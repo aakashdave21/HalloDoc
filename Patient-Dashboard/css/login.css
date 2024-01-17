@@ -1,0 +1,89 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root{
+    --main-color : #01bce9;
+    --white-color : #ffffff;
+}
+.login-page{
+    min-width: 100vw;
+    min-height: 100vh;
+}
+.background { 
+    position: absolute; 
+    height: 100%; 
+    width: 100%; 
+    background-image: url("/Patient-Dashboard/images/bg_login.jpg"); 
+    background-size: contain; 
+    background-position: center; 
+    background-repeat: no-repeat;
+    filter: blur(45px); 
+    z-index: -1; 
+} 
+
+.login-form{
+    margin: auto;
+    max-width: 400px;
+    width: 80%;
+    margin-top: -50px;
+}
+
+.login-page .main-container .row{
+    min-width: 100vw;
+    min-height: 100vh;
+}
+ 
+.login-header h1{
+    width: 95%;
+}
+
+/* Theme Button CSS */
+#theme-btn, .login-btn:hover{
+    border: 0.5px solid var(--main-color);
+    color: var(--main-color);
+    z-index: 1;
+}
+ #theme-btn:hover, .login-btn{
+    background-color: var(--main-color);
+    color: var(--white-color);
+}
+.login-page .login-details .forgot-pwd-link{
+    color: var(--main-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+.login-page .login-details .forgot-pwd-link:hover{
+    text-decoration: underline;
+}
+
+.login-page .login-footer a{
+    color: gray;
+    text-decoration: none;
+    font-weight: 600;
+}
+.login-page .login-footer a:hover{
+    text-decoration: underline;
+}
+
+.form-control:focus {
+    border-color: var(--main-color);
+    box-shadow: none;
+}
+
+.user-icon{
+    position: relative;
+    right: 100;
+}
+
+.input-with-icon{
+    position: relative;
+}
+
+.input-with-icon i{
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+}
