@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Patient</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/PatientRequest.css">
+    <!-- Jquery -->
+    <script
+    src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+    crossorigin="anonymous"></script>
+</head>
+<body class="patient-request-page">
+
+    <header>
+        <nav class="d-flex justify-content-between align-items-center border-bottom shadow-sm ps-4 pe-4">
+            <div>
+                <a href="index.html">
+                    <img src="images/logo.png" alt="logo hallo doc" style="width: 150px;">
+                </a>
+            </div>
+            <div>
+                <button class="btn" id="theme-btn">
+                    <i class="fa-regular fa-moon"></i>
+                    <i class="fa-regular fa-sun" style="display: none;"></i>
+                </button>
+        </div>
+        </nav>
+    </header>
+
+    <main class="patient-request-section container-sm">
+        <div class="d-flex justify-content-end mt-4">
+            <a href="SubmitRequest.html" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+        </div>
+
+        <div class="patient-request-form">
+            <div>
+                <h4>Patient Information</h4>
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 100px"></textarea>
+                    <label for="floatingTextarea">Enter Brief Details Of Symtomps</label>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="fname" placeholder="first name">
+                            <label for="floatingInput">First Name</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="lname" placeholder="last name">
+                            <label for="floatingInput">Last Name</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="dob" placeholder="Date Of Birth">
+                            <label for="floatingInput">Date Of Birth</label>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4>Patient Contact Information</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" placeholder="email">
+                            <label for="floatingInput">Email</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="contact" placeholder="contact">
+                            <label for="floatingInput">Contact No.</label>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+    </main>
+
+    <footer class="mt-auto d-flex justify-content-md-end justify-content-center p-4 dark-footer">
+        <div>
+            <a href="#" class="text-white text-decoration-none">Terms & Condition</a> 
+            <span class="ms-4 me-4 text-white"> | </span>
+            <a href="#" class="text-white text-decoration-none">Privacy Policy</a>
+        </div>
+    </footer>
+
+    
+    <script src="js/global.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/3bcc8c09be.js" crossorigin="anonymous"></script>
+</body>
+</html>

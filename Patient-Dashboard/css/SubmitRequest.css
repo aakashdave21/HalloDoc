@@ -1,0 +1,94 @@
+:root{
+    --main-color : #01bce9;
+    --white-color : #ffffff;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    min-height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.submit-request-page .back-link{
+    color: var(--main-color);
+    border: 1px solid var(--main-color);
+}
+.submit-request-page .back-link:hover{
+    background-color: var(--main-color);
+    color: var(--white-color);
+}
+
+.submit-request-page .content-div{
+    margin: 0 auto;
+    width: 50%;
+}
+.submit-request-page .content-div h2{
+    font-size: 3rem;
+}
+
+.submit-request-page .custom-button-group{
+    width: 210px;
+    min-width: 210px;
+}
+.submit-request-page .custom-button-group .patient-btn{
+    background: #e9eaef;
+    color: #5c669d;
+    font-weight: 600;
+    border: 1px solid #5c669d;
+}
+.submit-request-page .custom-button-group .family-btn{
+    background: #e5f2f8;
+    color: #479ab9;
+    font-weight: 600;
+    border: 1px solid #479ab9;
+    
+}
+.submit-request-page .custom-button-group .concierge-btn{
+    background: #e9f0e8;
+    color: #557856;
+    font-weight: 600;
+    border: 1px solid #557856;
+    
+}
+.submit-request-page .custom-button-group .partners-btn{
+    background: #f7e6ee;
+    color: #8d396d;
+    font-weight: 600;
+    border: 1px solid #8d396d;
+    
+}
+
+.submit-request-page .custom-button-group a{
+    position: relative;
+    text-decoration: none;
+    padding: 5px 0 0 12px;
+    border-radius: 5px;
+    transition: all 0.2s;
+}
+.submit-request-page .custom-button-group a:hover{
+    font-weight: bold;
+}
+
+/* Footer CSS */
+
+.dark-footer{
+    background-color: #161716;
+}
+.dark-footer a:hover{
+    text-decoration: underline !important;
+}
+
+@media only screen and (max-width : 400px){
+    .content-div{
+        margin: 0 auto;
+        width: 80%;
+    }
+
+}
