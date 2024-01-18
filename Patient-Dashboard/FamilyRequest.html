@@ -6,14 +6,14 @@
     <title>Login - Patient</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/PatientRequest.css">
+    <link rel="stylesheet" href="css/FamilyRequest.css">
     <!-- Jquery -->
     <script
     src="https://code.jquery.com/jquery-3.7.1.min.js"
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
     crossorigin="anonymous"></script>
 </head>
-<body class="patient-request-page">
+<body class="family-request-page">
 
     <header>
         <nav class="d-flex justify-content-between align-items-center border-bottom shadow-sm ps-4 pe-4">
@@ -31,13 +31,49 @@
         </nav>
     </header>
 
-    <main class="patient-request-section container-sm">
+    <main class="family-request-section container-sm">
         <div class="d-flex justify-content-end mt-4">
             <a href="SubmitRequest.html" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
         </div>
 
-        <div class="patient-request-form border p-4 mt-3 mb-3 rounded shadow">
+        <div class="family-request-form border p-4 mt-3 mb-3 rounded shadow">
             <div>
+                <h4>Family/Friend Information</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="fname" placeholder="first name">
+                            <label for="fname">First Name</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="lname" placeholder="last name">
+                            <label for="lname">Last Name</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="contact" placeholder="contact">
+                            <label for="contact">Contact No.</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" placeholder="email">
+                            <label for="email">Email</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="relation" placeholder="relation">
+                            <label for="relation">Relation With Patient</label>
+                          </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
                 <h4>Patient Information</h4>
                 <div class="form-floating">
                     <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 100px"></textarea>
@@ -47,37 +83,36 @@
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="fname" placeholder="first name">
-                            <label for="floatingInput">First Name</label>
+                            <label for="fname">First Name</label>
                           </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="lname" placeholder="last name">
-                            <label for="floatingInput">Last Name</label>
+                            <label for="lname">Last Name</label>
                           </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="date" class="form-control" id="dob" placeholder="Date Of Birth">
-                            <label for="floatingInput">Date Of Birth</label>
+                            <label for="dob">Date Of Birth</label>
                           </div>
                     </div>
                 </div>
             </div>
-
             <div class="mt-4">
                 <h4>Patient Contact Information</h4>
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="email" class="form-control" id="email" placeholder="email">
-                            <label for="floatingInput">Email</label>
+                            <label for="email">Email</label>
                           </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="number" class="form-control" id="contact" placeholder="contact">
-                            <label for="floatingInput">Contact No.</label>
+                            <label for="contact">Contact No.</label>
                           </div>
                     </div>
                 </div>
@@ -89,31 +124,31 @@
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="street" placeholder="street">
-                            <label for="floatingInput">Street</label>
+                            <label for="street">Street</label>
                           </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="city" placeholder="city">
-                            <label for="floatingInput">City</label>
+                            <label for="city">City</label>
                           </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="state" placeholder="state">
-                            <label for="floatingInput">State</label>
+                            <label for="state">State</label>
                           </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="zipCode" placeholder="zipCode">
-                            <label for="floatingInput">Zip Code</label>
+                            <label for="zipCode">Zip Code</label>
                           </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="room" placeholder="room">
-                            <label for="floatingInput">Room # / Suit (Optional)</label>
+                            <label for="room">Room # / Suit (Optional)</label>
                           </div>
                     </div>
                 </div>
@@ -138,6 +173,30 @@
             </div>
         
         </div>
+
+
+        <!-- The Modal -->
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-md-5 p-2">
+                <!-- Modal body -->
+                <div class="modal-body d-flex flex-column justify-content-center align-items-center">
+                    <div style="
+                        height: 150px;
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    ">
+                        <i class="fa-solid fa-circle-info text-warning warning-icon"></i>
+                    </div>
+                    <h5>Information</h5>
+                    <p class="mt-2">When submitting a request, you must provide the correct contact details of the patient or manager. Failure to provide the correct email address and telephone number will result in delayed service or denial of service. </p>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
+                </div>
+            </div>
+            </div>
+        </div>
     </main>
 
     <footer class="mt-auto d-flex justify-content-md-end justify-content-center p-4 dark-footer">
@@ -148,7 +207,11 @@
         </div>
     </footer>
 
-    
+    <script>
+        $(document).ready(function(){
+            $("#myModal").modal('show');
+        })
+    </script>
     <script src="js/global.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/3bcc8c09be.js" crossorigin="anonymous"></script>
