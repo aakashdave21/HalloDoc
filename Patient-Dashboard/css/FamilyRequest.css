@@ -34,7 +34,7 @@
 /* Animation For info icon CSS */
 .warning-icon{
     font-size: 60px;
-    border: 30px solid #ffefbd;
+    border: 40px solid #ffefbd;
     border-radius: 50%;
     animation-name: animate-icon;
     animation-duration: 1s;

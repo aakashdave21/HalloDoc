@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+*{
+    font-family: 'Poppins', sans-serif;
+}
 :root{
     --main-color : #01bce9;
     --white-color : #ffffff;
@@ -5,7 +9,8 @@
 
 /* Dark Theme Color */
 [data-bs-theme=dark]{
-    --bs-body-bg: #161716;
+    /* --bs-body-bg: #333333; */
+    --bs-body-bg: #001f3f;
 }
 
 
@@ -23,4 +28,8 @@
 .form-control:focus {
     border-color: var(--main-color);
     box-shadow: none;
+}
+
+.form-floating>.form-control:focus~label {
+   color: var(--main-color);
 }
