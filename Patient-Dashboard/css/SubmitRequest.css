@@ -29,9 +29,9 @@ body{
     margin: 0 auto;
     width: 50%;
 }
-.submit-request-page .content-div h2{
+/* .submit-request-page .content-div h2{
     font-size: 3rem;
-}
+} */
 
 .submit-request-page .custom-button-group{
     width: 210px;
@@ -76,19 +76,15 @@ body{
     font-weight: bold;
 }
 
-/* Footer CSS */
-
-.dark-footer{
-    background-color: #161716;
-}
-.dark-footer a:hover{
-    text-decoration: underline !important;
-}
-
 @media only screen and (max-width : 400px){
     .content-div{
         margin: 0 auto;
-        width: 80%;
+        width: 100%;
+    }
+
+    .submit-request-page .custom-button-group{
+        width: 160px;
+        min-width: 160px;
     }
 
 }

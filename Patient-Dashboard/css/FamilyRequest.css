@@ -1,17 +1,3 @@
-
-
-
-
-.family-request-page .family-request-section .back-link{
-    color: var(--main-color);
-    border: 1px solid var(--main-color);
-}
-.family-request-page .family-request-section .back-link:hover{
-    background-color: var(--main-color);
-    color: var(--white-color);
-}
-
-
 .family-request-page .family-request-section .upload-file-btn , .submit-btn , .cancle-btn:hover{
     background-color: var(--main-color);
     color: var(--white-color);
@@ -20,15 +6,6 @@
 .family-request-page .family-request-section .submit-btn:hover, .cancle-btn{
     color: var(--main-color);
     border: 1px solid var(--main-color);
-}
-
-
-/* Footer CSS */
-.family-request-page .dark-footer{
-    background-color: #161716;
-}
-.family-request-page .dark-footer a:hover{
-    text-decoration: underline !important;
 }
 
 /* Animation For info icon CSS */
