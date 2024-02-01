@@ -1,1 +1,4 @@
 https://onedrive.live.com/edit?id=68AFAC3807F6DE6D!139&resid=68AFAC3807F6DE6D!139&ithint=file%2cxlsx&authkey=!AK9_oWIh8t2-NTk&wdo=2&cid=68afac3807f6de6d
+
+
+Diagram in DB Diagram -> https://dbdiagram.io/d/HalloDoc-DB-Diagram-65b749ddac844320aeea470d
