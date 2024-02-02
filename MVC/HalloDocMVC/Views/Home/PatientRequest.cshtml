@@ -1,0 +1,114 @@
+@{
+    ViewData["Title"] = "Patient Request Page";
+    <link rel="stylesheet" href="~/css/PatientRequest.css" />
+}
+
+
+    <main class="patient-request-section container-sm">
+        <div class="d-flex justify-content-end mt-4">
+            <a asp-controller="Home" asp-action="SubmitRequest" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+        </div>
+
+        
+        <div class="patient-request-form border p-4 mt-3 mb-3 rounded shadow">
+            <div>
+                <h4>Patient Information</h4>
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 100px"></textarea>
+                    <label for="floatingTextarea">Enter Brief Details Of Symtomps</label>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="fname" placeholder="first name">
+                            <label for="floatingInput">First Name</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="lname" placeholder="last name">
+                            <label for="floatingInput">Last Name</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="dob" placeholder="Date Of Birth">
+                            <label for="floatingInput">Date Of Birth</label>
+                          </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>Patient Contact Information</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" placeholder="email">
+                            <label for="floatingInput">Email</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input id="phone" class="form-control" type="tel" name="phone"  />
+                          </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>Patient Location</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="street" placeholder="street">
+                            <label for="floatingInput">Street</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="city" placeholder="city">
+                            <label for="floatingInput">City</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="state" placeholder="state">
+                            <label for="floatingInput">State</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="zipCode" placeholder="zipCode">
+                            <label for="floatingInput">Zip Code</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="room" placeholder="room">
+                            <label for="floatingInput">Room # / Suit (Optional)</label>
+                          </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>(Optional) Upload Photo/Document</h4>
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" id="inputGroupFile02">
+                    <label class="input-group-text upload-file-btn" for="inputGroupFile02">Upload</label>
+                  </div>
+            </div>
+            <div class="mt-5 mb-3 d-flex justify-content-end">
+                <div class="section-btns">
+                    <button class="btn submit-btn me-2">
+                        Submit
+                    </button>
+                    <button class="btn cancle-btn">
+                        Cancle
+                    </button>
+                </div>
+            </div>
+        
+        </div>
+    </main>

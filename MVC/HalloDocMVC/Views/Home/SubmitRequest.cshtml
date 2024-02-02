@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Submit Request Page";
+    <link rel="stylesheet" href="~/css/SubmitRequest.css" />
+}
+
+ <main class="submit-request-page container-sm">
+        <div class="d-flex justify-content-end mt-4">
+            <a asp-action="Index" asp-controller="Home" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+        </div>
+        <div class="content-div">
+            <h2 class="text-center fs-1">I am a...</h2>
+            <div class="custom-button-group d-flex flex-column gap-4 mt-4 ms-auto me-auto">
+                <a asp-controller="Home" asp-action="PatientRequest" class="patient-btn" type="button"> <p>PATIENT</p></a>
+                <a href="FamilyRequest.html" class="family-btn" type="button"> <p>FAMILY/FRIEND</p> </a>
+                <a href="ConciergeRequest.html" class="concierge-btn" type="button"> <p>CONCIERGE</p> </a>
+                <a href="BusinessRequest.html" class="partners-btn" type="button"> <p>BUSINESS PARTNERS</p> </a>
+            </div>
+        </div>
+    </main>
