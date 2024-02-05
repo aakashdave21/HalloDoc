@@ -23,3 +23,9 @@ const phoneInputField = document.querySelector("#phone");
 const phoneInputPatientField = document.querySelector("#patient-phone");
 contactWithFlag(phoneInputField)
 contactWithFlag(phoneInputPatientField)
+
+
+// Modal Will be Open For Family,Concierge,Business
+$(document).ready(function(){
+    $("#myModal").modal('show');
+})

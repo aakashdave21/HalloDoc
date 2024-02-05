@@ -1,0 +1,172 @@
+@{
+    ViewData["Title"] = "Concierge Request Page";
+    <link rel="stylesheet" href="~/css/FamilyRequest.css" />
+}
+
+    <main class="concierge-request-section container-sm">
+        <div class="d-flex justify-content-end mt-4">
+            <a asp-controller="Home" asp-action="SubmitRequest" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+        </div>
+
+        <div class="concierge-request-form border p-4 mt-3 mb-3 rounded shadow">
+            <div>
+                <h4>Concierge Information</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="fname" placeholder="first name">
+                            <label for="fname">First Name</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="lname" placeholder="last name">
+                            <label for="lname">Last Name</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input id="phone" class="form-control" type="tel" name="phone"  />
+
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" placeholder="email">
+                            <label for="email">Email</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="hotel" placeholder="hotel">
+                            <label for="hotel">Hotel / Property Name</label>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h4>Concierge Location</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="street" placeholder="street">
+                            <label for="floatingInput">Street</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="city" placeholder="city">
+                            <label for="floatingInput">City</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="state" placeholder="state">
+                            <label for="floatingInput">State</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="zipCode" placeholder="zipCode">
+                            <label for="floatingInput">Zip Code</label>
+                          </div>
+                    </div>
+                   
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>Patient Information</h4>
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 100px"></textarea>
+                    <label for="floatingTextarea">Enter Brief Details Of Symtomps</label>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="fname" placeholder="first name">
+                            <label for="floatingInput">First Name</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="lname" placeholder="last name">
+                            <label for="floatingInput">Last Name</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="dob" placeholder="Date Of Birth">
+                            <label for="floatingInput">Date Of Birth</label>
+                          </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>Patient Contact Information</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" placeholder="email">
+                            <label for="floatingInput">Email</label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input id="patient-phone" class="form-control" type="tel" name="phone"  />
+                          </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>Patient Location</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="room" placeholder="room">
+                            <label for="floatingInput">Room # / Suit (Optional)</label>
+                          </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 mb-3 d-flex justify-content-end">
+                <div class="section-btns">
+                    <button class="btn submit-btn me-2">
+                        Submit
+                    </button>
+                    <button class="btn cancle-btn">
+                        Cancle
+                    </button>
+                </div>
+            </div>
+        
+        </div>
+
+
+
+        <!-- The Modal -->
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-md-5 p-1">
+                <!-- Modal body -->
+                <div class="modal-body d-flex flex-column justify-content-center align-items-center">
+                    <div style="
+                        height: 150px;
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    ">
+                        <i class="fa-solid fa-circle-info text-warning warning-icon"></i>
+                    </div>
+                    <h5>Information</h5>
+                    <p class="mt-2">When submitting a request, you must provide the correct contact details of the patient or manager. Failure to provide the correct email address and telephone number will result in delayed service or denial of service. </p>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
+                </div>
+            </div>
+            </div>
+        </div>
+    </main>

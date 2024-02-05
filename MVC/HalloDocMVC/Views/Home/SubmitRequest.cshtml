@@ -11,9 +11,9 @@
             <h2 class="text-center fs-1">I am a...</h2>
             <div class="custom-button-group d-flex flex-column gap-4 mt-4 ms-auto me-auto">
                 <a asp-controller="Home" asp-action="PatientRequest" class="patient-btn" type="button"> <p>PATIENT</p></a>
-                <a href="FamilyRequest.html" class="family-btn" type="button"> <p>FAMILY/FRIEND</p> </a>
-                <a href="ConciergeRequest.html" class="concierge-btn" type="button"> <p>CONCIERGE</p> </a>
-                <a href="BusinessRequest.html" class="partners-btn" type="button"> <p>BUSINESS PARTNERS</p> </a>
+                <a asp-controller="Home" asp-action="FamilyRequest" class="family-btn" type="button"> <p>FAMILY/FRIEND</p> </a>
+                <a asp-controller="Home" asp-action="ConciergeRequest" class="concierge-btn" type="button"> <p>CONCIERGE</p> </a>
+                <a asp-controller="Home" asp-action="BusinessRequest" class="partners-btn" type="button"> <p>BUSINESS PARTNERS</p> </a>
             </div>
         </div>
     </main>

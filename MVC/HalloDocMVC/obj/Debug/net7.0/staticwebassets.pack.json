@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\HalloDocMVC.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\css\\FamilyRequest.css",
+      "PackagePath": "staticwebassets\\css\\FamilyRequest.css"
+    },
+    {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\css\\ForgotPassword.css",
       "PackagePath": "staticwebassets\\css\\ForgotPassword.css"
     },
@@ -15,6 +19,10 @@
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\css\\Login.css",
       "PackagePath": "staticwebassets\\css\\Login.css"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\css\\PatientRequest.css",
+      "PackagePath": "staticwebassets\\css\\PatientRequest.css"
     },
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\css\\SubmitRequest.css",
