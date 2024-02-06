@@ -1,5 +1,5 @@
 const changePasswordView = ()=>{
-    let floatingPassword = document.getElementById("floatingPassword");
+    let floatingPassword = document.getElementById("Passwordhash");
     let eyeIcon = document.querySelector(".eye-icon");
      
     if (floatingPassword.type === "password") {
