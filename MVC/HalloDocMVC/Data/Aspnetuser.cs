@@ -72,4 +72,25 @@ public partial class Aspnetuser
 
     [Column("updatedat", TypeName = "timestamp without time zone")]
     public DateTime? Updatedat { get; set; }
+
+    [InverseProperty("Aspnetuser")]
+    public virtual ICollection<Admin> AdminAspnetusers { get; } = new List<Admin>();
+
+    [InverseProperty("CreatedbyNavigation")]
+    public virtual ICollection<Admin> AdminCreatedbyNavigations { get; } = new List<Admin>();
+
+    [InverseProperty("ModifiedbyNavigation")]
+    public virtual ICollection<Admin> AdminModifiedbyNavigations { get; } = new List<Admin>();
+
+    [InverseProperty("Aspnetuser")]
+    public virtual ICollection<Physician> PhysicianAspnetusers { get; } = new List<Physician>();
+
+    [InverseProperty("CreatedbyNavigation")]
+    public virtual ICollection<Physician> PhysicianCreatedbyNavigations { get; } = new List<Physician>();
+
+    [InverseProperty("ModifiedbyNavigation")]
+    public virtual ICollection<Physician> PhysicianModifiedbyNavigations { get; } = new List<Physician>();
+
+    [InverseProperty("Aspnetuser")]
+    public virtual ICollection<User> Users { get; } = new List<User>();
 }

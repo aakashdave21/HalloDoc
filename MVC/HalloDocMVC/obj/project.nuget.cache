@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "pEfLQfIgCzi3ZeeGHrjYAw47d/esEYz8zR/njJELHbiyQ0j0owL2kvCkqavAcYgZPZLmrXTDT31EkWynGnSUaQ==",
+  "dgSpecHash": "wng9UEd/Lap/ORO1iuWTqmOyZHkXc7ZGFWJG/Gd7yBD+uOpgVVo/oA8GjN2XX0N1mmUwXXqsZyOzDgszjaVDbA==",
   "success": true,
   "projectFilePath": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\HalloDocMVC.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\pce115\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\pce115\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\pce115\\.nuget\\packages\\messagepack\\2.1.152\\messagepack.2.1.152.nupkg.sha512",
     "C:\\Users\\pce115\\.nuget\\packages\\messagepack.annotations\\2.1.152\\messagepack.annotations.2.1.152.nupkg.sha512",

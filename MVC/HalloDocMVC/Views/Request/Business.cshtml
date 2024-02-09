@@ -1,0 +1,175 @@
+@model HalloDocMVC.ViewModels.BusinessRequestViewModel;
+
+@{
+    ViewData["Title"] = "Business Request Page";
+    <link rel="stylesheet" href="~/css/FamilyRequest.css" />
+}
+
+<main class="business-request-section container-sm">
+    <div class="d-flex justify-content-end mt-4">
+        <a asp-controller="Home" asp-action="SubmitRequest" class="btn btn-sm back-link"><i
+                class="fa-solid fa-chevron-left"></i> Back</a>
+    </div>
+
+
+    <form asp-action="BusinessPost" id="myForm">
+        <div class="business-request-form border p-4 mt-3 mb-3 rounded shadow">
+            <div>
+                <h4>Business Information</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="BusinessFirstname"  type="text" class="form-control" id="fname" placeholder="first name">
+                            <label asp-for="BusinessFirstname"  for="fname">First Name</label>
+                        </div>
+                        <span asp-validation-for="BusinessFirstname" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="BusinessLastname" type="text" class="form-control" id="lname" placeholder="last name">
+                            <label asp-for="BusinessLastname" for="lname">Last Name</label>
+                        </div>
+                        <span asp-validation-for="BusinessLastname" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                            <div class="form-floating">
+                                <input asp-for="BusinessPhonenumber" id="Mobile" class="form-control" type="tel"/>
+                                <input type="hidden" id="phone_hidden" name="full_phone" />
+                            </div>
+                            <span asp-validation-for="BusinessPhonenumber" class="text-danger" id="mobile-valid"></span>
+                        </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="BusinessEmail" type="email" class="form-control" id="email" placeholder="email">
+                            <label asp-for="BusinessEmail" for="email">Email</label>
+                        </div>
+                        <span asp-validation-for="BusinessEmail" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="PropertyName" type="text" class="form-control" id="business" placeholder="business">
+                            <label asp-for="PropertyName" for="business">Business / Property Name</label>
+                        </div>
+                        <span asp-validation-for="PropertyName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="CaseNumber" type="text" class="form-control" id="case" placeholder="case">
+                            <label asp-for="CaseNumber" for="case">(Optional) Case Number</label>
+                        </div>
+                        <span asp-validation-for="CaseNumber" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>Patient Information</h4>
+                <div>
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Leave a comment here" id="Symptoms" asp-for="Symptoms"  style="height: 100px"></textarea>
+                            <label asp-for="Symptoms" for="Symptoms">Enter Brief Details Of Symtomps</label>
+                        </div>
+                        <span asp-validation-for="Symptoms" class="text-danger"></span>
+                    </div>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Firstname" type="text" class="form-control" id="fname" placeholder="first name">
+                            <label asp-for="Firstname" for="floatingInput">First Name</label>
+                        </div>
+                        <span asp-validation-for="Firstname" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Lastname" type="text" class="form-control" id="lname" placeholder="last name">
+                            <label asp-for="Lastname" for="floatingInput">Last Name</label>
+                        </div>
+                        <span asp-validation-for="Lastname" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Birthdate" type="date" class="form-control" id="dob" placeholder="Date Of Birth">
+                            <label asp-for="Birthdate" for="floatingInput">Date Of Birth</label>
+                        </div>
+                        <span asp-validation-for="Birthdate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>Patient Contact Information</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Email" type="email" class="form-control" id="email" placeholder="email">
+                            <label asp-for="Email" for="floatingInput">Email</label>
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                                <input asp-for="Mobile" id="Phone" class="form-control" type="tel" />
+                                <input type="hidden" id="phone_hidden" name="full_phone" />
+                            </div>
+                            <span asp-validation-for="Mobile" class="text-danger" id="mobile-valid"></span>
+                        </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>Patient Location</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Street" type="text" class="form-control" id="street" placeholder="street">
+                            <label asp-for="Street" for="floatingInput">Street</label>
+                        </div>
+                        <span asp-validation-for="Street" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="City" type="text" class="form-control" id="city" placeholder="city">
+                            <label asp-for="City" for="floatingInput">City</label>
+                        </div>
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="State" type="text" class="form-control" id="state" placeholder="state">
+                            <label asp-for="State" for="floatingInput">State</label>
+                        </div>
+                        <span asp-validation-for="State" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Zipcode" type="text" class="form-control" id="zipCode" placeholder="zipCode">
+                            <label asp-for="Zipcode" for="floatingInput">Zip Code</label>
+                        </div>
+                        <span asp-validation-for="Zipcode" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Roomnoofpatient" type="text" class="form-control" id="room" placeholder="room">
+                            <label asp-for="Roomnoofpatient" for="floatingInput">Room # / Suit (Optional)</label>
+                        </div>
+                        <span asp-validation-for="Roomnoofpatient" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 mb-3 d-flex justify-content-end">
+                <div class="section-btns">
+                    <button type="button" class="btn submit-btn me-2" onclick="submitForm()">
+                            Submit
+                        </button>
+                        <a asp-controller="Home" asp-action="SubmitRequest">
+                            <button type="button" class="btn cancle-btn"> Cancle </button>
+                        </a>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+    <partial name="_AlertModel" />
+</main>

@@ -1,0 +1,218 @@
+@model HalloDocMVC.ViewModels.PatientRequestViewModel;
+@{
+    ViewData["Title"] = "Patient Request Page";
+    <link rel="stylesheet" href="~/css/PatientRequest.css" />
+}
+
+
+    <main class="patient-request-section container-sm">
+        <div class="d-flex justify-content-end mt-4">
+            <a asp-controller="Home" asp-action="SubmitRequest" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+        </div>
+
+        <form asp-action="PatientPost" id="myForm">
+                    <div class="patient-request-form border p-4 mt-3 mb-3 rounded shadow">
+            <div>
+                <h4>Patient Information</h4>
+                <div>
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here" id="Symptoms" asp-for="Symptoms"  style="height: 100px"></textarea>
+                        <label asp-for="Symptoms" for="Symptoms">Enter Brief Details Of Symtomps</label>
+                    </div>
+                    <span asp-validation-for="Symptoms" class="text-danger"></span>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Firstname" type="text" class="form-control" id="fname" placeholder="first name">
+                            <label asp-for="Firstname" for="floatingInput">First Name</label>
+                          </div>
+                          <span asp-validation-for="Firstname" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Lastname" type="text" class="form-control" id="lname" placeholder="last name">
+                            <label asp-for="Lastname" for="floatingInput">Last Name</label>
+                          </div>
+                          <span asp-validation-for="Lastname" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Birthdate" type="date" class="form-control" id="dob" placeholder="Date Of Birth">
+                            <label asp-for="Birthdate" for="floatingInput">Date Of Birth</label>
+                          </div>
+                          <span asp-validation-for="Birthdate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>Patient Contact Information</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Email" type="email" class="form-control" id="Email" placeholder="email" oninput="debounce(verifyEmail, 2000)">
+                            <label asp-for="Email" for="Email">Email</label>
+                          </div>
+                          <span asp-validation-for="Email" class="text-danger" id="email-valid"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Mobile" id="Mobile" class="form-control" type="tel" name="Mobile" />
+                            <input type="hidden" id="phone_hidden" name="full_phone" />
+                          </div>
+                          <span asp-validation-for="Mobile" class="text-danger" id="mobile-valid"></span>
+                    </div>
+                   <div id="password-fields" style="display: none;">
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input asp-for="Passwordhash" type="password" class="form-control" id="Password" placeholder="Password">
+                                <label asp-for="Passwordhash" for="Password">Password</label>
+                             </div>
+                             <span asp-validation-for="Passwordhash" id="PasswordhashValid" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input asp-for="ConfirmPassword" type="password" class="form-control" id="ConfirmPassword" placeholder="Confirm Password" oninput="changePassword()">
+                                <label asp-for="ConfirmPassword" for="ConfirmPassword">Confirm Password</label>
+                             </div>
+                             <span asp-validation-for="ConfirmPassword" id="ConfirmPasswordValid" class="text-danger" ></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>Patient Location</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Street" type="text" class="form-control" id="Street" placeholder="street">
+                            <label asp-for="Street" for="Street">Street</label>
+                          </div>
+                          <span asp-validation-for="Street" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="City" type="text" class="form-control" id="City" placeholder="city">
+                            <label asp-for="City" for="City">City</label>
+                          </div>
+                          <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="State" type="text" class="form-control" id="State" placeholder="state">
+                            <label asp-for="State" for="State">State</label>
+                          </div>
+                          <span asp-validation-for="State" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Zipcode" type="text" class="form-control" id="Zipcode" placeholder="zipCode">
+                            <label asp-for="Zipcode" for="Zipcode">Zip Code</label>
+                          </div>
+                          <span asp-validation-for="Zipcode" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Roomnoofpatient" type="text" class="form-control" id="room" placeholder="room">
+                            <label asp-for="Roomnoofpatient" for="floatingInput">Room # / Suit (Optional)</label>
+                          </div>
+                          <span asp-validation-for="Roomnoofpatient" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>(Optional) Upload Photo/Document</h4>
+                <div class="input-group mb-3">
+                    <input asp-for="Documentsofpatient" type="file" class="form-control" id="inputGroupFile02">
+                    <label asp-for="Documentsofpatient" class="input-group-text upload-file-btn" for="inputGroupFile02">Upload</label>
+                  </div>
+            </div>
+            <div class="mt-5 mb-3 d-flex justify-content-end">
+                <div class="section-btns">
+                    <button type="button" class="btn submit-btn me-2" onclick="submitForm()">
+                        Submit
+                    </button>
+                    <a asp-controller="Home" asp-action="SubmitRequest">
+                        <button  class="btn cancle-btn" type="button" >
+                            Cancle
+                    </button>
+                    </a>
+                    
+                </div>
+            </div>
+        
+        </div>
+    </form>
+        
+    </main>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+   <script type="text/javascript">
+   
+        let timeoutId;
+        function debounce(func, delay) {
+            let email = document.getElementById("Email").value;
+            let emailValid = document.getElementById("email-valid");
+            var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+
+            if (!emailRegex.test(email)) {
+                emailValid.innerHTML = "Invalid Email Format" 
+                return; 
+            }else{
+                emailValid.innerHTML = "" 
+            }
+
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(func, delay);
+        }
+        function verifyEmail() {
+            let email = document.getElementById("Email").value;
+        
+            // Send an AJAX request to the controller
+            $.ajax({
+                url: '@Url.Action("VerifyEmail", "Request")',
+                type: 'POST',
+                data: { email: email },
+                success: function (response) {
+                    // Handle the response from the server
+                    if (response.isValid == true) {
+                        toastr.success("Email is Valid, Please Enter Your Password");
+                        document.getElementById('password-fields').style.display = 'block';
+                        document.getElementById('Password').setAttribute('required', true);
+                        document.getElementById('ConfirmPassword').setAttribute('required', true);
+                    } else {
+                        toastr.info("Email Aleready Exists, You can also login now !!");
+                        document.getElementById('password-fields').style.display = 'none';
+                        document.getElementById('Password').removeAttribute('required', true);
+                        document.getElementById('ConfirmPassword').removeAttribute('required', true);
+                    }
+                },
+                error: function () {
+                    toastr.error("Error occurred while verifying email.");
+                }
+        });
+}
+
+
+            const changePassword = ()=>{
+                var confirmPasswordValid = document.querySelector('#ConfirmPasswordValid');
+                var confirmPassword = document.querySelector('#ConfirmPassword').value;
+                var password = document.querySelector('#Password').value;
+
+                if (password !== confirmPassword){
+                    confirmPasswordValid.innerText = "Password not matching"
+                    return;
+                }else{
+                    confirmPasswordValid.innerText = ""
+                }
+            }
+            
+
+        
+
+   </script>
