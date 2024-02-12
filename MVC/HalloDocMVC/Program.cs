@@ -1,5 +1,6 @@
-using HalloDocMVC.Data;
+// using HalloDocMVC.Data;
 using Microsoft.EntityFrameworkCore;
+using HalloDocMVC.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Patient</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/FamilyRequest.css">
+    <!-- Jquery -->
+    <script
+    src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+    crossorigin="anonymous"></script>
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
+   />
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+
+
+    <style>
+        .sorting-icons {
+        display: inline-block;
+        vertical-align: middle;
+    }   
+    .modal-header{
+        background-color: #01bce9;
+    }
+
+
+    ul{
+    margin: 0;
+    width: 100%;
+    
+}
+ul li {
+    list-style: none;  
+    margin: 0 10px;
+    padding: 10px;
+}
+ul li a{
+    color:black;
+    text-decoration: none;
+    padding: 10px;
+}
+ul li a:hover{
+  border-bottom: 2px solid #01bce9;
+  color: #01bce9;
+}
+ul li a:active{
+  border-bottom: 2px solid #01bce9;
+  color: #01bce9;
+}
+    </style>
+</head>
+<body class="family-request-page d-flex flex-column" style="min-height: 100vh;">
+
+    <header>
+        <nav class="border-bottom shadow-sm">
+            <div class="d-flex justify-content-between align-items-center border-bottom ps-4 pe-4">
+                <div>
+                    <a href="index.html">
+                        <img src="images/logo.png" alt="logo hallo doc" style="width: 150px;">
+                    </a>
+                </div>
+                <div class="d-flex align-items-center">
+                    <p class="me-2">Welcome <strong id="UserName">Test Testing</strong> </p>
+                    <button class="btn theme-btn me-2">Log Out</button>
+                    <button class="btn" id="theme-btn">
+                        <i class="fa-regular fa-moon"></i>
+                        <i class="fa-regular fa-sun" style="display: none;"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="nav-tabs">
+                <ul class="d-flex">
+                    <li>
+                        <a href="#">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="UserProfile.html">Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="concierge-request-section container-fluid-sm m-5">
+        <h2 class="mt-5">Medical History</h1>
+        
+            <div class="concierge-request-form border p-4 mt-3 mb-3 rounded shadow">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn theme-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Create New Request</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="myTable" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="sortable">Created Date <i class="fa-solid fa-chevron-up sorting-icons"></i> </th>
+                                <th>Current Status</th>
+                                <th>Document</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-02-09</td>
+                                <td>Pending</td>
+                                <td>
+                                    <a type="button" class="btn theme-btn">
+                                        Document
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2024-02-08</td>
+                                <td>Approved</td>
+                                <td></td>
+                            </tr>
+                            <!-- Add more rows here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </main>
+    <!-- Modal -->
+<div class="modal fade shadow-lg " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Create New Request</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Here I want to create request for...</p>
+          <div class="d-flex gap-2 justify-content-center mt-2">
+            <button type="button" class="btn secondary-theme-btn">Me</button>
+            <button type="button" class="btn theme-btn">Someone Else</button>
+          </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn secondary-theme-btn">Continue</button>
+            <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+
+    <footer class="mt-auto d-flex justify-content-md-end justify-content-center p-4 dark-footer">
+        <div>
+            <a href="#" class="text-white text-decoration-none">Terms & Condition</a> 
+            <span class="ms-4 me-4 text-white"> | </span>
+            <a href="#" class="text-white text-decoration-none">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script>
+        $(document).ready(function(){
+            $("#myModal").modal('show');
+        })
+        $(".sortable").click(function(){
+            var column = $(this).data('sort');
+            var order = $(this).hasClass('asc') ? 'desc' : 'asc';
+            $('.sortable').removeClass('asc desc');
+            $(this).addClass(order);
+            $(this).find('.sorting-icons').toggleClass('fa-chevron-up fa-chevron-down');
+        });
+       
+    </script>
+    <script src="js/global.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/3bcc8c09be.js" crossorigin="anonymous"></script>
+</body>
+</html>
