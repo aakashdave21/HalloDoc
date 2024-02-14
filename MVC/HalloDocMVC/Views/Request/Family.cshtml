@@ -1,4 +1,4 @@
-@model HalloDocMVC.ViewModels.FamilyRequestViewModel;
+@model FamilyRequestViewModel;
 @{
     ViewData["Title"] = "Family Request Page";
     <link rel="stylesheet" href="~/css/FamilyRequest.css" />
@@ -9,7 +9,7 @@
             <a asp-controller="Home" asp-action="SubmitRequest" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
         </div>
 
-        <form asp-action="FamilyPost" id="myForm">
+        <form asp-action="FamilyPost" id="myForm" method="post" enctype="multipart/form-data">
             <div class="family-request-form border p-4 mt-3 mb-3 rounded shadow">
                 <div>
                     <h4>Family/Friend Information</h4>
@@ -149,10 +149,10 @@
                 <div class="mt-4 mb-3">
                     <h4>(Optional) Upload Photo/Document</h4>
                     <div class="input-group">
-                        <input asp-for="Documentsofpatient" type="file" class="form-control" id="inputGroupFile02">
-                        <label asp-for="Documentsofpatient" class="input-group-text upload-file-btn" for="inputGroupFile02">Upload</label>
+                        <input type="file" class="form-control" id="inputGroupFile02" name="file" accept="image/png, image/gif, image/jpeg , application/pdf">
+                        <label class="input-group-text upload-file-btn" for="inputGroupFile02">Upload</label>
                     </div>
-                    <span asp-validation-for="Documentsofpatient" class="text-danger"></span>
+                    <span class="text-danger"></span>
                 </div>
                 <div class="mt-5 mb-3 d-flex justify-content-end">
                     <div class="section-btns">

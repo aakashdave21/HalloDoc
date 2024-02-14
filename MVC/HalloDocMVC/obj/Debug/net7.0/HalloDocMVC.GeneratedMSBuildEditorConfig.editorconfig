@@ -16,6 +16,18 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Views/Dashboard/Documents.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXERvY3VtZW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Views/Dashboard/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Views/Dashboard/UserProfile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXFVzZXJQcm9maWxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Views/Home/BusinessRequest.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxCdXNpbmVzc1JlcXVlc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -78,6 +90,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Views/Shared/_AlertModel.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BbGVydE1vZGVsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Views/Shared/_DashboardLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9EYXNoYm9hcmRMYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Views/Shared/_EmptyLayout.cshtml]

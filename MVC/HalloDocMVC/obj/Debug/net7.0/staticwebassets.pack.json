@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\HalloDocMVC.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\css\\DashboardLayout.css",
+      "PackagePath": "staticwebassets\\css\\DashboardLayout.css"
+    },
+    {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\css\\FamilyRequest.css",
       "PackagePath": "staticwebassets\\css\\FamilyRequest.css"
     },
@@ -471,6 +475,26 @@
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\lib\\jquery\\js\\bootstrap.min.js.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\431d4c5c-1c19-49b8-aca6-7b7d9366cd96_Untitled.png",
+      "PackagePath": "staticwebassets\\uploads\\431d4c5c-1c19-49b8-aca6-7b7d9366cd96_Untitled.png"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png",
+      "PackagePath": "staticwebassets\\uploads\\471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\95d65b4e-a7d0-48d9-aaff-4e49e7eaf163_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png",
+      "PackagePath": "staticwebassets\\uploads\\95d65b4e-a7d0-48d9-aaff-4e49e7eaf163_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\99c5e470-d6f0-4c68-948e-0f99ee053355_Untitled.png",
+      "PackagePath": "staticwebassets\\uploads\\99c5e470-d6f0-4c68-948e-0f99ee053355_Untitled.png"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\ae1f30e1-18a6-45cf-9441-19190732d835_Untitled.png",
+      "PackagePath": "staticwebassets\\uploads\\ae1f30e1-18a6-45cf-9441-19190732d835_Untitled.png"
     },
     {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.HalloDocMVC.Microsoft.AspNetCore.StaticWebAssets.props",

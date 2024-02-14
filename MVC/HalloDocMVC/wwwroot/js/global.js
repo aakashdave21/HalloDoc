@@ -60,7 +60,7 @@ function submitForm(){
             PasswordhashValid.innerText = "Password is Required";
             return;
         }else if(!confirmPassword){
-            confirmPasswordValid.innerText = "Confirm Password not matching"
+            confirmPasswordValid.innerText = "Confirm Password is Required"
             return;
         }else{
             PasswordhashValid.innerText = "";
@@ -74,12 +74,23 @@ function submitForm(){
     const phoneNumber = $("#Mobile").val();
     const phoneNumber1 = $("#Phone").val();
     if(phoneNumber){
-        const fullPhone = `+${countryCode}${phoneNumber}`;
-        $("#Mobile").val(fullPhone);
+        if(phoneNumber.includes("+")){
+            const fullPhone = `${phoneNumber}`;
+            $("#Mobile").val(fullPhone);
+            
+        }else{
+            const fullPhone = `+${countryCode}${phoneNumber}`;
+            $("#Mobile").val(fullPhone);
+        }
     }
     if(phoneNumber1){
-        const fullPhone1 = `+${countryCodeForSecondPhone}${phoneNumber1}`;
-        $("#Phone").val(fullPhone1);
+        if(phoneNumber.includes("+")){
+            const fullPhone = `${phoneNumber}`;
+            $("#Mobile").val(fullPhone);
+        }else{
+            const fullPhone = `+${countryCode}${phoneNumber}`;
+            $("#Mobile").val(fullPhone);
+        }
     }
     
     $("#myForm").submit();

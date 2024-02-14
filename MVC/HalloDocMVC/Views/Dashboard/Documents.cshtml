@@ -1,0 +1,124 @@
+@model List<ViewDocuments>;
+@{
+    ViewData["Title"] = "Documents";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+
+<main class="documents-section container-sm">
+        <div class="d-flex justify-content-end mt-4">
+            <a asp-controller="Dashboard" asp-action="Index" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+        </div>
+        <h2 class="mt-5 fw-bold">Documents</h1>
+        
+            <div class="concierge-request-form border p-4 mt-3 mb-3 rounded shadow">
+                <div class="d-flex flex-column">
+                    <small class="text-secondary">Patient Name</small>
+                    <div class="d-flex align-items-center gap-2">
+                        <h4 class="patient-name fw-bold">@Model.FirstOrDefault()?.PatientName</h4>
+                        <p>(MD56465498456549874654)</p>
+                    </div>
+                    <small class="text-secondary">Check here for any files that you and doctors of your subsequents requestors has attached for review.</small>
+
+                    <form asp-controller="Dashboard" asp-action="UploadFile" method="post" enctype="multipart/form-data">
+                        <div class="input-group mt-5 mb-5">
+                            <input type="hidden" name="requestId" value="@ViewBag.requestId">
+                            <input type="hidden" name="userId" value="@ViewBag.userId">
+                            <input type="file" class="form-control" name="file" id="inputGroupFile02">
+                            <button class="input-group-text theme-btn" type="submit">Upload</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div>
+                    <div class="d-flex justify-content-between w-100">
+                        <h4 class="fw-bold">Documents</h3>
+                        <button class="btn theme-btn">Download All</button>
+                    </div>
+                    
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="example" class="display" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="form-check-input" id="selectAll"></th>
+                                        <th>File</th>
+                                        <th>Uploader</th>
+                                        <th class="sortable">Upload Date <i class="fa-solid fa-chevron-up sorting-icons"></i> </th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach(var item in Model){
+                                            <tr>
+                                                <td><input type="checkbox"  class="form-check-input selectRow"></td>
+                                                <td>
+                                                    @{var filename = string.Join("_",  @item.FileName.Split("_").Skip(1));}
+                                                    @filename
+                                                </td>
+                                                <td>@item.UploaderName</td>
+                                                <td>@item.UploadDate</td>
+                                                <td> <a class="btn theme-btn" asp-action="SingleDownload" asp-route-docName="@item.FilePath">
+                                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                                </a>
+                                                </td>
+                                            </tr>
+                                            }
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+            </div>
+    </main>
+
+    <script>
+        $(document).ready(function(){
+            $("#myModal").modal('show');
+        })
+        document.addEventListener("DOMContentLoaded", function() {
+        var table = document.getElementById("example");
+        var selectAllCheckbox = document.getElementById("selectAll");
+
+        // Individual row selection
+        table.addEventListener("click", function(event) {
+            if (event.target.classList.contains("selectRow")) {
+                var row = event.target.closest("tr");
+                row.classList.toggle("selected");
+                updateSelectAllCheckbox();
+            }
+        });
+
+        // Select all rows
+        selectAllCheckbox.addEventListener("click", function() {
+            var isChecked = selectAllCheckbox.checked;
+            var checkboxes = table.querySelectorAll(".selectRow");
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = isChecked;
+                checkbox.closest("tr").classList.toggle("selected", isChecked);
+            });
+        });
+
+        // Update the state of the "Select All" checkbox
+        function updateSelectAllCheckbox() {
+            var checkboxes = table.querySelectorAll(".selectRow");
+            var allChecked = true;
+            checkboxes.forEach(function(checkbox) {
+                if (!checkbox.checked) {
+                    allChecked = false;
+                }
+            });
+            selectAllCheckbox.checked = allChecked;
+        }
+});
+
+
+        $(".sortable").click(function(){
+            var column = $(this).data('sort');
+            var order = $(this).hasClass('asc') ? 'desc' : 'asc';
+            $('.sortable').removeClass('asc desc');
+            $(this).addClass(order);
+            $(this).find('.sorting-icons').toggleClass('fa-chevron-up fa-chevron-down');
+        });
+    </script>

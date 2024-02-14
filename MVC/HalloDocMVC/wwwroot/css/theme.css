@@ -7,6 +7,10 @@
     --main-color : #01bce9;
     --white-color : #ffffff;
 }
+p,ul{
+    margin: 0;
+    padding: 0;
+}
 
 /* Dark Theme Color */
 [data-bs-theme=dark]{
@@ -35,17 +39,17 @@
   }
 
 /* Theme Button CSS */
-#theme-btn{
+#theme-btn,.theme-btn,.secondary-theme-btn:hover{
     border: 0.5px solid var(--main-color);
     color: var(--main-color);
     z-index: 1;
 }
-#theme-btn:hover{
+#theme-btn:hover,.theme-btn:hover,.secondary-theme-btn{
     background-color: var(--main-color);
     color: var(--white-color);
 }
 
-.form-control:focus {
+.form-control:focus, .form-select:focus {
     border-color: var(--main-color);
     box-shadow: none;
 }

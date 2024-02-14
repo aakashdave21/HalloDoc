@@ -1,4 +1,4 @@
-@model HalloDocMVC.ViewModels.PatientRequestViewModel;
+@model PatientRequestViewModel;
 @{
     ViewData["Title"] = "Patient Request Page";
     <link rel="stylesheet" href="~/css/PatientRequest.css" />
@@ -10,7 +10,7 @@
             <a asp-controller="Home" asp-action="SubmitRequest" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
         </div>
 
-        <form asp-action="PatientPost" id="myForm">
+        <form asp-action="PatientPost" id="myForm" method="post" enctype="multipart/form-data">
                     <div class="patient-request-form border p-4 mt-3 mb-3 rounded shadow">
             <div>
                 <h4>Patient Information</h4>
@@ -127,8 +127,9 @@
             <div class="mt-4">
                 <h4>(Optional) Upload Photo/Document</h4>
                 <div class="input-group mb-3">
-                    <input asp-for="Documentsofpatient" type="file" class="form-control" id="inputGroupFile02">
-                    <label asp-for="Documentsofpatient" class="input-group-text upload-file-btn" for="inputGroupFile02">Upload</label>
+                    <input type="file" class="form-control" id="inputGroupFile02" name="file" accept="application/pdf">
+
+                    <label class="input-group-text upload-file-btn" for="inputGroupFile02">Upload</label>
                   </div>
             </div>
             <div class="mt-5 mb-3 d-flex justify-content-end">

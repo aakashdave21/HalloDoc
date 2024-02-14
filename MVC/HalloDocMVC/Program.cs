@@ -1,6 +1,11 @@
-// using HalloDocMVC.Data;
+
 using Microsoft.EntityFrameworkCore;
-using HalloDocMVC.Data;
+using HalloDocRepository.DataModels;
+using HalloDocRepository.Implementation;
+using HalloDocRepository.Interfaces;
+using HalloDocService.Implementation;
+using HalloDocService.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +13,19 @@ var builder = WebApplication.CreateBuilder(args);
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HalloDocContext>(q => q.UseNpgsql());
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IPatientLoginRepo, PatientLoginRepo>();
+builder.Services.AddScoped<IPatientLogin, PatientLogin>();
+builder.Services.AddScoped<IPatientRequestRepo, PatientRequestRepo>();
+builder.Services.AddScoped<IPatientRequestService, PatientRequestService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IDashboardRepo, DashboardRepo>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(Option => {
+    Option.LoginPath = "/PatientLogin/Index";
+    Option.ExpireTimeSpan = TimeSpan.FromDays(7);
+});
+
 
 var app = builder.Build();
 
@@ -23,7 +41,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

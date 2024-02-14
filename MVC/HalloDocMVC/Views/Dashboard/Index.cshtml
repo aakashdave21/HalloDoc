@@ -1,0 +1,80 @@
+@model DashboardViewModel;
+@{
+    ViewData["Title"] = "Submit Request Page";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<main class="container-fluid-sm m-5">
+    <h2 class="mt-5">Medical History</h1>
+
+        <div class="concierge-request-form border p-4 mt-3 mb-3 rounded shadow">
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn theme-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Create
+                    New Request</button>
+            </div>
+
+            <div class="table-responsive">
+                <table id="myTable" class="table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th class="sortable">Created Date <i class="fa-solid fa-chevron-up sorting-icons"></i> </th>
+                            <th>Current Status</th>
+                            <th>Document</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in Model.UserRequests){
+                            <tr>
+                            <td>@(((DateTime)item.Createdat).ToString("yyyy-MM-dd"))</td>
+                            <td>@Model.GetUserRequestType(item.Status)</td>
+                            <td>
+                                @{
+                                    if(@item.NoOfRequests > 0){
+                                        <a style="white-space: nowrap;" type="button" class="btn theme-btn" asp-action="Documents" asp-route-RequestId="@item.Id" >
+                                           (<span>@item.NoOfRequests</span>) Document
+                                        </a>
+                                    }
+                                }
+                                
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</main>
+
+<!-- Modal -->
+<div class="modal fade shadow-lg " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Create New Request</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Here I want to create request for...</p>
+                <div class="d-flex gap-2 justify-content-center mt-2">
+                    <button type="button" class="btn secondary-theme-btn">Me</button>
+                    <button type="button" class="btn theme-btn">Someone Else</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn secondary-theme-btn">Continue</button>
+                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(".sortable").click(function () {
+        var column = $(this).data('sort');
+        var order = $(this).hasClass('asc') ? 'desc' : 'asc';
+        $('.sortable').removeClass('asc desc');
+        $(this).addClass(order);
+        $(this).find('.sorting-icons').toggleClass('fa-chevron-up fa-chevron-down');
+    });
+</script>
