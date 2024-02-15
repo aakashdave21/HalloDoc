@@ -12,6 +12,10 @@ p,ul{
     padding: 0;
 }
 
+th{
+    cursor: default;
+}
+
 /* Dark Theme Color */
 [data-bs-theme=dark]{
     /* --bs-body-bg: #333333; */

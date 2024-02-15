@@ -10,7 +10,7 @@ public class PatientRequestService : IPatientRequestService
     private readonly IPatientLoginRepo _patientLoginRepo;
 
     // Patient Request Implementation
-    public PatientRequestService(IPatientRequestRepo patientRequestRepo,IPatientLoginRepo patientLoginRepo)
+        public PatientRequestService(IPatientRequestRepo patientRequestRepo,IPatientLoginRepo patientLoginRepo)
     {
         _patientRequestRepo = patientRequestRepo;
         _patientLoginRepo = patientLoginRepo;
@@ -60,9 +60,9 @@ public class PatientRequestService : IPatientRequestService
                 City = viewRequest.City,
                 State = viewRequest.State,
                 Zipcode = viewRequest.Zipcode,
-                Strmonth = viewRequest.Birthdate.Value.ToString("MMMM"),
-                Intyear = viewRequest.Birthdate.Value.Year,
-                Intdate = viewRequest.Birthdate.Value.Day
+                Strmonth = DateOnly.Parse(viewRequest.Birthdate).ToString("MMMM"),
+                Intyear = DateOnly.Parse(viewRequest.Birthdate).Year,
+                Intdate = DateOnly.Parse(viewRequest.Birthdate).Day
             };
             _patientRequestRepo.AddPatientInfoForExistedUser(patientInfo);
 
@@ -101,7 +101,7 @@ public class PatientRequestService : IPatientRequestService
                 City = viewRequest.City,
                 State = viewRequest.State,
                 Zipcode = viewRequest.Zipcode,
-                Birthdate = viewRequest.Birthdate,
+                Birthdate = DateOnly.Parse(viewRequest.Birthdate),
                 Createddate = DateTime.Now
             };
             _patientRequestRepo.NewUserAdd(newPatient);
@@ -134,9 +134,9 @@ public class PatientRequestService : IPatientRequestService
                 City = viewRequest.City,
                 State = viewRequest.State,
                 Zipcode = viewRequest.Zipcode,
-                Strmonth = viewRequest.Birthdate.Value.ToString("MMMM"),
-                Intyear = viewRequest.Birthdate.Value.Year,
-                Intdate = viewRequest.Birthdate.Value.Day
+                Strmonth = DateOnly.Parse(viewRequest.Birthdate).ToString("MMMM"),
+                Intyear = DateOnly.Parse(viewRequest.Birthdate).Year,
+                Intdate = DateOnly.Parse(viewRequest.Birthdate).Day
             };
             _patientRequestRepo.NewPatientAdd(newPatientInfo);
 
@@ -193,9 +193,9 @@ public class PatientRequestService : IPatientRequestService
                         City = familyRequest.City,
                         State = familyRequest.State,
                         Zipcode = familyRequest.Zipcode,
-                        Strmonth = familyRequest.Birthdate.Value.ToString("MMMM"),
-                        Intyear = familyRequest.Birthdate.Value.Year,
-                        Intdate = familyRequest.Birthdate.Value.Day
+                        Strmonth = DateOnly.Parse(familyRequest.Birthdate).ToString("MMMM"),
+                        Intyear = DateOnly.Parse(familyRequest.Birthdate).Year,
+                        Intdate = DateOnly.Parse(familyRequest.Birthdate).Day
                     };
                     _patientRequestRepo.AddPatientInfoForExistedUser(patientInfo);
 
@@ -236,9 +236,9 @@ public class PatientRequestService : IPatientRequestService
                         City = familyRequest.City,
                         State = familyRequest.State,
                         Zipcode = familyRequest.Zipcode,
-                        Strmonth = familyRequest.Birthdate.Value.ToString("MMMM"),
-                        Intyear = familyRequest.Birthdate.Value.Year,
-                        Intdate = familyRequest.Birthdate.Value.Day
+                        Strmonth = DateOnly.Parse(familyRequest.Birthdate).ToString("MMMM"),
+                        Intyear = DateOnly.Parse(familyRequest.Birthdate).Year,
+                        Intdate = DateOnly.Parse(familyRequest.Birthdate).Day
                 };
                 _patientRequestRepo.NewPatientAdd(newPatientInfo);
 

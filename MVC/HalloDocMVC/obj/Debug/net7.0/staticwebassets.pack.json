@@ -477,12 +477,24 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\js\\bootstrap.min.js.map"
     },
     {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\1e01df60-f6fd-4a20-abd7-b3ba1c3304e6_471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png",
+      "PackagePath": "staticwebassets\\uploads\\1e01df60-f6fd-4a20-abd7-b3ba1c3304e6_471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png"
+    },
+    {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\431d4c5c-1c19-49b8-aca6-7b7d9366cd96_Untitled.png",
       "PackagePath": "staticwebassets\\uploads\\431d4c5c-1c19-49b8-aca6-7b7d9366cd96_Untitled.png"
     },
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png",
       "PackagePath": "staticwebassets\\uploads\\471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\6a7001cc-1d83-4063-95f5-ec281144a1dd_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png",
+      "PackagePath": "staticwebassets\\uploads\\6a7001cc-1d83-4063-95f5-ec281144a1dd_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\73bd0fec-57d3-4de9-83c7-dbcb9597dde4_471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png",
+      "PackagePath": "staticwebassets\\uploads\\73bd0fec-57d3-4de9-83c7-dbcb9597dde4_471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png"
     },
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\95d65b4e-a7d0-48d9-aaff-4e49e7eaf163_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png",
@@ -495,6 +507,10 @@
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\ae1f30e1-18a6-45cf-9441-19190732d835_Untitled.png",
       "PackagePath": "staticwebassets\\uploads\\ae1f30e1-18a6-45cf-9441-19190732d835_Untitled.png"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\cfa6389a-355e-446a-9fd1-85fa300aca78_Untitled.png",
+      "PackagePath": "staticwebassets\\uploads\\cfa6389a-355e-446a-9fd1-85fa300aca78_Untitled.png"
     },
     {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.HalloDocMVC.Microsoft.AspNetCore.StaticWebAssets.props",

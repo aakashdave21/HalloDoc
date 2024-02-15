@@ -4,19 +4,42 @@ $(document).ready(function(){
     $("#myModal").modal('show');
 })
 
+function setThemePreference(theme) {
+    localStorage.setItem('theme', theme);
+}
+
+// Function to retrieve the theme preference
+function getThemePreference() {
+    return localStorage.getItem('theme');
+}
 
 $("#theme-btn").click(function(){
     if($("html").attr("data-bs-theme")==="light"){
         $("html").attr("data-bs-theme","dark")
         $("#theme-btn .fa-moon").css("display","none")
         $("#theme-btn .fa-sun").css("display","inline")
-
+        setThemePreference('dark');
     }else{
         $("html").attr("data-bs-theme","light")
         $("#theme-btn .fa-moon").css("display","inline")
         $("#theme-btn .fa-sun").css("display","none")
+        setThemePreference('light');
     }
 })
+
+$(document).ready(function() {
+    var themePreference = getThemePreference();
+    if (themePreference) {
+        $("html").attr("data-bs-theme", themePreference);
+        if (themePreference === "dark") {
+            $("#theme-btn .fa-moon").css("display", "none");
+            $("#theme-btn .fa-sun").css("display", "inline");
+        } else {
+            $("#theme-btn .fa-moon").css("display", "inline");
+            $("#theme-btn .fa-sun").css("display", "none");
+        }
+    }
+});
 
 const hiddenInputMobile = document.querySelector("#hiddenInput");
 

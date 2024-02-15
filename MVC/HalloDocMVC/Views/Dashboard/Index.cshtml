@@ -17,7 +17,7 @@
                 <table id="myTable" class="table table-striped" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="sortable">Created Date <i class="fa-solid fa-chevron-up sorting-icons"></i> </th>
+                            <th class="sortable asc">Created Date <i class="fa-solid fa-chevron-up sorting-icons"></i> </th>
                             <th>Current Status</th>
                             <th>Document</th>
                         </tr>
@@ -25,7 +25,7 @@
                     <tbody>
                         @foreach(var item in Model.UserRequests){
                             <tr>
-                            <td>@(((DateTime)item.Createdat).ToString("yyyy-MM-dd"))</td>
+                            <td class="created-date">@(((DateTime)item.Createdat).ToString("MMM dd, yyyy"))</td>
                             <td>@Model.GetUserRequestType(item.Status)</td>
                             <td>
                                 @{
@@ -57,8 +57,8 @@
             <div class="modal-body">
                 <p>Here I want to create request for...</p>
                 <div class="d-flex gap-2 justify-content-center mt-2">
-                    <button type="button" class="btn secondary-theme-btn">Me</button>
-                    <button type="button" class="btn theme-btn">Someone Else</button>
+                    <a type="button" class="btn secondary-theme-btn" asp-controller="Dashboard" asp-action="NewRequest">Me</a>
+                    <a type="button" class="btn theme-btn" asp-controller="Dashboard" asp-action="AnotherUserRequest" >Someone Else</a>
                 </div>
             </div>
             <div class="modal-footer">
@@ -76,5 +76,26 @@
         $('.sortable').removeClass('asc desc');
         $(this).addClass(order);
         $(this).find('.sorting-icons').toggleClass('fa-chevron-up fa-chevron-down');
+        sortTable(order);
     });
+
+    function sortTable(order){
+        const tbody = document.querySelector("tbody");
+        const tr = document.querySelectorAll("tbody tr");
+        const trArray = Array.from(tr);
+        
+        trArray.sort((a, b) => {
+            const dateA = new Date(a.querySelector('.created-date').textContent);
+            const dateB = new Date(b.querySelector('.created-date').textContent);
+            
+            if (order === 'asc') {
+                return dateA - dateB;
+            } else if (order === 'desc') {
+                return dateB - dateA;
+            }
+    });
+
+    // Re-append sorted table rows to the table body
+    trArray.forEach(row => tbody.appendChild(row));
+    }
 </script>
