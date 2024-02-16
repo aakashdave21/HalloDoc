@@ -7,4 +7,7 @@ public interface IPatientLoginRepo
     Aspnetuser userDetailsFromUserName(string username);
 
     User UserDetailsFetch(string email);
+    void StoreResetToken(int AspUserId, string token, DateTime expiry);
+
+    Aspnetuser? GetResetTokenExpiry(int AspUserId, string token);
 }

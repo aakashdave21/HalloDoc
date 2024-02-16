@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
-<main class="container-fluid-sm m-5">
+<main class="container-fluid-sm p-sm-5 p-2">
     <h2 class="mt-5">Medical History</h1>
 
         <div class="concierge-request-form border p-4 mt-3 mb-3 rounded shadow">
@@ -17,15 +17,15 @@
                 <table id="myTable" class="table table-striped" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="sortable asc">Created Date <i class="fa-solid fa-chevron-up sorting-icons"></i> </th>
-                            <th>Current Status</th>
-                            <th>Document</th>
+                            <th class="sortable asc" style="white-space: nowrap;">Created Date <i class="fa-solid fa-chevron-up sorting-icons"></i> </th>
+                            <th style="white-space: nowrap;">Current Status</th>
+                            <th style="white-space: nowrap;">Document</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach(var item in Model.UserRequests){
                             <tr>
-                            <td class="created-date">@(((DateTime)item.Createdat).ToString("MMM dd, yyyy"))</td>
+                            <td class="created-date" style="white-space: nowrap;">@(((DateTime)item.Createdat).ToString("MMM dd, yyyy"))</td>
                             <td>@Model.GetUserRequestType(item.Status)</td>
                             <td>
                                 @{

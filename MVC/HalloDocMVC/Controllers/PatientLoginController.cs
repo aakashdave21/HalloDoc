@@ -10,12 +10,16 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using System.Net.Mail;
+using System.Net;
 
 namespace HalloDocMVC.Controllers;
 
 public class PatientLoginController : Controller
 {
         private readonly IPatientLogin _patientLoginService; 
+       
+
 
         public PatientLoginController(IPatientLogin patientLoginService)
         {
@@ -100,16 +104,92 @@ public class PatientLoginController : Controller
         {
             return View(nameof(ForgotPassword), user); // Return the view with validation errors
         }
-        
-        var userDetails = _patientLoginService.FindUserFromUsername(user);
-        
-        if(userDetails!=null){
-            // Send the create Account Link to User Via Email ********
-            TempData["success"] = "Reset Link Sent to User Via Email " + userDetails.Email;
+        try
+        {
+             var userDetails = _patientLoginService.FindUserFromUsername(user);
+                if(userDetails!=null){
+                        string token = Guid.NewGuid().ToString();
+                        var callbackUrl = Url.Action("ResetPassword", "PatientLogin", new { userId = userDetails.Id, token }, protocol: HttpContext.Request.Scheme);
+                        DateTime expirationTime = DateTime.UtcNow.AddHours(1);
+                        _patientLoginService.StoreResetToken(userDetails.Id,token,expirationTime);
+                        Console.WriteLine(callbackUrl);
+
+                        // string fromMail = "testkirtan04@gmail.com";
+                        // // string fromMail = "test.dotnet@etatvasoft.com";
+                        // // string fromMail = "project.homebuddy.01@gmail.com";
+                        // // string fromMail = "architsolnki@gmail.com";
+                        // // string fromPassword = "zdjm lbja mwgi zyou";
+                        // string fromPassword = "cihv cpfv toya yjfu";
+                        // // string fromPassword = "P}N^{z-]7Ilp";
+                        // // string fromPassword = "xjoytqbqgfwyqwim";
+                        // // string fromPassword = "cawb cjlh tftj tuve";
+
+                        // MailMessage msg = new MailMessage();
+                        // msg.From = new MailAddress(fromMail);
+                        // msg.Subject = "Test";
+                        // msg.To.Add(new MailAddress("aakashdave21@gmail.com"));
+                        // msg.Body = "Test";
+                        // msg.IsBodyHtml = true;
+
+                        // var smtpClient = new SmtpClient("smtp.gmail.com"){
+                        // // var smtpClient = new SmtpClient("mail.etatvasoft.com"){
+                        //     Port = 587,
+                        //     Credentials = new NetworkCredential(fromMail,fromPassword),
+                        //     EnableSsl = true,
+                            
+                        // };
+
+                        // smtpClient.Send(msg);
+                    
+                        // var callbackUrl = Url.Action("Index", "Forgot", new { userId = user.Id, token }, protocol: HttpContext.Request.Scheme);
+
+                        TempData["success"] = "Reset Link Sent to User Via Email " + userDetails.Email;
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else{
+                        TempData["error"] = "User does not exists";
+                        return RedirectToAction(nameof(ForgotPassword));
+                    }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            TempData["error"] = "Internal Server Error";
             return RedirectToAction(nameof(Index));
-        }else{
-            TempData["error"] = "User does not exists";
-            return RedirectToAction(nameof(ForgotPassword));
+        }
+       
+        
+        
+    }
+
+    public IActionResult ResetPassword(){
+        return View();
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> ResetPasswordPost(UserResetPasswordViewModel user){
+         if (!ModelState.IsValid)
+        {
+            return View("ResetPassword"); // Return the view with validation errors
+        }
+        try
+        {
+            var token = _patientLoginService.GetResetTokenExpiry(user.UserId,user.UserToken);
+            if(token.ResetToken==user.UserToken && token != null && token.ResetExpiration > DateTime.UtcNow){
+                TempData["success"] = "Password Reset Successfully !";
+                return RedirectToAction(nameof(Index));
+            }else if(token.ResetExpiration < DateTime.UtcNow){
+                 TempData["error"] = "Oops! Token Expires, Please Go To Login Page";
+                 return RedirectToAction(nameof(Index));
+            }
+             TempData["error"] = "Internal Server Error";
+            return View("ResetPassword");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction(nameof(Index));
         }
     }
 

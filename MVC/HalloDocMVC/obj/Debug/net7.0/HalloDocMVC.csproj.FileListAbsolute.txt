@@ -7,7 +7,13 @@ C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Hall
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\HalloDocMVC.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\HalloDocMVC.pdb
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\BCrypt.Net-Next.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\BouncyCastle.Cryptography.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Google.Apis.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Google.Apis.Auth.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Google.Apis.Core.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Google.Apis.Gmail.v1.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Humanizer.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\MailKit.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\MessagePack.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\MessagePack.Annotations.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Microsoft.AspNetCore.Razor.Language.dll
@@ -45,6 +51,7 @@ C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Micr
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\MimeKit.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Mono.TextTemplating.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Newtonsoft.Json.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Npgsql.dll
@@ -66,7 +73,9 @@ C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Syst
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\System.Composition.TypedParts.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\System.Configuration.ConfigurationManager.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\System.Drawing.Common.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\System.Management.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\System.Reflection.MetadataLoadContext.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\System.Security.Permissions.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\System.Windows.Extensions.dll
@@ -229,6 +238,8 @@ C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\zh-H
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Management.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\HalloDocRepository.dll
@@ -259,7 +270,6 @@ C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\obj\Debug\net7.0\refi
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\obj\Debug\net7.0\HalloDocMVC.pdb
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\obj\Debug\net7.0\HalloDocMVC.genruntimeconfig.cache
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\obj\Debug\net7.0\ref\HalloDocMVC.dll
-C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\BouncyCastle.Cryptography.dll
-C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\MimeKit.dll
-C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
-C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\obj\Debug\net7.0\HalloDocMVC.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Microsoft.AspNetCore.Identity.UI.dll

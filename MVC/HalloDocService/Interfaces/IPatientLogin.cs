@@ -11,4 +11,8 @@ public interface IPatientLogin
     Aspnetuser FindUserFromUsername(UserResetPasswordViewModel user);
 
     User UserDetailsFetch(string email); 
+
+    void StoreResetToken(int AspUserId, string token, DateTime expiry);
+    Aspnetuser? GetResetTokenExpiry(int AspUserId, string token);
+
 }

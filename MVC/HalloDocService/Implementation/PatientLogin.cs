@@ -36,4 +36,13 @@ public class PatientLogin : IPatientLogin
         return _userRepository.UserDetailsFetch(email);
     }
 
+    public void StoreResetToken(int AspUserId, string token, DateTime expiry){
+        _userRepository.StoreResetToken(AspUserId,token,expiry);
+    }
+
+    public Aspnetuser? GetResetTokenExpiry(int AspUserId, string token){
+        return _userRepository.GetResetTokenExpiry(AspUserId, token);
+    }
+
+
 }
