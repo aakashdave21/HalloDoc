@@ -1,0 +1,292 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root{
+    --main-color : #01bce9;
+    --white-color : #ffffff;
+}
+.col{
+    position: relative;
+}
+.col.active-col:before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    margin-left: -10px;
+    width: 0;
+    height: 0;
+    border-left: solid 10px transparent;
+    border-right: solid 10px transparent;
+}
+.card{
+    cursor: pointer;
+    transition: all 0.2s linear;
+}
+[data-bs-theme=dark] .card{
+    background-color: transparent;
+}
+
+.newUserCard{
+    color: #203f9a;
+    border: 1px solid #203f9a;
+    background-color: #cddaff;
+}
+.newUserCard:hover,.newUserCard.active{
+    background-color: #203f9a;
+    color: white;
+}
+.pendingUserCard{
+    color: #01bce9;
+    border: 1px solid #01bce9;
+    background-color: #cef6ff;
+}
+.pendingUserCard:hover,.pendingUserCard.active{
+    background-color: #01bce9;
+    color: white;
+}
+.activeUserCard{
+    color: #41843d;
+    border: 1px solid #41843d;
+    background-color: #e7ffe5;
+}
+.activeUserCard:hover,.activeUserCard.active{
+    background-color: #41843d;
+    color: white;
+}
+.concludeUserCard{
+    color: #c7619f;
+    border: 1px solid #c7619f;
+    background-color: #ffe0f3;
+}
+.concludeUserCard:hover,.concludeUserCard.active{
+    background-color: #c7619f;
+    color: white;
+}
+.closeUserCard{
+    color: #2476b7;
+    border: 1px solid #2476b7;
+    background-color: #e2f2ff;
+}
+.closeUserCard:hover,.closeUserCard.active{
+    background-color: #2476b7;
+    color: white;
+}
+.unpaidUserCard{
+    color: #a685bf;
+    border: 1px solid #a685bf;
+    background-color: #f4e5ff;
+}
+.unpaidUserCard:hover,.unpaidUserCard.active{
+    background-color: #a685bf;
+    color: white;
+}
+.newUserTip::before{
+    border-top: solid 10px #203f9a;
+}
+.pendingUserTip::before{
+    border-top: solid 10px #01bce9;
+}
+.activeUserTip::before{
+    border-top: solid 10px #41843d;
+}
+.concludeUserTip::before{
+    border-top: solid 10px #c7619f;
+}
+.closeUserTip::before{
+    border-top: solid 10px #2476b7;
+}
+.unpaidUserTip::before{
+    border-top: solid 10px #a685bf;
+}
+.feature-btns button{
+    margin: 5px;
+}
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+    
+}
+.has-search .form-control {
+    padding-left: 2.375rem;
+    max-width: 254px;
+}
+.dot {
+    height: 10px;
+    width: 10px;
+    
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .green-dot{
+    background-color: #41843d;
+  }
+  .orange-dot{
+    background-color: #e5942c;
+  }
+  .blue-dot{
+    background-color: #2476b7;
+  }
+  .pink-dot{
+    background-color: #c7619f;
+  }
+  .purple-dot{
+    background-color: #a685bf;
+  }
+  [data-bs-theme=dark] .table-info-btn a{
+    color: white;
+  }
+  .table-info-btn a{
+    text-decoration: none;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+  }
+  .request-table thead th{
+    white-space: nowrap;
+  }
+  .user-phone{
+    white-space: nowrap;
+  }
+.table>:not(caption)>*>* {
+    padding: 0.5rem 0.5rem;
+}
+table tr td{
+    background-color: transparent !important;
+}
+.patient-row{
+    background-color: #5fbc61;
+    color: white;
+}
+.patient-row td, .concierge-row td,.family-row td,.business-row td{
+    color: white;
+}
+.concierge-row{
+    background-color: #007ec5;
+    color: white;
+}
+.family-row{
+    background-color: #e5942c;
+    color: white;
+}
+.business-row{
+    background-color: #c7619f;
+    color: white;
+}
+[data-bs-theme=dark] .patient-row .btn ,[data-bs-theme=dark] .concierge-row td .btn,[data-bs-theme=dark] .family-row td .btn,[data-bs-theme=dark] .business-row td .btn{
+    color: white;
+    border: 1px solid white;
+}
+
+.patient-row td .btn,.concierge-row td .btn, .family-row td .btn, .business-row td .btn{
+    border: 1px solid white;
+    color: white;
+}
+tbody tr td .btn{
+    border: 1px solid black;
+}
+[data-bs-theme=dark] tbody tr td .btn{
+    color: white;
+    border: 1px solid white;
+}
+tbody tr td .btn:hover{
+    border: 1px solid rgb(199, 199, 199);
+}
+.patient-sm-address{
+    word-wrap: break-word;
+    max-width: 150px;
+}
+.patient-sm-name{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 150px;
+}
+.mobile-req-list li:hover{
+    background-color: #00000008;
+}
+.accordion-button::after {
+    width: 0;
+}
+.accordion-button:not(.collapsed) {
+    color: white;
+    background-color: #000000bf;
+    box-shadow: none;
+}
+.accordion-button:focus {
+    box-shadow: none;
+}
+.accordion-body p{
+    font-weight: 600;
+    color: gray;
+}
+.accordion-body p span{
+    font-weight: 400;
+    color: gray;
+}
+.req-btns .row button{
+    align-self: center;
+    width: 100%;
+    border-radius: 20px;
+}
+.popoverBox{
+    position: absolute;
+    left: -86px;
+    display: flex;
+    flex-direction: column;
+    /* gap: 8px; */
+    background: white;
+    top: 27px;
+    padding: 10px;
+}
+.dropdown-menu li{
+    padding: 0;
+}
+.btn-purple{
+    background-color: purple;
+    color: white;
+}
+
+    .warning-icon {
+        font-size: 60px;
+        border: 40px solid #ffefbd;
+        border-radius: 50%;
+        animation-name: animate-icon;
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+        animation-timing-function: linear;
+    }
+    @keyframes animate-icon {
+        from {border: 10px solid #ffefbd;}
+        to {border: 0 solid #ffefbd;}
+      }
+
+@media only screen and (max-width: 1024px){
+    .table-info-btn a{
+        font-size: 12px;
+    }
+}
+@media only screen and (max-width: 576px){
+    .feature-btns button{
+        margin: 0;
+    }
+    .has-search .form-control {
+        max-width: 100%;
+    }
+    .table-info-btn a{
+        font-size: 10px;
+        flex-direction: column;
+    }
+}

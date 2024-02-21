@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\HalloDocMVC.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\css\\AdminDashboard.css",
+      "PackagePath": "staticwebassets\\css\\AdminDashboard.css"
+    },
+    {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\css\\DashboardLayout.css",
       "PackagePath": "staticwebassets\\css\\DashboardLayout.css"
     },

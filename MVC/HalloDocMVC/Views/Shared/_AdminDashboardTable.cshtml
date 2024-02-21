@@ -1,0 +1,707 @@
+@* Table Upto Mobile Screen *@
+<div class="table-responsive mt-5 d-sm-block d-none">
+    <table class="table request-table">
+        <thead>
+            <tr>
+
+                <th scope="col" style="width: 25%; min-width:150px">Name</th>
+                <th scope="col">Date Of Birth</th>
+                @if (ViewBag.statusType == "close")
+                {
+                    <th scope="col">Region</th>
+                }
+                @if (ViewBag.statusType == "new" || ViewBag.statusType == "" || ViewBag.statusType == "pending" ||
+                ViewBag.statusType == "active")
+                {
+                    <th scope="col">Requestor</th>
+                }
+                @if (ViewBag.statusType == "new" || ViewBag.statusType == "")
+                {
+                    <th scope="col">Requested Date</th>
+                }
+                @if (ViewBag.statusType == "pending" || ViewBag.statusType == "active" || ViewBag.statusType ==
+                "conclude" || ViewBag.statusType == "close" || ViewBag.statusType == "unpaid")
+                {
+                    <th scope="col">Physician Name</th>
+                    <th scope="col">Date Of Service</th>
+                }
+                @if (ViewBag.statusType != "close")
+                {
+                    <th scope="col">Phone</th>
+                }
+                <th scope="col" style="width: 15%; min-width:150px">Address</th>
+                @if (ViewBag.statusType == "new" || ViewBag.statusType == "" || ViewBag.statusType == "pending" ||
+                ViewBag.statusType == "active" || ViewBag.statusType == "close")
+                {
+                    <th scope="col" style="width: 25%; min-width:150px">Notes</th>
+                }
+                <th scope="col">Chat With</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var item in Model.Requests)
+                {
+                    var requestTypeClass = "";
+                    if (item.RequestType == 1) requestTypeClass = "patient-row";
+                    if (item.RequestType == 2) requestTypeClass = "family-row";
+                    if (item.RequestType == 3) requestTypeClass = "concierge-row";
+                    if (item.RequestType == 4) requestTypeClass = "business-row";
+
+                    <tr class=@requestTypeClass>
+                        <td>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>
+                                    @{
+                                        var fullname = item.Firstname + ", " + item.Lastname;
+                                    }
+                                    @fullname
+                                </span>
+                                <button class="btn">
+                                    <i class="fas fa-envelope"></i>
+                                </button>
+                            </div>
+
+                        </td>
+                        <td>
+
+                            @{
+                                var bdate = item.BirthDate.Length > 3 ? item.BirthDate : "-";
+                            }
+                            @bdate
+                        </td>
+                        @if (ViewBag.statusType == "close")
+                        {
+                            <td>@item.Region</td>
+                        }
+                        @if (ViewBag.statusType == "new" || ViewBag.statusType == "" || ViewBag.statusType == "pending" ||
+                ViewBag.statusType == "active")
+                        {
+                            <td>@item.Requestor</td>
+                        }
+
+                        @if (ViewBag.statusType == "new" || ViewBag.statusType == "")
+                        {
+                            <td>@item.RequestedDate</td>
+                        }
+                        @if (ViewBag.statusType == "pending" || ViewBag.statusType == "active" || ViewBag.statusType ==
+                "conclude" || ViewBag.statusType == "close" || ViewBag.statusType == "unpaid")
+                        {
+                            <td>@item.PhysicianName</td>
+                            <td>@item.ServiceDate</td>
+                        }
+                        @if (ViewBag.statusType != "close")
+                        {
+                            <td>
+                                <button class="btn user-phone">
+                                    @item.Phonenumber
+                                </button>
+                                <small>(patient)</small>
+                            </td>
+                        }
+                        <td>
+                            @item.Address
+                        </td>
+                        @if (ViewBag.statusType == "new" || ViewBag.statusType == "" || ViewBag.statusType == "pending" ||
+                ViewBag.statusType == "active" || ViewBag.statusType == "close")
+                        {
+                            <td>
+                                @item.Notes
+                            </td>
+                        }
+                        <td>
+                            <div class="d-flex gap-2">
+                                @if (ViewBag.statusType == "pending" || ViewBag.statusType == "active" || ViewBag.statusType ==
+                        "conclude" || ViewBag.statusType == "close" || ViewBag.statusType == "unpaid")
+                                {
+                                    <button class="btn">
+                                        Patient
+                                    </button>
+                                }
+                                <button class="btn">
+                                    Provider
+                                </button>
+                            </div>
+                        </td>
+                        <td class="position-relative">
+                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Action
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">View Case</a></li>
+                                <li><a class="dropdown-item" href="#">View Uploads</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                        data-bs-target="#assignCaseModal">Assign Case</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                        data-bs-target="#transferModal">Transfer</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                        data-bs-target="#clearCaseModal">Clear Case</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                        data-bs-target="#cancleCaseModal">Cancle Case</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                        data-bs-target="#blockCaseModal">Block Case</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                        data-bs-target="#sendAgreementModal">Send Agreement</a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@* Mobile Screen View *@
+<div class="mobile-req-list d-sm-none mt-4">
+    @{
+        int index = 0;
+        foreach (var item in Model.Requests)
+        {
+
+            var requestTypeDot = "";
+            if (item.RequestType == 1) requestTypeDot = "<p><span class='dot green-dot'></span> Patient</p>";
+            if (item.RequestType == 2) requestTypeDot = "<p><span class='dot orange-dot'></span> Friend/Family</p>";
+            if (item.RequestType == 3) requestTypeDot = "<p><span class='dot blue-dot'></span> Concierge</p>";
+            if (item.RequestType == 4) requestTypeDot = "<p><span class='dot pink-dot'></span> Business</p>";
+
+
+            <div class="accordion" id="accordian-@index">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#panelsStayOpen-collapse-@index" aria-expanded="false">
+                            <div class="d-flex justify-content-between w-100">
+                                <div>
+                                    <p class="patient-sm-name">@{
+                                            var fullname = item.Firstname + ", " + item.Lastname;
+                                        } @fullname
+                                    </p>
+                                    <p class="patient-sm-address">
+                                        @item.Address
+                                    </p>
+                                </div>
+                                <div>
+                                    @Html.Raw(requestTypeDot)
+                                </div>
+
+                            </div>
+                        </button>
+                    </h2>
+
+                    @if (ViewBag.statusType == "new")
+                    {
+                        <div id="panelsStayOpen-collapse-@index" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div>
+                                    <p>Date of Birth : <span>@item.BirthDate</span> </p>
+                                    <p>Email : <span>@item.Email</span> </p>
+                                    <p>Patient : <span>@item.Phonenumber</span> </p>
+                                    <p>Requestor : <span>@item.Requestor</span>
+                                    </p>
+                                </div>
+                                <div class="req-btns mt-2">
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-purple">
+                                                Assign Case
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-danger">
+                                                Cancle Case
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                View Notes
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-danger">
+                                                Block Patient
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                Email
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end align-items-center gap-2 mt-3">
+                                    <p>chat with : </p>
+                                    <a class="btn theme-btn">Patient</a>
+                                    <a class="btn theme-btn">Provider</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (ViewBag.statusType == "pending")
+                    {
+                        <div id="panelsStayOpen-collapse-@index" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div>
+                                    <p>Date of Birth : <span>@item.BirthDate</span> </p>
+                                    <p>Email : <span>@item.Email</span> </p>
+                                    <p>Patient : <span>@item.Phonenumber</span> </p>
+                                    <p>Transfer Notes : <span></span> </p>
+                                    <p>Date Of Service : <span>@item.ServiceDate</span> </p>
+                                    <p>Physician : <span>@item.PhysicianName</span> </p>
+                                    <p>Requestor : <span>@item.Requestor</span>
+                                    </p>
+                                </div>
+                                <div class="req-btns mt-2">
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-warning">
+                                                Send Agreement
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                View Notes
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-info">
+                                                Transfer
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                View Uplaods
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-warning">
+                                                Clear Case
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                Email
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end align-items-center gap-2 mt-3">
+                                    <p>chat with : </p>
+                                    <a class="btn theme-btn">Patient</a>
+                                    <a class="btn theme-btn">Provider</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (ViewBag.statusType == "active")
+                    {
+                        <div id="panelsStayOpen-collapse-@index" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div>
+                                    <p>Date of Birth : <span>@item.BirthDate</span> </p>
+                                    <p>Email : <span>@item.Email</span> </p>
+                                    <p>Patient : <span>@item.Firstname , @item.Lastname</span> </p>
+                                    <p>Transfer Notes : <span>Admin Transfereed notes to physcian and
+                                            physician
+                                            transferred to me</span> </p>
+                                    <p>Date of Service : <span>@item.ServiceDate</span> </p>
+                                    <p>Physician : <span>@item.PhysicianName</span> </p>
+                                    <p>Requestor : <span>@item.Requestor</span>
+                                    </p>
+                                </div>
+                                <div class="req-btns mt-2">
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                View Notes
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                Doctor Notes
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                View Uploads
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                Encounter
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-warning">
+                                                Orders
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                Email
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end align-items-center gap-2 mt-3">
+                                    <p>chat with : </p>
+                                    <a class="btn theme-btn">Patient</a>
+                                    <a class="btn theme-btn">Provider</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (ViewBag.statusType == "conclude")
+                    {
+                        <div id="panelsStayOpen-collapse-@index" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div>
+                                    <p>Date of Birth : <span>@item.BirthDate</span> </p>
+                                    <p>Email : <span>@item.Email</span> </p>
+                                    <p>Patient : <span>@item.Firstname , @item.Lastname</span> </p>
+
+                                    <p>Date of Service : <span>@item.ServiceDate</span> </p>
+                                    <p>Physician : <span>@item.PhysicianName</span> </p>
+                                </div>
+                                <div class="req-btns mt-2">
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                View Notes
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                Doctor Notes
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                View Uploads
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                Encounter
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-warning">
+                                                Orders
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                Email
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end align-items-center gap-2 mt-3">
+                                    <p>chat with : </p>
+                                    <a class="btn theme-btn">Patient</a>
+                                    <a class="btn theme-btn">Provider</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (ViewBag.statusType == "close")
+                    {
+                        <div id="panelsStayOpen-collapse-@index" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div>
+                                    <p>Date of Birth : <span>@item.BirthDate</span> </p>
+                                    <p>Email : <span>@item.Email</span> </p>
+                                    <p>Patient : <span>@item.Firstname , @item.Lastname</span> </p>
+                                    <p>Transfer Notes : <span>Admin Transfereed notes to physcian and
+                                            physician
+                                            transferred to me</span> </p>
+                                    <p>Date of Service : <span>@item.ServiceDate</span> </p>
+                                    <p>Physician : <span>@item.PhysicianName</span> </p>
+                                    <p>Region : <span>@item.Region</span> </p>
+                                </div>
+                                <div class="req-btns mt-2">
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-danger">
+                                                Close Case
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                View Notes
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                Doctor Notes
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                View Uploads
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                Encounter
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-warning">
+                                                Clear Case
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                Email
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end align-items-center gap-2 mt-3">
+                                    <p>chat with : </p>
+                                    <a class="btn theme-btn">Patient</a>
+                                    <a class="btn theme-btn">Provider</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (ViewBag.statusType == "unpaid")
+                    {
+                        <div id="panelsStayOpen-collapse-@index" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div>
+                                    <p>Email : <span>@item.Email</span> </p>
+                                    <p>Patient : <span>@item.Firstname , @item.Lastname</span> </p>
+
+                                    <p>Date of Service : <span>@item.ServiceDate</span> </p>
+                                    <p>Physician : <span>@item.PhysicianName</span> </p>
+
+                                </div>
+                                <div class="req-btns mt-2">
+                                    <div class="row g-2">
+
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                View Notes
+                                            </button>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                View Uploads
+                                            </button>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <button class="btn btn-sm btn-success">
+                                                Email
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end align-items-center gap-2 mt-3">
+                                    <p>chat with : </p>
+                                    <a class="btn theme-btn">Patient</a>
+                                    <a class="btn theme-btn">Provider</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            index++;
+        }
+    }
+</div>
+
+
+@* Cancle Case Modal *@
+<div class="modal fade shadow-lg " id="cancleCaseModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Confirmation Cancelation</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4>Patient Name : <span class="patient-name-modal">Test, Test</span></h4>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Reason For Cancelation</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <div class="form-floating mt-2">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="Symptoms"
+                        style="height: 100px"></textarea>
+                    <label for="Symptoms" style="white-space: normal;">Please Provide Additional Notes</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn secondary-theme-btn">Confirm</button>
+                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* Assign Case Modal *@
+<div class="modal fade shadow-lg " id="assignCaseModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Assign Request</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <small class="text-muted">To assign this request, search and select physician.</small>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Search By Region</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <select class="form-select mt-2" aria-label="Default select example">
+                    <option selected>Select Physician</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <div class="form-floating mt-2">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="Symptoms"
+                        style="height: 100px"></textarea>
+                    <label for="Symptoms" style="white-space: normal;">Description</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn secondary-theme-btn">Confirm</button>
+                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* Block Case Modal *@
+<div class="modal fade shadow-lg " id="blockCaseModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Confirm Block</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4>Patient Name : <span class="patient-name-modal">Test, Test</span></h4>
+                <div class="form-floating mt-2">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="Symptoms"
+                        style="height: 100px"></textarea>
+                    <label for="Symptoms" style="white-space: normal;">Reason For Block Request</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn secondary-theme-btn">Confirm</button>
+                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* transfer Case Modal *@
+<div class="modal fade shadow-lg " id="transferModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Transfer Request</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <small class="text-muted">To transfer this request, search and select physician.</small>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Search By Region</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <select class="form-select mt-2" aria-label="Default select example">
+                    <option selected>Select Physician</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <div class="form-floating mt-2">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="Symptoms"
+                        style="height: 100px"></textarea>
+                    <label for="Symptoms" style="white-space: normal;">Description</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn secondary-theme-btn">Confirm</button>
+                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* send agreeement Modal *@
+<div class="modal fade shadow-lg " id="sendAgreementModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Send Agreement</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <small class="text-muted">To Send Agreement please make sure you are updating correct contact information below the responsible party</small>
+                     <div class=" mb-3">
+                        <div class="form-floating">
+                            <input  type="email" class="form-control" id="email" placeholder="email">
+                            <label  for="email">Email</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class=" mb-3">
+                        <div class="form-floating">
+                            <input  id="phone" class="form-control" type="tel" placeholder="phone"/>
+                            <label  for="phone">Phone</label>
+                        </div>
+                        <span  class="text-danger" id="mobile-valid"></span>
+                    </div>
+                    
+            <div class="modal-footer">
+                <button type="button" class="btn secondary-theme-btn">Confirm</button>
+                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* Clear Case *@
+<div class="modal fade" id="clearCaseModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-md-5 p-1">
+            <div class="modal-body d-flex flex-column justify-content-center align-items-center">
+                <div style="
+                        height: 150px;
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    ">
+                    <i class="fa-solid fa-circle-info text-warning warning-icon"></i>
+                </div>
+                <h5>Confirmation for Clear Case</h5>
+                <p class="mt-2">Are you sure want to clear this request? Once clear this request you are not able to see this request. </p>
+                <div class="d-flex">
+                    <button type="button" class="btn secondary-theme-btn me-2" >Clear</button>
+                    <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

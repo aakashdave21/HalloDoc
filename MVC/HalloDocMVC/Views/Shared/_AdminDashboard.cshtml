@@ -1,6 +1,4 @@
-@{
-    var username = Context.User.Identity.Name;
-}
+
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
@@ -14,6 +12,7 @@
     <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/DashboardLayout.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HalloDocMVC.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/AdminDashboard.css" asp-append-version="true" />
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -52,8 +51,10 @@
                             <img src="~/images/logo.png" alt="logo hallo doc" style="width: 150px;">
                         </a>
                     </div>
+
+                    
                     <div class="d-flex align-items-center">
-                        <p class="me-2 d-none d-md-inline d-lg-inline d-xlg-inline">Welcome <strong id="UserName">@username.ToUpper()</strong> </p>
+                        <p class="me-2 d-none d-md-inline d-lg-inline d-xlg-inline">Welcome <strong id="UserName">Test Test</strong> </p>
                         <a asp-controller="Dashboard" asp-action="LogOut" class="btn theme-btn me-2"> <span class="d-none d-md-inline d-lg-inline"> Log Out </span> <i class="fas fa-sign-out-alt d-sm-inline d-md-none"></i> </a>
                         <button class="btn" id="theme-btn">
                             <i class="fa-regular fa-moon"></i>
@@ -61,20 +62,36 @@
                         </button>
                     </div>
                 </div>
-                <div class="collapse navbar-collapse nav-tabs d-md-block position-absolute" id="navbarSupportedContent" style="width: 100%;">
+                <div class="collapse navbar-collapse nav-tabs d-md-block position-absolute shadow" id="navbarSupportedContent" style="width: 100%;">
                     <ul class="d-flex flex-md-row flex-column">
                         <li>
                             <a asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                         </li>
                         <li>
-                            <a asp-controller="Dashboard" asp-action="UserProfile">Profile</a>
+                            <a asp-controller="Dashboard" asp-action="UserProfile">Provider Location</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Dashboard" asp-action="UserProfile">My Profile</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Dashboard" asp-action="UserProfile">Provider</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Dashboard" asp-action="UserProfile">Partners</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Dashboard" asp-action="UserProfile">Access</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Dashboard" asp-action="UserProfile">Records</a>
                         </li>
                     </ul>
                 </div>
             </nav>
         </header>
 
-        @RenderBody()
+         @RenderBody()
+        
 
         <footer class="mt-auto d-flex justify-content-md-end justify-content-center p-4 dark-footer">
             <div>

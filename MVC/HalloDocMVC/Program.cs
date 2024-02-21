@@ -6,6 +6,10 @@ using HalloDocRepository.Interfaces;
 using HalloDocService.Implementation;
 using HalloDocService.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using HalloDocRepository.Admin.Interfaces;
+using HalloDocRepository.Admin.Implementation;
+using HalloDocService.Admin.Interfaces;
+using HalloDocService.Admin.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +24,8 @@ builder.Services.AddScoped<IPatientRequestRepo, PatientRequestRepo>();
 builder.Services.AddScoped<IPatientRequestService, PatientRequestService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IDashboardRepo, DashboardRepo>();
+builder.Services.AddScoped<IAdminDashboardRepo, AdminDashboardRepo>();
+builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(Option => {
     Option.LoginPath = "/PatientLogin/Index";
