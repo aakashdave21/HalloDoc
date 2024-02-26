@@ -14,67 +14,134 @@ public class AdminDashboardRepo : IAdminDashboardRepo
         _dbContext = dbContext;
     }
 
-    public IEnumerable<Request> GetNewRequest()
-    {
-        return _dbContext.Requests
-                     .Include(req => req.Requestclients) // Include related Requestclients
-                     .Where(req => req.Status == 1)
-                     .ToList();
+    public IEnumerable<Request> GetNewRequest(string searchBy = "",int reqTypeId=0)
+{
+    IQueryable<Request> query = _dbContext.Requests
+        .Include(req => req.Requestclients)
+        .Where(req => req.Status == 1);
+
+    if(reqTypeId>0){
+        query = query.Where(req => req.Requesttypeid == reqTypeId);
     }
-    public IEnumerable<Request> GetPendingStatusRequest()
+    if (!string.IsNullOrWhiteSpace(searchBy))
     {
-        return _dbContext.Requests
-                     .Include(req => req.Requestclients) // Include related Requestclients
-                     .Include(req => req.Physician)
-                     .Where(req => req.Status == 2 && req.Accepteddate == null) // <---HERE -> ADD ALSO PHYSICAIN IS NOT NULL
-                     .ToList();
+        query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
     }
-    public IEnumerable<Request> GetActiveStatusRequest()
+    
+
+    return query.ToList();
+}
+
+public IEnumerable<Request> GetPendingStatusRequest(string searchBy = "",int reqTypeId=0)
+{
+    IQueryable<Request> query = _dbContext.Requests
+        .Include(req => req.Requestclients)
+        .Include(req => req.Physician)
+        .Where(req => req.Status == 2 && req.Accepteddate == null);
+
+    if(reqTypeId>0){
+        query = query.Where(req => req.Requesttypeid == reqTypeId);
+    }
+    if (!string.IsNullOrWhiteSpace(searchBy))
     {
-        return _dbContext.Requests
-                     .Include(req => req.Requestclients) // Include related Requestclients
-                     .Include(req => req.Physician)
-                     .Where(req => req.Status == 2 && req.Accepteddate != null) // <---HERE -> ADD ALSO PHYSICAIN IS NOT NULL
-                     .ToList();
+        query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
     }
-    public IEnumerable<Request> GetConcludeStatusRequest()
+    
+
+    return query.ToList();
+}
+
+public IEnumerable<Request> GetActiveStatusRequest(string searchBy = "",int reqTypeId=0)
+{
+    IQueryable<Request> query = _dbContext.Requests
+        .Include(req => req.Requestclients)
+        .Include(req => req.Physician)
+        .Where(req => (req.Status == 4 || req.Status == 5) && req.Accepteddate != null);
+
+    if(reqTypeId>0){
+        query = query.Where(req => req.Requesttypeid == reqTypeId);
+    }
+    if (!string.IsNullOrWhiteSpace(searchBy))
     {
-        return _dbContext.Requests
-                     .Include(req => req.Requestclients) // Include related Requestclients
-                     .Include(req => req.Physician)
-                     .Where(req => req.Completedbyphysician == true && req.Status != 1) // <---HERE -> ADD ALSO PHYSICAIN IS NOT NULL
-                     .ToList();
+        query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
     }
-    public IEnumerable<Request> GetCloseStatusRequest()
+    
+
+    return query.ToList();
+}
+
+public IEnumerable<Request> GetConcludeStatusRequest(string searchBy = "",int reqTypeId=0)
+{
+    IQueryable<Request> query = _dbContext.Requests
+        .Include(req => req.Requestclients)
+        .Include(req => req.Physician)
+        .Where(req => req.Status == 6);
+
+    if(reqTypeId>0){
+        query = query.Where(req => req.Requesttypeid == reqTypeId);
+    }
+    if (!string.IsNullOrWhiteSpace(searchBy))
     {
-        return _dbContext.Requests
-                         .Include(req => req.Requestclients) // Include related Requestclients
-                             .ThenInclude(rc => rc.Region) // Include related Region for each Requestclient
-                         .Include(req => req.Physician)
-                         .Where(req => req.Status == 8)
-                         .ToList();
+        query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
     }
-    public IEnumerable<Request> GetUnpaidStatusRequest()
+    
+
+    return query.ToList();
+}
+
+public IEnumerable<Request> GetCloseStatusRequest(string searchBy = "",int reqTypeId=0)
+{
+    IQueryable<Request> query = _dbContext.Requests
+        .Include(req => req.Requestclients)
+        .ThenInclude(rc => rc.Region)
+        .Include(req => req.Physician)
+        .Where(req => (req.Status == 8 || req.Status == 7 || req.Status == 3));
+
+     if(reqTypeId>0){
+        query = query.Where(req => req.Requesttypeid == reqTypeId);
+    }
+    if (!string.IsNullOrWhiteSpace(searchBy))
     {
-        return _dbContext.Requests
-                     .Include(req => req.Requestclients) // Include related Requestclients
-                     .Include(req => req.Physician)
-                     .Where(req => req.Status == 4 || req.Status==11 || req.Status==16) // <---Reserving | Consult | Unpaid
-                     .ToList();
+        query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
     }
+   
+
+    return query.ToList();
+}
+
+public IEnumerable<Request> GetUnpaidStatusRequest(string searchBy = "",int reqTypeId=0)
+{
+    IQueryable<Request> query = _dbContext.Requests
+        .Include(req => req.Requestclients)
+        .Include(req => req.Physician)
+        .Where(req => req.Status == 9);
+
+    if(reqTypeId>0){
+        query = query.Where(req => req.Requesttypeid == reqTypeId);
+        Console.WriteLine(query);
+    }
+    if (!string.IsNullOrWhiteSpace(searchBy))
+    {
+        query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
+    }
+    
+
+    return query.ToList();
+}
     public Dictionary<string,int> CountRequestByType()
     {
         Dictionary<string,int> CountRequestRow = new Dictionary<string, int>();
+        
         CountRequestRow = _dbContext.Requests
         .GroupBy(req => true) // Group all records into one group
         .Select(group => new
         {
             NewCount = group.Count(req => req.Status == 1),
             PendingCount = group.Count(req => req.Status == 2 && req.Accepteddate == null),
-            ActiveCount = group.Count(req => req.Status == 2 && req.Accepteddate != null),
-            ConcludeCount = group.Count(req => req.Completedbyphysician == true && req.Status != 1),
-            CloseCount = group.Count(req => req.Status == 8),
-            UnpaidCount = group.Count(req => req.Status == 4 || req.Status == 11 || req.Status == 16)
+            ActiveCount = group.Count(req => (req.Status == 4 || req.Status == 5) && req.Accepteddate != null),
+            ConcludeCount = group.Count(req => req.Status == 6),
+            CloseCount = group.Count(req =>  req.Status == 8 || req.Status == 7 || req.Status == 3),
+            UnpaidCount = group.Count(req => req.Status == 9)
         })
         .Select(result => new Dictionary<string, int>
         {
@@ -88,6 +155,26 @@ public class AdminDashboardRepo : IAdminDashboardRepo
         .SingleOrDefault();
 
         return CountRequestRow;
+    }
+
+    public Request GetViewCaseDetails(int id) {
+        return _dbContext.Requests.Include(item => item.Requestclients)
+                                        .ThenInclude(req => req.Region)
+                                    .Include(req=>req.Requesttype)
+                                    .FirstOrDefault(req => req.Id == id);
+    }
+
+    public Requestnote GetViewNotesDetails(int reqId){
+        return _dbContext.Requestnotes.FirstOrDefault(req => req.Requestid == reqId);
+    }
+    public void SaveAdditionalNotes(string AdditionalNote,int noteId){
+        var notesData = _dbContext.Requestnotes.FirstOrDefault(req=>req.Id == noteId);
+        if(notesData!=null){
+        Console.WriteLine("in if here");
+
+            notesData.Adminnotes = AdditionalNote;
+            _dbContext.SaveChanges();
+        }
     }
 
 }

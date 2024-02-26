@@ -31,6 +31,8 @@ public partial class HalloDocContext : DbContext
 
     public virtual DbSet<Requestconcierge> Requestconcierges { get; set; }
 
+    public virtual DbSet<Requestnote> Requestnotes { get; set; }
+
     public virtual DbSet<Requesttype> Requesttypes { get; set; }
 
     public virtual DbSet<Requestwisefile> Requestwisefiles { get; set; }
@@ -154,6 +156,22 @@ public partial class HalloDocContext : DbContext
             entity.HasOne(d => d.Request).WithMany(p => p.Requestconcierges)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("requestconcierge_requestid_fkey");
+        });
+
+        modelBuilder.Entity<Requestnote>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("requestnotes_pkey");
+
+            entity.Property(e => e.Createddate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Modifieddate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.CreatedbyNavigation).WithMany(p => p.RequestnoteCreatedbyNavigations).HasConstraintName("requestnotes_createdby_fkey");
+
+            entity.HasOne(d => d.ModifiedbyNavigation).WithMany(p => p.RequestnoteModifiedbyNavigations).HasConstraintName("requestnotes_modifiedby_fkey");
+
+            entity.HasOne(d => d.Request).WithOne(p => p.Requestnote)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("requestnotes_requestid_fkey");
         });
 
         modelBuilder.Entity<Requesttype>(entity =>

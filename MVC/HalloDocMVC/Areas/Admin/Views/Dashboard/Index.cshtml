@@ -108,7 +108,7 @@
                     <div class="col-md-6 d-flex gap-2 flex-sm-row flex-column">
                         <div class="form-group has-search">
                             <span class="fa fa-search form-control-feedback"></span>
-                            <input type="text" class="form-control" placeholder="Search">
+                            <input type="text" id="searchKeyword" class="form-control" placeholder="Search By Patient Name" oninput="debounce(searchByKeyword, 500)">
                         </div>
                         <div class="form-group has-search">
                             <span class="fa fa-search form-control-feedback"></span>
@@ -123,16 +123,18 @@
                     </div>
                     <div
                         class="col-md-6 table-info-btn border-sm-top d-flex justify-content-between align-items-center">
-                        <button class="btn ">All</button>
-                        <a href="#"><span class="dot green-dot"></span> Patient</a>
-                        <a href="#"><span class="dot orange-dot"></span> Family/Friend</a>
-                        <a href="#"><span class="dot blue-dot"></span> Concierge</a>
-                        <a href="#"><span class="dot pink-dot"></span> Business</a>
+                        <button class="btn" onclick="callAjax()">All</button>
+                        <a id="patient-only" href="#" onclick="getOnlyPatient()"><span class="dot green-dot"></span> Patient</a>
+                        <a id="family-only" href="#" onclick="getOnlyFamily()"><span class="dot orange-dot"></span> Family/Friend</a>
+                        <a id="concierge-only" href="#" onclick="getOnlyConcierge()"><span class="dot blue-dot"></span> Concierge</a>
+                        <a id="business-only" href="#" onclick="getOnlyBusiness()"><span class="dot pink-dot"></span> Business</a>
                         <a href="#"><span class="dot purple-dot"></span> VIP</a>
                     </div>
 
                     <div id="render-content">
-                        <partial name="_AdminDashboardTable" />
+                        @* <partial name="_AdminDashboardTable.cshtml" model="@Model"/> *@
+                        @Html.Partial("_AdminDashboardTable", Model)
+                        @* @{ await Html.RenderPartialAsync("_AdminDashboardTable"); } *@
                     </div>
 
                 </div>
@@ -157,7 +159,7 @@
                             style="height: 100px"></textarea>
                         <label for="Symptoms" style="white-space: normal;">Message</label>
                     </div>
-                    
+            </div>    
             <div class="modal-footer">
                 <button type="button" class="btn secondary-theme-btn">Confirm</button>
                 <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
@@ -172,17 +174,39 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #01bce9;">
-                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Request Support</h1>
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Send Mail To Patient For Submitting Request </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <small class="text-muted">To all unscedule physician: we are short on coverage and needs additional supports on call to respond to Requests.</small>
-                     <div class="form-floating mt-2">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="Symptoms"
-                        style="height: 100px"></textarea>
-                    <label for="Symptoms" style="white-space: normal;">Message</label>
-                </div>
-                    
+                <div class="mb-3">
+                        <div class="form-floating ">
+                            <input  type="text" class="form-control" id="fname" placeholder="first name">
+                            <label  for="floatingInput">First Name</label>
+                          </div>
+                          <span  class="text-danger"></span>
+                    </div>
+                    <div class=" mb-3">
+                        <div class="form-floating ">
+                            <input  type="text" class="form-control" id="lname" placeholder="last name">
+                            <label  for="floatingInput">Last Name</label>
+                          </div>
+                          <span  class="text-danger"></span>
+                    </div>
+                    <div class=" mb-3">
+                        <div class="form-floating ">
+                            <input  type="email" class="form-control" id="Email" placeholder="email" oninput="debounce(verifyEmail, 2000)">
+                            <label  for="Email">Email</label>
+                          </div>
+                          <span  class="text-danger" id="email-valid"></span>
+                    </div>
+                    <div class=" mb-3">
+                        <div class="form-floating">
+                            <input  id="Mobile" class="form-control" type="tel" name="Mobile" />
+                            <input type="hidden" id="phone_hidden" name="full_phone" />
+                          </div>
+                          <span  class="text-danger" id="mobile-valid"></span>
+                    </div>
+            </div>  
             <div class="modal-footer">
                 <button type="button" class="btn secondary-theme-btn">Confirm</button>
                 <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
@@ -192,13 +216,15 @@
 </div>
 
 <script>
+    let params,tabData;
+    
     $(document).ready(function () {
         $(".card").click(function () {
             let action = $(this).data('action');
-            let params;
-            console.log(this);
+            
             $(".card").removeClass("active");
             $(".col").removeClass("active-col");
+
             $(this).addClass("active");
             $(this).closest(".col").addClass("active-col");
 
@@ -225,22 +251,84 @@
                     params = { status: "new" };
                     break;
             }
+            callAjax();
+        })
+    })
 
+        let timeoutId;
+        function debounce(func, delay) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(func, delay);
+        }
+        function searchByKeyword(){
+            let searchKeyword = document.getElementById("searchKeyword").value.toLowerCase();
+            
+                $.ajax({
+                url: `/admin/dashboard?searchBy=${searchKeyword}`,
+                type: 'GET',
+                data: params,
+                traditional : true,
+                success: function (response) {
+                    $('#render-content').empty();
+                    $('#render-content').html(response);
+                },
+                error: function () {
+                    toastr.error("Error occurred while verifying email.");
+                }
+        });
+            
+        }
 
+        const getOnlyPatient = ()=>{
+            $(".dot").closest("a").removeClass("fw-bold")
+            $("#patient-only").addClass("fw-bold");
+           findFunction(1);
+        }
+        const getOnlyFamily = ()=>{
+            $(".dot").closest("a").removeClass("fw-bold")
+            $("#family-only").addClass("fw-bold");
+           findFunction(2);
+        }
+        const getOnlyConcierge = ()=>{
+            $(".dot").closest("a").removeClass("fw-bold")
+            $("#concierge-only").addClass("fw-bold");
+           findFunction(3);
+        }
+        const getOnlyBusiness = ()=>{
+            $(".dot").closest("a").removeClass("fw-bold")
+            $("#business-only").addClass("fw-bold");
+           findFunction(4);
+        }
+
+        const findFunction = (reqTypeId) => {
             $.ajax({
-                url: '/AdminDashboard/Index',
+                url: `/admin/dashboard/Index?requesttype=${reqTypeId}`,
                 type: 'GET', 
                 data: params,
                 success: function (response) {
-                    console.log(params);
-                    console.log(response);
                     $('#render-content').empty();
                     $('#render-content').html(response);
+                    tabData = response;
                 },
                 error: function () {
                     console.log('Error occurred');
                 }
             });
-        })
-    })
+        }
+        const callAjax = ()=>{
+            $(".dot").closest("a").removeClass("fw-bold")
+            $.ajax({
+                url: '/admin/dashboard/Index',
+                type: 'GET', 
+                data: params,
+                success: function (response) {
+                    $('#render-content').empty();
+                    $('#render-content').html(response);
+                    tabData = response;
+                },
+                error: function () {
+                    console.log('Error occurred');
+                }
+            });
+        }
 </script>

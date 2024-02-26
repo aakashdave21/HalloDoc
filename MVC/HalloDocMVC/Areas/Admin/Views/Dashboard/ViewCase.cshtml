@@ -1,0 +1,133 @@
+@using HalloDocService.ViewModels;
+@model ViewCaseViewModel;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "ViewCase Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+    <link rel="stylesheet" href="~/css/PatientRequest.css" />
+    Console.WriteLine(Model.Id);
+}
+
+<main class="patient-request-section container-sm mt-5">
+    <div class="d-flex justify-content-end mt-4">
+        <a href="/admin/dashboard" class="btn btn-sm back-link"><i
+                class="fa-solid fa-chevron-left"></i> Back</a>
+    </div>
+
+    <form asp-action="PatientPost" id="myForm" method="post" enctype="multipart/form-data">
+    <div class="d-flex">
+        <h1>New Request</h1>
+        <p class="ms-2">
+            <span class="badge rounded-pill text-bg-success">@Model.RequestType</button>
+        </p>
+    </div>
+        <div class="patient-request-form border p-4 mt-3 mb-3 rounded shadow">
+            <div>
+                <h4>Patient Information</h4>
+                <div>
+                    <small class="text-muted">Confirmation Number</small>
+                    <h5 style="color: #01bce9;">@Model.ConfirmationNumber</h5>
+                </div>
+                <div>
+                    <div class="form-floating">
+                        <textarea asp-for="Symptoms" class="form-control" placeholder="Leave a comment here" id="Symptoms"
+                            style="height: 100px" readonly></textarea>
+                        <label asp-for="Symptoms"  for="Symptoms">Enter Brief Details Of Symtomps</label>
+                    </div>
+                    <span  class="text-danger"></span>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Firstname" type="text" class="form-control" id="fname"
+                                placeholder="first name" readonly>
+                            <label asp-for="Firstname"  for="floatingInput">First Name</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Lastname"  type="text" class="form-control" id="lname"
+                                placeholder="last name" readonly>
+                            <label asp-for="Lastname"  for="floatingInput">Last Name</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="DateOfBirth" type="date" class="form-control" id="dob"
+                                placeholder="Date Of Birth" readonly>
+                            <label asp-for="DateOfBirth" for="floatingInput">Date Of Birth</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Email"  type="email" class="form-control" id="Email" placeholder="email" readonly>
+                            <label asp-for="Email"  for="Email">Email</label>
+                        </div>
+                        <span  class="text-danger" id="email-valid"></span>
+                    </div>
+                     <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input  asp-for="Phone" id="Mobile" class="form-control" type="tel" name="Mobile" readonly/>
+                            <input asp-for="Phone" type="hidden" id="phone_hidden" name="full_phone" />
+                        </div>
+                        <span  class="text-danger" id="mobile-valid"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h4>Location</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input  type="text" class="form-control" id="Region" placeholder="Region" readonly>
+                            <label  for="Street">Region</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="PropertyName" type="text" class="form-control" id="business" placeholder="business" readonly>
+                            <label asp-for="PropertyName" for="business">Business Name/Address</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Room" type="text" class="form-control" id="room" placeholder="room" readonly>
+                            <label asp-for="Room" for="room">Room#</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                   
+                </div>
+            </div>
+            <div class="mt-5 mb-3 d-flex justify-content-end">
+                <div class="section-btns">
+                    <button type="button" class="btn secondary-theme-btn me-2">
+                        Assign
+                    </button>
+                    <a href="/admin/dashboard/viewnotes/@Model.Id" class="btn secondary-theme-btn me-2"> 
+                        View Notes
+                    </a>
+                    <a asp-area="Admin" asp-controller="dashboard" asp-action="viewnotes" asp-route-id="@Model.Id" class="btn secondary-theme-btn me-2"> 
+                        View Notes
+                    </a>
+                    
+                    @* Cancle Case *@
+                    <a href="/admin/dashboard/viewcase/@Model.Id">
+                        <button class="btn btn-danger" type="button">
+                            Cancle
+                        </button>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+</main>

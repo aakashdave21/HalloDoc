@@ -10,4 +10,5 @@ public interface IPatientLoginRepo
     void StoreResetToken(int AspUserId, string token, DateTime expiry);
 
     Aspnetuser? GetResetTokenExpiry(int AspUserId, string token);
+    void UpdatePassword(int userId , string password);
 }

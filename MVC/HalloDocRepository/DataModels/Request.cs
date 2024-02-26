@@ -138,6 +138,9 @@ public partial class Request
     [InverseProperty("Request")]
     public virtual ICollection<Requestconcierge> Requestconcierges { get; } = new List<Requestconcierge>();
 
+    [InverseProperty("Request")]
+    public virtual Requestnote? Requestnote { get; set; }
+
     [ForeignKey("Requesttypeid")]
     [InverseProperty("Requests")]
     public virtual Requesttype Requesttype { get; set; } = null!;

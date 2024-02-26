@@ -1,9 +1,13 @@
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.css" />
+<script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
+
 @* Table Upto Mobile Screen *@
 <div class="table-responsive mt-5 d-sm-block d-none">
-    <table class="table request-table">
+    <table class="table request-table" id="request-table" style="max-height:200px; " >
         <thead>
             <tr>
-
                 <th scope="col" style="width: 25%; min-width:150px">Name</th>
                 <th scope="col">Date Of Birth</th>
                 @if (ViewBag.statusType == "close")
@@ -36,11 +40,14 @@
                     <th scope="col" style="width: 25%; min-width:150px">Notes</th>
                 }
                 <th scope="col">Chat With</th>
-                <th scope="col">Actions</th>
+                <th scope="col" >Actions</th>
             </tr>
         </thead>
         <tbody>
             @{
+                int requestCount = Model.Requests.Count;
+                @if (requestCount > 0)
+                {
                 foreach (var item in Model.Requests)
                 {
                     var requestTypeClass = "";
@@ -51,7 +58,6 @@
 
                     <tr class=@requestTypeClass>
                         <td>
-
                             <div class="d-flex justify-content-between align-items-center">
                                 <span>
                                     @{
@@ -130,7 +136,7 @@
                                 Action
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">View Case</a></li>
+                                <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
                                 <li><a class="dropdown-item" href="#">View Uploads</a></li>
                                 <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
                                         data-bs-target="#assignCaseModal">Assign Case</a></li>
@@ -146,6 +152,11 @@
                                         data-bs-target="#sendAgreementModal">Send Agreement</a></li>
                             </ul>
                         </td>
+                    </tr>
+                }
+                }else{
+                    <tr>
+                        <td colspan="10" class="text-center">No records found</td>
                     </tr>
                 }
             }
@@ -654,54 +665,55 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <small class="text-muted">To Send Agreement please make sure you are updating correct contact information below the responsible party</small>
-                     <div class=" mb-3">
-                        <div class="form-floating">
-                            <input  type="email" class="form-control" id="email" placeholder="email">
-                            <label  for="email">Email</label>
-                        </div>
-                        <span  class="text-danger"></span>
+                <small class="text-muted">To Send Agreement please make sure you are updating correct contact
+                    information below the responsible party</small>
+                <div class=" mb-3">
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="email" placeholder="email">
+                        <label for="email">Email</label>
                     </div>
-                    <div class=" mb-3">
-                        <div class="form-floating">
-                            <input  id="phone" class="form-control" type="tel" placeholder="phone"/>
-                            <label  for="phone">Phone</label>
-                        </div>
-                        <span  class="text-danger" id="mobile-valid"></span>
+                    <span class="text-danger"></span>
+                </div>
+                <div class=" mb-3">
+                    <div class="form-floating">
+                        <input id="phone" class="form-control" type="tel" placeholder="phone" />
+                        <label for="phone">Phone</label>
                     </div>
-                    
-            <div class="modal-footer">
-                <button type="button" class="btn secondary-theme-btn">Confirm</button>
-                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+                    <span class="text-danger" id="mobile-valid"></span>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn secondary-theme-btn">Confirm</button>
+                    <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
-@* Clear Case *@
-<div class="modal fade" id="clearCaseModal">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-md-5 p-1">
-            <div class="modal-body d-flex flex-column justify-content-center align-items-center">
-                <div style="
+    @* Clear Case *@
+    <div class="modal fade" id="clearCaseModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-md-5 p-1">
+                <div class="modal-body d-flex flex-column justify-content-center align-items-center">
+                    <div style="
                         height: 150px;
                         width: 100%;
                         display: flex;
                         justify-content: center;
                         align-items: center;
                     ">
-                    <i class="fa-solid fa-circle-info text-warning warning-icon"></i>
-                </div>
-                <h5>Confirmation for Clear Case</h5>
-                <p class="mt-2">Are you sure want to clear this request? Once clear this request you are not able to see this request. </p>
-                <div class="d-flex">
-                    <button type="button" class="btn secondary-theme-btn me-2" >Clear</button>
-                    <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+                        <i class="fa-solid fa-circle-info text-warning warning-icon"></i>
+                    </div>
+                    <h5>Confirmation for Clear Case</h5>
+                    <p class="mt-2">Are you sure want to clear this request? Once clear this request you are not able to
+                        see this request. </p>
+                    <div class="d-flex">
+                        <button type="button" class="btn secondary-theme-btn me-2">Clear</button>
+                        <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
 
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-

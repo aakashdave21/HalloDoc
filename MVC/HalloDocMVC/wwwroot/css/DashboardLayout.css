@@ -49,7 +49,7 @@
     color: #01bce9;
 }
 
-.dashboard-header [data-bs-theme=dark] ul li a {
+[data-bs-theme=dark] .dashboard-header  ul li a {
     color: white;
 }
 

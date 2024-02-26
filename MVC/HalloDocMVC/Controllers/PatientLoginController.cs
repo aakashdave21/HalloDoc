@@ -203,23 +203,28 @@ public class PatientLoginController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ResetPasswordPost(UserResetPasswordViewModel user)
-    {
+    public async Task<IActionResult> ResetPasswordPost(ResetPasswordViewModel users)
+    {   
         if (!ModelState.IsValid)
         {
             return View("ResetPassword"); // Return the view with validation errors
         }
         try
         {
-            var token = _patientLoginService.GetResetTokenExpiry(user.UserId, user.UserToken);
-            if (token.ResetToken == user.UserToken && token != null && token.ResetExpiration > DateTime.UtcNow)
+            
+            var token = _patientLoginService.GetResetTokenExpiry(users.UserId, users.UserToken);
+            if (token.ResetToken == users.UserToken && token != null && token.ResetExpiration > DateTime.UtcNow)
             {
+                _patientLoginService.UpdatePassword(token.Id , users.Password);
                 TempData["success"] = "Password Reset Successfully !";
                 return RedirectToAction(nameof(Index));
             }
             else if (token.ResetExpiration < DateTime.UtcNow)
             {
                 TempData["error"] = "Oops! Token Expires, Please Go To Login Page";
+                return RedirectToAction(nameof(Index));
+            }else if(token.ResetToken != users.UserToken){
+                TempData["error"] = "Oops! Token Expires or Incorrect, Please Go To Login Page";
                 return RedirectToAction(nameof(Index));
             }
             TempData["error"] = "Internal Server Error";
@@ -240,43 +245,5 @@ public class PatientLoginController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-}
-
-public class MailService
-{
-    private const string SenderEmail = "aakashdave21@gmail.com"; // Your Gmail email address
-    private const string SenderPassword = "buicbfrijgnvrttn"; // Your application-specific password
-
-    private readonly SmtpClient _smtpClient = new SmtpClient("smtp.gmail.com", 587);
-
-    public MailService()
-    {
-        _smtpClient.EnableSsl = true;
-        _smtpClient.UseDefaultCredentials = false;
-        _smtpClient.Credentials = new NetworkCredential(SenderEmail, SenderPassword);
-    }
-
-    public async Task<bool> SendAsync(string recipientEmail, string subject, string body)
-    {
-        try
-        {
-            var mailMessage = new MailMessage(SenderEmail, recipientEmail, subject, body);
-            mailMessage.IsBodyHtml = true;
-
-            await _smtpClient.SendMailAsync(mailMessage);
-
-            // Email sent successfully, return true
-            return true;
-        }
-        catch (Exception ex)
-        {
-            // Log the exception (optional)
-            Console.WriteLine($"Failed to send email: {ex.Message}");
-            Console.WriteLine(ex);
-
-            // Return false to indicate that the email sending failed
-            return false;
-        }
     }
 }

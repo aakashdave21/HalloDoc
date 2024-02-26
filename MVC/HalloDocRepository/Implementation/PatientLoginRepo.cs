@@ -36,6 +36,16 @@ public class PatientLoginRepo : IPatientLoginRepo
 
     public Aspnetuser? GetResetTokenExpiry(int AspUserId, string token){
         return _dbContext.Aspnetusers.FirstOrDefault(user => user.Id==AspUserId);
+    }
 
+    public void UpdatePassword(int AspUserId,string password){
+        var usersDetails = _dbContext.Aspnetusers.FirstOrDefault(user => user.Id == AspUserId);
+        if (usersDetails != null)
+        {
+            usersDetails.Passwordhash = password;
+            _dbContext.SaveChanges();
+        }else{
+            throw new InvalidOperationException("User not found.");
+        }
     }
 }

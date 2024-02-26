@@ -44,5 +44,9 @@ public class PatientLogin : IPatientLogin
         return _userRepository.GetResetTokenExpiry(AspUserId, token);
     }
 
+     public void UpdatePassword(int AspUserId, string password){
+        _userRepository.UpdatePassword(AspUserId,password);
+    }
+
 
 }
