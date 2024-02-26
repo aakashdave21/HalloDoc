@@ -167,13 +167,38 @@ public IEnumerable<Request> GetUnpaidStatusRequest(string searchBy = "",int reqT
     public Requestnote GetViewNotesDetails(int reqId){
         return _dbContext.Requestnotes.FirstOrDefault(req => req.Requestid == reqId);
     }
+    public Requestclient GetPatientNoteDetails(int reqId){
+        return _dbContext.Requestclients.FirstOrDefault(req=> req.Requestid == reqId);
+    }
+    // public Dictionary<string,string> GetAllCancelNotes(int reqId){
+    //     var cancelNotes = _dbContext.Requeststatuslogs
+    //     .Where(log => log.Requestid == reqId && (log.Status == 7 || log.Status == 3))
+    //     .GroupBy(
+    //         log => 1, // Group by a constant value to ensure a single group
+    //         (key, logs) => new
+    //         {
+    //             PatientCancel = logs.FirstOrDefault(log => log.Status == 7)?.Notes,
+    //             AdminCancel = logs.FirstOrDefault(log => log.Status == 3 && log.Adminid != null && log.Physicianid == null)?.Notes,
+    //             PhysicianCancel = logs.FirstOrDefault(log => log.Status == 3 && log.Adminid == null && log.Physicianid != null)?.Notes
+    //         })
+    //     .Select(result => new Dictionary<string, string>
+    //     {
+    //         { "PatientCancel", result.PatientCancel },
+    //         { "AdminCancel", result.AdminCancel },
+    //         { "PhysicianCancel", result.PhysicianCancel }
+    //     })
+    //     .FirstOrDefault();
+
+    //     return cancelNotes ?? new Dictionary<string, string>();
+
+    // }
     public void SaveAdditionalNotes(string AdditionalNote,int noteId){
         var notesData = _dbContext.Requestnotes.FirstOrDefault(req=>req.Id == noteId);
         if(notesData!=null){
-        Console.WriteLine("in if here");
-
             notesData.Adminnotes = AdditionalNote;
             _dbContext.SaveChanges();
+        }else{
+            throw new Exception();
         }
     }
 

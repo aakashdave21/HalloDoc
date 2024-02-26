@@ -17,7 +17,7 @@
 
 <main class="patient-request-section container-sm mt-5">
     <div class="d-flex justify-content-end mt-4">
-        <a href="/admin/dashboard" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
     </div>
 
     <h1>Notes</h1>
@@ -181,7 +181,6 @@
                 <button type="submit" class="btn secondary-theme-btn">Save Changes</button>
             </div>
         </form>
-
 
     </div>
 </main>

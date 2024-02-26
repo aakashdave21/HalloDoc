@@ -99,6 +99,9 @@ public partial class Admin
     public virtual Region? Region { get; set; }
 
     [InverseProperty("Admin")]
+    public virtual ICollection<Requeststatuslog> Requeststatuslogs { get; } = new List<Requeststatuslog>();
+
+    [InverseProperty("Admin")]
     public virtual ICollection<Requestwisefile> Requestwisefiles { get; } = new List<Requestwisefile>();
 
     [ForeignKey("Roleid")]

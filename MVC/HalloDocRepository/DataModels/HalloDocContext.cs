@@ -33,6 +33,8 @@ public partial class HalloDocContext : DbContext
 
     public virtual DbSet<Requestnote> Requestnotes { get; set; }
 
+    public virtual DbSet<Requeststatuslog> Requeststatuslogs { get; set; }
+
     public virtual DbSet<Requesttype> Requesttypes { get; set; }
 
     public virtual DbSet<Requestwisefile> Requestwisefiles { get; set; }
@@ -172,6 +174,25 @@ public partial class HalloDocContext : DbContext
             entity.HasOne(d => d.Request).WithOne(p => p.Requestnote)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("requestnotes_requestid_fkey");
+        });
+
+        modelBuilder.Entity<Requeststatuslog>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("requeststatuslog_pkey");
+
+            entity.Property(e => e.Createddate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Transtoadmin).HasDefaultValueSql("false");
+            entity.Property(e => e.Updateddate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.Admin).WithMany(p => p.Requeststatuslogs).HasConstraintName("requeststatuslog_adminid_fkey");
+
+            entity.HasOne(d => d.Physician).WithMany(p => p.RequeststatuslogPhysicians).HasConstraintName("requeststatuslog_physicianid_fkey");
+
+            entity.HasOne(d => d.Request).WithMany(p => p.Requeststatuslogs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("requeststatuslog_requestid_fkey");
+
+            entity.HasOne(d => d.Transtophysician).WithMany(p => p.RequeststatuslogTranstophysicians).HasConstraintName("requeststatuslog_transtophysicianid_fkey");
         });
 
         modelBuilder.Entity<Requesttype>(entity =>

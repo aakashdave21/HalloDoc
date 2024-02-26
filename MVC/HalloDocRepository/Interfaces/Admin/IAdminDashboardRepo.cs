@@ -14,6 +14,8 @@ public interface IAdminDashboardRepo
    Request GetViewCaseDetails(int id);
 
    Requestnote GetViewNotesDetails(int reqId);
+   Requestclient GetPatientNoteDetails(int reqId);
+   Dictionary<string,string> GetAllCancelNotes(int reqId);
    void SaveAdditionalNotes(string AdditionalNote,int noteId);
 
 

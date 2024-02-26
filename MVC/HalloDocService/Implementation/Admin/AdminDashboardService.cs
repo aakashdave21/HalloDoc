@@ -192,14 +192,20 @@ public class AdminDashboardService : IAdminDashboardService
 
     public ViewNotesViewModel GetViewNotesDetails(int reqId){
         var reqData = _dashboardRepo.GetViewNotesDetails(reqId);
+        var patientNote = _dashboardRepo.GetPatientNoteDetails(reqId);
+        Dictionary<string,string> cancelAndTransferNote = _dashboardRepo.GetAllCancelNotes(reqId);
+
         ViewNotesViewModel viewNotes = new ViewNotesViewModel(){
             Id = reqData.Id,
             AdminNote = reqData.Adminnotes,
             NoteId = reqData.Id,
             PhysicianNote = reqData.Physiciannotes,
             ReqId = reqData.Requestid,
-            AdditionalNote = reqData.Adminnotes
+            AdditionalNote = reqData.Adminnotes,
+            PatientNote = patientNote.Notes,
+            // AdminCancelNote = cancelAndTransferNote[""]
         };
+
         return viewNotes;
     }
         public void SaveAdditionalNotes(string AdditionalNote,int noteId){

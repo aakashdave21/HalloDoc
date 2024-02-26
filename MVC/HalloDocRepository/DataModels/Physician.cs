@@ -155,6 +155,12 @@ public partial class Physician
     public virtual ICollection<Request> Requests { get; } = new List<Request>();
 
     [InverseProperty("Physician")]
+    public virtual ICollection<Requeststatuslog> RequeststatuslogPhysicians { get; } = new List<Requeststatuslog>();
+
+    [InverseProperty("Transtophysician")]
+    public virtual ICollection<Requeststatuslog> RequeststatuslogTranstophysicians { get; } = new List<Requeststatuslog>();
+
+    [InverseProperty("Physician")]
     public virtual ICollection<Requestwisefile> Requestwisefiles { get; } = new List<Requestwisefile>();
 
     [ForeignKey("Roleid")]

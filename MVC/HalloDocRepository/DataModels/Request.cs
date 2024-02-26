@@ -141,6 +141,9 @@ public partial class Request
     [InverseProperty("Request")]
     public virtual Requestnote? Requestnote { get; set; }
 
+    [InverseProperty("Request")]
+    public virtual ICollection<Requeststatuslog> Requeststatuslogs { get; } = new List<Requeststatuslog>();
+
     [ForeignKey("Requesttypeid")]
     [InverseProperty("Requests")]
     public virtual Requesttype Requesttype { get; set; } = null!;
