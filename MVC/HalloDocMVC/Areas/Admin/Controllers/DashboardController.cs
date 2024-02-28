@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using HalloDocMVC.Models;
 using HalloDocService.ViewModels;
 using HalloDocService.Admin.Interfaces;
+using HalloDocRepository.DataModels;
 
 namespace HalloDocMVC.Controllers.Admin;
 
@@ -21,6 +22,7 @@ public class DashboardController : Controller
 
     public IActionResult Index(string status)
     {
+        (List<RequestViewModel> req, int totalCount) myresult;
         ViewBag.statusType = status ?? "";
         var viewModel = new AdminDashboardViewModel();
         var countDictionary = _adminDashboardService.CountRequestByType();
@@ -33,20 +35,21 @@ public class DashboardController : Controller
         viewModel.UnPaidState = countDictionary["unpaid"];
 
         string searchBy = Request.Query["searchBy"];
-       int reqType = 0;
+        // int pageNumber = int.Parse(Request.Query["pageNumber"]);
+        // int pageSize = int.Parse(Request.Query["pageSize"]);
+        int pageNumber = 1;
+        int pageSize = 3;
+        int reqType = 0;
         if (!string.IsNullOrEmpty(Request.Query["requesttype"]))
         {
             int.TryParse(Request.Query["requesttype"], out reqType);
         }
-
-        Console.WriteLine(searchBy);
-        Console.WriteLine(status);
-        Console.WriteLine(reqType+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-
         switch (status)
         {
             case "new":
-                viewModel.Requests = _adminDashboardService.GetNewStatusRequest(searchBy,reqType);
+                myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize);
+                viewModel.TotalPage = myresult.totalCount;
+                viewModel.Requests = myresult.req;
                 break;
             case "pending":
                 viewModel.Requests = _adminDashboardService.GetPendingStatusRequest(searchBy,reqType);
@@ -64,7 +67,9 @@ public class DashboardController : Controller
                 viewModel.Requests = _adminDashboardService.GetUnpaidStatusRequest(searchBy,reqType);
                 break;
             default:
-                viewModel.Requests = _adminDashboardService.GetNewStatusRequest(searchBy,reqType);
+                myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize);
+                viewModel.TotalPage = myresult.totalCount;
+                viewModel.Requests = myresult.req;
                 break;
         }
 
@@ -100,11 +105,14 @@ public class DashboardController : Controller
         try
         {
             ViewNotesViewModel viewnotes = _adminDashboardService.GetViewNotesDetails(id);
-            return View("ViewNotes",viewnotes);
+            if(viewnotes!=null){
+                return View("ViewNotes",viewnotes);
+            }else{
+                return View("ViViewNotesew");
+            }
         }
         catch (Exception e)
         {   
-            Console.WriteLine(e);
             TempData["error"] = "Internal Server Error";
             return Redirect("/Admin/Dashboard/Index");
 
@@ -116,7 +124,7 @@ public async Task<IActionResult> SaveViewNotes(ViewNotesViewModel viewnotes)
 {
     try
     {
-        _adminDashboardService.SaveAdditionalNotes(viewnotes.AdditionalNote,viewnotes.NoteId);
+        _adminDashboardService.SaveAdditionalNotes(viewnotes?.AdditionalNote,viewnotes.NoteId,viewnotes.ReqId);
          TempData["success"] = "Updated Successfully";
         return Redirect("/admin/dashboard/ViewNotes/"+viewnotes.ReqId);
     }
@@ -127,8 +135,6 @@ public async Task<IActionResult> SaveViewNotes(ViewNotesViewModel viewnotes)
         return Redirect("/Admin/Dashboard/Index");
     }
 }
-
-
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

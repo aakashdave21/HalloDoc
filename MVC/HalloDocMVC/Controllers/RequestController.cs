@@ -45,11 +45,11 @@ public class RequestController : Controller
                 }
             }
 
-        if (!ModelState.IsValid)
-        {   
-            TempData["error"] = "Something went wrong! Please enter your details correct";
-            return View(nameof(Patient), viewRequest); // Return the view with validation errors
-        }
+            if (!ModelState.IsValid)
+            {   
+                TempData["error"] = "Something went wrong! Please enter your details correct";
+                return View(nameof(Patient), viewRequest); // Return the view with validation errors
+            }
        
         try
         {

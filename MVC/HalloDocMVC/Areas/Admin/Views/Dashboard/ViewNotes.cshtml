@@ -33,8 +33,25 @@
                     <div class="content-div">
                         <h5 class="card-title fw-bold">Transfer Notes</h5>
                         @* <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> *@
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
+                        @if (Model != null)
+                        {
+                            @if (Model.TransferNote != null && Model.TransferNote.Count > 0)
+                            {
+                                int index = 1;
+                                foreach (var item in Model.TransferNote){
+                                    <p class="card-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@{var notes = index +". " + item;} @notes</p>
+                                    index++;
+                                }
+                            }
+                            else
+                            {
+                                <p class="card-text text-muted">Empty Notes</p>
+                            }
+                        }
+                        else
+                        {
+                            <p class="card-text text-muted">Empty Notes</p>
+                        }
                     </div>
                 </div>
             </div>
@@ -108,7 +125,21 @@
                     </div>
                     <div class="content-div">
                         <h5 class="card-title fw-bold">Patient Notes</h5>
-                       
+                       @if (Model != null)
+                        {
+                            @if (!string.IsNullOrEmpty(Model.PatientNote))
+                            {
+                                <p class="card-text">@Model.PatientNote</p>
+                            }
+                            else
+                            {
+                                <p class="card-text text-muted">Empty Notes</p>
+                            }
+                        }
+                        else
+                        {
+                            <p class="card-text text-muted">Empty Notes</p>
+                        }
                     </div>
                 </div>
             </div>
@@ -124,8 +155,21 @@
                     <div class="content-div">
                         <h5 class="card-title fw-bold">Physician Cancellation Notes</h5>
                         @* <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> *@
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
+                        @if (Model != null)
+                        {
+                            @if (!string.IsNullOrEmpty(Model.PhysicianCancelNote))
+                            {
+                                <p class="card-text">@Model.PhysicianCancelNote</p>
+                            }
+                            else
+                            {
+                                <p class="card-text text-muted">Empty Notes</p>
+                            }
+                        }
+                        else
+                        {
+                            <p class="card-text text-muted">Empty Notes</p>
+                        }
                     </div>
                 </div>
             </div>
@@ -141,8 +185,21 @@
                     <div class="content-div">
                         <h5 class="card-title fw-bold">Admin Cancellation Notes</h5>
                         @* <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> *@
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
+                        @if (Model != null)
+                        {
+                            @if (!string.IsNullOrEmpty(Model.AdminCancelNote))
+                            {
+                                <p class="card-text">@Model.AdminCancelNote</p>
+                            }
+                            else
+                            {
+                                <p class="card-text text-muted">Empty Notes</p>
+                            }
+                        }
+                        else
+                        {
+                            <p class="card-text text-muted">Empty Notes</p>
+                        }
                     </div>
                 </div>
             </div>
@@ -158,8 +215,21 @@
                     <div class="content-div">
                         <h5 class="card-title fw-bold">Patient Cancellation Notes</h5>
                         @* <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> *@
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
+                        @if (Model != null)
+                        {
+                            @if (!string.IsNullOrEmpty(Model.PatientCancelNote))
+                            {
+                                <p class="card-text">@Model.PatientCancelNote</p>
+                            }
+                            else
+                            {
+                                <p class="card-text text-muted">Empty Notes</p>
+                            }
+                        }
+                        else
+                        {
+                            <p class="card-text text-muted">Empty Notes</p>
+                        }
                     </div>
                 </div>
             </div>

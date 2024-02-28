@@ -12,6 +12,8 @@ namespace HalloDocService.ViewModels
         public int ToCloseState { get; set; } = 0;
         public int UnPaidState { get; set; } = 0;
 
+        public int TotalPage {get; set;}
+
         public List<RequestViewModel> Requests { get; set; } = new List<RequestViewModel>();
     }
 
@@ -32,6 +34,7 @@ namespace HalloDocService.ViewModels
         public string PhysicianName {get; set;}
         public string ServiceDate {get; set;}
         public string Region {get; set;}
+       
     }
 
 }

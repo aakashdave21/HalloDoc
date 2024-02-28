@@ -14,23 +14,29 @@ public class AdminDashboardRepo : IAdminDashboardRepo
         _dbContext = dbContext;
     }
 
-    public IEnumerable<Request> GetNewRequest(string searchBy = "",int reqTypeId=0)
-{
-    IQueryable<Request> query = _dbContext.Requests
-        .Include(req => req.Requestclients)
-        .Where(req => req.Status == 1);
+    public (IEnumerable<Request> requests, int totalCount) GetNewRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2)
+    {   
+        IQueryable<Request> query = _dbContext.Requests
+            .Include(req => req.Requestclients)
+            .Where(req => req.Status == 1);
 
-    if(reqTypeId>0){
-        query = query.Where(req => req.Requesttypeid == reqTypeId);
-    }
-    if (!string.IsNullOrWhiteSpace(searchBy))
-    {
-        query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
-    }
-    
+        if(reqTypeId>0){
+            query = query.Where(req => req.Requesttypeid == reqTypeId);
+        }
+        if (!string.IsNullOrWhiteSpace(searchBy))
+        {
+            query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
+        }
+        // Calculate total count
+        int totalCount = query.Count();
+        Console.WriteLine(totalCount);
+        // Apply pagination
+        query = query.Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize);
+        
 
-    return query.ToList();
-}
+        return (query.ToList(),totalCount);
+    }
 
 public IEnumerable<Request> GetPendingStatusRequest(string searchBy = "",int reqTypeId=0)
 {
@@ -170,36 +176,32 @@ public IEnumerable<Request> GetUnpaidStatusRequest(string searchBy = "",int reqT
     public Requestclient GetPatientNoteDetails(int reqId){
         return _dbContext.Requestclients.FirstOrDefault(req=> req.Requestid == reqId);
     }
-    // public Dictionary<string,string> GetAllCancelNotes(int reqId){
-    //     var cancelNotes = _dbContext.Requeststatuslogs
-    //     .Where(log => log.Requestid == reqId && (log.Status == 7 || log.Status == 3))
-    //     .GroupBy(
-    //         log => 1, // Group by a constant value to ensure a single group
-    //         (key, logs) => new
-    //         {
-    //             PatientCancel = logs.FirstOrDefault(log => log.Status == 7)?.Notes,
-    //             AdminCancel = logs.FirstOrDefault(log => log.Status == 3 && log.Adminid != null && log.Physicianid == null)?.Notes,
-    //             PhysicianCancel = logs.FirstOrDefault(log => log.Status == 3 && log.Adminid == null && log.Physicianid != null)?.Notes
-    //         })
-    //     .Select(result => new Dictionary<string, string>
-    //     {
-    //         { "PatientCancel", result.PatientCancel },
-    //         { "AdminCancel", result.AdminCancel },
-    //         { "PhysicianCancel", result.PhysicianCancel }
-    //     })
-    //     .FirstOrDefault();
+    public IQueryable<Requeststatuslog> GetAllCancelNotes(int reqId){
+        var cancelNotes = _dbContext.Requeststatuslogs
+        .Where(log => log.Requestid == reqId && (log.Status == 7 || log.Status == 3 || log.Status==2));
 
-    //     return cancelNotes ?? new Dictionary<string, string>();
+        return cancelNotes;
 
-    // }
-    public void SaveAdditionalNotes(string AdditionalNote,int noteId){
-        var notesData = _dbContext.Requestnotes.FirstOrDefault(req=>req.Id == noteId);
-        if(notesData!=null){
-            notesData.Adminnotes = AdditionalNote;
-            _dbContext.SaveChanges();
+    }
+    public void SaveAdditionalNotes(string AdditionalNote,int noteId,int reqId){
+        if(noteId==0){
+            // We have to add new Records for that
+            Requestnote reqNote = new()
+            {
+              Requestid = reqId,
+              Adminnotes = AdditionalNote,
+            //   Createdby = AdminId <---- Need To Added Admin Id 
+            };
+            _dbContext?.Requestnotes.Add(reqNote);
+            _dbContext?.SaveChanges();
         }else{
-            throw new Exception();
+            var notesData = _dbContext.Requestnotes.FirstOrDefault(req=>req.Id == noteId);
+            if(notesData!=null){
+                notesData.Adminnotes = AdditionalNote;
+                _dbContext.SaveChanges();
+            }else{
+                throw new Exception();
+            }
         }
     }
-
 }

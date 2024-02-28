@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "BKWTkXpQvwLhdBJEki7cgc0mO5oQCTKwa6+qNYleN74=",
+  "Hash": "bffGEAJjlVXAokO+6JmqpZCMwFB9iVGKs1Dr1kp58S0=",
   "Source": "HalloDocMVC",
   "BasePath": "_content/HalloDocMVC",
   "Mode": "Default",
@@ -3145,6 +3145,23 @@
       "OriginalItemSpec": "wwwroot\\uploads\\471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png"
     },
     {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\61afafd7-2d09-42d8-9983-2ac8ee5f9ec2_final-SRS.pdf",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/61afafd7-2d09-42d8-9983-2ac8ee5f9ec2_final-SRS.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\61afafd7-2d09-42d8-9983-2ac8ee5f9ec2_final-SRS.pdf"
+    },
+    {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\6a7001cc-1d83-4063-95f5-ec281144a1dd_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png",
       "SourceId": "HalloDocMVC",
       "SourceType": "Discovered",
@@ -3160,6 +3177,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\6a7001cc-1d83-4063-95f5-ec281144a1dd_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\71c281d7-4764-4ac3-be5a-514548b5f31b_SRS-23-24-Trainees-21Feb24.pdf",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/71c281d7-4764-4ac3-be5a-514548b5f31b_SRS-23-24-Trainees-21Feb24.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\71c281d7-4764-4ac3-be5a-514548b5f31b_SRS-23-24-Trainees-21Feb24.pdf"
     },
     {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\73bd0fec-57d3-4de9-83c7-dbcb9597dde4_471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png",

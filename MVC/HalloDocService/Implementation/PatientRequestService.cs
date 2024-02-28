@@ -82,6 +82,7 @@ public class PatientRequestService : IPatientRequestService
             string email = viewRequest.Email;
             string[] parts = email.Split('@');
             string userName = parts[0];
+            
             var newUser = new Aspnetuser
             {
                 Username = userName,

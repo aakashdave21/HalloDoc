@@ -3,166 +3,231 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.css" />
 <script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
 
+<style>
+    .req-tab {
+        overflow-x: auto;
+        max-height: 450px;
+        min-height: 450px;
+    }
+
+    .dropdown-menu.show {
+        display: block;
+        min-width: auto;
+    }
+
+    @@media only screen and (max-width:768px) {
+        .req-tab {
+            overflow-x: auto;
+            max-height: 380px;
+            min-height: 380px;
+        }
+    }
+</style>
 @* Table Upto Mobile Screen *@
-<div class="table-responsive mt-5 d-sm-block d-none">
-    <table class="table request-table" id="request-table" style="max-height:200px; " >
-        <thead>
-            <tr>
-                <th scope="col" style="width: 25%; min-width:150px">Name</th>
-                <th scope="col">Date Of Birth</th>
-                @if (ViewBag.statusType == "close")
-                {
-                    <th scope="col">Region</th>
-                }
-                @if (ViewBag.statusType == "new" || ViewBag.statusType == "" || ViewBag.statusType == "pending" ||
-                ViewBag.statusType == "active")
-                {
-                    <th scope="col">Requestor</th>
-                }
-                @if (ViewBag.statusType == "new" || ViewBag.statusType == "")
-                {
-                    <th scope="col">Requested Date</th>
-                }
-                @if (ViewBag.statusType == "pending" || ViewBag.statusType == "active" || ViewBag.statusType ==
-                "conclude" || ViewBag.statusType == "close" || ViewBag.statusType == "unpaid")
-                {
-                    <th scope="col">Physician Name</th>
-                    <th scope="col">Date Of Service</th>
-                }
-                @if (ViewBag.statusType != "close")
-                {
-                    <th scope="col">Phone</th>
-                }
-                <th scope="col" style="width: 15%; min-width:150px">Address</th>
-                @if (ViewBag.statusType == "new" || ViewBag.statusType == "" || ViewBag.statusType == "pending" ||
-                ViewBag.statusType == "active" || ViewBag.statusType == "close")
-                {
-                    <th scope="col" style="width: 25%; min-width:150px">Notes</th>
-                }
-                <th scope="col">Chat With</th>
-                <th scope="col" >Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                int requestCount = Model.Requests.Count;
-                @if (requestCount > 0)
-                {
-                foreach (var item in Model.Requests)
-                {
-                    var requestTypeClass = "";
-                    if (item.RequestType == 1) requestTypeClass = "patient-row";
-                    if (item.RequestType == 2) requestTypeClass = "family-row";
-                    if (item.RequestType == 3) requestTypeClass = "concierge-row";
-                    if (item.RequestType == 4) requestTypeClass = "business-row";
+<div>
+    <div class="mt-5 d-sm-block d-none req-tab">
+        <table class="table request-table" id="request-table">
+            <thead style="position: sticky; top: 0; background-color: white; z-index: 1;">
+                <tr>
+                    <th scope="col" style="width: 25%; min-width:150px">Name</th>
+                    <th scope="col">Date Of Birth</th>
+                    @if (ViewBag.statusType == "close")
+                    {
+                        <th scope="col">Region</th>
+                    }
+                    @if (ViewBag.statusType == "new" || ViewBag.statusType == "" || ViewBag.statusType == "pending" ||
+                    ViewBag.statusType == "active")
+                    {
+                        <th scope="col">Requestor</th>
+                    }
+                    @if (ViewBag.statusType == "new" || ViewBag.statusType == "")
+                    {
+                        <th scope="col">Requested Date</th>
+                    }
+                    @if (ViewBag.statusType == "pending" || ViewBag.statusType == "active" || ViewBag.statusType ==
+                    "conclude" || ViewBag.statusType == "close" || ViewBag.statusType == "unpaid")
+                    {
+                        <th scope="col">Physician Name</th>
+                        <th scope="col">Date Of Service</th>
+                    }
+                    @if (ViewBag.statusType != "close")
+                    {
+                        <th scope="col">Phone</th>
+                    }
+                    <th scope="col" style="width: 15%; min-width:150px">Address</th>
+                    @if (ViewBag.statusType == "new" || ViewBag.statusType == "" || ViewBag.statusType == "pending" ||
+                    ViewBag.statusType == "active" || ViewBag.statusType == "close")
+                    {
+                        <th scope="col" style="width: 25%; min-width:150px">Notes</th>
+                    }
+                    <th scope="col">Chat With</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody style="overflow-y: auto; max-height: calc(50vh - 40px);">
+                @{
+                    int requestCount = Model.Requests.Count;
+                    @if (requestCount > 0)
+                    {
+                        foreach (var item in Model.Requests)
+                        {
+                            var requestTypeClass = "";
+                            if (item.RequestType == 1) requestTypeClass = "patient-row";
+                            if (item.RequestType == 2) requestTypeClass = "family-row";
+                            if (item.RequestType == 3) requestTypeClass = "concierge-row";
+                            if (item.RequestType == 4) requestTypeClass = "business-row";
 
-                    <tr class=@requestTypeClass>
-                        <td>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span>
+                            <tr class=@requestTypeClass>
+                                <td>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>
+                                            @{
+                                                var fullname = item.Firstname + ", " + item.Lastname;
+                                            }
+                                            @fullname
+                                        </span>
+                                        <button class="btn">
+                                            <i class="fas fa-envelope"></i>
+                                        </button>
+                                    </div>
+
+                                </td>
+                                <td>
+
                                     @{
-                                        var fullname = item.Firstname + ", " + item.Lastname;
+                                        var bdate = item.BirthDate.Length > 3 ? item.BirthDate : "-";
                                     }
-                                    @fullname
-                                </span>
-                                <button class="btn">
-                                    <i class="fas fa-envelope"></i>
-                                </button>
-                            </div>
-
-                        </td>
-                        <td>
-
-                            @{
-                                var bdate = item.BirthDate.Length > 3 ? item.BirthDate : "-";
-                            }
-                            @bdate
-                        </td>
-                        @if (ViewBag.statusType == "close")
-                        {
-                            <td>@item.Region</td>
-                        }
-                        @if (ViewBag.statusType == "new" || ViewBag.statusType == "" || ViewBag.statusType == "pending" ||
-                ViewBag.statusType == "active")
-                        {
-                            <td>@item.Requestor</td>
-                        }
-
-                        @if (ViewBag.statusType == "new" || ViewBag.statusType == "")
-                        {
-                            <td>@item.RequestedDate</td>
-                        }
-                        @if (ViewBag.statusType == "pending" || ViewBag.statusType == "active" || ViewBag.statusType ==
-                "conclude" || ViewBag.statusType == "close" || ViewBag.statusType == "unpaid")
-                        {
-                            <td>@item.PhysicianName</td>
-                            <td>@item.ServiceDate</td>
-                        }
-                        @if (ViewBag.statusType != "close")
-                        {
-                            <td>
-                                <button class="btn user-phone">
-                                    @item.Phonenumber
-                                </button>
-                                <small>(patient)</small>
-                            </td>
-                        }
-                        <td>
-                            @item.Address
-                        </td>
-                        @if (ViewBag.statusType == "new" || ViewBag.statusType == "" || ViewBag.statusType == "pending" ||
-                ViewBag.statusType == "active" || ViewBag.statusType == "close")
-                        {
-                            <td>
-                                @item.Notes
-                            </td>
-                        }
-                        <td>
-                            <div class="d-flex gap-2">
-                                @if (ViewBag.statusType == "pending" || ViewBag.statusType == "active" || ViewBag.statusType ==
-                        "conclude" || ViewBag.statusType == "close" || ViewBag.statusType == "unpaid")
+                                    @bdate
+                                </td>
+                                @if (ViewBag.statusType == "close")
                                 {
-                                    <button class="btn">
-                                        Patient
-                                    </button>
+                                    <td>@item.Region</td>
                                 }
-                                <button class="btn">
-                                    Provider
-                                </button>
-                            </div>
-                        </td>
-                        <td class="position-relative">
-                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Action
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
-                                <li><a class="dropdown-item" href="#">View Uploads</a></li>
-                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#assignCaseModal">Assign Case</a></li>
-                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#transferModal">Transfer</a></li>
-                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#clearCaseModal">Clear Case</a></li>
-                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#cancleCaseModal">Cancle Case</a></li>
-                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#blockCaseModal">Block Case</a></li>
-                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#sendAgreementModal">Send Agreement</a></li>
-                            </ul>
-                        </td>
-                    </tr>
+                                @if (ViewBag.statusType == "new" || ViewBag.statusType == "" || ViewBag.statusType == "pending" ||
+                           ViewBag.statusType == "active")
+                                {
+                                    <td>@item.Requestor</td>
+                                }
+
+                                @if (ViewBag.statusType == "new" || ViewBag.statusType == "")
+                                {
+                                    <td>@item.RequestedDate</td>
+                                }
+                                @if (ViewBag.statusType == "pending" || ViewBag.statusType == "active" || ViewBag.statusType ==
+                           "conclude" || ViewBag.statusType == "close" || ViewBag.statusType == "unpaid")
+                                {
+                                    <td>@item.PhysicianName</td>
+                                    <td>@item.ServiceDate</td>
+                                }
+                                @if (ViewBag.statusType != "close")
+                                {
+                                    <td>
+                                        <button class="btn user-phone">
+                                            @item.Phonenumber
+                                        </button>
+                                        <small>(patient)</small>
+                                    </td>
+                                }
+                                <td>
+                                    @item.Address
+                                </td>
+                                @if (ViewBag.statusType == "new" || ViewBag.statusType == "" || ViewBag.statusType == "pending" ||
+                           ViewBag.statusType == "active" || ViewBag.statusType == "close")
+                                {
+                                    <td>
+                                        @item.Notes
+                                    </td>
+                                }
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        @if (ViewBag.statusType == "pending" || ViewBag.statusType == "active" || ViewBag.statusType
+                                   ==
+                                   "conclude" || ViewBag.statusType == "close" || ViewBag.statusType == "unpaid")
+                                        {
+                                            <button class="btn">
+                                                Patient
+                                            </button>
+                                        }
+                                        <button class="btn">
+                                            Provider
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        Action
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
+                                        <li><a class="dropdown-item" href="/admin/dashboard/ViewNotes/@item.Id">View Notes</a></li>
+                                        <li><a class="dropdown-item" href="#">View Uploads</a></li>
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                data-bs-target="#assignCaseModal">Assign Case</a></li>
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                data-bs-target="#transferModal">Transfer</a></li>
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                data-bs-target="#clearCaseModal">Clear Case</a></li>
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                data-bs-target="#cancleCaseModal">Cancle Case</a></li>
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                data-bs-target="#blockCaseModal">Block Case</a></li>
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                data-bs-target="#sendAgreementModal">Send Agreement</a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="10" class="text-center">No records found</td>
+                        </tr>
+                    }
                 }
-                }else{
-                    <tr>
-                        <td colspan="10" class="text-center">No records found</td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mt-2">
+        <div>
+            <div class="d-flex">
+                Page : <div class="dropdown">
+                    <button class="btn dropdown-toggle p-0 ps-2 pe-2" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        1
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item">1</a></li>
+                        <li><a class="dropdown-item">2</a></li>
+                        <li><a class="dropdown-item">3</a></li>
+                    </ul>
+                </div> of 3
+            </div>
+        </div>
+        <div>
+            <div class="d-flex">
+                Show Results : 1 - 5 Out of <span>&nbsp;@Model.TotalPage</span>
+                </div>
+        </div>
+        <div>
+            <div class="d-flex">
+                Show Rows : <div class="dropdown">
+                    <button class="btn dropdown-toggle p-0 ps-2 pe-2" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        5
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item">5</a></li>
+                        <li><a class="dropdown-item">10</a></li>
+                        <li><a class="dropdown-item">15</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 @* Mobile Screen View *@
 <div class="mobile-req-list d-sm-none mt-4">

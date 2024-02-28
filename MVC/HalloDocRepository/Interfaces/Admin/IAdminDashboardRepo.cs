@@ -4,7 +4,7 @@ using Microsoft.VisualBasic;
 namespace HalloDocRepository.Admin.Interfaces;
 public interface IAdminDashboardRepo
 {
-   IEnumerable<Request> GetNewRequest(string searchBy,int reqTypeId);
+   (IEnumerable<Request> requests, int totalCount) GetNewRequest(string searchBy,int reqTypeId,int pageNumber,int pageSize);
    IEnumerable<Request> GetPendingStatusRequest(string searchBy,int reqTypeId);
    IEnumerable<Request> GetActiveStatusRequest(string searchBy,int reqTypeId);
    IEnumerable<Request> GetConcludeStatusRequest(string searchBy,int reqTypeId);
@@ -15,8 +15,8 @@ public interface IAdminDashboardRepo
 
    Requestnote GetViewNotesDetails(int reqId);
    Requestclient GetPatientNoteDetails(int reqId);
-   Dictionary<string,string> GetAllCancelNotes(int reqId);
-   void SaveAdditionalNotes(string AdditionalNote,int noteId);
+   IQueryable<Requeststatuslog> GetAllCancelNotes(int reqId);
+   void SaveAdditionalNotes(string AdditionalNote,int noteId,int reqId);
 
 
 }

@@ -1968,6 +1968,22 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\61afafd7-2d09-42d8-9983-2ac8ee5f9ec2_final-SRS.pdf))">
+      <SourceType>Package</SourceType>
+      <SourceId>HalloDocMVC</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/HalloDocMVC</BasePath>
+      <RelativePath>uploads/61afafd7-2d09-42d8-9983-2ac8ee5f9ec2_final-SRS.pdf</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\61afafd7-2d09-42d8-9983-2ac8ee5f9ec2_final-SRS.pdf))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\6a7001cc-1d83-4063-95f5-ec281144a1dd_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png))">
       <SourceType>Package</SourceType>
       <SourceId>HalloDocMVC</SourceId>
@@ -1983,6 +1999,22 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\6a7001cc-1d83-4063-95f5-ec281144a1dd_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\71c281d7-4764-4ac3-be5a-514548b5f31b_SRS-23-24-Trainees-21Feb24.pdf))">
+      <SourceType>Package</SourceType>
+      <SourceId>HalloDocMVC</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/HalloDocMVC</BasePath>
+      <RelativePath>uploads/71c281d7-4764-4ac3-be5a-514548b5f31b_SRS-23-24-Trainees-21Feb24.pdf</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\71c281d7-4764-4ac3-be5a-514548b5f31b_SRS-23-24-Trainees-21Feb24.pdf))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\73bd0fec-57d3-4de9-83c7-dbcb9597dde4_471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png))">
       <SourceType>Package</SourceType>
