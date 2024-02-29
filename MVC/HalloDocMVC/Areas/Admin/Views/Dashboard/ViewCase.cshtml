@@ -118,16 +118,19 @@
                     </a>
                     
                     @* Cancle Case *@
-                    <a href="/admin/dashboard/viewcase/@Model.Id">
-                        <button class="btn btn-danger" type="button">
+                        <button class="btn btn-danger" type="button" onclick="populateCancleCaseModal('@Model.Firstname','@Model.Lastname','@Model.Id')">
                             Cancle
                         </button>
-                    </a>
-
                 </div>
             </div>
 
         </div>
     </form>
 
+    @* Cancle Case Modal *@
+    <div class="modal fade shadow-lg " id="cancleCaseModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+    </div>
+
 </main>
+

@@ -78,11 +78,11 @@
             @* Head & buttons *@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h4 style="white-space: nowrap;">Patient <small id="showStatus" class="text-muted">(New)</small></h4>
+                    <h4 style="white-space: nowrap;">Patient <small id="showStatus" class="text-muted">(New)</small>
+                    </h4>
                 </div>
                 <div class="feature-btns">
-                    <button class="btn secondary-theme-btn" data-bs-toggle="modal"
-                                        data-bs-target="#sendMailModal">
+                    <button class="btn secondary-theme-btn" data-bs-toggle="modal" data-bs-target="#sendMailModal">
                         <i class="far fa-paper-plane "></i> <span class="d-none d-md-inline">Send Link</span>
                     </button>
                     <button class="btn secondary-theme-btn">
@@ -95,9 +95,8 @@
                         <i class="fa-regular fa-share-from-square"></i> <span class="d-none d-md-inline">Exports
                             All</span>
                     </button>
-                    <button class="btn secondary-theme-btn" data-bs-toggle="modal"
-                                        data-bs-target="#reqSupportModal">
-                        <i class="fas fa-user-alt"></i> <span class="d-none d-md-inline" >Request DTY Support</span>
+                    <button class="btn secondary-theme-btn" data-bs-toggle="modal" data-bs-target="#reqSupportModal">
+                        <i class="fas fa-user-alt"></i> <span class="d-none d-md-inline">Request DTY Support</span>
                     </button>
                 </div>
             </div>
@@ -108,7 +107,8 @@
                     <div class="col-md-6 d-flex gap-2 flex-sm-row flex-column">
                         <div class="form-group has-search">
                             <span class="fa fa-search form-control-feedback"></span>
-                            <input type="text" id="searchKeyword" class="form-control" placeholder="Search By Patient Name" oninput="debounce(searchByKeyword, 500)">
+                            <input type="text" id="searchKeyword" class="form-control"
+                                placeholder="Search By Patient Name" oninput="debounce(searchByKeyword, 500)">
                         </div>
                         <div class="form-group has-search">
                             <span class="fa fa-search form-control-feedback"></span>
@@ -123,11 +123,15 @@
                     </div>
                     <div
                         class="col-md-6 table-info-btn border-sm-top d-flex justify-content-between align-items-center">
-                        <button class="btn" onclick="makeAjaxRequest('/admin/dashboard/Index', params)">All</button>
-                        <a id="patient-only" href="#" onclick="getOnlyPatient()"><span class="dot green-dot"></span> Patient</a>
-                        <a id="family-only" href="#" onclick="getOnlyFamily()"><span class="dot orange-dot"></span> Family/Friend</a>
-                        <a id="concierge-only" href="#" onclick="getOnlyConcierge()"><span class="dot blue-dot"></span> Concierge</a>
-                        <a id="business-only" href="#" onclick="getOnlyBusiness()"><span class="dot pink-dot"></span> Business</a>
+                        <button class="btn" onclick="getAllRecords()"">All</button>
+                        <a id="patient-only" href="#" onclick="getOnlyPatient()"><span class="dot green-dot"></span>
+                            Patient</a>
+                        <a id="family-only" href="#" onclick="getOnlyFamily()"><span class="dot orange-dot"></span>
+                            Family/Friend</a>
+                        <a id="concierge-only" href="#" onclick="getOnlyConcierge()"><span class="dot blue-dot"></span>
+                            Concierge</a>
+                        <a id="business-only" href="#" onclick="getOnlyBusiness()"><span class="dot pink-dot"></span>
+                            Business</a>
                         <a href="#"><span class="dot purple-dot"></span> VIP</a>
                     </div>
 
@@ -153,13 +157,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                    <small class="text-muted">To all unscedule physician: we are short on coverage and needs additional supports on call to respond to Requests.</small>
-                     <div class="form-floating mt-2">
-                        <textarea class="form-control" placeholder="Leave a comment here" id="Symptoms"
-                            style="height: 100px"></textarea>
-                        <label for="Symptoms" style="white-space: normal;">Message</label>
-                    </div>
-            </div>    
+                <small class="text-muted">To all unscedule physician: we are short on coverage and needs additional
+                    supports on call to respond to Requests.</small>
+                <div class="form-floating mt-2">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="Symptoms"
+                        style="height: 100px"></textarea>
+                    <label for="Symptoms" style="white-space: normal;">Message</label>
+                </div>
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn secondary-theme-btn">Confirm</button>
                 <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
@@ -174,39 +179,41 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #01bce9;">
-                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Send Mail To Patient For Submitting Request </h1>
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Send Mail To Patient For Submitting
+                    Request </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                        <div class="form-floating ">
-                            <input  type="text" class="form-control" id="fname" placeholder="first name">
-                            <label  for="floatingInput">First Name</label>
-                          </div>
-                          <span  class="text-danger"></span>
+                    <div class="form-floating ">
+                        <input type="text" class="form-control" id="fname" placeholder="first name">
+                        <label for="floatingInput">First Name</label>
                     </div>
-                    <div class=" mb-3">
-                        <div class="form-floating ">
-                            <input  type="text" class="form-control" id="lname" placeholder="last name">
-                            <label  for="floatingInput">Last Name</label>
-                          </div>
-                          <span  class="text-danger"></span>
+                    <span class="text-danger"></span>
+                </div>
+                <div class=" mb-3">
+                    <div class="form-floating ">
+                        <input type="text" class="form-control" id="lname" placeholder="last name">
+                        <label for="floatingInput">Last Name</label>
                     </div>
-                    <div class=" mb-3">
-                        <div class="form-floating ">
-                            <input  type="email" class="form-control" id="Email" placeholder="email" oninput="debounce(verifyEmail, 2000)">
-                            <label  for="Email">Email</label>
-                          </div>
-                          <span  class="text-danger" id="email-valid"></span>
+                    <span class="text-danger"></span>
+                </div>
+                <div class=" mb-3">
+                    <div class="form-floating ">
+                        <input type="email" class="form-control" id="Email" placeholder="email"
+                            oninput="debounce(verifyEmail, 2000)">
+                        <label for="Email">Email</label>
                     </div>
-                    <div class=" mb-3">
-                        <div class="form-floating">
-                            <input  id="Mobile" class="form-control" type="tel" name="Mobile" />
-                            <input type="hidden" id="phone_hidden" name="full_phone" />
-                          </div>
-                          <span  class="text-danger" id="mobile-valid"></span>
+                    <span class="text-danger" id="email-valid"></span>
+                </div>
+                <div class=" mb-3">
+                    <div class="form-floating">
+                        <input id="Mobile" class="form-control" type="tel" name="Mobile" />
+                        <input type="hidden" id="phone_hidden" name="full_phone" />
                     </div>
-            </div>  
+                    <span class="text-danger" id="mobile-valid"></span>
+                </div>
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn secondary-theme-btn">Confirm</button>
                 <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
@@ -216,124 +223,123 @@
 </div>
 
 <script>
-    let params,tabData;
-     function makeAjaxRequest(url, requestData) {
-            $.ajax({
-                url: url,
-                type: 'GET',
-                data: requestData,
-                success: function (response) {
-                    $('#render-content').empty();
-                    $('#render-content').html(response);
-                    tabData = response;
-                },
-                error: function () {
-                    console.log('Error occurred');
-                }
-            });
+    let params, tabData, searchKeyword=null, reqTypes=null, pageNum = 1,pageRecord = 5;
+
+    $(".card").click(function () {
+        let action = $(this).data('action');
+        let showStatus = document.querySelector("#showStatus");
+        showStatus.innerHTML = `(${action})`;
+
+        $(".card").removeClass("active");
+        $(".col").removeClass("active-col");
+
+        $(this).addClass("active");
+        $(this).closest(".col").addClass("active-col");
+
+        switch (action) {
+            case "new":
+                params = { status: "new" };
+                break;
+            case "pending":
+                params = { status: "pending" };
+                break;
+            case "active":
+                params = { status: "active" };
+                break;
+            case "conclude":
+                params = { status: "conclude" };
+                break;
+            case "close":
+                params = { status: "close" };
+                break;
+            case "unpaid":
+                params = { status: "unpaid" };
+                break;
+            default:
+                params = { status: "new" };
+                break;
         }
-   
-       
+        makeAjaxRequest(`/admin/dashboard/Index?pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
+    })
+    let timeoutId;
+    function debounce(func, delay) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(func, delay);
+    }
+    function searchByKeyword() {
+        searchKeyword = document.getElementById("searchKeyword").value.toLowerCase();
+        pageNum = 1;
+        pageRecord = 5;
+        makeAjaxRequest(`/admin/dashboard?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
+    }
 
-        $(".card").click(function () {
-            let action = $(this).data('action');
-            let showStatus = document.querySelector("#showStatus");
-            showStatus.innerHTML = `(${action})`;
-            
-            $(".card").removeClass("active");
-            $(".col").removeClass("active-col");
+    const getOnlyPatient = () => {
+        $(".dot").closest("a").removeClass("fw-bold")
+        $("#patient-only").addClass("fw-bold");
+        findFunction(1);
+    }
+    const getOnlyFamily = () => {
+        $(".dot").closest("a").removeClass("fw-bold")
+        $("#family-only").addClass("fw-bold");
+        findFunction(2);
+    }
+    const getOnlyConcierge = () => {
+        $(".dot").closest("a").removeClass("fw-bold")
+        $("#concierge-only").addClass("fw-bold");
+        findFunction(3);
+    }
+    const getOnlyBusiness = () => {
+        $(".dot").closest("a").removeClass("fw-bold")
+        $("#business-only").addClass("fw-bold");
+        findFunction(4);
+    }
 
-            $(this).addClass("active");
-            $(this).closest(".col").addClass("active-col");
+    const findFunction = (reqTypeId) => {
+        reqTypes = reqTypeId;
+        pageNum = 1;
+        pageRecord = 5;
+        if(searchKeyword){
+            makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypeId}&pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
+        }else{
+            makeAjaxRequest(`/admin/dashboard/Index?requesttype=${reqTypeId}&pageNumber=${pageNum}&pageSize=${pageRecord}`);
+        }
+    }
 
-            switch (action) {
-                case "new":
-                    params = { status: "new" };
-                    break;
-                case "pending":
-                    params = { status: "pending" };
-                    break;
-                case "active":
-                    params = { status: "active" };
-                    break;
-                case "conclude":
-                    params = { status: "conclude" };
-                    break;
-                case "close":
-                    params = { status: "close" };
-                    break;
-                case "unpaid":
-                    params = { status: "unpaid" };
-                    break;
-                default:
-                    params = { status: "new" };
-                    break;
+    const getAllRecords = ()=>{
+        reqTypes = 0;
+        pageNum = 1;
+        pageRecord = 5;
+        $(".dot").closest("a").removeClass("fw-bold")
+        makeAjaxRequest(`/admin/dashboard/Index?pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
+    }
+
+    function makeAjaxRequest(url, requestData) {
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: requestData,
+            success: function (response) {
+                $('#render-content').empty();
+                $('#render-content').html(response);
+                tabData = response;
+            },
+            error: function () {
+                console.log('Error occurred');
             }
-            makeAjaxRequest('/admin/dashboard/Index', params);
-        })
-        let timeoutId;
-        function debounce(func, delay) {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(func, delay);
-        }
-        function searchByKeyword(){
-            let searchKeyword = document.getElementById("searchKeyword").value.toLowerCase();
-            makeAjaxRequest(`/admin/dashboard?searchBy=${searchKeyword}`, params);
-                @* $.ajax({
-                url: `/admin/dashboard?searchBy=${searchKeyword}`,
-                type: 'GET',
-                data: params,
-                traditional : true,
-                success: function (response) {
-                    $('#render-content').empty();
-                    $('#render-content').html(response);
-                },
-                error: function () {
-                    toastr.error("Error occurred while verifying email.");
-                }
-        }); *@
-            
-        }
+        });
+    }
 
-        const getOnlyPatient = ()=>{
-            $(".dot").closest("a").removeClass("fw-bold")
-            $("#patient-only").addClass("fw-bold");
-           findFunction(1);
-        }
-        const getOnlyFamily = ()=>{
-            $(".dot").closest("a").removeClass("fw-bold")
-            $("#family-only").addClass("fw-bold");
-           findFunction(2);
-        }
-        const getOnlyConcierge = ()=>{
-            $(".dot").closest("a").removeClass("fw-bold")
-            $("#concierge-only").addClass("fw-bold");
-           findFunction(3);
-        }
-        const getOnlyBusiness = ()=>{
-            $(".dot").closest("a").removeClass("fw-bold")
-            $("#business-only").addClass("fw-bold");
-           findFunction(4);
-        }
+    function pageChange() {
+        searchKeyword = document.getElementById("searchKeyword").value.toLowerCase();
+        const pageChange = document.querySelector("#pageChange");
+        pageNum = pageChange.value;
+        makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
+    }
 
-        const findFunction = (reqTypeId) => {
-            $(".dot").closest("a").removeClass("fw-bold")
-            @* $.ajax({
-                url: `/admin/dashboard/Index?requesttype=${reqTypeId}`,
-                type: 'GET', 
-                data: params,
-                success: function (response) {
-                    $('#render-content').empty();
-                    $('#render-content').html(response);
-                    tabData = response;
-                },
-                error: function () {
-                    console.log('Error occurred');
-                }
-            }); *@
-            makeAjaxRequest(`/admin/dashboard/Index?requesttype=${reqTypeId}`, params);
-        }
-
-        
-    
+    function pageRecordChange(){
+        searchKeyword = document.getElementById("searchKeyword").value.toLowerCase();
+        const pageRecordChange = document.querySelector("#pageRecordChange");
+        pageRecord = pageRecordChange.value;
+        makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
+    }
 </script>

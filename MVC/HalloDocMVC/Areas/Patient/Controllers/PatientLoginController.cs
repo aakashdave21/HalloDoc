@@ -19,6 +19,7 @@ using System.Text;
 
 namespace HalloDocMVC.Controllers;
 
+[Area("Patient")]
 public class PatientLoginController : Controller
 {
     private readonly IPatientLogin _patientLoginService;

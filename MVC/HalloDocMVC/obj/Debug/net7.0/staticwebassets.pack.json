@@ -65,6 +65,14 @@
       "PackagePath": "staticwebassets\\images\\logo.png"
     },
     {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\adminDashboardRequest.js",
+      "PackagePath": "staticwebassets\\js\\adminDashboardRequest.js"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\cancleCase.js",
+      "PackagePath": "staticwebassets\\js\\cancleCase.js"
+    },
+    {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\global.js",
       "PackagePath": "staticwebassets\\js\\global.js"
     },
@@ -523,6 +531,10 @@
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\cfa6389a-355e-446a-9fd1-85fa300aca78_Untitled.png",
       "PackagePath": "staticwebassets\\uploads\\cfa6389a-355e-446a-9fd1-85fa300aca78_Untitled.png"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\fdc780a3-14fe-48bb-987a-44d4fc7e11c8_SRS-23-24-Trainees-21Feb24.pdf",
+      "PackagePath": "staticwebassets\\uploads\\fdc780a3-14fe-48bb-987a-44d4fc7e11c8_SRS-23-24-Trainees-21Feb24.pdf"
     },
     {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.HalloDocMVC.Microsoft.AspNetCore.StaticWebAssets.props",

@@ -13,6 +13,10 @@ namespace HalloDocService.ViewModels
         public int UnPaidState { get; set; } = 0;
 
         public int TotalPage {get; set;}
+        
+        public int PageRangeStart { get; set; }
+        public int PageRangeEnd { get; set; }
+        public int NoOfPage { get; set; }
 
         public List<RequestViewModel> Requests { get; set; } = new List<RequestViewModel>();
     }

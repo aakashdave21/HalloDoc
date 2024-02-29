@@ -7,7 +7,7 @@ namespace HalloDocRepository.Admin.Implementation;
 public class AdminDashboardRepo : IAdminDashboardRepo
 {
 
-    private readonly HalloDocContext? _dbContext;
+    private readonly HalloDocContext _dbContext;
 
     public AdminDashboardRepo(HalloDocContext dbContext)
     {
@@ -20,6 +20,7 @@ public class AdminDashboardRepo : IAdminDashboardRepo
             .Include(req => req.Requestclients)
             .Where(req => req.Status == 1);
 
+
         if(reqTypeId>0){
             query = query.Where(req => req.Requesttypeid == reqTypeId);
         }
@@ -27,18 +28,15 @@ public class AdminDashboardRepo : IAdminDashboardRepo
         {
             query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
         }
-        // Calculate total count
+        
         int totalCount = query.Count();
-        Console.WriteLine(totalCount);
-        // Apply pagination
         query = query.Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize);
-        
 
         return (query.ToList(),totalCount);
     }
 
-public IEnumerable<Request> GetPendingStatusRequest(string searchBy = "",int reqTypeId=0)
+public (IEnumerable<Request> requests, int totalCount) GetPendingStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2)
 {
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
@@ -54,10 +52,14 @@ public IEnumerable<Request> GetPendingStatusRequest(string searchBy = "",int req
     }
     
 
-    return query.ToList();
+    int totalCount = query.Count();
+        query = query.Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize);
+
+        return (query.ToList(),totalCount);
 }
 
-public IEnumerable<Request> GetActiveStatusRequest(string searchBy = "",int reqTypeId=0)
+public (IEnumerable<Request> requests, int totalCount) GetActiveStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2)
 {
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
@@ -73,10 +75,14 @@ public IEnumerable<Request> GetActiveStatusRequest(string searchBy = "",int reqT
     }
     
 
-    return query.ToList();
+    int totalCount = query.Count();
+        query = query.Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize);
+
+        return (query.ToList(),totalCount);
 }
 
-public IEnumerable<Request> GetConcludeStatusRequest(string searchBy = "",int reqTypeId=0)
+public (IEnumerable<Request> requests, int totalCount) GetConcludeStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2)
 {
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
@@ -92,10 +98,14 @@ public IEnumerable<Request> GetConcludeStatusRequest(string searchBy = "",int re
     }
     
 
-    return query.ToList();
+   int totalCount = query.Count();
+        query = query.Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize);
+
+        return (query.ToList(),totalCount);
 }
 
-public IEnumerable<Request> GetCloseStatusRequest(string searchBy = "",int reqTypeId=0)
+public (IEnumerable<Request> requests, int totalCount) GetCloseStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2)
 {
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
@@ -112,10 +122,14 @@ public IEnumerable<Request> GetCloseStatusRequest(string searchBy = "",int reqTy
     }
    
 
-    return query.ToList();
+   int totalCount = query.Count();
+        query = query.Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize);
+
+        return (query.ToList(),totalCount);
 }
 
-public IEnumerable<Request> GetUnpaidStatusRequest(string searchBy = "",int reqTypeId=0)
+public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2)
 {
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
@@ -132,7 +146,11 @@ public IEnumerable<Request> GetUnpaidStatusRequest(string searchBy = "",int reqT
     }
     
 
-    return query.ToList();
+    int totalCount = query.Count();
+        query = query.Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize);
+
+        return (query.ToList(),totalCount);
 }
     public Dictionary<string,int> CountRequestByType()
     {
@@ -203,5 +221,34 @@ public IEnumerable<Request> GetUnpaidStatusRequest(string searchBy = "",int reqT
                 throw new Exception();
             }
         }
+    }
+
+    public short GetStatusOfRequest(int reqId){
+        return _dbContext.Requests.FirstOrDefault(req => req.Id == reqId).Status;
+    }
+    public int? GetNoteIdFromRequestId(int reqId){
+        return _dbContext.Requestnotes.FirstOrDefault(req => req.Requestid == reqId)?.Id;
+    }
+    public void ChangeStatusOfRequest(int reqId,short newStatus){
+        Request RequestData = _dbContext.Requests.FirstOrDefault(req => req.Id == reqId);
+        if(RequestData!=null){
+            RequestData.Status = newStatus;
+            _dbContext.SaveChanges();
+        }else{
+                throw new Exception();
+        }
+    }
+
+    public void AddStatusLog(int reqId,short newStatus,short oldStatus,string reason,int? adminId,int? physicianId){
+        Requeststatuslog NewStatusLog = new(){
+            Requestid = reqId,
+            Status = newStatus,
+            Oldstatus = oldStatus,
+            Notes = reason,
+            // Adminid = adminId,
+            // Physicianid = physicianId
+        };
+        _dbContext.Requeststatuslogs.Add(NewStatusLog);
+        _dbContext.SaveChanges();
     }
 }

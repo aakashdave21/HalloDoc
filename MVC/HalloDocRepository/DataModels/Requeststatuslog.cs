@@ -45,6 +45,9 @@ public partial class Requeststatuslog
     [Column("updateddate", TypeName = "timestamp without time zone")]
     public DateTime Updateddate { get; set; }
 
+    [Column("oldstatus")]
+    public short? Oldstatus { get; set; }
+
     [ForeignKey("Adminid")]
     [InverseProperty("Requeststatuslogs")]
     public virtual Admin? Admin { get; set; }

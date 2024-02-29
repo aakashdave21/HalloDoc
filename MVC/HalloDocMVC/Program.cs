@@ -52,6 +52,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -59,13 +60,28 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Redirect root URL to your desired default URL
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/")
+    {
+        context.Response.Redirect("/Patient/Home/Index"); // Specify your desired default URL here
+        return;
+    }
+
+    await next();
+});
+
+app.MapControllerRoute(
+    name: "Patient",
+    pattern: "{area=exists}/{controller=Home}/{action=Index}/{id?}");
+
 app.MapControllerRoute(
        name: "Admin",
         pattern: "{area=exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "Pateint/{controller=PatientHome}/{action=Index}/{id?}");
 
 app.Run();

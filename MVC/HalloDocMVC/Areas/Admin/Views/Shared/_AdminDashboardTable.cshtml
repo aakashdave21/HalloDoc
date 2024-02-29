@@ -7,7 +7,6 @@
     .req-tab {
         overflow-x: auto;
         max-height: 450px;
-        min-height: 450px;
     }
 
     .dropdown-menu.show {
@@ -15,11 +14,14 @@
         min-width: auto;
     }
 
+    .select-page{
+        padding: 0 2.5rem 0 0.5rem;
+    }
+
     @@media only screen and (max-width:768px) {
         .req-tab {
             overflow-x: auto;
             max-height: 380px;
-            min-height: 380px;
         }
     }
 </style>
@@ -168,8 +170,9 @@
                                                 data-bs-target="#transferModal">Transfer</a></li>
                                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                 data-bs-target="#clearCaseModal">Clear Case</a></li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#cancleCaseModal">Cancle Case</a></li>
+                                        <li><a class="dropdown-item" href="#"
+                                                onclick="populateCancleCaseModal('@item.Firstname','@item.Lastname','@item.Id')">Cancle
+                                                Case</a></li>
                                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                 data-bs-target="#blockCaseModal">Block Case</a></li>
                                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
@@ -191,37 +194,40 @@
     </div>
     <div class="d-flex justify-content-between align-items-center mt-2">
         <div>
-            <div class="d-flex">
-                Page : <div class="dropdown">
-                    <button class="btn dropdown-toggle p-0 ps-2 pe-2" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        1
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item">1</a></li>
-                        <li><a class="dropdown-item">2</a></li>
-                        <li><a class="dropdown-item">3</a></li>
-                    </ul>
-                </div> of 3
+            <div class="d-flex" style="white-space: nowrap;">
+                Page : <select class="form-select select-page ms-2" id="pageChange" onchange="pageChange()" aria-label="Default select example">
+                    @{
+                        for(int i=1;i<=@Model.NoOfPage;i++){
+                            if(ViewBag.currentPage == i){
+                                <option value="@i" selected>@i</option>
+                            }else{
+                                <option value="@i">@i</option>
+                            }
+                        }
+                    }
+                </select> &nbsp; of @Model.NoOfPage
             </div>
         </div>
         <div>
             <div class="d-flex">
-                Show Results : 1 - 5 Out of <span>&nbsp;@Model.TotalPage</span>
-                </div>
+                Show Results : @Model.PageRangeStart - @Model.PageRangeEnd Out of <span>&nbsp;@Model.TotalPage</span>
+            </div>
         </div>
         <div>
-            <div class="d-flex">
-                Show Rows : <div class="dropdown">
-                    <button class="btn dropdown-toggle p-0 ps-2 pe-2" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        5
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item">5</a></li>
-                        <li><a class="dropdown-item">10</a></li>
-                        <li><a class="dropdown-item">15</a></li>
-                    </ul>
+            <div class="d-flex" style="white-space: nowrap;">
+                Show Rows : 
+                    <select class="form-select select-page ms-2" id="pageRecordChange" onchange="pageRecordChange()" aria-label="Default select example">
+                        @{
+                            int[] pageSizeArrray = {5,10,15};
+                            foreach(int i in pageSizeArrray){
+                                if(ViewBag.currentPageSize==i){
+                                     <option value="@i" selected>@i</option>
+                                }else{
+                                    <option value="@i">@i</option>
+                                }
+                            }
+                        }
+                    </select>
                 </div>
             </div>
         </div>
@@ -597,33 +603,10 @@
 @* Cancle Case Modal *@
 <div class="modal fade shadow-lg " id="cancleCaseModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #01bce9;">
-                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Confirmation Cancelation</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h4>Patient Name : <span class="patient-name-modal">Test, Test</span></h4>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Reason For Cancelation</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-                <div class="form-floating mt-2">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="Symptoms"
-                        style="height: 100px"></textarea>
-                    <label for="Symptoms" style="white-space: normal;">Please Provide Additional Notes</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn secondary-theme-btn">Confirm</button>
-                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
-            </div>
-        </div>
-    </div>
 </div>
+
+
+
 @* Assign Case Modal *@
 <div class="modal fade shadow-lg " id="assignCaseModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">

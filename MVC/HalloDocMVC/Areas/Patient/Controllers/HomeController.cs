@@ -4,6 +4,7 @@ using HalloDocMVC.Models;
 
 namespace HalloDocMVC.Controllers;
 
+[Area("Patient")]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;

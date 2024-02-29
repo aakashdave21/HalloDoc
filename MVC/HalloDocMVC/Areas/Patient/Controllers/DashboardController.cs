@@ -15,6 +15,7 @@ using System.IO.Compression;
 
 namespace HalloDocMVC.Controllers;
 
+[Area("Patient")]
 [Authorize]
 public class DashboardController : Controller
 {
@@ -128,14 +129,14 @@ public class DashboardController : Controller
 
     }
 
-    [HttpGet("/Dashboard/Documents/{RequestId}")]
-    public async Task<IActionResult> Documents(int requestId)
+    // [HttpGet("/Dashboard/Documents/{RequestId}")]
+    public async Task<IActionResult> Documents(int RequestId)
     {
         try
         {
-            var DocumentRecords = _dashboardService.GetAllRequestedDocuments(requestId);
+            var DocumentRecords = _dashboardService.GetAllRequestedDocuments(RequestId);
             ViewBag.userId = User.FindFirstValue("UserId");
-            ViewBag.requestId = requestId;
+            ViewBag.requestId = RequestId;
 
             var viewModel = DocumentRecords.Select(d => new ViewDocuments
             {

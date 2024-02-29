@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "bffGEAJjlVXAokO+6JmqpZCMwFB9iVGKs1Dr1kp58S0=",
+  "Hash": "fFZqYF/XZW1mz342lg0EoI0yYvZjktCSOOM+AeSPDKQ=",
   "Source": "HalloDocMVC",
   "BasePath": "_content/HalloDocMVC",
   "Mode": "Default",
@@ -1324,6 +1324,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\logo.png"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\adminDashboardRequest.js",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "js/adminDashboardRequest.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\adminDashboardRequest.js"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\cancleCase.js",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "js/cancleCase.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\cancleCase.js"
     },
     {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\global.js",
@@ -3279,6 +3313,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\cfa6389a-355e-446a-9fd1-85fa300aca78_Untitled.png"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\fdc780a3-14fe-48bb-987a-44d4fc7e11c8_SRS-23-24-Trainees-21Feb24.pdf",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/fdc780a3-14fe-48bb-987a-44d4fc7e11c8_SRS-23-24-Trainees-21Feb24.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\fdc780a3-14fe-48bb-987a-44d4fc7e11c8_SRS-23-24-Trainees-21Feb24.pdf"
     }
   ]
 }

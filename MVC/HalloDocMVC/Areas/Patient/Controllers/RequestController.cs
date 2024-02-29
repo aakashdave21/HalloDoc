@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace HalloDocMVC.Controllers;
 
+[Area("Patient")]
 public class RequestController : Controller
 {
     private readonly IPatientRequestService _patientRequestService;

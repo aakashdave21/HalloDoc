@@ -7,7 +7,7 @@
 
 <main class="family-request-section container-sm mt-5">
     <div class="d-flex justify-content-end mt-4">
-        <a asp-controller="Dashboard" asp-action="Index" class="btn btn-sm back-link"><i
+        <a asp-area="Patient" asp-controller="Dashboard" asp-action="Index" class="btn btn-sm back-link"><i
                 class="fa-solid fa-chevron-left"></i> Back</a>
     </div>
 
@@ -172,7 +172,7 @@
                     <button type="button" class="btn submit-btn me-2" onclick="submitForm()">
                         Submit
                     </button>
-                    <a asp-controller="Home" asp-action="SubmitRequest">
+                    <a asp-area="Patient" asp-controller="Home" asp-action="SubmitRequest">
                         <button type="button" class="btn cancle-btn"> Cancle </button>
                     </a>
 

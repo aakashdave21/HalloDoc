@@ -10,17 +10,17 @@ namespace HalloDocMVC.Controllers.Admin;
 [Area("Admin")]
 public class DashboardController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<DashboardController> _logger;
     private readonly IAdminDashboardService _adminDashboardService;
 
-    public DashboardController(ILogger<HomeController> logger, IAdminDashboardService adminDashboardService)
+    public DashboardController(ILogger<DashboardController> logger, IAdminDashboardService adminDashboardService)
     {
         _logger = logger;
         _adminDashboardService = adminDashboardService;
     }
 
 
-    public IActionResult Index(string status)
+    public object Index(string status)
     {
         (List<RequestViewModel> req, int totalCount) myresult;
         ViewBag.statusType = status ?? "";
@@ -35,11 +35,15 @@ public class DashboardController : Controller
         viewModel.UnPaidState = countDictionary["unpaid"];
 
         string searchBy = Request.Query["searchBy"];
-        // int pageNumber = int.Parse(Request.Query["pageNumber"]);
-        // int pageSize = int.Parse(Request.Query["pageSize"]);
-        int pageNumber = 1;
-        int pageSize = 3;
+        int pageNumber = Request.Query.TryGetValue("pageNumber", out var pageNumberValue) ? int.Parse(pageNumberValue) : 1;
+        int pageSize = Request.Query.TryGetValue("pageSize", out var pageSizeValue) ? int.Parse(pageSizeValue) : 5;
+    
         int reqType = 0;
+        ViewBag.currentPage = pageNumber;
+        ViewBag.currentPageSize = pageSize;
+
+        int startIndex = (pageNumber - 1) * pageSize + 1;
+
         if (!string.IsNullOrEmpty(Request.Query["requesttype"]))
         {
             int.TryParse(Request.Query["requesttype"], out reqType);
@@ -50,26 +54,69 @@ public class DashboardController : Controller
                 myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize);
                 viewModel.TotalPage = myresult.totalCount;
                 viewModel.Requests = myresult.req;
+                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
+                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
+                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
                 break;
             case "pending":
-                viewModel.Requests = _adminDashboardService.GetPendingStatusRequest(searchBy,reqType);
+                myresult = _adminDashboardService.GetPendingStatusRequest(searchBy, reqType, pageNumber, pageSize);
+                viewModel.TotalPage = myresult.totalCount;
+                viewModel.Requests = myresult.req;
+                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
+                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
+                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
+
+
                 break;
             case "active":
-                viewModel.Requests = _adminDashboardService.GetActiveStatusRequest(searchBy,reqType);
+                myresult = _adminDashboardService.GetActiveStatusRequest(searchBy, reqType, pageNumber, pageSize);
+                viewModel.TotalPage = myresult.totalCount;
+                viewModel.Requests = myresult.req;
+                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
+                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
+                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
+
+
                 break;
             case "conclude":
-                viewModel.Requests = _adminDashboardService.GetConcludeStatusRequest(searchBy,reqType);
+                myresult = _adminDashboardService.GetConcludeStatusRequest(searchBy, reqType, pageNumber, pageSize);
+                viewModel.TotalPage = myresult.totalCount;
+                viewModel.Requests = myresult.req;
+                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
+                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
+                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
+
+
                 break;
             case "close":
-                viewModel.Requests = _adminDashboardService.GetCloseStatusRequest(searchBy,reqType);
+                myresult = _adminDashboardService.GetCloseStatusRequest(searchBy, reqType, pageNumber, pageSize);
+                viewModel.TotalPage = myresult.totalCount;
+                viewModel.Requests = myresult.req;
+                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
+                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
+                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
+
+
                 break;
             case "unpaid":
-                viewModel.Requests = _adminDashboardService.GetUnpaidStatusRequest(searchBy,reqType);
+                myresult = _adminDashboardService.GetUnpaidStatusRequest(searchBy, reqType, pageNumber, pageSize);
+                viewModel.TotalPage = myresult.totalCount;
+                viewModel.Requests = myresult.req;
+                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
+                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
+                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
+
+
                 break;
             default:
                 myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize);
                 viewModel.TotalPage = myresult.totalCount;
                 viewModel.Requests = myresult.req;
+                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
+                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
+                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
+
+
                 break;
         }
 
@@ -127,6 +174,25 @@ public async Task<IActionResult> SaveViewNotes(ViewNotesViewModel viewnotes)
         _adminDashboardService.SaveAdditionalNotes(viewnotes?.AdditionalNote,viewnotes.NoteId,viewnotes.ReqId);
          TempData["success"] = "Updated Successfully";
         return Redirect("/admin/dashboard/ViewNotes/"+viewnotes.ReqId);
+    }
+    catch (Exception e)
+    {
+        _logger.LogInformation(e.Message);
+        TempData["error"] = "Internal Server Error";
+        return Redirect("/Admin/Dashboard/Index");
+    }
+}
+[HttpPost]
+public async Task<IActionResult> CancleCase(IFormCollection formData)
+{
+    try
+    {   
+        var reqId = formData["reqId"];
+        var reason = formData["reason"];
+        var additionalNotes = formData["additionalNotes"];
+        _adminDashboardService.CancleRequestCase(int.Parse(reqId),reason,additionalNotes);
+        TempData["success"] = "Request Cancelled Successfully!";
+       return Json(new { success = true, message = "Form data received successfully" });
     }
     catch (Exception e)
     {

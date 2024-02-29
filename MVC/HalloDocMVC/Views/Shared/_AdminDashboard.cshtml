@@ -63,9 +63,9 @@
                     </div>
                 </div>
                 <div class="collapse navbar-collapse nav-tabs d-md-block position-absolute shadow" id="navbarSupportedContent" style="width: 100%;">
-                    <ul class="d-flex flex-md-row flex-column">
+                    <ul class="d-flex flex-md-row flex-column nav-tabs-ul">
                         <li>
-                            <a asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                         </li>
                         <li>
                             <a asp-controller="Dashboard" asp-action="UserProfile">Provider Location</a>
@@ -109,7 +109,14 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/global.js" asp-append-version="true"></script>
+    <script src="~/js/adminDashboardRequest.js" asp-append-version="true"></script>
+    <script src="~/js/cancleCase.js" asp-append-version="true"></script>
     <script src="https://kit.fontawesome.com/3bcc8c09be.js" crossorigin="anonymous"></script>
+    @* <script>
+        $(".dashboard-header ul li a").click(function(){
+
+        }) .removeClass("active");
+    </script> *@
 </body>
 
 </html>

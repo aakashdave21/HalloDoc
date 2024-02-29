@@ -39,7 +39,7 @@
 }
 
 .dashboard-header ul li a:hover,
-[data-bs-theme=dark] .dashboard-header ul li a:hover {
+[data-bs-theme=dark] .dashboard-header ul li a:hover , .dashboard-header ul li a.active {
     border-bottom: 2px solid #01bce9;
     color: #01bce9;
 }

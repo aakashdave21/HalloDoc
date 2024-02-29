@@ -30,7 +30,7 @@
                             <td>
                                 @{
                                     if(@item.NoOfRequests > 0){
-                                        <a style="white-space: nowrap;" type="button" class="btn theme-btn" asp-action="Documents" asp-route-RequestId="@item.Id" >
+                                        <a style="white-space: nowrap;" type="button" class="btn theme-btn" asp-area="Patient" asp-controller="Dashboard" asp-action="Documents" asp-route-RequestId="@item.Id" >
                                            (<span>@item.NoOfRequests</span>) Document
                                         </a>
                                     }
@@ -57,8 +57,8 @@
             <div class="modal-body">
                 <p>Here I want to create request for...</p>
                 <div class="d-flex gap-2 justify-content-center mt-2">
-                    <a type="button" class="btn secondary-theme-btn" asp-controller="Dashboard" asp-action="NewRequest">Me</a>
-                    <a type="button" class="btn theme-btn" asp-controller="Dashboard" asp-action="AnotherUserRequest" >Someone Else</a>
+                    <a type="button" class="btn secondary-theme-btn" asp-area="Patient" asp-controller="Dashboard" asp-action="NewRequest">Me</a>
+                    <a type="button" class="btn theme-btn" asp-area="Patient" asp-controller="Dashboard" asp-action="AnotherUserRequest" >Someone Else</a>
                 </div>
             </div>
             <div class="modal-footer">
