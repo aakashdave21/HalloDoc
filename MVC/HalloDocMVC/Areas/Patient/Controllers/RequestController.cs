@@ -18,10 +18,13 @@ public class RequestController : Controller
     private readonly IPatientRequestService _patientRequestService;
     private readonly IWebHostEnvironment _hostingEnvironment;
 
-    public RequestController(IPatientRequestService patientRequestService,IWebHostEnvironment hostingEnvironment)
+    private readonly IUtilityService _utilityService;
+
+    public RequestController(IPatientRequestService patientRequestService,IWebHostEnvironment hostingEnvironment,IUtilityService utilityService)
     {
         _patientRequestService = patientRequestService;
         _hostingEnvironment = hostingEnvironment;
+        _utilityService = utilityService;
     }
 
 

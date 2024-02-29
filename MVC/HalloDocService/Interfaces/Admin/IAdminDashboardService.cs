@@ -18,4 +18,10 @@ public interface IAdminDashboardService
     ViewNotesViewModel GetViewNotesDetails(int reqId);
     void SaveAdditionalNotes(string AdditionalNote,int noteId,int reqId);
     void CancleRequestCase(int reqId,string reason,string additionalNotes);
+
+    Task<IEnumerable<Region>> GetRegions();
+    Task<IEnumerable<Casetag>> GetCaseTag();
+    Task<IEnumerable<Physician>> GetPhysicianByRegion(int regionId);
+
+    Task AssignRequestCase(int reqId,int phyId,int? adminId,string desc);
 }

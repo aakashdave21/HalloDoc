@@ -21,7 +21,7 @@ public partial class Aspnetuser
 
     [Column("passwordhash")]
     [StringLength(128)]
-    public string Passwordhash { get; set; } = null!;
+    public string? Passwordhash { get; set; }
 
     [Column("securitystamp")]
     [StringLength(128)]

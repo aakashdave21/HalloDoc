@@ -18,8 +18,13 @@ public interface IAdminDashboardRepo
    IQueryable<Requeststatuslog> GetAllCancelNotes(int reqId);
    void SaveAdditionalNotes(string AdditionalNote,int noteId,int reqId);
    void ChangeStatusOfRequest(int reqId,short newStatus);
-   void AddStatusLog(int reqId,short newStatus,short oldStatus,string reason,int? adminId,int? physicianId);
+   void AddStatusLog(int reqId,short newStatus,short oldStatus,string reason,int? adminId,int? physicianId,int? transToPhyId);
    short GetStatusOfRequest(int reqId);
    int? GetNoteIdFromRequestId(int reqId);
+
+   Task<IEnumerable<Region>> GetRegions();
+   Task<IEnumerable<Casetag>> GetCaseTag();
+   Task<IEnumerable<Physician>> GetPhysicianByRegion(int regionId);
+   void AddPhysicianToRequest(int reqId,int transPhyId);
 
 }

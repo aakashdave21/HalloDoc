@@ -19,9 +19,13 @@ public partial class HalloDocContext : DbContext
 
     public virtual DbSet<Aspnetuser> Aspnetusers { get; set; }
 
+    public virtual DbSet<Casetag> Casetags { get; set; }
+
     public virtual DbSet<Concierge> Concierges { get; set; }
 
     public virtual DbSet<Physician> Physicians { get; set; }
+
+    public virtual DbSet<Physicianregion> Physicianregions { get; set; }
 
     public virtual DbSet<Region> Regions { get; set; }
 
@@ -78,6 +82,14 @@ public partial class HalloDocContext : DbContext
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
+        modelBuilder.Entity<Casetag>(entity =>
+        {
+            entity.HasKey(e => e.Casetagid).HasName("casetag_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
         modelBuilder.Entity<Concierge>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("concierge_pkey");
@@ -107,6 +119,18 @@ public partial class HalloDocContext : DbContext
             entity.HasOne(d => d.Region).WithMany(p => p.Physicians).HasConstraintName("physician_regionid_fkey");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Physicians).HasConstraintName("physician_roleid_fkey");
+        });
+
+        modelBuilder.Entity<Physicianregion>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("physicianregion_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.Physician).WithMany(p => p.Physicianregions).HasConstraintName("physicianregion_physicianid_fkey");
+
+            entity.HasOne(d => d.Region).WithMany(p => p.Physicianregions).HasConstraintName("physicianregion_regionid_fkey");
         });
 
         modelBuilder.Entity<Region>(entity =>

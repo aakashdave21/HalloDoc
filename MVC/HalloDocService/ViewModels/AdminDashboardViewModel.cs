@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using HalloDocRepository.DataModels;
 
 namespace HalloDocService.ViewModels
 {
@@ -19,6 +20,8 @@ namespace HalloDocService.ViewModels
         public int NoOfPage { get; set; }
 
         public List<RequestViewModel> Requests { get; set; } = new List<RequestViewModel>();
+
+        public IEnumerable<Region>? RegionList {get;set;}
     }
 
     public class RequestViewModel

@@ -4,6 +4,7 @@ using HalloDocMVC.Models;
 using HalloDocService.ViewModels;
 using HalloDocService.Admin.Interfaces;
 using HalloDocRepository.DataModels;
+using System.Text.Json.Nodes;
 
 namespace HalloDocMVC.Controllers.Admin;
 
@@ -20,12 +21,14 @@ public class DashboardController : Controller
     }
 
 
-    public object Index(string status)
+    public async Task<IActionResult> Index(string status)
     {
         (List<RequestViewModel> req, int totalCount) myresult;
         ViewBag.statusType = status ?? "";
         var viewModel = new AdminDashboardViewModel();
         var countDictionary = _adminDashboardService.CountRequestByType();
+
+        viewModel.RegionList = await _adminDashboardService.GetRegions();
 
         viewModel.NewState = countDictionary["new"];
         viewModel.PendingState = countDictionary["pending"];
@@ -65,8 +68,6 @@ public class DashboardController : Controller
                 viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
                 viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
                 viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
-
-
                 break;
             case "active":
                 myresult = _adminDashboardService.GetActiveStatusRequest(searchBy, reqType, pageNumber, pageSize);
@@ -75,8 +76,6 @@ public class DashboardController : Controller
                 viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
                 viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
                 viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
-
-
                 break;
             case "conclude":
                 myresult = _adminDashboardService.GetConcludeStatusRequest(searchBy, reqType, pageNumber, pageSize);
@@ -85,8 +84,6 @@ public class DashboardController : Controller
                 viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
                 viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
                 viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
-
-
                 break;
             case "close":
                 myresult = _adminDashboardService.GetCloseStatusRequest(searchBy, reqType, pageNumber, pageSize);
@@ -95,8 +92,6 @@ public class DashboardController : Controller
                 viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
                 viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
                 viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
-
-
                 break;
             case "unpaid":
                 myresult = _adminDashboardService.GetUnpaidStatusRequest(searchBy, reqType, pageNumber, pageSize);
@@ -105,8 +100,6 @@ public class DashboardController : Controller
                 viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
                 viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
                 viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
-
-
                 break;
             default:
                 myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize);
@@ -115,8 +108,6 @@ public class DashboardController : Controller
                 viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
                 viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
                 viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
-
-
                 break;
         }
 
@@ -182,6 +173,19 @@ public async Task<IActionResult> SaveViewNotes(ViewNotesViewModel viewnotes)
         return Redirect("/Admin/Dashboard/Index");
     }
 }
+public async Task<IActionResult> GetCaseTag(){
+    try
+    {
+        var casetags = await _adminDashboardService.GetCaseTag();
+       return Ok(casetags);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogInformation(ex.Message);
+        TempData["error"] = "Internal Server Error";
+        return Redirect("/Admin/Dashboard/Index");
+    }
+}
 [HttpPost]
 public async Task<IActionResult> CancleCase(IFormCollection formData)
 {
@@ -192,6 +196,60 @@ public async Task<IActionResult> CancleCase(IFormCollection formData)
         var additionalNotes = formData["additionalNotes"];
         _adminDashboardService.CancleRequestCase(int.Parse(reqId),reason,additionalNotes);
         TempData["success"] = "Request Cancelled Successfully!";
+       return Json(new { success = true, message = "Form data received successfully" });
+    }
+    catch (Exception e)
+    {
+        _logger.LogInformation(e.Message);
+        TempData["error"] = "Internal Server Error";
+        return Redirect("/Admin/Dashboard/Index");
+    }
+}
+
+public async Task<IActionResult> GetRegions(){
+    try
+    {
+        var regions = await _adminDashboardService.GetRegions();
+        return Ok(regions);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogInformation(ex.Message);
+        TempData["error"] = "Internal Server Error";
+        return Redirect("/Admin/Dashboard/Index");
+    }
+}
+
+public async Task<IActionResult> GetPhysicians(int RegionId){
+    try
+    {   
+        var physicians = await _adminDashboardService.GetPhysicianByRegion(RegionId);
+        if (physicians == null)
+        {
+            return Ok(new List<Physician>());
+        }
+        return Ok(physicians);
+    }
+    catch (Exception e)
+    {
+        TempData["error"] = "Internal Server Error";
+        return Redirect("/Admin/Dashboard/Index");
+    }
+}
+
+[HttpPost]
+public async Task<IActionResult> AssignCase(IFormCollection formData)
+{
+    try
+    {   
+        string? Description = formData["description"];
+        string? PhysicianId = formData["physician"];
+        string? ReqId = formData["reqId"];
+        int? AdminId = null;
+
+        await _adminDashboardService.AssignRequestCase(int.Parse(ReqId),int.Parse(PhysicianId),AdminId,Description);
+
+        TempData["success"] = "Request Assigned Successfully!";
        return Json(new { success = true, message = "Form data received successfully" });
     }
     catch (Exception e)

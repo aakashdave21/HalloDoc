@@ -35,10 +35,11 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IDashboardRepo, DashboardRepo>();
 builder.Services.AddScoped<IAdminDashboardRepo, AdminDashboardRepo>();
 builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+builder.Services.AddScoped<IUtilityService, UtilityService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(Option =>
 {
-    Option.LoginPath = "/PatientLogin/Index";
+    Option.LoginPath = "/Patient/PatientLogin/Index";
     Option.ExpireTimeSpan = TimeSpan.FromDays(7);
 });
 
@@ -65,7 +66,7 @@ app.Use(async (context, next) =>
 {
     if (context.Request.Path == "/")
     {
-        context.Response.Redirect("/Patient/Home/Index"); // Specify your desired default URL here
+        context.Response.Redirect("/Patient/Home/Index");
         return;
     }
 

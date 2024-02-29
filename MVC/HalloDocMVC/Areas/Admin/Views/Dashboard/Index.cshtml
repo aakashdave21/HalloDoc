@@ -113,11 +113,10 @@
                         <div class="form-group has-search">
                             <span class="fa fa-search form-control-feedback"></span>
                             <select class="form-control form-select" id="regionDropdown">
-                                <option selected>All Regions</option>
-                                <option>Region 1</option>
-                                <option>Region 2</option>
-                                <option>Region 3</option>
-                                <!-- Add more options as needed -->
+                                <option value="all" selected>All Regions</option>
+                                @foreach(var item in Model.RegionList){
+                                    <option value="@item.Id">@item.Name</option>
+                                }
                             </select>
                         </div>
                     </div>

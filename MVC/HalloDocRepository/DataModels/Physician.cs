@@ -147,6 +147,9 @@ public partial class Physician
     [InverseProperty("PhysicianModifiedbyNavigations")]
     public virtual Aspnetuser? ModifiedbyNavigation { get; set; }
 
+    [InverseProperty("Physician")]
+    public virtual ICollection<Physicianregion> Physicianregions { get; } = new List<Physicianregion>();
+
     [ForeignKey("Regionid")]
     [InverseProperty("Physicians")]
     public virtual Region? Region { get; set; }

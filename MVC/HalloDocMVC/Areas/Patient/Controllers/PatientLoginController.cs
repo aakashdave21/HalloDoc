@@ -23,12 +23,14 @@ namespace HalloDocMVC.Controllers;
 public class PatientLoginController : Controller
 {
     private readonly IPatientLogin _patientLoginService;
+    private readonly IUtilityService _utilityService;
 
 
 
-    public PatientLoginController(IPatientLogin patientLoginService)
+    public PatientLoginController(IPatientLogin patientLoginService,IUtilityService utilityService)
     {
         _patientLoginService = patientLoginService;
+        _utilityService = utilityService;
     }
 
 
@@ -67,6 +69,7 @@ public class PatientLoginController : Controller
 
                 // Authentication Logic Start Here
                 List<Claim> claims = new List<Claim>(){
+                    new Claim(ClaimTypes.Role, "Patient"),
                     new Claim(ClaimTypes.NameIdentifier, user.Email),
                     new Claim(ClaimTypes.Name, userEmail.Username),
                     new Claim("UserId", userDetails.Id.ToString()),
@@ -123,60 +126,9 @@ public class PatientLoginController : Controller
                 DateTime expirationTime = DateTime.UtcNow.AddHours(1);
                 _patientLoginService.StoreResetToken(userDetails.Id, token, expirationTime);
                 Console.WriteLine(callbackUrl);
-
-                string senderEmail = "tatva.dotnet.aakashdave@outlook.com";
-                // string senderEmail = "aakashdave21@gmail.com";
-                string senderPassword = "Aakash21##";
-                // string senderPassword = "buicbfrijgnvrttn";
-
-                SmtpClient client = new SmtpClient("smtp.office365.com")
-                {
-                    Port = 587,
-                    Credentials = new NetworkCredential(senderEmail, senderPassword),
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false
-                };
-
-                MailMessage mailMessage = new MailMessage
-                {
-                    From = new MailAddress(senderEmail, "HalloDoc"),
-                    Subject = "Set up your Account",
-                    IsBodyHtml = true,
-                    Body = $"Please click the following link to reset your password: <a href='{callbackUrl}'>{callbackUrl}</a>"
-                };
-
-                mailMessage.To.Add("aakashdave21@gmail.com");
-
-                client.Send(mailMessage);
-                // string fromMail = "testkirtan04@gmail.com";
-                // // string fromMail = "test.dotnet@etatvasoft.com";
-                // // string fromMail = "project.homebuddy.01@gmail.com";
-                // // string fromMail = "architsolnki@gmail.com";
-                // // string fromPassword = "zdjm lbja mwgi zyou";
-                // string fromPassword = "cihv cpfv toya yjfu";
-                // // string fromPassword = "P}N^{z-]7Ilp";
-                // // string fromPassword = "xjoytqbqgfwyqwim";
-                // // string fromPassword = "cawb cjlh tftj tuve";
-
-                // MailMessage msg = new MailMessage();
-                // msg.From = new MailAddress(fromMail);
-                // msg.Subject = "Test";
-                // msg.To.Add(new MailAddress("aakashdave21@gmail.com"));
-                // msg.Body = "Test";
-                // msg.IsBodyHtml = true;
-
-                // var smtpClient = new SmtpClient("smtp.gmail.com"){
-                // // var smtpClient = new SmtpClient("mail.etatvasoft.com"){
-                //     Port = 587,
-                //     Credentials = new NetworkCredential(fromMail,fromPassword),
-                //     EnableSsl = true,
-
-                // };
-
-                // smtpClient.Send(msg);
-
-                // var callbackUrl = Url.Action("Index", "Forgot", new { userId = user.Id, token }, protocol: HttpContext.Request.Scheme);
+                string rcvrMail = "aakashdave21@gmail.com";
+                await _utilityService.EmailSend(callbackUrl,rcvrMail);
+                
 
                 TempData["success"] = "Reset Link Sent to User Via Email " + userDetails.Email;
                 return RedirectToAction(nameof(Index));

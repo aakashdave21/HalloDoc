@@ -164,8 +164,7 @@
                                         <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
                                         <li><a class="dropdown-item" href="/admin/dashboard/ViewNotes/@item.Id">View Notes</a></li>
                                         <li><a class="dropdown-item" href="#">View Uploads</a></li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#assignCaseModal">Assign Case</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="populateAssignCaseModal('@item.Id')">Assign Case</a></li>
                                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                 data-bs-target="#transferModal">Transfer</a></li>
                                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
@@ -610,38 +609,7 @@
 @* Assign Case Modal *@
 <div class="modal fade shadow-lg " id="assignCaseModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #01bce9;">
-                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Assign Request</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <small class="text-muted">To assign this request, search and select physician.</small>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Search By Region</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-                <select class="form-select mt-2" aria-label="Default select example">
-                    <option selected>Select Physician</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-                <div class="form-floating mt-2">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="Symptoms"
-                        style="height: 100px"></textarea>
-                    <label for="Symptoms" style="white-space: normal;">Description</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn secondary-theme-btn">Confirm</button>
-                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
-            </div>
-        </div>
-    </div>
+    
 </div>
 @* Block Case Modal *@
 <div class="modal fade shadow-lg " id="blockCaseModal" tabindex="-1" aria-labelledby="exampleModalLabel"

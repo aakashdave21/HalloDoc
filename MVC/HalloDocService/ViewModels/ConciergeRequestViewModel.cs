@@ -54,7 +54,7 @@ namespace HalloDocService.ViewModels
 
          [Required(ErrorMessage = "Birth Date is required.")]
          [DisplayName("Birth Date")]
-         public DateOnly? Birthdate { get; set; }
+         public string? Birthdate { get; set; }
 
         [StringLength(250)]
         public string? Roomnoofpatient { get; set; }

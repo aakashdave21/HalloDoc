@@ -16,7 +16,7 @@ using System.IO.Compression;
 namespace HalloDocMVC.Controllers;
 
 [Area("Patient")]
-[Authorize]
+[Authorize(Roles = "Patient")]
 public class DashboardController : Controller
 {
 

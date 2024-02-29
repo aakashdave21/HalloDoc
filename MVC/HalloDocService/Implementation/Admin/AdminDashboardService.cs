@@ -257,11 +257,33 @@ public class AdminDashboardService : IAdminDashboardService
         Nullable<int> physicianId = null;
         short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
         int? noteId = _dashboardRepo.GetNoteIdFromRequestId(reqId);
+
         _dashboardRepo.ChangeStatusOfRequest(reqId,newStatus);
-        _dashboardRepo.AddStatusLog(reqId,newStatus,oldStatus,reason,adminId,physicianId);
+        _dashboardRepo.AddStatusLog(reqId,newStatus,oldStatus,reason,adminId,physicianId,null);
+
         if(noteId != null) _dashboardRepo.SaveAdditionalNotes(additionalNotes, (int)noteId, reqId);
         else _dashboardRepo.SaveAdditionalNotes(additionalNotes, 0, reqId);
         
     }
+
+    public async Task<IEnumerable<Region>> GetRegions(){
+        return await _dashboardRepo.GetRegions();
+    }
+    public async Task<IEnumerable<Casetag>> GetCaseTag(){
+        return await _dashboardRepo.GetCaseTag();
+    }
+
+    public async Task<IEnumerable<Physician>> GetPhysicianByRegion(int regionId){
+        return await _dashboardRepo.GetPhysicianByRegion(regionId);
+    }
+
+    public async Task AssignRequestCase(int reqId,int transPhyId,int? adminId,string desc){
+        short newStatus = 2;
+        short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
+        _dashboardRepo.ChangeStatusOfRequest(reqId,newStatus);
+        _dashboardRepo.AddStatusLog(reqId,newStatus,oldStatus,desc,adminId,null,transPhyId);
+        _dashboardRepo.AddPhysicianToRequest(reqId,transPhyId);
+    }
+
 
 }

@@ -28,6 +28,7 @@ public class AdminDashboardRepo : IAdminDashboardRepo
         {
             query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
         }
+        query = query.OrderByDescending(req => req.Createdat);
         
         int totalCount = query.Count();
         query = query.Skip((pageNumber - 1) * pageSize)
@@ -41,7 +42,7 @@ public (IEnumerable<Request> requests, int totalCount) GetPendingStatusRequest(s
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
         .Include(req => req.Physician)
-        .Where(req => req.Status == 2 && req.Accepteddate == null);
+        .Where(req => req.Status == 2);
 
     if(reqTypeId>0){
         query = query.Where(req => req.Requesttypeid == reqTypeId);
@@ -50,7 +51,8 @@ public (IEnumerable<Request> requests, int totalCount) GetPendingStatusRequest(s
     {
         query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
     }
-    
+            query = query.OrderByDescending(req => req.Createdat);
+
 
     int totalCount = query.Count();
         query = query.Skip((pageNumber - 1) * pageSize)
@@ -73,7 +75,8 @@ public (IEnumerable<Request> requests, int totalCount) GetActiveStatusRequest(st
     {
         query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
     }
-    
+            query = query.OrderByDescending(req => req.Createdat);
+
 
     int totalCount = query.Count();
         query = query.Skip((pageNumber - 1) * pageSize)
@@ -96,7 +99,8 @@ public (IEnumerable<Request> requests, int totalCount) GetConcludeStatusRequest(
     {
         query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
     }
-    
+            query = query.OrderByDescending(req => req.Createdat);
+
 
    int totalCount = query.Count();
         query = query.Skip((pageNumber - 1) * pageSize)
@@ -120,7 +124,8 @@ public (IEnumerable<Request> requests, int totalCount) GetCloseStatusRequest(str
     {
         query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
     }
-   
+           query = query.OrderByDescending(req => req.Createdat);
+
 
    int totalCount = query.Count();
         query = query.Skip((pageNumber - 1) * pageSize)
@@ -144,7 +149,8 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
     {
         query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
     }
-    
+            query = query.OrderByDescending(req => req.Createdat);
+
 
     int totalCount = query.Count();
         query = query.Skip((pageNumber - 1) * pageSize)
@@ -161,7 +167,7 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         .Select(group => new
         {
             NewCount = group.Count(req => req.Status == 1),
-            PendingCount = group.Count(req => req.Status == 2 && req.Accepteddate == null),
+            PendingCount = group.Count(req => req.Status == 2),
             ActiveCount = group.Count(req => (req.Status == 4 || req.Status == 5) && req.Accepteddate != null),
             ConcludeCount = group.Count(req => req.Status == 6),
             CloseCount = group.Count(req =>  req.Status == 8 || req.Status == 7 || req.Status == 3),
@@ -239,16 +245,44 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         }
     }
 
-    public void AddStatusLog(int reqId,short newStatus,short oldStatus,string reason,int? adminId,int? physicianId){
+    public void AddStatusLog(int reqId,short newStatus,short oldStatus,string reason,int? adminId,int? physicianId,int? transToPhyId=null){
         Requeststatuslog NewStatusLog = new(){
             Requestid = reqId,
             Status = newStatus,
             Oldstatus = oldStatus,
             Notes = reason,
+            Transtophysicianid = transToPhyId
             // Adminid = adminId,
             // Physicianid = physicianId
         };
         _dbContext.Requeststatuslogs.Add(NewStatusLog);
         _dbContext.SaveChanges();
+    }
+
+    public async Task<IEnumerable<Region>> GetRegions(){
+        return await _dbContext.Regions.ToListAsync();
+    }
+    public async Task<IEnumerable<Casetag>> GetCaseTag(){
+        return await _dbContext.Casetags.ToListAsync();
+    }
+
+    public async Task<IEnumerable<Physician>> GetPhysicianByRegion(int regionId){
+        var physicians = await _dbContext.Physicianregions
+        .Where(phyReg => phyReg.Regionid == regionId)
+        .Select(phyReg => phyReg.Physician)
+        .ToListAsync();
+
+        return physicians.Any() ? physicians : null;
+
+    }
+
+    public void AddPhysicianToRequest(int reqId,int transPhyId){
+        Request reqData = _dbContext.Requests.FirstOrDefault(req => req.Id == reqId);
+        if(reqData != null){
+            reqData.Physicianid = transPhyId;
+             _dbContext.SaveChanges();
+        }else{
+            throw new Exception();
+        }
     }
 }
