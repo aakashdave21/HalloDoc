@@ -175,3 +175,64 @@ const assignCaseSubmit = ()=>{
         console.error("Error Submitting:", error)
     }
 }
+
+// Block Case Javascript
+const populateBlockCaseModal = async(reqId,firstname,lastname)=>{
+    var modal = document.getElementById('blockCaseModal');
+    modal.innerHTML = `<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #01bce9;">
+            <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Confirm Block</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="blockCaseForm">
+                <input type="hidden" name="reqId" value="${reqId}">
+                <h5>Patient Name : <span class="patient-name-modal" style="color : #01bce9;">${firstname} ${lastname}</span></h5>
+                <div class="form-floating mt-2">
+                    <textarea class="form-control" name="reason" id="block-reason" placeholder="Leave a comment here" id="reason"
+                        style="height: 100px"></textarea>
+                    <label for="reason" style="white-space: normal;">Reason For Block Request</label>
+                </div>
+                <span class="text-danger" id="blockReasonValidation"></span>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn secondary-theme-btn" onclick="blockCaseSubmit()">Confirm</button>
+            <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+        </div>
+    </div>
+</div>`
+
+        var modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
+}
+
+const blockCaseSubmit = ()=>{
+    try {
+        let form = document.querySelector('#blockCaseForm');
+        let formData = new FormData(form);
+
+        if($("#block-reason").val()==""){
+            $("#blockReasonValidation").html("Please Provide Reason For Block.");
+            return;
+        }
+        $("#blockReasonValidation").empty();
+        $.ajax({
+            url: '/admin/dashboard/blockcase',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function () {
+                location.href = '/admin/dashboard'
+            },
+            error: function () {
+                console.log("error");
+            }
+        })
+    } catch (error) {
+        console.error("Error Submitting:", error)
+    }
+}

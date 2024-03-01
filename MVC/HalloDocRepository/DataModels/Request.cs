@@ -124,6 +124,11 @@ public partial class Request
 
     public int? NoOfRequests { get; set; }
 
+    public bool? IsBlocked { get; set; }
+
+    [InverseProperty("Request")]
+    public virtual Blockrequest? Blockrequest { get; set; }
+
     [ForeignKey("Createduserid")]
     [InverseProperty("RequestCreatedusers")]
     public virtual User? Createduser { get; set; }

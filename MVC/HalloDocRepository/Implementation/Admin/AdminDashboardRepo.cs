@@ -285,4 +285,23 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
             throw new Exception();
         }
     }
+
+    public Request GetSingleRequestDetails(int reqId){
+        return _dbContext.Requests.Include(req => req.Requestclients).FirstOrDefault(req => req.Id == reqId);
+    }
+
+    public void SetBlockFieldRequest(int reqId){
+        Request reqData = _dbContext.Requests.FirstOrDefault(req => req.Id == reqId);
+        if(reqData != null){
+            reqData.IsBlocked = true;
+             _dbContext.SaveChanges();
+        }else{
+            throw new Exception();
+        }
+    }
+
+    public void AddBlockRequest(Blockrequest newBlockReq){
+        _dbContext.Blockrequests.Add(newBlockReq);
+        _dbContext.SaveChanges();
+    }
 }

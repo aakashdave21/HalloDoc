@@ -222,6 +222,7 @@
 </div>
 
 <script>
+    
     let params, tabData, searchKeyword=null, reqTypes=null, pageNum = 1,pageRecord = 5;
 
     $(".card").click(function () {
@@ -300,7 +301,7 @@
         if(searchKeyword){
             makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypeId}&pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
         }else{
-            makeAjaxRequest(`/admin/dashboard/Index?requesttype=${reqTypeId}&pageNumber=${pageNum}&pageSize=${pageRecord}`);
+            makeAjaxRequest(`/admin/dashboard/Index?requesttype=${reqTypeId}&pageNumber=${pageNum}&pageSize=${pageRecord}`,params);
         }
     }
 
@@ -329,15 +330,17 @@
     }
 
     function pageChange() {
+        
         searchKeyword = document.getElementById("searchKeyword").value.toLowerCase();
-        const pageChange = document.querySelector("#pageChange");
+        const pageChange = document.querySelector(".pageChange");
         pageNum = pageChange.value;
         makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
     }
 
     function pageRecordChange(){
+        pageNum = 1;
         searchKeyword = document.getElementById("searchKeyword").value.toLowerCase();
-        const pageRecordChange = document.querySelector("#pageRecordChange");
+        const pageRecordChange = document.querySelector(".pageRecordChange");
         pageRecord = pageRecordChange.value;
         makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
     }

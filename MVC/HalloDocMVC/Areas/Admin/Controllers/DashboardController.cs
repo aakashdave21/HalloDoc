@@ -5,6 +5,7 @@ using HalloDocService.ViewModels;
 using HalloDocService.Admin.Interfaces;
 using HalloDocRepository.DataModels;
 using System.Text.Json.Nodes;
+using Org.BouncyCastle.Ocsp;
 
 namespace HalloDocMVC.Controllers.Admin;
 
@@ -24,7 +25,10 @@ public class DashboardController : Controller
     public async Task<IActionResult> Index(string status)
     {
         (List<RequestViewModel> req, int totalCount) myresult;
-        ViewBag.statusType = status ?? "";
+        Console.WriteLine(status+"<<<<<<<<<<<<<<<<This is Status");
+        ViewBag.statusType = string.IsNullOrEmpty(status) ? "new" : status;
+               Console.WriteLine(ViewBag.statusType +"<<<<<<<<<<<<<<<<This is Status");
+
         var viewModel = new AdminDashboardViewModel();
         var countDictionary = _adminDashboardService.CountRequestByType();
 
@@ -250,6 +254,28 @@ public async Task<IActionResult> AssignCase(IFormCollection formData)
         await _adminDashboardService.AssignRequestCase(int.Parse(ReqId),int.Parse(PhysicianId),AdminId,Description);
 
         TempData["success"] = "Request Assigned Successfully!";
+       return Json(new { success = true, message = "Form data received successfully" });
+    }
+    catch (Exception e)
+    {
+        _logger.LogInformation(e.Message);
+        TempData["error"] = "Internal Server Error";
+        return Redirect("/Admin/Dashboard/Index");
+    }
+}
+
+[HttpPost]
+public async Task<IActionResult> BlockCase(IFormCollection formData)
+{
+    try
+    {   
+        string? Reason = formData["reason"];
+        string? ReqId = formData["reqId"];
+        int? AdminId = null;
+
+        await _adminDashboardService.BlockRequestCase(int.Parse(ReqId),AdminId,Reason);
+
+        TempData["success"] = "Request Blocked Successfully!";
        return Json(new { success = true, message = "Form data received successfully" });
     }
     catch (Exception e)

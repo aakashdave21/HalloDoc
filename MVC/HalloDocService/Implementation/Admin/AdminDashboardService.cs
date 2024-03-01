@@ -285,5 +285,19 @@ public class AdminDashboardService : IAdminDashboardService
         _dashboardRepo.AddPhysicianToRequest(reqId,transPhyId);
     }
 
+    public async Task BlockRequestCase(int reqId,int? adminId,string reason){
+        Request requestData = _dashboardRepo.GetSingleRequestDetails(reqId);
+        short status = 11; //Blocked
+        _dashboardRepo.ChangeStatusOfRequest(reqId,status);
+        _dashboardRepo.SetBlockFieldRequest(reqId);
 
+        Blockrequest newBlockRequest = new(){
+            Requestid = reqId,
+            Phonenumber = requestData.Requestclients.FirstOrDefault()?.Phonenumber,
+            Email = requestData.Requestclients.FirstOrDefault()?.Email,
+            Isactive = requestData.Status == 4 || requestData.Status == 5,
+            Reason = reason
+        };
+        _dashboardRepo.AddBlockRequest(newBlockRequest);
+    }
 }

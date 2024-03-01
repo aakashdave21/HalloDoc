@@ -27,4 +27,9 @@ public interface IAdminDashboardRepo
    Task<IEnumerable<Physician>> GetPhysicianByRegion(int regionId);
    void AddPhysicianToRequest(int reqId,int transPhyId);
 
+   Request GetSingleRequestDetails(int reqId);
+
+   void SetBlockFieldRequest(int reqId);
+   void AddBlockRequest(Blockrequest newBlockReq);
+
 }

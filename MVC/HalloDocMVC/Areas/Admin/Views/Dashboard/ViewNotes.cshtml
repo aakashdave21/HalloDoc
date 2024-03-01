@@ -22,218 +22,135 @@
 
     <h1>Notes</h1>
     <div class="row g-4">
-        <div class="col-sm-6">
-            <div class="card shadow">
-                <div class="card-body d-flex gap-3">
-                    <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
-                        <span style="font-size: 2rem;">
-                            <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                        </span>
-                    </div>
-                    <div class="content-div">
-                        <h5 class="card-title fw-bold">Transfer Notes</h5>
-                        @* <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> *@
-                        @if (Model != null)
-                        {
-                            @if (Model.TransferNote != null && Model.TransferNote.Count > 0)
-                            {
-                                int index = 1;
-                                foreach (var item in Model.TransferNote){
-                                    <p class="card-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@{var notes = index +". " + item;} @notes</p>
-                                    index++;
+        @if(Model != null && Model.TransferNote != null && Model.TransferNote.Count > 0){
+            <div class="col-sm-6">
+                <div class="card shadow">
+                    <div class="card-body d-flex gap-3">
+                        <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
+                            <span style="font-size: 2rem;">
+                                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                            </span>
+                        </div>
+                        <div class="content-div">
+                            <h5 class="card-title fw-bold">Transfer Notes</h5>
+                             @{
+                                    int index = 1;
+                                    foreach (var item in Model.TransferNote){
+                                        <p class="card-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@{var notes = index +". " + item;} @notes</p>
+                                        index++;
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                <p class="card-text text-muted">Empty Notes</p>
-                            }
-                        }
-                        else
-                        {
-                            <p class="card-text text-muted">Empty Notes</p>
-                        }
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="card shadow">
-                <div class="card-body d-flex gap-3">
-                    <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
-                        <span style="font-size: 2rem;">
-                            <i class="fa-solid fa-user-doctor"></i>
-                        </span>
-                    </div>
-                    <div class="content-div">
-                        <h5 class="card-title fw-bold">Physician Notes</h5>
-                        @if (Model != null)
-                        {
-                            @if (!string.IsNullOrEmpty(Model.PhysicianNote))
-                            {
-                                <p class="card-text">@Model.PhysicianNote</p>
-                            }
-                            else
-                            {
-                                <p class="card-text text-muted">Empty Notes</p>
-                            }
-                        }
-                        else
-                        {
-                            <p class="card-text text-muted">Empty Notes</p>
-                        }
-
+        }
+        @if(Model != null && !string.IsNullOrEmpty(Model.PhysicianNote)){
+            <div class="col-sm-6">
+                <div class="card shadow">
+                    <div class="card-body d-flex gap-3">
+                        <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
+                            <span style="font-size: 2rem;">
+                                <i class="fa-solid fa-user-doctor"></i>
+                            </span>
+                        </div>
+                        <div class="content-div">
+                            <h5 class="card-title fw-bold">Physician Notes</h5>
+                            <p class="card-text">@Model.PhysicianNote</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="card shadow">
-                <div class="card-body d-flex gap-3">
-                    <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
-                        <span style="font-size: 2rem;">
-                            <i class="fa-solid fa-user-tie"></i>
-                        </span>
-                    </div>
-                    <div class="content-div">
-                        <h5 class="card-title fw-bold">Admin Notes</h5>
-                        @if (Model != null)
-                        {
-                            @if (!string.IsNullOrEmpty(Model.AdminNote))
-                            {
-                                <p class="card-text">@Model.AdminNote</p>
-                            }
-                            else
-                            {
-                                <p class="card-text text-muted">Empty Notes</p>
-                            }
-                        }
-                        else
-                        {
-                            <p class="card-text text-muted">Empty Notes</p>
-                        }
+        }
+        @if(Model != null && !string.IsNullOrEmpty(Model.AdminNote)){
+            <div class="col-sm-6">
+                <div class="card shadow">
+                    <div class="card-body d-flex gap-3">
+                        <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
+                            <span style="font-size: 2rem;">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </span>
+                        </div>
+                        <div class="content-div">
+                            <h5 class="card-title fw-bold">Admin Notes</h5>
+                             <p class="card-text">@Model.AdminNote</p>
+                             
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="card shadow">
-                <div class="card-body d-flex gap-3">
-                    <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
-                        <span style="font-size: 2rem;">
-                            <i class="fa-solid fa-user"></i>
-                        </span>
-                    </div>
-                    <div class="content-div">
-                        <h5 class="card-title fw-bold">Patient Notes</h5>
-                       @if (Model != null)
-                        {
-                            @if (!string.IsNullOrEmpty(Model.PatientNote))
-                            {
-                                <p class="card-text">@Model.PatientNote</p>
-                            }
-                            else
-                            {
-                                <p class="card-text text-muted">Empty Notes</p>
-                            }
-                        }
-                        else
-                        {
-                            <p class="card-text text-muted">Empty Notes</p>
-                        }
+        }
+        @if(Model != null && !string.IsNullOrEmpty(Model.PatientNote)){
+            <div class="col-sm-6">
+                <div class="card shadow">
+                    <div class="card-body d-flex gap-3">
+                        <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
+                            <span style="font-size: 2rem;">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                        </div>
+                        <div class="content-div">
+                            <h5 class="card-title fw-bold">Patient Notes</h5>
+                            <p class="card-text">@Model.PatientNote</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="card shadow">
-                <div class="card-body d-flex gap-3">
-                    <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
-                        <span style="font-size: 2rem;">
-                            <i class="fa-solid fa-user-xmark"></i>
-                        </span>
-                    </div>
-                    <div class="content-div">
-                        <h5 class="card-title fw-bold">Physician Cancellation Notes</h5>
-                        @* <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> *@
-                        @if (Model != null)
-                        {
-                            @if (!string.IsNullOrEmpty(Model.PhysicianCancelNote))
-                            {
+        }
+        @if(Model != null && !string.IsNullOrEmpty(Model.PhysicianCancelNote)){
+            <div class="col-sm-6">
+                <div class="card shadow">
+                    <div class="card-body d-flex gap-3">
+                        <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
+                            <span style="font-size: 2rem;">
+                                <i class="fa-solid fa-user-xmark"></i>
+                            </span>
+                        </div>
+                        
+                            <div class="content-div">
+                                <h5 class="card-title fw-bold">Physician Cancellation Notes</h5>
                                 <p class="card-text">@Model.PhysicianCancelNote</p>
-                            }
-                            else
-                            {
-                                <p class="card-text text-muted">Empty Notes</p>
-                            }
-                        }
-                        else
-                        {
-                            <p class="card-text text-muted">Empty Notes</p>
-                        }
+                            </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="card shadow">
-                <div class="card-body d-flex gap-3">
-                    <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
-                        <span style="font-size: 2rem;">
-                            <i class="fa-solid fa-ban"></i>
-                        </span>
-                    </div>
-                    <div class="content-div">
-                        <h5 class="card-title fw-bold">Admin Cancellation Notes</h5>
-                        @* <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> *@
-                        @if (Model != null)
-                        {
-                            @if (!string.IsNullOrEmpty(Model.AdminCancelNote))
-                            {
-                                <p class="card-text">@Model.AdminCancelNote</p>
-                            }
-                            else
-                            {
-                                <p class="card-text text-muted">Empty Notes</p>
-                            }
-                        }
-                        else
-                        {
-                            <p class="card-text text-muted">Empty Notes</p>
-                        }
+        }
+        @if(Model != null && !string.IsNullOrEmpty(Model.AdminCancelNote)){
+            <div class="col-sm-6">
+                <div class="card shadow">
+                    <div class="card-body d-flex gap-3">
+                        <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
+                            <span style="font-size: 2rem;">
+                                <i class="fa-solid fa-ban"></i>
+                            </span>
+                        </div>
+                        <div class="content-div">
+                            <h5 class="card-title fw-bold">Admin Cancellation Notes</h5>
+                            <p class="card-text">@Model.AdminCancelNote</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="card shadow">
-                <div class="card-body d-flex gap-3">
-                    <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
-                        <span style="font-size: 2rem;">
-                            <i class="fa-solid fa-xmark"></i>
-                        </span>
-                    </div>
-                    <div class="content-div">
-                        <h5 class="card-title fw-bold">Patient Cancellation Notes</h5>
-                        @* <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> *@
-                        @if (Model != null)
-                        {
-                            @if (!string.IsNullOrEmpty(Model.PatientCancelNote))
-                            {
-                                <p class="card-text">@Model.PatientCancelNote</p>
-                            }
-                            else
-                            {
-                                <p class="card-text text-muted">Empty Notes</p>
-                            }
-                        }
-                        else
-                        {
-                            <p class="card-text text-muted">Empty Notes</p>
-                        }
+        }
+        @if(Model != null && !string.IsNullOrEmpty(Model.PatientCancelNote)){
+            <div class="col-sm-6">
+                <div class="card shadow">
+                    <div class="card-body d-flex gap-3">
+                        <div class="icon-div m-auto d-sm-inline d-none" style="width: 10%;">
+                            <span style="font-size: 2rem;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </span>
+                        </div>
+                        <div class="content-div">
+                            <h5 class="card-title fw-bold">Patient Cancellation Notes</h5>
+                            <p class="card-text">@Model.PatientCancelNote</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
+        
+        
     </div>
     <div class="mt-4 p-4 shadow">
         <form action="/Admin/Dashboard/SaveViewNotes" method="post">

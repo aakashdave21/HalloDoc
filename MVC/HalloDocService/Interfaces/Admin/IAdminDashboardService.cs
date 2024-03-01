@@ -24,4 +24,5 @@ public interface IAdminDashboardService
     Task<IEnumerable<Physician>> GetPhysicianByRegion(int regionId);
 
     Task AssignRequestCase(int reqId,int phyId,int? adminId,string desc);
+    Task BlockRequestCase(int reqId,int? adminId,string reason);
 }

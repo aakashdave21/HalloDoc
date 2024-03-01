@@ -19,6 +19,8 @@ public partial class HalloDocContext : DbContext
 
     public virtual DbSet<Aspnetuser> Aspnetusers { get; set; }
 
+    public virtual DbSet<Blockrequest> Blockrequests { get; set; }
+
     public virtual DbSet<Casetag> Casetags { get; set; }
 
     public virtual DbSet<Concierge> Concierges { get; set; }
@@ -80,6 +82,16 @@ public partial class HalloDocContext : DbContext
 
             entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
+        modelBuilder.Entity<Blockrequest>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("blockrequests_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.Request).WithOne(p => p.Blockrequest).HasConstraintName("blockrequests_requestid_fkey");
         });
 
         modelBuilder.Entity<Casetag>(entity =>
@@ -147,6 +159,7 @@ public partial class HalloDocContext : DbContext
 
             entity.Property(e => e.Completedbyphysician).HasDefaultValueSql("false");
             entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.IsBlocked).HasDefaultValueSql("false");
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             entity.HasOne(d => d.Createduser).WithMany(p => p.RequestCreatedusers).HasConstraintName("fk_request_user");
