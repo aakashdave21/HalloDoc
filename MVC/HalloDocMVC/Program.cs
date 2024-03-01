@@ -37,11 +37,33 @@ builder.Services.AddScoped<IAdminDashboardRepo, AdminDashboardRepo>();
 builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 builder.Services.AddScoped<IUtilityService, UtilityService>();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(Option =>
-{
-    Option.LoginPath = "/Patient/PatientLogin/Index";
-    Option.ExpireTimeSpan = TimeSpan.FromDays(7);
-});
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = context =>
+            {
+                if (context.Request.Path.StartsWithSegments("/Admin") &&
+                    !context.Request.Path.StartsWithSegments("/Admin/Login"))
+                {
+                    context.Response.Redirect("/Admin/Login/Index");
+                }
+                else if (context.Request.Path.StartsWithSegments("/Patient") &&
+                         !context.Request.Path.StartsWithSegments("/Patient/PatientLogin"))
+                {
+                    context.Response.Redirect("/Patient/PatientLogin/Index");
+                }
+                else
+                {
+                    context.Response.Redirect("/Account/Login");
+                }
+                return Task.CompletedTask;
+            }
+        };
+    });
+
 
 var app = builder.Build();
 

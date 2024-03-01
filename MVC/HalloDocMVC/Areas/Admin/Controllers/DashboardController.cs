@@ -4,12 +4,15 @@ using HalloDocMVC.Models;
 using HalloDocService.ViewModels;
 using HalloDocService.Admin.Interfaces;
 using HalloDocRepository.DataModels;
-using System.Text.Json.Nodes;
-using Org.BouncyCastle.Ocsp;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HalloDocMVC.Controllers.Admin;
 
 [Area("Admin")]
+[Authorize(Roles = "Admin")]
 public class DashboardController : Controller
 {
     private readonly ILogger<DashboardController> _logger;
@@ -285,6 +288,12 @@ public async Task<IActionResult> BlockCase(IFormCollection formData)
         return Redirect("/Admin/Dashboard/Index");
     }
 }
+
+public async Task<IActionResult> LogOut()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index", "Login");
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

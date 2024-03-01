@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets\\css\\AdminDashboard.css"
     },
     {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\css\\AdminLogin.css",
+      "PackagePath": "staticwebassets\\css\\AdminLogin.css"
+    },
+    {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\css\\DashboardLayout.css",
       "PackagePath": "staticwebassets\\css\\DashboardLayout.css"
     },
@@ -59,6 +63,10 @@
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\images\\cursor-removebg-preview.png",
       "PackagePath": "staticwebassets\\images\\cursor-removebg-preview.png"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\images\\login_bg.jpg",
+      "PackagePath": "staticwebassets\\images\\login_bg.jpg"
     },
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\images\\logo.png",
