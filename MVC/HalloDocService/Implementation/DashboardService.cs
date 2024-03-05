@@ -69,10 +69,11 @@ public class DashboardService : IDashboardService
         return _dashboardRepo.GetAllRequestedDocuments(reqId);
     }
 
-    public void UploadFileFromDocument(string filename,int reqId){
+    public void UploadFileFromDocument(string filename,int reqId , int? AdminId=null){
         Requestwisefile newFile = new Requestwisefile{
             Filename = filename,
             Requestid = reqId,
+            Adminid = AdminId,
             Createddate = DateTime.Now
         };
         _patientRequestRepo.AddDocumentDetails(newFile);

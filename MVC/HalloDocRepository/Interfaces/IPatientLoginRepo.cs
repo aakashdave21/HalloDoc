@@ -11,4 +11,5 @@ public interface IPatientLoginRepo
 
     Aspnetuser? GetResetTokenExpiry(int AspUserId, string token);
     void UpdatePassword(int userId , string password);
+    string GetAspUserEmail(int userId);
 }

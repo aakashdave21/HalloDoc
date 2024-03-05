@@ -25,4 +25,7 @@ public interface IAdminDashboardService
 
     Task AssignRequestCase(int reqId,int phyId,int? adminId,string desc);
     Task BlockRequestCase(int reqId,int? adminId,string reason);
+
+    Request GetSingleRequest(int reqId);
+    void DeleteDocument(int docId);
 }

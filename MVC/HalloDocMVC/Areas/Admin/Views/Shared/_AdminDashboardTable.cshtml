@@ -181,11 +181,12 @@
                                                           </ul> 
                                                           break;
                                             case "pending" : <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item" onclick="populateAssignCaseModal('@item.Id')">Assign Case</a></li>
-                                                            <li><a class="dropdown-item" onclick="populateCancleCaseModal('@item.Firstname','@item.Lastname','@item.Id')">Cancle Case</a></li>
                                                             <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
+                                                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id">View Uploads</a></li>
                                                             <li><a class="dropdown-item" href="/admin/dashboard/ViewNotes/@item.Id">View Notes</a></li>
-                                                            <li><a class="dropdown-item" onclick="populateBlockCaseModal('@item.Id','@item.Firstname','@item.Lastname')">Block Case</a></li>
+                                                            <li><a class="dropdown-item" href="#">Transfer</a></li>
+                                                            <li><a class="dropdown-item" href="#">Clear Case</a></li>
+                                                            <li><a class="dropdown-item" href="#">Send Agreement</a></li>
                                                           </ul> 
                                                           break;
                                             case "active" : <ul class="dropdown-menu">

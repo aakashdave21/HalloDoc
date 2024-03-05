@@ -52,7 +52,7 @@
                                         <label asp-for="Passwordhash" for="Passwordhash">Password</label>
                                     </div>
 
-                                    <i class="fa-regular fa-eye eye-icon" onclick="changePasswordView()"></i>
+                                    <i class="fa-regular fa-eye eye-icon" onclick="changePasswordView(document.getElementById('Passwordhash'),document.querySelector('.eye-icon'))"></i>
 
                                 </div>
                                 <span asp-validation-for="Passwordhash" class="text-danger"></span>

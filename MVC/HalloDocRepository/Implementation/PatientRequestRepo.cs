@@ -1,4 +1,5 @@
 
+using System.Configuration.Assemblies;
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -58,6 +59,14 @@ public class PatientRequestRepo : IPatientRequestRepo
     public void AddDocumentDetails(Requestwisefile requestData){
         _dbContext.Requestwisefiles.Add(requestData);
         _dbContext.SaveChanges();
+    }
+    public void StoreActivationToken(int AspUserId , string token, DateTime expiry){
+        Aspnetuser existedUser = _dbContext.Aspnetusers.FirstOrDefault(user => user.Id == AspUserId);
+        if(existedUser!=null){
+            existedUser.AcivationToken = token;
+            existedUser.ActivationExpiry = expiry;
+            _dbContext.SaveChanges();
+        }
     }
      
 }

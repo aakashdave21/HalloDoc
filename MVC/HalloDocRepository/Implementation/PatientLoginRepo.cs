@@ -48,4 +48,8 @@ public class PatientLoginRepo : IPatientLoginRepo
             throw new InvalidOperationException("User not found.");
         }
     }
+
+    public string GetAspUserEmail(int userId){
+        return _dbContext.Aspnetusers.FirstOrDefault(user => user.Id == userId).Email;
+    }
 }

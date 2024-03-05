@@ -9,7 +9,7 @@ namespace HalloDocService.Implementation;
 public class UtilityService : IUtilityService
 {
     public async Task EmailSend(string callbackUrl,string rcvrMail){
-        string senderEmail = "tatva.dotnet.aakashdave@outlook.com";
+                string senderEmail = "tatva.dotnet.aakashdave@outlook.com";
                 string senderPassword = "Aakash21##";
 
                 SmtpClient client = new SmtpClient("smtp.office365.com")

@@ -185,7 +185,7 @@ public class DashboardController : Controller
                 fileName = filePath;
             }
 
-            _dashboardService.UploadFileFromDocument(fileName, requestId);
+            _dashboardService.UploadFileFromDocument(fileName, requestId, null);
             TempData["success"] = "Uploaded Successfully";
 
             return RedirectToAction("Documents", new { requestId });
@@ -197,7 +197,7 @@ public class DashboardController : Controller
         }
     }
 
-    [HttpGet("/Dashboard/SingleDownload/{FileName}")]
+    
     public async Task<IActionResult> SingleDownload(string fileName,int reqId)
     {
         try
@@ -225,7 +225,8 @@ public class DashboardController : Controller
 
         if(fileNames.Length==0 || fileNames == null){
             TempData["error"] = "Please Choose File ! ";
-            return Json(new { redirectTo = Url.Action("Documents", new { reqId }) });
+                return Json(new { redirectTo = Url.Action("Documents", "Dashboard", new { area = "Patient", requestId = reqId }) });
+
         }
 
         try

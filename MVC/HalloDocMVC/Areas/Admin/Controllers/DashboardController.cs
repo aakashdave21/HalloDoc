@@ -8,6 +8,11 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using HalloDocService.Interfaces;
+using System.IO.Compression;
+using Newtonsoft.Json;
+using System.Net.Mail;
+using System.Net;
 
 namespace HalloDocMVC.Controllers.Admin;
 
@@ -17,20 +22,25 @@ public class DashboardController : Controller
 {
     private readonly ILogger<DashboardController> _logger;
     private readonly IAdminDashboardService _adminDashboardService;
+    private readonly IDashboardService _dashboardService;
 
-    public DashboardController(ILogger<DashboardController> logger, IAdminDashboardService adminDashboardService)
+    private readonly IWebHostEnvironment _hostingEnvironment;
+
+    public DashboardController(ILogger<DashboardController> logger, IAdminDashboardService adminDashboardService, IDashboardService dashboardService, IWebHostEnvironment hostingEnvironment)
     {
         _logger = logger;
         _adminDashboardService = adminDashboardService;
+        _dashboardService = dashboardService;
+        _hostingEnvironment = hostingEnvironment;
     }
 
 
     public async Task<IActionResult> Index(string status)
     {
         (List<RequestViewModel> req, int totalCount) myresult;
-        Console.WriteLine(status+"<<<<<<<<<<<<<<<<This is Status");
+        Console.WriteLine(status + "<<<<<<<<<<<<<<<<This is Status");
         ViewBag.statusType = string.IsNullOrEmpty(status) ? "new" : status;
-               Console.WriteLine(ViewBag.statusType +"<<<<<<<<<<<<<<<<This is Status");
+        Console.WriteLine(ViewBag.statusType + "<<<<<<<<<<<<<<<<This is Status");
 
         var viewModel = new AdminDashboardViewModel();
         var countDictionary = _adminDashboardService.CountRequestByType();
@@ -47,7 +57,7 @@ public class DashboardController : Controller
         string searchBy = Request.Query["searchBy"];
         int pageNumber = Request.Query.TryGetValue("pageNumber", out var pageNumberValue) ? int.Parse(pageNumberValue) : 1;
         int pageSize = Request.Query.TryGetValue("pageSize", out var pageSizeValue) ? int.Parse(pageSizeValue) : 5;
-    
+
         int reqType = 0;
         ViewBag.currentPage = pageNumber;
         ViewBag.currentPageSize = pageSize;
@@ -135,10 +145,10 @@ public class DashboardController : Controller
         {
             ViewCaseViewModel viewcase = _adminDashboardService.GetViewCaseDetails(id);
             Console.WriteLine(viewcase.Phone);
-            return View("ViewCase",viewcase);
+            return View("ViewCase", viewcase);
         }
         catch (Exception e)
-        {   
+        {
             Console.WriteLine(e);
             TempData["error"] = "Internal Server Error";
             return Redirect("/Admin/Dashboard/Index");
@@ -150,146 +160,416 @@ public class DashboardController : Controller
         try
         {
             ViewNotesViewModel viewnotes = _adminDashboardService.GetViewNotesDetails(id);
-            if(viewnotes!=null){
-                return View("ViewNotes",viewnotes);
-            }else{
+            if (viewnotes != null)
+            {
+                return View("ViewNotes", viewnotes);
+            }
+            else
+            {
                 return View("ViViewNotesew");
             }
         }
         catch (Exception e)
-        {   
+        {
             TempData["error"] = "Internal Server Error";
             return Redirect("/Admin/Dashboard/Index");
 
         }
-    } 
+    }
 
-[HttpPost]
-public async Task<IActionResult> SaveViewNotes(ViewNotesViewModel viewnotes)
-{
-    try
+    [HttpPost]
+    public async Task<IActionResult> SaveViewNotes(ViewNotesViewModel viewnotes)
     {
-        _adminDashboardService.SaveAdditionalNotes(viewnotes?.AdditionalNote,viewnotes.NoteId,viewnotes.ReqId);
-         TempData["success"] = "Updated Successfully";
-        return Redirect("/admin/dashboard/ViewNotes/"+viewnotes.ReqId);
-    }
-    catch (Exception e)
-    {
-        _logger.LogInformation(e.Message);
-        TempData["error"] = "Internal Server Error";
-        return Redirect("/Admin/Dashboard/Index");
-    }
-}
-public async Task<IActionResult> GetCaseTag(){
-    try
-    {
-        var casetags = await _adminDashboardService.GetCaseTag();
-       return Ok(casetags);
-    }
-    catch (Exception ex)
-    {
-        _logger.LogInformation(ex.Message);
-        TempData["error"] = "Internal Server Error";
-        return Redirect("/Admin/Dashboard/Index");
-    }
-}
-[HttpPost]
-public async Task<IActionResult> CancleCase(IFormCollection formData)
-{
-    try
-    {   
-        var reqId = formData["reqId"];
-        var reason = formData["reason"];
-        var additionalNotes = formData["additionalNotes"];
-        _adminDashboardService.CancleRequestCase(int.Parse(reqId),reason,additionalNotes);
-        TempData["success"] = "Request Cancelled Successfully!";
-       return Json(new { success = true, message = "Form data received successfully" });
-    }
-    catch (Exception e)
-    {
-        _logger.LogInformation(e.Message);
-        TempData["error"] = "Internal Server Error";
-        return Redirect("/Admin/Dashboard/Index");
-    }
-}
-
-public async Task<IActionResult> GetRegions(){
-    try
-    {
-        var regions = await _adminDashboardService.GetRegions();
-        return Ok(regions);
-    }
-    catch (Exception ex)
-    {
-        _logger.LogInformation(ex.Message);
-        TempData["error"] = "Internal Server Error";
-        return Redirect("/Admin/Dashboard/Index");
-    }
-}
-
-public async Task<IActionResult> GetPhysicians(int RegionId){
-    try
-    {   
-        var physicians = await _adminDashboardService.GetPhysicianByRegion(RegionId);
-        if (physicians == null)
+        try
         {
-            return Ok(new List<Physician>());
+            _adminDashboardService.SaveAdditionalNotes(viewnotes?.AdditionalNote, viewnotes.NoteId, viewnotes.ReqId);
+            TempData["success"] = "Updated Successfully";
+            return Redirect("/admin/dashboard/ViewNotes/" + viewnotes.ReqId);
         }
-        return Ok(physicians);
+        catch (Exception e)
+        {
+            _logger.LogInformation(e.Message);
+            TempData["error"] = "Internal Server Error";
+            return Redirect("/Admin/Dashboard/Index");
+        }
     }
-    catch (Exception e)
+    public async Task<IActionResult> GetCaseTag()
     {
-        TempData["error"] = "Internal Server Error";
-        return Redirect("/Admin/Dashboard/Index");
+        try
+        {
+            var casetags = await _adminDashboardService.GetCaseTag();
+            return Ok(casetags);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogInformation(ex.Message);
+            TempData["error"] = "Internal Server Error";
+            return Redirect("/Admin/Dashboard/Index");
+        }
     }
-}
-
-[HttpPost]
-public async Task<IActionResult> AssignCase(IFormCollection formData)
-{
-    try
-    {   
-        string? Description = formData["description"];
-        string? PhysicianId = formData["physician"];
-        string? ReqId = formData["reqId"];
-        int? AdminId = null;
-
-        await _adminDashboardService.AssignRequestCase(int.Parse(ReqId),int.Parse(PhysicianId),AdminId,Description);
-
-        TempData["success"] = "Request Assigned Successfully!";
-       return Json(new { success = true, message = "Form data received successfully" });
-    }
-    catch (Exception e)
+    [HttpPost]
+    public async Task<IActionResult> CancleCase(IFormCollection formData)
     {
-        _logger.LogInformation(e.Message);
-        TempData["error"] = "Internal Server Error";
-        return Redirect("/Admin/Dashboard/Index");
+        try
+        {
+            var reqId = formData["reqId"];
+            var reason = formData["reason"];
+            var additionalNotes = formData["additionalNotes"];
+            _adminDashboardService.CancleRequestCase(int.Parse(reqId), reason, additionalNotes);
+            TempData["success"] = "Request Cancelled Successfully!";
+            return Json(new { success = true, message = "Form data received successfully" });
+        }
+        catch (Exception e)
+        {
+            _logger.LogInformation(e.Message);
+            TempData["error"] = "Internal Server Error";
+            return Redirect("/Admin/Dashboard/Index");
+        }
     }
-}
 
-[HttpPost]
-public async Task<IActionResult> BlockCase(IFormCollection formData)
-{
-    try
-    {   
-        string? Reason = formData["reason"];
-        string? ReqId = formData["reqId"];
-        int? AdminId = null;
-
-        await _adminDashboardService.BlockRequestCase(int.Parse(ReqId),AdminId,Reason);
-
-        TempData["success"] = "Request Blocked Successfully!";
-       return Json(new { success = true, message = "Form data received successfully" });
-    }
-    catch (Exception e)
+    public async Task<IActionResult> GetRegions()
     {
-        _logger.LogInformation(e.Message);
-        TempData["error"] = "Internal Server Error";
-        return Redirect("/Admin/Dashboard/Index");
+        try
+        {
+            var regions = await _adminDashboardService.GetRegions();
+            return Ok(regions);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogInformation(ex.Message);
+            TempData["error"] = "Internal Server Error";
+            return Redirect("/Admin/Dashboard/Index");
+        }
     }
-}
 
-public async Task<IActionResult> LogOut()
+    public async Task<IActionResult> GetPhysicians(int RegionId)
+    {
+        try
+        {
+            var physicians = await _adminDashboardService.GetPhysicianByRegion(RegionId);
+            if (physicians == null)
+            {
+                return Ok(new List<Physician>());
+            }
+            return Ok(physicians);
+        }
+        catch (Exception e)
+        {
+            TempData["error"] = "Internal Server Error";
+            return Redirect("/Admin/Dashboard/Index");
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AssignCase(IFormCollection formData)
+    {
+        try
+        {
+            string? Description = formData["description"];
+            string? PhysicianId = formData["physician"];
+            string? ReqId = formData["reqId"];
+            int? AdminId = null;
+
+            await _adminDashboardService.AssignRequestCase(int.Parse(ReqId), int.Parse(PhysicianId), AdminId, Description);
+
+            TempData["success"] = "Request Assigned Successfully!";
+            return Json(new { success = true, message = "Form data received successfully" });
+        }
+        catch (Exception e)
+        {
+            _logger.LogInformation(e.Message);
+            TempData["error"] = "Internal Server Error";
+            return Redirect("/Admin/Dashboard/Index");
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> BlockCase(IFormCollection formData)
+    {
+        try
+        {
+            string? Reason = formData["reason"];
+            string? ReqId = formData["reqId"];
+            int? AdminId = null;
+
+            await _adminDashboardService.BlockRequestCase(int.Parse(ReqId), AdminId, Reason);
+
+            TempData["success"] = "Request Blocked Successfully!";
+            return Json(new { success = true, message = "Form data received successfully" });
+        }
+        catch (Exception e)
+        {
+            _logger.LogInformation(e.Message);
+            TempData["error"] = "Internal Server Error";
+            return Redirect("/Admin/Dashboard/Index");
+        }
+    }
+
+    public async Task<IActionResult> ViewUploads(int RequestId)
+    {
+        try
+        {
+
+            var DocumentRecords = _dashboardService.GetAllRequestedDocuments(RequestId);
+            var patientData = _adminDashboardService.GetSingleRequest(RequestId);
+            ViewBag.PatientName = patientData.User != null ? (patientData.User.Firstname + " " + patientData.User.Lastname) :
+                 (patientData.Requestclients.FirstOrDefault()?.Firstname.ToUpper() + " " + patientData.Requestclients.FirstOrDefault()?.Lastname.ToUpper());
+            ViewBag.userId = User.FindFirstValue("UserId");
+            ViewBag.requestId = RequestId;
+
+            List<ViewDocuments> viewModel = DocumentRecords.Select(d => new ViewDocuments
+            {
+                DocumentId = d.Id,
+                FilePath = d.Filename,
+                FileName = Path.GetFileName(d.Filename),
+                UploaderName = d.Request.Createduser != null ? d.Request.Createduser.Firstname : d.Request.Firstname,
+                UploadDate = d.Createddate.ToString("yyyy-MM-dd"),
+                PatientName = d.Request.User != null ? (d.Request.User.Firstname + " " + d.Request.User.Lastname) :
+                 (d.Request.Requestclients.FirstOrDefault()?.Firstname.ToUpper() + " " + d.Request.Requestclients.FirstOrDefault()?.Lastname.ToUpper())
+            }).ToList();
+
+            return View(viewModel);
+
+        }
+        catch (Exception)
+        {
+            TempData["error"] = "Internal Server Error";
+            return View("Index");
+        }
+    }
+    public async Task<IActionResult> SingleDownload(string fileName, int reqId)
+    {
+        try
+        {
+            // Construct the full file path by combining the wwwroot path and the fileName
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
+            // Check if the file exists
+            if (!System.IO.File.Exists(filePath))
+            {
+                TempData["error"] = "File not found";
+                return View("Index");
+            }
+            byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+            return File(bytes, "application/octet-stream", fileName);
+        }
+        catch (Exception)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("ViewUploads", new { RequestId = reqId });
+        }
+    }
+
+    public async Task<IActionResult> SelectedDownload(string[] fileNames, int reqId)
+    {
+
+        if (fileNames.Length == 0 || fileNames == null)
+        {
+            TempData["error"] = "Please Choose File ! ";
+            return Json(new { redirectTo = Url.Action("ViewUploads", "Dashboard", new { area = "Admin", requestId = reqId }) });
+        }
+
+        try
+        {
+            var zipName = $"HalloDoc_Documents.zip";
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
+                {
+                    //QUery the Products table and get all image content  
+                    foreach (var file in fileNames)
+                    {
+
+                        var entry = zip.CreateEntry(file);
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(),
+                                "wwwroot\\uploads", file);
+                        byte[] buffer = System.IO.File.ReadAllBytes(filePath);
+                        using (var fileStream = new MemoryStream(buffer))
+                        using (var entryStream = entry.Open())
+                        {
+                            fileStream.CopyTo(entryStream);
+                        }
+                    }
+                }
+
+                return File(ms.ToArray(), "application/zip", zipName);
+            }
+
+        }
+        catch (Exception)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("ViewUploads", new { RequestId = reqId });
+        }
+    }
+
+    public async Task<IActionResult> SingleDelete(string fileName, int reqId, string docId)
+    {
+        try
+        {
+            // string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
+            // if (!System.IO.File.Exists(filePath))
+            // {
+            //     TempData["error"] = "File not found";
+            //     return RedirectToAction("ViewUploads", new { RequestId = reqId });
+            // }
+
+            // // Delete the file
+            // System.IO.File.Delete(filePath);
+
+            _adminDashboardService.DeleteDocument(int.Parse(docId));
+
+            TempData["success"] = "File deleted successfully";
+            return RedirectToAction("ViewUploads", new { RequestId = reqId });
+        }
+        catch (Exception)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("ViewUploads", new { RequestId = reqId });
+        }
+    }
+
+    public async Task<IActionResult> SelectedDelete(string[] fileNames, int reqId, string[] fileIds)
+    {
+
+        if (fileNames.Length == 0 || fileNames == null)
+        {
+            TempData["error"] = "Please Choose File ! ";
+            return Json(new { redirectTo = Url.Action("ViewUploads", "Dashboard", new { area = "Admin", requestId = reqId }) });
+        }
+        try
+        {
+
+            //    foreach (var filename in fileNames)
+            //    {
+            //         string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", filename);
+            //         if (!System.IO.File.Exists(filePath))
+            //         {
+            //             TempData["error"] = "File not found";
+            //             return RedirectToAction("ViewUploads", new { RequestId = reqId });
+            //         }
+            //         // Delete the file
+            //         System.IO.File.Delete(filePath);
+            //    }
+
+            foreach (var fileId in fileIds)
+            {
+                _adminDashboardService.DeleteDocument(int.Parse(fileId));
+            }
+
+            TempData["error"] = "Files Are Deleted !";
+            return Json(new { success = true, message = "Deleted Success" });
+        }
+        catch (Exception)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("ViewUploads", new { RequestId = reqId });
+        }
+    }
+    public async Task<IActionResult> UploadFile(IFormFile file, int requestId)
+    {
+
+        if (file == null)
+        {
+            TempData["error"] = "Please Choose File !";
+            return RedirectToAction("ViewUploads", new { RequestId = requestId });
+        }
+        try
+        {
+            int? AdminId = null;
+
+            string fileName = null;
+            // File Upload Logic
+            if (file != null && file.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                // Ensure the uploads folder exists, create it if not
+                if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+                // Generate a unique file name for the uploaded file
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(file.FileName);
+                // Combine the uploads folder path with the unique file name to get the full file path
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                // Adding or copying the uploaded file to Server
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                fileName = filePath;
+            }
+
+            // We have to add Admin Id here
+            _dashboardService.UploadFileFromDocument(fileName, requestId, AdminId);
+            TempData["success"] = "Uploaded Successfully";
+
+            return RedirectToAction("ViewUploads", new { RequestId = requestId });
+        }
+        catch (Exception e)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("ViewUploads", new { RequestId = requestId });
+        }
+    }
+
+
+    public async Task<IActionResult> SendEmailToPatient(string[] fileNames, int reqId, string[] fileIds)
+    {
+        if (fileNames.Length == 0 || fileNames == null)
+        {
+            TempData["error"] = "Please Choose File ! ";
+            return Json(new { redirectTo = Url.Action("ViewUploads", "Dashboard", new { area = "Admin", requestId = reqId }) });
+        }
+        try
+        {
+
+            string senderEmail = "tatva.dotnet.aakashdave@outlook.com";
+            string senderPassword = "Aakash21##";
+
+            SmtpClient client = new SmtpClient("smtp.office365.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential(senderEmail, senderPassword),
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false
+            };
+
+            MailMessage mailMessage = new MailMessage
+            {
+                From = new MailAddress(senderEmail, "HalloDoc"),
+                Subject = "Set up your Account",
+                IsBodyHtml = true,
+                Body = $"Dear patient, please find attached the files you requested"
+            };
+
+            foreach (var fileName in fileNames)
+            {
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", fileName);
+                if (System.IO.File.Exists(filePath))
+                {
+                    // Add the file as an attachment to the email
+                    mailMessage.Attachments.Add(new Attachment(filePath));
+                }
+                else
+                {
+                    // Handle the case where the file does not exist
+                    Console.WriteLine($"File '{fileName}' does not exist at path: {filePath}");
+                }
+            }
+
+            mailMessage.To.Add("aakashdave21@gmail.com");
+
+            client.Send(mailMessage);
+
+
+            TempData["success"] = "Files Are Send !";
+            return Json(new { success = true, message = "File Send Success" });
+        }
+        catch (Exception)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("ViewUploads", new { RequestId = reqId });
+        }
+    }
+    public async Task<IActionResult> LogOut()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Index", "Login");

@@ -79,6 +79,12 @@ public partial class Aspnetuser
     [Column("resetExpiration")]
     public DateTime? ResetExpiration { get; set; }
 
+    [Column("acivationToken")]
+    public string? AcivationToken { get; set; }
+
+    [Column("activationExpiry")]
+    public DateTime? ActivationExpiry { get; set; }
+
     [InverseProperty("Aspnetuser")]
     public virtual ICollection<Admin> AdminAspnetusers { get; } = new List<Admin>();
 

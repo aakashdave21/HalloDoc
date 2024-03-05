@@ -304,4 +304,17 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         _dbContext.Blockrequests.Add(newBlockReq);
         _dbContext.SaveChanges();
     }
+
+    public Request GetSingleRequest(int reqId){
+        return _dbContext.Requests.Include(req => req.User).Include(req=>req.Requestclients).FirstOrDefault(req => req.Id == reqId);
+    }
+
+    public void DeleteDocument(int docId){
+        Requestwisefile fileData =  _dbContext.Requestwisefiles.FirstOrDefault(doc => doc.Id == docId);
+        if(fileData!=null){
+                fileData.Isdeleted = true;
+                _dbContext.SaveChanges();
+        }
+    }
+
 }

@@ -259,6 +259,8 @@
                 params = { status: "new" };
                 break;
         }
+        pageNum = 1;
+        pageRecord = 5;
         makeAjaxRequest(`/admin/dashboard/Index?pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
     })
     let timeoutId;

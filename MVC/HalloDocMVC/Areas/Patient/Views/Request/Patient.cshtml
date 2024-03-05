@@ -152,7 +152,8 @@
     </main>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
    <script type="text/javascript">
    
         let timeoutId;
@@ -182,19 +183,39 @@
                 success: function (response) {
                     // Handle the response from the server
                     if (response.isValid == true) {
-                        toastr.success("Email is Valid, Please Enter Your Password");
+                        Toastify({
+                            text: "Email is Valid, Please Enter Your Password",
+                            duration : 3000,
+                            className: "success", // Use "success" class for styling success message
+                            style: {
+                                background: "linear-gradient(to right, #5cb85c, #5cb85c)", // Green background for success message
+                            }
+                        }).showToast();
                         document.getElementById('password-fields').style.display = 'block';
                         document.getElementById('Password').setAttribute('required', true);
                         document.getElementById('ConfirmPassword').setAttribute('required', true);
                     } else {
-                        toastr.info("Email Aleready Exists, You can also login now !!");
+                        Toastify({
+                            text: "Email Aleready Exists, You can also login now !!",
+                            className: "info", // Use "info" class for styling info message
+                            style: {
+                                background: "linear-gradient(to right, #5bc0de, #5bc0de)", // Blue background for info message
+                            }
+                        }).showToast();
                         document.getElementById('password-fields').style.display = 'none';
                         document.getElementById('Password').removeAttribute('required', true);
                         document.getElementById('ConfirmPassword').removeAttribute('required', true);
                     }
                 },
                 error: function () {
-                    toastr.error("Error occurred while verifying email.");
+                    Toastify({
+                        text: "Error occurred while verifying email.",
+                        duration : 3000,
+                        className: "error", // Use "error" class for styling error message
+                        style: {
+                            background: "linear-gradient(to right, #d9534f, #d9534f)", // Red background for error message
+                        }
+                    }).showToast();
                 }
         });
 }

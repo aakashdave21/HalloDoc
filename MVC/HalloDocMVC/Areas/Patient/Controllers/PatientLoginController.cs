@@ -93,6 +93,7 @@ public class PatientLoginController : Controller
         return View(nameof(Index), user);
     }
 
+  
 
     // Forgot Password View
     public IActionResult ForgotPassword()
@@ -119,7 +120,9 @@ public class PatientLoginController : Controller
                 var callbackUrl = Url.Action("ResetPassword", "PatientLogin", new { userId = userDetails.Id, token }, protocol: HttpContext.Request.Scheme);
                 DateTime expirationTime = DateTime.UtcNow.AddHours(1);
                 _patientLoginService.StoreResetToken(userDetails.Id, token, expirationTime);
+
                 Console.WriteLine(callbackUrl);
+
                 string rcvrMail = "aakashdave21@gmail.com";
                 await _utilityService.EmailSend(callbackUrl,rcvrMail);
                 

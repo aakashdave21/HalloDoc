@@ -159,7 +159,14 @@ public class RequestController : Controller
                     // Update the view model with the file path
                     familyRequest.FilePath = filePath;
                 }
-                await _patientRequestService.ProcessFamilyRequestAsync(familyRequest);
+                int userId = await _patientRequestService.ProcessFamilyRequestAsync(familyRequest);
+
+                if(userId!=0){
+                    SendCreationLink(userId);
+                }
+                
+
+
                 TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
                 return RedirectToAction("Index", "PatientLogin");
             }
@@ -193,8 +200,11 @@ public class RequestController : Controller
                 return View(nameof(Concierge), conciergeRequest); // Return the view with validation errors
             }
             try{
-                await _patientRequestService.ProcessConciergeRequestAsync(conciergeRequest);
+                int userId = await _patientRequestService.ProcessConciergeRequestAsync(conciergeRequest);
                 
+                if(userId!=0){
+                    SendCreationLink(userId);
+                }
                 TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
                 return RedirectToAction("Index", "PatientLogin");
             }
@@ -233,8 +243,10 @@ public class RequestController : Controller
 
             try{
 
-                await _patientRequestService.ProcessBusinessRequestAsync(businessRequests);
-                
+                int userId = await _patientRequestService.ProcessBusinessRequestAsync(businessRequests);
+                 if(userId!=0){
+                    SendCreationLink(userId);
+                }
                 TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
                 return RedirectToAction("Index", "PatientLogin");
             }
@@ -245,6 +257,25 @@ public class RequestController : Controller
                 
                 return View(nameof(Business), businessRequests);
             }
+    }
+
+    private async Task SendCreationLink(int userId){
+        try
+        {
+            // Activation Email Sent To Patient
+                string token = Guid.NewGuid().ToString();
+                var createAccountLink = Url.Action("Index","SignUp",new { area = "Patient", userId, token }, Request.Scheme);
+                DateTime expirationTime = DateTime.UtcNow.AddHours(1);
+                _patientRequestService.StoreActivationToken(userId,token,expirationTime);
+                string rcvrMail = "aakashdave21@gmail.com";
+                await _utilityService.EmailSend(createAccountLink,rcvrMail);
+        }
+        catch (Exception e)
+        {
+            TempData["error"] = "Error While Sending Mail";
+            throw;
+        }
+                
     }
 
 

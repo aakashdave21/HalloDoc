@@ -75,10 +75,11 @@ public class DashboardRepo : IDashboardRepo
 
      public IEnumerable<Requestwisefile> GetAllRequestedDocuments(int reqId){
         return _dbContext.Requestwisefiles
-                 .Where(rwf => rwf.Requestid == reqId)          // Filter by request ID
+                 .Where(rwf => rwf.Requestid == reqId && rwf.Isdeleted != true)          // Filter by request ID
                  .Include(rwf => rwf.Request)                   // Include related Request entity
                      .ThenInclude(req => req.Createduser)
-                 .Include(rwf => rwf.Request.User)            // Include related User entity within Request
+                 .Include(rwf => rwf.Request.User)        // Include related User entity within Request
+                 .Include(rq => rq.Request.Requestclients)
                  .ToList();
      }
 

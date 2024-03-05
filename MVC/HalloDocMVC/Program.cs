@@ -11,7 +11,6 @@ using HalloDocRepository.Admin.Implementation;
 using HalloDocService.Admin.Interfaces;
 using HalloDocService.Admin.Implementation;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +40,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.ExpireTimeSpan = TimeSpan.FromDays(7);
+        options.AccessDeniedPath = "/Account/AccessDenied";
         options.Events = new CookieAuthenticationEvents
         {
             OnRedirectToLogin = context =>
@@ -75,10 +75,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -91,9 +89,15 @@ app.Use(async (context, next) =>
         context.Response.Redirect("/Patient/Home/Index");
         return;
     }
+    
+    if(context.Response.StatusCode == 403 || context.Response.StatusCode == 404){
+        context.Response.Redirect("/Patient/Home/Index");
+        return;
+    }
 
     await next();
 });
+
 
 app.MapControllerRoute(
     name: "Patient",
@@ -105,6 +109,6 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "Pateint/{controller=PatientHome}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=AccessDenied}/{id?}");
 
 app.Run();

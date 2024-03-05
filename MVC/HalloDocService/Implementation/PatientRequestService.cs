@@ -165,20 +165,22 @@ public class PatientRequestService : IPatientRequestService
     }
 
     // Family Request Implementation
-    public async Task ProcessFamilyRequestAsync(FamilyRequestViewModel familyView)
+    public async Task<int> ProcessFamilyRequestAsync(FamilyRequestViewModel familyView)
     {
         var userEmail = _patientRequestRepo.FindUserByEmail(familyView.Email);
         if (userEmail != null)
         {
-            await ProcessExistingUserFamilyRequestAsync(familyView);
+            var userId = await ProcessExistingUserFamilyRequestAsync(familyView);
+            return userId;
         }
         else
         {
-            await ProcessNewUserFamilyRequestAsync(familyView);
+            var userId = await ProcessNewUserFamilyRequestAsync(familyView);
+            return userId;
             
         }
     }
-    private async Task ProcessExistingUserFamilyRequestAsync(FamilyRequestViewModel familyRequest)
+    private async Task<int> ProcessExistingUserFamilyRequestAsync(FamilyRequestViewModel familyRequest)
     {
         var existUserData = _patientRequestRepo.FindUserByEmailFromUser(familyRequest.Email);
 
@@ -225,8 +227,10 @@ public class PatientRequestService : IPatientRequestService
             };
             _patientRequestRepo.AddDocumentDetails(documentDetails);
         }
+
+        return 0;
     }
-    private async Task ProcessNewUserFamilyRequestAsync(FamilyRequestViewModel familyRequest)
+    private async Task<int> ProcessNewUserFamilyRequestAsync(FamilyRequestViewModel familyRequest)
     {
         // If user is not exists then new User Creation
         // Create Request Without UserId -> When Account is Created then Assign USERID to Request Table
@@ -300,25 +304,29 @@ public class PatientRequestService : IPatientRequestService
             };
             _patientRequestRepo.AddDocumentDetails(documentDetails);
         }
+
+        return newUser.Id;
     }
 
 
 
     // Business Request Implementaion
-    public async Task ProcessBusinessRequestAsync(BusinessRequestViewModel businessView)
+    public async Task<int> ProcessBusinessRequestAsync(BusinessRequestViewModel businessView)
     {
         var userEmail = _patientRequestRepo.FindUserByEmail(businessView.Email);
         if (userEmail != null)
         {
-            await ProcessExistingUserBusinessRequestAsync(businessView);
+            int userId = await ProcessExistingUserBusinessRequestAsync(businessView);
+            return userId;
         }
         else
         {
-            await ProcessNewUserBusinessRequestAsync(businessView);
+            int userId = await ProcessNewUserBusinessRequestAsync(businessView);
+            return userId;
         }
     }
 
-    private async Task ProcessExistingUserBusinessRequestAsync(BusinessRequestViewModel businessRequests)
+    private async Task<int> ProcessExistingUserBusinessRequestAsync(BusinessRequestViewModel businessRequests)
     {
         var existUserData = _patientRequestRepo.FindUserByEmailFromUser(businessRequests.Email);
 
@@ -355,8 +363,9 @@ public class PatientRequestService : IPatientRequestService
             Intdate = DateOnly.Parse(businessRequests.Birthdate).Day
         };
         _patientRequestRepo.AddPatientInfoForExistedUser(patientInfo);
+        return 0;
     }
-    private async Task ProcessNewUserBusinessRequestAsync(BusinessRequestViewModel businessRequests)
+    private async Task<int> ProcessNewUserBusinessRequestAsync(BusinessRequestViewModel businessRequests)
     {
         // If user is not exists then new User Creation
         // Create Request Without UserId -> When Account is Created then Assign USERID to Request Table
@@ -420,23 +429,26 @@ public class PatientRequestService : IPatientRequestService
             Intdate = DateOnly.Parse(businessRequests.Birthdate).Day
         };
         _patientRequestRepo.NewPatientAdd(newPatientInfo);
+        return newUser.Id;
     }
 
     // Concierge Request Implementatin
-    public async Task ProcessConciergeRequestAsync(ConciergeRequestViewModel conciergeView)
+    public async Task<int> ProcessConciergeRequestAsync(ConciergeRequestViewModel conciergeView)
     {
         var userEmail = _patientRequestRepo.FindUserByEmail(conciergeView.Email);
         if (userEmail != null)
         {
-            await ProcessExistingUserConciergeRequestAsync(conciergeView);
+            int userId = await ProcessExistingUserConciergeRequestAsync(conciergeView);
+            return userId;
         }
         else
         {
-            await ProcessNewUserConciergeRequestAsync(conciergeView);
+            int userId = await ProcessNewUserConciergeRequestAsync(conciergeView);
+            return userId;
         }
     }
 
-    private async Task ProcessExistingUserConciergeRequestAsync(ConciergeRequestViewModel conciergeRequest)
+    private async Task<int> ProcessExistingUserConciergeRequestAsync(ConciergeRequestViewModel conciergeRequest)
     {
         var existUserData = _patientRequestRepo.FindUserByEmailFromUser(conciergeRequest.Email);
 
@@ -486,8 +498,9 @@ public class PatientRequestService : IPatientRequestService
             Conciergeid = newConcierge.Id
         };
         _patientRequestRepo.RequestConciergeMappingAdd(new_request_concierge);
+        return 0;
     }
-    private async Task ProcessNewUserConciergeRequestAsync(ConciergeRequestViewModel conciergeRequest)
+    private async Task<int> ProcessNewUserConciergeRequestAsync(ConciergeRequestViewModel conciergeRequest)
     {
         // If user is not exists then new User Creation
         // Create Request Without UserId -> When Account is Created then Assign USERID to Request Table
@@ -561,6 +574,14 @@ public class PatientRequestService : IPatientRequestService
             Conciergeid = newConciergeForNewUser.Id
         };
         _patientRequestRepo.RequestConciergeMappingAdd(new_request_concierge_for_newcustomer);
+
+        return newUser.Id;
+    }
+
+
+
+    public void StoreActivationToken(int AspUserId , string token, DateTime expiry){
+        _patientRequestRepo.StoreActivationToken(AspUserId , token, expiry);
     }
 }
 

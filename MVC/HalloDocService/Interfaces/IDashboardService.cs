@@ -15,5 +15,5 @@ public interface IDashboardService
 
     IEnumerable<Requestwisefile> GetAllRequestedDocuments (int reqId);
 
-    void UploadFileFromDocument(string filename,int reqId);
+    void UploadFileFromDocument(string filename,int reqId , int? AdminId);
 }

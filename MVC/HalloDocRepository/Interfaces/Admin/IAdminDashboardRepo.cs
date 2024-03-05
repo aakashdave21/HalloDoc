@@ -31,5 +31,10 @@ public interface IAdminDashboardRepo
 
    void SetBlockFieldRequest(int reqId);
    void AddBlockRequest(Blockrequest newBlockReq);
+   Request GetSingleRequest(int reqId);
+
+   void DeleteDocument(int docId);
+
+   
 
 }

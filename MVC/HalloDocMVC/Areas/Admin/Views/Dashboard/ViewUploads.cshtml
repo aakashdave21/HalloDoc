@@ -1,13 +1,13 @@
 @model List<ViewDocuments>;
 @{
-    ViewData["Title"] = "Documents";
-    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "ViewNotes Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+    string patientName = @Model.FirstOrDefault()?.PatientName ?? ViewBag.PatientName;
+
 }
-
-
 <main class="documents-section container-sm mt-5">
         <div class="d-flex justify-content-end mt-4">
-            <a asp-area="Patient" asp-controller="Dashboard" asp-action="Index" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
         </div>
         <h2 class="mt-5 fw-bold">Documents</h1>
         
@@ -15,12 +15,12 @@
                 <div class="d-flex flex-column">
                     <small class="text-secondary">Patient Name</small>
                     <div class="d-flex flex-sm-row flex-column align-items-sm-center justify-content-start gap-2">
-                        <h4 class="patient-name fw-bold">@Model.FirstOrDefault()?.PatientName</h4>
+                        <h4 class="patient-name fw-bold">@patientName</h4>
                         <p>(MD56465498456549874654)</p>
                     </div>
                     <small class="text-secondary">Check here for any files that you and doctors of your subsequents requestors has attached for review.</small>
 
-                    <form asp-area="Patient" asp-controller="Dashboard" asp-action="UploadFile" method="post" enctype="multipart/form-data">
+                    <form asp-area="Admin" asp-controller="Dashboard" asp-action="UploadFile" method="post" enctype="multipart/form-data">
                         <div class="input-group mt-5 mb-5">
                             <input type="hidden" name="requestId" value="@ViewBag.requestId">
                             <input type="hidden" name="userId" value="@ViewBag.userId">
@@ -33,7 +33,12 @@
                 <div>
                     <div class="d-flex justify-content-between w-100 mb-3">
                         <h4 class="fw-bold">Documents</h3>
+                        <div>
                         <button class="btn theme-btn" type="button" id="downloadSelectedFile">Download All</button>
+                        <button class="btn theme-btn" type="button" id="deleteSelectedFile">Delete All</button>
+                        <button class="btn theme-btn" type="button" id="sendSelectedFile">Send Mail</button>
+                        </div>
+                        
                     </div>
                     
                         <div class="table-responsive">
@@ -59,9 +64,15 @@
                                                 <td>@item.UploaderName</td>
                                                 <td class="created-date">@item.UploadDate</td>
                                                 <td> 
-                                                    <a class="btn theme-btn" asp-area="Patient" asp-controller="Dashboard" asp-action="SingleDownload" asp-route-FileName="@item.FileName">
+                                                    <div class="d-flex h-100 gap-2">
+                                                        <a class="btn theme-btn" asp-area="Admin" asp-controller="Dashboard" asp-action="SingleDownload" asp-route-FileName="@item.FileName" asp-route-reqId="@ViewBag.requestId">
                                                         <i class="fa-solid fa-cloud-arrow-up"></i>
-                                                    </a>
+                                                        </a>
+                                                        <a class="btn theme-btn" asp-area="Admin" asp-controller="Dashboard" asp-action="SingleDelete" asp-route-FileName="@item.FileName" asp-route-reqId="@ViewBag.requestId" asp-route-docId = "@item.DocumentId">
+                                                            <i class="fa-solid fa-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                     
                                                 </td>
                                             </tr>
                                             }
@@ -156,7 +167,7 @@
                 }
             })
             $.ajax({
-                url: '@Url.Action("SelectedDownload", "Dashboard")',
+                url: '/admin/dashboard/SelectedDownload',
                 type: 'GET',
                 traditional: true,                  // Ensure array is serialized correctly
                 data: { fileNames: selectedItems, reqId : @ViewBag.requestId }, // Pass selectedItems as an array
@@ -164,20 +175,88 @@
                     responseType: 'blob' // Set response type to 'blob' for binary data
                 },
                 success: function(response) {
-                    var url = window.URL.createObjectURL(response);
+                    @* var url = window.URL.createObjectURL(response);
                     var a = document.createElement('a');
                     a.href = url;
                     a.download = "HalloDoc_Documents.zip";
                     document.body.appendChild(a);
                     a.click();
                     window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
+                    document.body.removeChild(a); *@
                 },
                 error: function() {
                     // Handle error
-                    window.location.href = `/Patient/Dashboard/Documents?RequestId=${@ViewBag.requestId }`
+                    window.location.href = `/Admin/Dashboard/ViewUploads?RequestId=${@ViewBag.requestId}`
                     console.error('Error occurred during download');
                 }
             })    
         })
+
+        
+        $("#deleteSelectedFile").click(function(){
+            let selectedItems = [];
+            let selectedIds = [];
+            var table = document.getElementById("example");
+            var checkboxes = table.querySelectorAll(".selectRow");
+            checkboxes.forEach(function(item){
+                if(item.checked){
+                    selectedIds.push(item.id);
+                    selectedItems.push(item.value);
+                }
+            })
+            $.ajax({
+                url: '/admin/dashboard/SelectedDelete',
+                type: 'GET',
+                traditional: true,                  // Ensure array is serialized correctly
+                data: { fileNames: selectedItems, reqId : @ViewBag.requestId, fileIds : selectedIds }, // Pass selectedItems as an array
+                xhrFields: {
+                    responseType: 'blob' // Set response type to 'blob' for binary data
+                },
+                success: function(response) {
+                    @* var url = window.URL.createObjectURL(response);
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = "HalloDoc_Documents.zip";
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a); *@
+                    console.log("Successfully deleted files");
+                },
+                error: function() {
+                    // Handle error
+                    window.location.href = `/Admin/Dashboard/ViewUploads?RequestId=${@ViewBag.requestId}`
+                    console.error('Error occurred during download');
+                }
+            })    
+        })
+        
+        $('#sendSelectedFile').click(function() {
+        let selectedItems = [];
+        let selectedIds = [];
+        var table = document.getElementById("example");
+        var checkboxes = table.querySelectorAll(".selectRow");
+            checkboxes.forEach(function(item){
+                if(item.checked){
+                    selectedIds.push(item.id);
+                    selectedItems.push(item.value);
+                }
+            })
+
+        // Make an AJAX request to send the email
+        $.ajax({
+                url: '/admin/dashboard/SendEmailToPatient',
+                type: 'GET',
+                traditional: true,                  // Ensure array is serialized correctly
+                data: { fileNames: selectedItems, reqId : @ViewBag.requestId, fileIds : selectedIds }, // Pass selectedItems as an array
+                success: function(response) {
+                     window.location.href = `/Admin/Dashboard/ViewUploads?RequestId=@ViewBag.requestId`
+                },
+                error: function() {
+                    // Handle error
+                    window.location.href = `/Admin/Dashboard/ViewUploads?RequestId=${@ViewBag.requestId}`
+                    console.error('Error occurred during download');
+                }
+            })    
+    });
     </script>

@@ -15,4 +15,5 @@ public interface IPatientRequestRepo
     void ConciergeDetailsAdd(Concierge requestData);
     void RequestConciergeMappingAdd(Requestconcierge requestData);
     void AddDocumentDetails(Requestwisefile requestData);
+    void StoreActivationToken(int AspUserId , string token, DateTime expiry);
 }

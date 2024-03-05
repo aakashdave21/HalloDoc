@@ -48,5 +48,9 @@ public class PatientLogin : IPatientLogin
         _userRepository.UpdatePassword(AspUserId,password);
     }
 
+    public string GetAspUserEmail(int userId){
+        return _userRepository.GetAspUserEmail(userId);
+    }
+
 
 }

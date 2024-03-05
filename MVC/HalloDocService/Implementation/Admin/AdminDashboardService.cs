@@ -300,4 +300,12 @@ public class AdminDashboardService : IAdminDashboardService
         };
         _dashboardRepo.AddBlockRequest(newBlockRequest);
     }
+
+    public Request GetSingleRequest(int reqId){
+        return _dashboardRepo.GetSingleRequest(reqId);
+    }
+
+    public void DeleteDocument(int docId){
+         _dashboardRepo.DeleteDocument(docId);
+    }
 }

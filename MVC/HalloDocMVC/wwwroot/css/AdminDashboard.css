@@ -193,9 +193,9 @@ table tr td{
     border: 1px solid white;
     color: white;
 }
-tbody tr td .btn{
+/* tbody tr td .btn{
     border: 1px solid black;
-}
+} */
 [data-bs-theme=dark] tbody tr td .btn{
     color: white;
     border: 1px solid white;

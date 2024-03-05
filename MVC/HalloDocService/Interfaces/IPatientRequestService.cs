@@ -7,9 +7,10 @@ public interface IPatientRequestService
 {
     Aspnetuser GetUserByEmail(string email);
     Task ProcessPatientRequestAsync(PatientRequestViewModel patientView);
-    Task ProcessFamilyRequestAsync(FamilyRequestViewModel familyView);
-    Task ProcessConciergeRequestAsync(ConciergeRequestViewModel conciergeView);
-    Task ProcessBusinessRequestAsync(BusinessRequestViewModel businessView);
- 
+    Task<int> ProcessFamilyRequestAsync(FamilyRequestViewModel familyView);
+    Task<int> ProcessConciergeRequestAsync(ConciergeRequestViewModel conciergeView);
+    Task<int> ProcessBusinessRequestAsync(BusinessRequestViewModel businessView);
+    
+    void StoreActivationToken(int AspUserId , string token, DateTime expiry);
     
 }
