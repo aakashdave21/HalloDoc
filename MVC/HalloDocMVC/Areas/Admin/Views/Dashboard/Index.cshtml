@@ -226,6 +226,7 @@
     let params, tabData, searchKeyword=null, reqTypes=null, pageNum = 1,pageRecord = 5;
 
     $(".card").click(function () {
+        $(".dot").closest("a").removeClass("fw-bold")
         let action = $(this).data('action');
         let showStatus = document.querySelector("#showStatus");
         showStatus.innerHTML = `(${action})`;

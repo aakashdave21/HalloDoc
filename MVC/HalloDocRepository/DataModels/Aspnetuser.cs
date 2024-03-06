@@ -94,6 +94,12 @@ public partial class Aspnetuser
     [InverseProperty("ModifiedbyNavigation")]
     public virtual ICollection<Admin> AdminModifiedbyNavigations { get; } = new List<Admin>();
 
+    [InverseProperty("User")]
+    public virtual ICollection<Aspnetuserrole> Aspnetuserroles { get; } = new List<Aspnetuserrole>();
+
+    [InverseProperty("CreatedbyNavigation")]
+    public virtual ICollection<Orderdetail> Orderdetails { get; } = new List<Orderdetail>();
+
     [InverseProperty("Aspnetuser")]
     public virtual ICollection<Physician> PhysicianAspnetusers { get; } = new List<Physician>();
 

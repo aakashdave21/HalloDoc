@@ -16,7 +16,7 @@ public class PatientLoginRepo : IPatientLoginRepo
 
     public Aspnetuser ValidateUser(string email)
     {
-        return _dbContext.Aspnetusers.FirstOrDefault(user => user.Email == email);
+        return _dbContext.Aspnetusers.Include(users => users.Aspnetuserroles).ThenInclude(roles => roles.Role).FirstOrDefault(user => user.Email == email);
     }
 
     public Aspnetuser userDetailsFromUserName(string username){

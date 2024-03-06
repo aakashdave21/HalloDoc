@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "hfbqecIXsXGoLr8xIlCsAQwTCMPqgHaXZpo6CYZrnG4=",
+  "Hash": "+A6vYXW9GqElYg13PUI2gJk2SaEP9LvfC9VIoHE/TDc=",
   "Source": "HalloDocMVC",
   "BasePath": "_content/HalloDocMVC",
   "Mode": "Default",
@@ -1326,6 +1326,23 @@
       "OriginalItemSpec": "wwwroot\\images\\cursor-removebg-preview.png"
     },
     {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\images\\forbidden.png",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "images/forbidden.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\forbidden.png"
+    },
+    {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\images\\login_bg.jpg",
       "SourceId": "HalloDocMVC",
       "SourceType": "Discovered",
@@ -1358,6 +1375,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\logo.png"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\images\\not_found.png",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "images/not_found.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\not_found.png"
     },
     {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\adminDashboardRequest.js",

@@ -304,6 +304,22 @@ public class DashboardController : Controller
             return Redirect("/Admin/Dashboard/Index");
         }
     }
+    [HttpPost]
+    public async Task<IActionResult> ClearCase(int RequestId)
+    {
+        try
+        {
+            _adminDashboardService.SetClearCase(RequestId);
+            TempData["success"] = "Request Cleared Successfully!";
+            return Json(new { success = true, message = "Form data received successfully" });
+        }
+        catch (Exception e)
+        {
+            _logger.LogInformation(e.Message);
+            TempData["error"] = "Internal Server Error";
+            return Redirect("/Admin/Dashboard/Index");
+        }
+    }
 
     public async Task<IActionResult> ViewUploads(int RequestId)
     {
@@ -569,6 +585,71 @@ public class DashboardController : Controller
             return RedirectToAction("ViewUploads", new { RequestId = reqId });
         }
     }
+
+    public IActionResult SendOrder(int RequestId){
+        try
+        {
+            SendOrderViewModel sendOrders = new SendOrderViewModel
+            {
+                ProfessionLists = _adminDashboardService.GetAllProfessions()
+            };
+            ViewBag.RequestId = RequestId;
+            return View(sendOrders);
+        }
+        catch (Exception)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("SendOrder", new { RequestId });
+        }
+    }
+
+    [HttpPost]
+    public IActionResult SendOrder(SendOrderViewModel sendOrders){
+        try
+        {
+            Console.WriteLine(sendOrders.ReqId);
+            Console.WriteLine(sendOrders.BusinessId);
+            Console.WriteLine(sendOrders.Prescription);
+            Console.WriteLine(sendOrders.ProfessionId);
+            Console.WriteLine(sendOrders.BusinessContact);
+            Console.WriteLine(sendOrders.BusinessEmail);
+            Console.WriteLine(sendOrders.FaxNumber);
+
+            _adminDashboardService.AddOrderDetails(sendOrders);
+            TempData["success"] = "Order Sent Successfully!";
+            return RedirectToAction("SendOrder",new {RequestId = sendOrders.ReqId});
+        }
+        catch (Exception)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("SendOrder",new {RequestId = sendOrders.ReqId});
+        }
+    }
+    public IActionResult GetBusinessByProfession(int professionId){
+        try
+        {
+            IEnumerable<BusinessList> businessLists = _adminDashboardService.GetBusinessByProfession(professionId);
+           return Json(businessLists);
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = "Internal Server Error";
+            return BadRequest("Error occurred while fetching businesses: " + ex.Message);
+        }
+    }
+    public IActionResult GetBusinessDetails(int businessId){
+        try
+        {
+            SendOrderViewModel viewData = _adminDashboardService.GetBusinessDetails(businessId);
+           return Json(viewData);
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = "Internal Server Error";
+            return BadRequest("Error occurred while fetching businesses: " + ex.Message);
+        }
+    }
+
     public async Task<IActionResult> LogOut()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

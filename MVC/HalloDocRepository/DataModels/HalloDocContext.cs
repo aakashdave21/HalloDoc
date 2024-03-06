@@ -17,13 +17,23 @@ public partial class HalloDocContext : DbContext
 
     public virtual DbSet<Admin> Admins { get; set; }
 
+    public virtual DbSet<Aspnetrole> Aspnetroles { get; set; }
+
     public virtual DbSet<Aspnetuser> Aspnetusers { get; set; }
+
+    public virtual DbSet<Aspnetuserrole> Aspnetuserroles { get; set; }
 
     public virtual DbSet<Blockrequest> Blockrequests { get; set; }
 
     public virtual DbSet<Casetag> Casetags { get; set; }
 
     public virtual DbSet<Concierge> Concierges { get; set; }
+
+    public virtual DbSet<Healthprofessional> Healthprofessionals { get; set; }
+
+    public virtual DbSet<Healthprofessionaltype> Healthprofessionaltypes { get; set; }
+
+    public virtual DbSet<Orderdetail> Orderdetails { get; set; }
 
     public virtual DbSet<Physician> Physicians { get; set; }
 
@@ -76,12 +86,37 @@ public partial class HalloDocContext : DbContext
             entity.HasOne(d => d.Role).WithMany(p => p.Admins).HasConstraintName("admin_roleid_fkey");
         });
 
+        modelBuilder.Entity<Aspnetrole>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("aspnetroles_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
         modelBuilder.Entity<Aspnetuser>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("aspnetusers_pkey");
 
             entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
+        modelBuilder.Entity<Aspnetuserrole>(entity =>
+        {
+            entity.HasKey(e => new { e.Userid, e.Roleid }).HasName("aspnetuserroles_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Aspnetuserroles)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("aspnetuserroles_roleid_fkey");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Aspnetuserroles)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("aspnetuserroles_userid_fkey");
         });
 
         modelBuilder.Entity<Blockrequest>(entity =>
@@ -111,6 +146,40 @@ public partial class HalloDocContext : DbContext
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             entity.HasOne(d => d.Region).WithMany(p => p.Concierges).HasConstraintName("concierge_regionid_fkey");
+        });
+
+        modelBuilder.Entity<Healthprofessional>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("healthprofessionals_pkey");
+
+            entity.Property(e => e.Createddate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Modifieddate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.ProfessionNavigation).WithMany(p => p.Healthprofessionals).HasConstraintName("healthprofessionals_profession_fkey");
+
+            entity.HasOne(d => d.Region).WithMany(p => p.Healthprofessionals).HasConstraintName("healthprofessionals_regionid_fkey");
+        });
+
+        modelBuilder.Entity<Healthprofessionaltype>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("healthprofessionaltype_pkey");
+
+            entity.Property(e => e.Createddate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Isactive).HasDefaultValueSql("true");
+            entity.Property(e => e.Isdeleted).HasDefaultValueSql("false");
+        });
+
+        modelBuilder.Entity<Orderdetail>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("orderdetails_pkey");
+
+            entity.Property(e => e.Createddate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.CreatedbyNavigation).WithMany(p => p.Orderdetails).HasConstraintName("orderdetails_createdby_fkey");
+
+            entity.HasOne(d => d.Request).WithMany(p => p.Orderdetails).HasConstraintName("orderdetails_requestid_fkey");
+
+            entity.HasOne(d => d.Vendor).WithMany(p => p.Orderdetails).HasConstraintName("orderdetails_vendorid_fkey");
         });
 
         modelBuilder.Entity<Physician>(entity =>

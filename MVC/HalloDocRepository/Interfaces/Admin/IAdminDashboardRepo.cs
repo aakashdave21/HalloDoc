@@ -35,6 +35,10 @@ public interface IAdminDashboardRepo
 
    void DeleteDocument(int docId);
 
-   
+   IEnumerable<Healthprofessionaltype> GetAllProfessions();
+   IEnumerable<Healthprofessional> GetBusinessByProfession(int professionId);
+   Healthprofessional GetBusinessDetails(int businessId);
+   void AddOrderDetails(Orderdetail order);
+
 
 }

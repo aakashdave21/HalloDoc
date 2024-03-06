@@ -28,4 +28,13 @@ public interface IAdminDashboardService
 
     Request GetSingleRequest(int reqId);
     void DeleteDocument(int docId);
+
+    IEnumerable<ProfessionList> GetAllProfessions();
+
+    IEnumerable<BusinessList> GetBusinessByProfession(int ProfessionId);
+    SendOrderViewModel GetBusinessDetails(int businessId);
+
+    void AddOrderDetails(SendOrderViewModel sendOrders);
+
+    void SetClearCase(int RequestId);
 }

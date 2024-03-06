@@ -41,7 +41,7 @@ public class DashboardService : IDashboardService
             8 => "Closed",
             9 => "Unpaid",
             10 => "Clear",
-            // 11 => "Consult",
+            11 => "Blocked",
             // 12 => "Clear",
             // 13 => "CancelledByProvider",
             // 14 => "CCUploadedByClient",

@@ -49,6 +49,18 @@ public class PatientLoginController : Controller
         }
 
         var userEmail = _patientLoginService.ValidateUser(user);
+        var roles = userEmail.Aspnetuserroles.ToList();
+        bool IsPatient = false;
+        bool IsAdmin = false;
+        foreach (var item in roles)
+        {
+            if(string.Equals(item.Role.Name, "patient", StringComparison.OrdinalIgnoreCase)){
+                IsPatient = true;
+            }
+            if(string.Equals(item.Role.Name, "admin", StringComparison.OrdinalIgnoreCase)){
+                IsAdmin = true;
+            }
+        }
 
         if (userEmail != null)
         {
@@ -56,7 +68,7 @@ public class PatientLoginController : Controller
             // var isPasswordCorrect = PasswordHasher.VerifyPassword(user.Passwordhash , storedHashPassword);  <<<<<<< For Hashing
             var isPasswordCorrect = _patientLoginService.VerifyPassword(user.Passwordhash, storedHashPassword);
 
-            if (isPasswordCorrect)
+            if (isPasswordCorrect && IsPatient)
             {
                 var userDetails = _patientLoginService.UserDetailsFetch(userEmail.Email);
 
@@ -69,6 +81,17 @@ public class PatientLoginController : Controller
                     new Claim("UserId", userDetails.Id.ToString()),
                     new Claim("OtherProperties","Example Role")
                 };
+                
+                if(IsAdmin){
+                    claims.Add(new Claim(ClaimTypes.Role,"Admin"));
+                }
+
+                // foreach (var item in roles)
+                // {
+                //     Console.WriteLine(item.Role.Name + "<-----------" + item.Userid);
+                //     claims.Add(new Claim(ClaimTypes.Role, item.Role.Name.ToString()));
+                // }
+
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
                     CookieAuthenticationDefaults.AuthenticationScheme

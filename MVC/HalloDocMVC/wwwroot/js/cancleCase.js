@@ -236,3 +236,52 @@ const blockCaseSubmit = ()=>{
         console.error("Error Submitting:", error)
     }
 }
+
+// CLEAR CASE
+const populateClearCase = async (reqId) => {
+    var modal = document.getElementById('clearCaseModal');
+    modal.innerHTML = `<div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content p-md-5 p-1">
+                                <div class="modal-body d-flex flex-column justify-content-center align-items-center">
+                                    <div style="
+                                        height: 150px;
+                                        width: 100%;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                    ">
+                                        <i class="fa-solid fa-circle-info text-warning warning-icon"></i>
+                                    </div>
+                                    <h5>Confirmation for Clear Case</h5>
+                                    <p class="mt-2">Are you sure want to clear this request? Once clear this request you are not able to
+                                        see this request. </p>
+                                    <div class="d-flex">
+                                        <button type="button" class="btn secondary-theme-btn me-2" onclick='clearCase(${reqId})'>Clear</button>
+                                        <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+            var modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+}
+
+const clearCase = (reqId) => {
+    try {
+        $.ajax({
+            url: `/admin/dashboard/clearcase?RequestId=${reqId}`,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function () {
+                location.href = '/admin/dashboard'
+            },
+            error: function () {
+                console.log("error");
+            }
+        })
+    } catch (error) {
+        console.error("Error Submitting:", error)
+    }
+}

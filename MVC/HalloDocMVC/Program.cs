@@ -89,13 +89,13 @@ app.Use(async (context, next) =>
         context.Response.Redirect("/Patient/Home/Index");
         return;
     }
-    
+    await next();
+
     if(context.Response.StatusCode == 403 || context.Response.StatusCode == 404){
-        context.Response.Redirect("/Patient/Home/Index");
+        context.Response.Redirect("/Account/NotFound");
         return;
     }
 
-    await next();
 });
 
 

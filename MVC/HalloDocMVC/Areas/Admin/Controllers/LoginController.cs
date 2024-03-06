@@ -19,7 +19,8 @@ public class LoginController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index(){
+    public IActionResult Index()
+    {
         ClaimsPrincipal claimUser = HttpContext.User;
         if (claimUser.Identity.IsAuthenticated)
             return RedirectToAction(nameof(Index), "Dashboard");
@@ -28,10 +29,11 @@ public class LoginController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Index(UserLoginViewModel userView){
+    public async Task<IActionResult> Index(UserLoginViewModel userView)
+    {
         try
         {
-             if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(nameof(Index), userView);
             }
@@ -39,11 +41,28 @@ public class LoginController : Controller
             Console.WriteLine(userView.Passwordhash);
 
             var userEmail = _userLogin.ValidateUser(userView);
-            if(userEmail != null){
-                string storedHashPassword = userEmail.Passwordhash;
-                var isPasswordCorrect = _userLogin.VerifyPassword(userView.Passwordhash,storedHashPassword);
+            var roles = userEmail.Aspnetuserroles.ToList();
+            bool IsPatient = false;
+            bool IsAdmin = false;
+            foreach (var item in roles)
+            {
+                if (string.Equals(item.Role.Name, "patient", StringComparison.OrdinalIgnoreCase))
+                {
+                    IsPatient = true;
+                }
+                if (string.Equals(item.Role.Name, "admin", StringComparison.OrdinalIgnoreCase))
+                {
+                    IsAdmin = true;
+                }
+            }
 
-                if(isPasswordCorrect){
+            if (userEmail != null)
+            {
+                string storedHashPassword = userEmail.Passwordhash;
+                var isPasswordCorrect = _userLogin.VerifyPassword(userView.Passwordhash, storedHashPassword);
+
+                if (isPasswordCorrect && IsAdmin)
+                {
                     var userDetails = _userLogin.UserDetailsFetch(userEmail.Email);
 
                     // Authentication
@@ -54,22 +73,32 @@ public class LoginController : Controller
                         new Claim("UserId",userDetails.Id.ToString()),
                     };
 
+                    if (IsPatient)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, "Patient"));
+                    }
+                    // if (IsAdmin)
+                    // {
+                    //     claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                    // }
+
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
                     CookieAuthenticationDefaults.AuthenticationScheme);
 
-                    AuthenticationProperties properties = new AuthenticationProperties(){
+                    AuthenticationProperties properties = new AuthenticationProperties()
+                    {
                         AllowRefresh = true
                     };
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                        new ClaimsPrincipal(claimsIdentity),properties);
+                        new ClaimsPrincipal(claimsIdentity), properties);
 
                     TempData["success"] = "Login Successfully";
-                    return RedirectToAction("Index","Dashboard");
+                    return RedirectToAction("Index", "Dashboard");
                 }
             }
-             TempData["error"] = "Logged In Failed";
-                return View(nameof(Index), userView);
+            TempData["error"] = "Logged In Failed";
+            return View(nameof(Index), userView);
         }
         catch (Exception e)
         {

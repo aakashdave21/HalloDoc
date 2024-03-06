@@ -308,4 +308,48 @@ public class AdminDashboardService : IAdminDashboardService
     public void DeleteDocument(int docId){
          _dashboardRepo.DeleteDocument(docId);
     }
+
+    public IEnumerable<ProfessionList> GetAllProfessions(){
+        IEnumerable<Healthprofessionaltype> healthProfessionals = _dashboardRepo.GetAllProfessions();
+        IEnumerable<ProfessionList> Porfessions = healthProfessionals.Select(prof => new ProfessionList{
+            ProfessionId = prof.Id,
+            ProfessionName = prof.Professionname
+        }).ToList();
+        return Porfessions;
+    }
+
+    public IEnumerable<BusinessList> GetBusinessByProfession(int ProfessionId){
+       IEnumerable<BusinessList> businessLists = _dashboardRepo.GetBusinessByProfession(ProfessionId).Select(prof => new BusinessList{
+        BusinessId = prof.Id,
+        BusinessName = prof.Vendorname
+       });
+       return businessLists;
+    }
+    public SendOrderViewModel GetBusinessDetails(int businessId){
+        Healthprofessional vendor = _dashboardRepo.GetBusinessDetails(businessId);
+        SendOrderViewModel SendOrders = new(){
+            BusinessContact = vendor.Phonenumber,
+            BusinessEmail = vendor.Email,
+            FaxNumber = vendor.Faxnumber
+        };
+        return SendOrders;
+    }
+
+    public void AddOrderDetails(SendOrderViewModel sendOrders){
+        Orderdetail newOrder = new(){
+            Vendorid = sendOrders.BusinessId,
+            Requestid = sendOrders.ReqId,
+            Faxnumber = sendOrders.FaxNumber,
+            Email = sendOrders.BusinessEmail,
+            Businesscontact = sendOrders.BusinessContact,
+            Prescription = sendOrders.Prescription,
+            Noofrefill = sendOrders.NoOfRefill,
+            // Createdby = AdminId
+        };
+        _dashboardRepo.AddOrderDetails(newOrder);
+    }
+
+    public void SetClearCase(int RequestId){
+        _dashboardRepo.ChangeStatusOfRequest(RequestId,10);
+    }
 }

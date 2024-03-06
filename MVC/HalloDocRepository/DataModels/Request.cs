@@ -133,6 +133,9 @@ public partial class Request
     [InverseProperty("RequestCreatedusers")]
     public virtual User? Createduser { get; set; }
 
+    [InverseProperty("Request")]
+    public virtual ICollection<Orderdetail> Orderdetails { get; } = new List<Orderdetail>();
+
     [ForeignKey("Physicianid")]
     [InverseProperty("Requests")]
     public virtual Physician? Physician { get; set; }

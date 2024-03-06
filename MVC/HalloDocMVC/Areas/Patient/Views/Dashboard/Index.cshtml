@@ -4,6 +4,15 @@
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
+<style>
+    .blocked-req td{
+        background: none !important;
+    }
+    .blocked-req{
+        background: #c1c1c1;
+    }
+</style>
+
 <main class="container-fluid-sm p-sm-5 p-2">
     <h2 class="mt-5">Medical History</h1>
 
@@ -24,20 +33,38 @@
                     </thead>
                     <tbody>
                         @foreach(var item in Model.UserRequests){
-                            <tr>
-                            <td class="created-date" style="white-space: nowrap;">@(((DateTime)item.Createdat).ToString("MMM dd, yyyy"))</td>
-                            <td>@Model.GetUserRequestType(item.Status)</td>
-                            <td>
-                                @{
-                                    if(@item.NoOfRequests > 0){
-                                        <a style="white-space: nowrap;" type="button" class="btn theme-btn" asp-area="Patient" asp-controller="Dashboard" asp-action="Documents" asp-route-RequestId="@item.Id" >
-                                           (<span>@item.NoOfRequests</span>) Document
-                                        </a>
+                            if(Model.GetUserRequestType(item.Status) == "Blocked"){
+                                <tr class="blocked-req">
+                                    <td class="created-date" style="white-space: nowrap;">@(((DateTime)item.Createdat).ToString("MMM dd, yyyy"))</td>
+                                    <td>@Model.GetUserRequestType(item.Status)</td>
+                                    <td>
+                                        @* @{
+                                            if(@item.NoOfRequests > 0){
+                                                <a style="white-space: nowrap;" type="button" class="btn theme-btn" asp-area="Patient" asp-controller="Dashboard" asp-action="Documents" asp-route-RequestId="@item.Id" >
+                                                (<span>@item.NoOfRequests</span>) Document
+                                                </a>
+                                            }
+                                        } *@
+                                        
+                                    </td>
+                                </tr>
+                            }else{
+                                <tr >
+                                <td class="created-date" style="white-space: nowrap;">@(((DateTime)item.Createdat).ToString("MMM dd, yyyy"))</td>
+                                <td>@Model.GetUserRequestType(item.Status)</td>
+                                <td>
+                                    @{
+                                        if(@item.NoOfRequests > 0){
+                                            <a style="white-space: nowrap;" type="button" class="btn theme-btn" asp-area="Patient" asp-controller="Dashboard" asp-action="Documents" asp-route-RequestId="@item.Id" >
+                                            (<span>@item.NoOfRequests</span>) Document
+                                            </a>
+                                        }
                                     }
-                                }
-                                
-                            </td>
-                        </tr>
+                                    
+                                </td>
+                            </tr>
+                            }
+                            
                         }
                     </tbody>
                 </table>

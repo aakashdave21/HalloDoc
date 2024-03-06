@@ -317,4 +317,19 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         }
     }
 
+    public IEnumerable<Healthprofessionaltype> GetAllProfessions(){
+        return _dbContext.Healthprofessionaltypes.ToList();
+    }
+    public IEnumerable<Healthprofessional> GetBusinessByProfession(int professionId){
+        return _dbContext.Healthprofessionals.Where(prof => prof.Profession == professionId);
+    }
+    public Healthprofessional GetBusinessDetails(int businessId){
+        return _dbContext.Healthprofessionals.FirstOrDefault(prof => prof.Id == businessId);
+    }
+
+    public void AddOrderDetails(Orderdetail newOrder){
+        _dbContext.Orderdetails.Add(newOrder);
+        _dbContext.SaveChanges();
+    }
+
 }
