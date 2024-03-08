@@ -11,6 +11,7 @@ using HalloDocRepository.Admin.Implementation;
 using HalloDocService.Admin.Interfaces;
 using HalloDocService.Admin.Implementation;
 using Microsoft.AspNetCore.Mvc.Razor;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,7 +40,7 @@ builder.Services.AddScoped<IUtilityService, UtilityService>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+        options.ExpireTimeSpan = TimeSpan.FromHours(24);
         options.AccessDeniedPath = "/Account/AccessDenied";
         options.Events = new CookieAuthenticationEvents
         {
@@ -84,18 +85,26 @@ app.UseAuthorization();
 // Redirect root URL to your desired default URL
 app.Use(async (context, next) =>
 {
+
+    ClaimsPrincipal claimUser = context.User;
+    if (context.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && claimUser.Identity.IsAuthenticated==false){
+        Console.WriteLine("In this Middlewear");
+        context.Response.StatusCode = 401;
+        return;
+    }
+
     if (context.Request.Path == "/")
     {
         context.Response.Redirect("/Patient/Home/Index");
         return;
     }
-    await next();
-
+    
     if(context.Response.StatusCode == 403 || context.Response.StatusCode == 404){
-        context.Response.Redirect("/Account/NotFound");
+        context.Response.Redirect("/Patient/Home/Index");
         return;
     }
 
+    await next();
 });
 
 

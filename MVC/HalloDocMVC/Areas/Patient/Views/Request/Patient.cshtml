@@ -207,7 +207,10 @@
                         document.getElementById('ConfirmPassword').removeAttribute('required', true);
                     }
                 },
-                error: function () {
+                error: function (xhr,status,error) {
+                    if(xhr.status==401){
+                        window.location.href = '/admin/login';                
+                    }
                     Toastify({
                         text: "Error occurred while verifying email.",
                         duration : 3000,

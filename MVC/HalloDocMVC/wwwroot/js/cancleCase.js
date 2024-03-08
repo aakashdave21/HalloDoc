@@ -64,8 +64,10 @@ function cancleCaseSubmit() {
         success: function () {
             location.href = '/admin/dashboard'
         },
-        error: function () {
-            console.log("error");
+        error: function (xhr,status,error) {
+            if(xhr.status==401){
+                window.location.href = '/admin/login';                
+            }
         }
     })
 }
@@ -123,7 +125,7 @@ const populateAssignCaseModal = async (reqId) => {
     }
 }
 
-const getPhysicianByRegion = async()=>{
+const getPhysicianByRegion = async(physicianId=null)=>{
     try {
          $("#physicianSelectDropdown").removeAttr("disabled");
          const regionValue = $("#regionSelectDropdown").val();
@@ -131,8 +133,11 @@ const getPhysicianByRegion = async()=>{
          let PhysicianDropdown = $("#physicianSelectDropdown")
          PhysicianDropdown.empty();
          PhysicianDropdown.append(`<option value="" selected disabled>Choose Physician</option>`);
+         console.log(physicians);
          physicians.forEach(phy => {
-            PhysicianDropdown.append(`<option value="${phy.id}">${phy.firstname}</option>`);
+            if(physicianId!=phy.id){
+                PhysicianDropdown.append(`<option value="${phy.id}">${phy.id}. ${phy.firstname}</option>`);
+            }
         });
     } catch (error) {
         console.error("Error loading Physician:", error)
@@ -166,8 +171,10 @@ const assignCaseSubmit = ()=>{
             success: function () {
                 location.href = '/admin/dashboard'
             },
-            error: function () {
-                console.log("error");
+            error: function (xhr,status,error) {
+                if(xhr.status==401){
+                    window.location.href = '/admin/login';                
+                }
             }
         })
 
@@ -175,6 +182,8 @@ const assignCaseSubmit = ()=>{
         console.error("Error Submitting:", error)
     }
 }
+
+
 
 // Block Case Javascript
 const populateBlockCaseModal = async(reqId,firstname,lastname)=>{
@@ -228,14 +237,18 @@ const blockCaseSubmit = ()=>{
             success: function () {
                 location.href = '/admin/dashboard'
             },
-            error: function () {
-                console.log("error");
+            error: function (xhr,status,error) {
+                if(xhr.status==401){
+                    window.location.href = '/admin/login';                
+                }
             }
         })
     } catch (error) {
         console.error("Error Submitting:", error)
     }
 }
+
+
 
 // CLEAR CASE
 const populateClearCase = async (reqId) => {
@@ -265,7 +278,6 @@ const populateClearCase = async (reqId) => {
             var modalInstance = new bootstrap.Modal(modal);
             modalInstance.show();
 }
-
 const clearCase = (reqId) => {
     try {
         $.ajax({
@@ -277,10 +289,186 @@ const clearCase = (reqId) => {
             success: function () {
                 location.href = '/admin/dashboard'
             },
-            error: function () {
-                console.log("error");
+            error: function (xhr,status,error) {
+                if(xhr.status==401){
+                    window.location.href = '/admin/login';                
+                }
             }
         })
+    } catch (error) {
+        console.error("Error Submitting:", error)
+    }
+}
+
+// Transfer Case
+const populateTransferCase = async (reqId,physicianId) => {
+    var modal = document.getElementById('assignCaseModal');
+    modal.innerHTML = `
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Transfer Request</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="transferCaseForm">
+                    <input type="hidden" name="reqId" value="${reqId}">
+                    <input type="hidden" name="phyId" value="${physicianId}">
+                    <small class="text-muted">To assign this request, search and select physician.</small>
+                    <select class="form-select" name="region" id="regionSelectDropdown" onchange="getPhysicianByRegion(${physicianId})" aria-label="Default select example">
+                        <option>Loading...</option>
+                    </select>
+                    <span class="text-danger" id="regionTransferValidation"></span>
+                    <select class="form-select mt-2" name="physician" id="physicianSelectDropdown" aria-label="Default select example" disabled>
+                        <option value="" selected>Select Physician</option>
+                    </select>
+                    <span class="text-danger" id="physicianTransferValidation"></span>
+                    <div class="form-floating mt-2">
+                        <textarea class="form-control" name="description" placeholder="Leave a comment here" id="Symptoms" style="height: 100px"></textarea>
+                        <label for="Symptoms" style="white-space: normal;">Description</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn secondary-theme-btn" onclick="transferCaseSubmit()">Confirm</button>
+                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>`;
+
+    try {
+        // GET Regions From Database
+        const regions = await $.get("/admin/dashboard/GetRegions");
+        const regionDropdown = $("#regionSelectDropdown");
+        regionDropdown.empty();
+        regionDropdown.append(`<option value="" selected disabled>Choose Region</option>`);
+        regions.forEach(region => {
+            regionDropdown.append(`<option value="${region.id}">${region.name}</option>`);
+        });
+    } catch (error) {
+        console.error("Error loading regions:", error);
+    }finally{
+        var modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
+    }
+}
+
+const transferCaseSubmit = ()=>{
+    try {
+        let form = document.querySelector('#transferCaseForm');
+        let formData = new FormData(form);
+        const regionTransferDropdown = document.getElementById("regionSelectDropdown").value;
+        const physicianTransferDropdown = document.getElementById("physicianSelectDropdown").value;
+        if(regionTransferDropdown == "" || regionTransferDropdown ==null){
+            $("#regionTransferValidation").html("Please Choose Region");
+        }else{
+            $("#regionTransferValidation").empty();
+        }
+        if(physicianTransferDropdown == "" || physicianTransferDropdown == null){
+            $("#physicianTransferValidation").html("Please Choose Physician");
+            return;
+        }else{
+            $("#physicianTransferValidation").empty();
+        }
+        $.ajax({
+            url: '/admin/dashboard/transfercase',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function () {
+                location.href = '/admin/dashboard'
+            },
+            error: function (xhr,status,error) {
+                if(xhr.status==401){
+                    window.location.href = '/admin/login';                
+                }
+            }
+        })
+
+    } catch (error) {
+        console.error("Error Submitting:", error)
+    }
+}
+
+
+// Send Agreement
+const populateSendAgreement=(reqId,Email,Phone)=>{
+    var modal = document.getElementById('sendAgreementModal');
+    modal.innerHTML = `
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #01bce9;">
+            <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Send Agreement</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="sendAgreementForm">
+            <div class="modal-body">
+                <small class="text-muted">To Send Agreement please make sure you are updating correct contact
+                    information below the responsible party</small>
+                    <input type="hidden" name="request_id" value="${reqId}" />
+                <div class=" mb-3">
+                    <div class="form-floating">
+                        <input type="email" class="form-control" name="Email" value="${Email}" id="email" placeholder="email">
+                        <label for="email">Email</label>
+                    </div>
+                    <span id="invalid-email" class="text-danger"></span>
+                </div>
+                <div class=" mb-3">
+                    <div class="form-floating">
+                        <input id="phone" class="form-control" name="Mobile" value="${Phone}" type="tel" placeholder="phone"/>
+                        <label for="phone">Phone</label>
+                    </div>
+                    <span  id="invalid-phone" class="text-danger" id="mobile-valid"></span>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn secondary-theme-btn" onclick="submitSendAgreement()">Confirm</button>
+                    <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+                </div>
+            </div>
+        </form>
+        
+    </div>
+</div>`;
+
+    var modalInstance = new bootstrap.Modal(modal);
+    modalInstance.show();
+}
+
+function submitSendAgreement(){
+    try {
+        let form = document.querySelector('#sendAgreementForm');
+        let formData = new FormData(form);
+        if($("#email").val() == ""){
+            $("#invalid-email").html("Email is Required");
+            return;
+        }
+        if($("#phone").val() == ""){
+            $("#invalid-phone").html("Phone is Required");
+            return;
+        }
+        $("#invalid-email").html("");
+        $("#invalid-phone").html("");
+
+        $.ajax({
+            url: '/admin/dashboard/sendAgreement',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function () {
+                location.href = '/admin/dashboard'
+            },
+            error: function (xhr,status,error) {
+                if(xhr.status==401){
+                    window.location.href = '/admin/login';                
+                }
+            }
+        })
+
     } catch (error) {
         console.error("Error Submitting:", error)
     }

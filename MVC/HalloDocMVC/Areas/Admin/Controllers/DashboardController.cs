@@ -23,15 +23,16 @@ public class DashboardController : Controller
     private readonly ILogger<DashboardController> _logger;
     private readonly IAdminDashboardService _adminDashboardService;
     private readonly IDashboardService _dashboardService;
-
+    private readonly IUtilityService _utilityService;
     private readonly IWebHostEnvironment _hostingEnvironment;
 
-    public DashboardController(ILogger<DashboardController> logger, IAdminDashboardService adminDashboardService, IDashboardService dashboardService, IWebHostEnvironment hostingEnvironment)
+    public DashboardController(ILogger<DashboardController> logger, IAdminDashboardService adminDashboardService, IDashboardService dashboardService, IWebHostEnvironment hostingEnvironment,IUtilityService utilityService)
     {
         _logger = logger;
         _adminDashboardService = adminDashboardService;
         _dashboardService = dashboardService;
         _hostingEnvironment = hostingEnvironment;
+        _utilityService = utilityService;
     }
 
 
@@ -54,8 +55,9 @@ public class DashboardController : Controller
         viewModel.ToCloseState = countDictionary["close"];
         viewModel.UnPaidState = countDictionary["unpaid"];
 
-        string searchBy = Request.Query["searchBy"];
+        string? searchBy = Request.Query["searchBy"];
         int pageNumber = Request.Query.TryGetValue("pageNumber", out var pageNumberValue) ? int.Parse(pageNumberValue) : 1;
+        
         int pageSize = Request.Query.TryGetValue("pageSize", out var pageSizeValue) ? int.Parse(pageSizeValue) : 5;
 
         int reqType = 0;
@@ -139,7 +141,7 @@ public class DashboardController : Controller
         }
     }
 
-    public async Task<IActionResult> ViewCase(int id)
+    public IActionResult ViewCase(int id)
     {
         try
         {
@@ -155,7 +157,7 @@ public class DashboardController : Controller
         }
     }
 
-    public async Task<IActionResult> ViewNotes(int id)
+    public IActionResult ViewNotes(int id)
     {
         try
         {
@@ -169,7 +171,7 @@ public class DashboardController : Controller
                 return View("ViViewNotesew");
             }
         }
-        catch (Exception e)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return Redirect("/Admin/Dashboard/Index");
@@ -178,7 +180,7 @@ public class DashboardController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> SaveViewNotes(ViewNotesViewModel viewnotes)
+    public IActionResult SaveViewNotes(ViewNotesViewModel viewnotes)
     {
         try
         {
@@ -259,7 +261,6 @@ public class DashboardController : Controller
             return Redirect("/Admin/Dashboard/Index");
         }
     }
-
     [HttpPost]
     public async Task<IActionResult> AssignCase(IFormCollection formData)
     {
@@ -282,7 +283,6 @@ public class DashboardController : Controller
             return Redirect("/Admin/Dashboard/Index");
         }
     }
-
     [HttpPost]
     public async Task<IActionResult> BlockCase(IFormCollection formData)
     {
@@ -321,6 +321,25 @@ public class DashboardController : Controller
         }
     }
 
+    [HttpPost]
+    public async Task<IActionResult> TransferCase(IFormCollection formData){
+         try
+        {   
+            int reqId = int.Parse(formData["reqId"]);
+            int oldphyId = int.Parse(formData["phyId"]);
+            int physician = int.Parse(formData["physician"]);
+            string description = formData["description"];
+            _adminDashboardService.SetTransferCase(reqId,oldphyId,physician,description);
+            TempData["success"] = "Request Transfered Successfully!";
+            return Json(new { success = true, message = "Form data received successfully" });
+        }
+        catch (Exception e)
+        {
+            _logger.LogInformation(e.Message);
+            TempData["error"] = "Internal Server Error";
+            return Redirect("/Admin/Dashboard/Index");
+        }
+    }
     public async Task<IActionResult> ViewUploads(int RequestId)
     {
         try
@@ -587,6 +606,7 @@ public class DashboardController : Controller
     }
 
     public IActionResult SendOrder(int RequestId){
+        
         try
         {
             SendOrderViewModel sendOrders = new SendOrderViewModel
@@ -605,16 +625,26 @@ public class DashboardController : Controller
 
     [HttpPost]
     public IActionResult SendOrder(SendOrderViewModel sendOrders){
+        if(sendOrders.ProfessionId == 0){
+            ModelState.AddModelError("ProfessionId","Please Select Profession");
+        }
+        if(sendOrders.BusinessId == 0){
+            if(sendOrders.ProfessionId != 0){
+                ModelState.AddModelError("BusinessId","Please Choose Profession Again, Then Select Business");
+            }else{
+                ModelState.AddModelError("BusinessId","Please Select Business");
+            }
+            
+        }
+        if (!ModelState.IsValid)
+        {
+            sendOrders.ProfessionId = 0;
+            sendOrders.ProfessionLists = _adminDashboardService.GetAllProfessions();
+            ViewBag.RequestId = sendOrders.ReqId;
+            return View(sendOrders);
+        }
         try
         {
-            Console.WriteLine(sendOrders.ReqId);
-            Console.WriteLine(sendOrders.BusinessId);
-            Console.WriteLine(sendOrders.Prescription);
-            Console.WriteLine(sendOrders.ProfessionId);
-            Console.WriteLine(sendOrders.BusinessContact);
-            Console.WriteLine(sendOrders.BusinessEmail);
-            Console.WriteLine(sendOrders.FaxNumber);
-
             _adminDashboardService.AddOrderDetails(sendOrders);
             TempData["success"] = "Order Sent Successfully!";
             return RedirectToAction("SendOrder",new {RequestId = sendOrders.ReqId});
@@ -644,6 +674,24 @@ public class DashboardController : Controller
            return Json(viewData);
         }
         catch (Exception ex)
+        {
+            TempData["error"] = "Internal Server Error";
+            return BadRequest("Error occurred while fetching businesses: " + ex.Message);
+        }
+    }
+
+    public IActionResult sendAgreement(IFormCollection formData){
+        try
+        {
+            int reqId = int.Parse(formData["request_id"]);
+            string Email = formData["Email"];
+            string Mobile = formData["Mobile"];
+
+             Services.SmsSender.SendSMS();
+            
+            return Ok();
+        }
+        catch (System.Exception ex)
         {
             TempData["error"] = "Internal Server Error";
             return BadRequest("Error occurred while fetching businesses: " + ex.Message);

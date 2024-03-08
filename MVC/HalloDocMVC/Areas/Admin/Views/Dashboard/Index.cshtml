@@ -321,13 +321,17 @@
             url: url,
             type: 'GET',
             data: requestData,
-            success: function (response) {
+            success: function (response,status,xhr) {
+                console.log(status);
+                console.log(xhr);
                 $('#render-content').empty();
                 $('#render-content').html(response);
                 tabData = response;
             },
-            error: function () {
-                console.log('Error occurred');
+            error: function (xhr,status,error) {
+                if(xhr.status==401){
+                    window.location.href = '/admin/login';                
+                }
             }
         });
     }

@@ -118,3 +118,8 @@ function submitForm(){
     
     $("#myForm").submit();
 }
+
+
+window.addEventListener('popstate', function () {
+    window.location.reload(true); // Reload the page, forcing server reload
+});

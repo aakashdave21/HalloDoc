@@ -55,9 +55,10 @@
                                 <td>
                                     @{
                                         if(@item.NoOfRequests > 0){
-                                            <a style="white-space: nowrap;" type="button" class="btn theme-btn" asp-area="Patient" asp-controller="Dashboard" asp-action="Documents" asp-route-RequestId="@item.Id" >
-                                            (<span>@item.NoOfRequests</span>) Document
-                                            </a>
+                                            using(Html.BeginForm("Documents", "Dashboard", new { area = "Patient" }, FormMethod.Post)){
+                                                <input type="hidden" name="RequestId" value="@item.Id"/>
+                                                <button type="submit" class="btn theme-btn" style="white-space: nowrap;"> (<span>@item.NoOfRequests</span>) Document </button>
+                                            }
                                         }
                                     }
                                     

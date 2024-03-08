@@ -1,6 +1,7 @@
 @{
     int[] pageSizeArrray = { 5, 10, 15 };
 }
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.css" />
@@ -184,19 +185,22 @@
                                                             <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
                                                             <li><a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id">View Uploads</a></li>
                                                             <li><a class="dropdown-item" href="/admin/dashboard/ViewNotes/@item.Id">View Notes</a></li>
-                                                            <li><a class="dropdown-item" href="#">Transfer</a></li>
+                                                            <li><a class="dropdown-item" onclick="populateTransferCase('@item.Id','@item.PhysicianId')">Transfer</a></li>
                                                             <li><a class="dropdown-item" onclick="populateClearCase('@item.Id')">Clear Case</a></li>
-                                                            <li><a class="dropdown-item" href="#">Send Agreement</a></li>
+                                                            <li><a class="dropdown-item" onclick="populateSendAgreement('@item.Id','@item.Email','@item.Phonenumber')">Send Agreement</a></li>
                                                           </ul> 
+
                                                           break;
+
                                             case "active" : <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
-                                                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id">View Uploads</a></li>
-                                                            <li><a class="dropdown-item" href="/admin/dashboard/ViewNotes/@item.Id">View Notes</a></li>
-                                                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="SendOrder" asp-route-RequestId="@item.Id">Orders</a></li>
-                                                            <li><a class="dropdown-item" href="#">Doctor Note</a></li>
-                                                            <li><a class="dropdown-item" href="#">Encounter</a></li>
-                                                          </ul> 
+                                                                <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
+                                                                <li>
+                                                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id"> View Uploads </a>
+                                                                </li>
+                                                                <li><a class="dropdown-item" href="/admin/dashboard/ViewNotes/@item.Id">View Notes</a></li>
+                                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="SendOrder" asp-route-RequestId="@item.Id">Orders</a></li>
+                                                                <li><a class="dropdown-item" >Encounter</a></li>
+                                                            </ul> 
                                                           break;
                                             case "conclude" : <ul class="dropdown-menu">
                                                             <li><a class="dropdown-item" onclick="populateAssignCaseModal('@item.Id')">Assign Case</a></li>
@@ -815,7 +819,7 @@
 @* transfer Case Modal *@
 <div class="modal fade shadow-lg " id="transferModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    @* <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #01bce9;">
                 <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Transfer Request</h1>
@@ -846,42 +850,15 @@
                 <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
             </div>
         </div>
-    </div>
+    </div> *@
 </div>
+
+
 @* send agreeement Modal *@
 <div class="modal fade shadow-lg " id="sendAgreementModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #01bce9;">
-                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Send Agreement</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <small class="text-muted">To Send Agreement please make sure you are updating correct contact
-                    information below the responsible party</small>
-                <div class=" mb-3">
-                    <div class="form-floating">
-                        <input type="email" class="form-control" id="email" placeholder="email">
-                        <label for="email">Email</label>
-                    </div>
-                    <span class="text-danger"></span>
-                </div>
-                <div class=" mb-3">
-                    <div class="form-floating">
-                        <input id="phone" class="form-control" type="tel" placeholder="phone" />
-                        <label for="phone">Phone</label>
-                    </div>
-                    <span class="text-danger" id="mobile-valid"></span>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn secondary-theme-btn">Confirm</button>
-                    <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
-                </div>
-            </div>
-        </div>
-    </div>
+   
+</div>
 
 
    

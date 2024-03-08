@@ -98,17 +98,6 @@ public class DashboardController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit(UserProfileViewModel userData)
     {
-
-        Console.WriteLine("ModelState errors:");
-        foreach (var modelStateKey in ModelState.Keys)
-        {
-            var modelStateVal = ModelState[modelStateKey];
-            foreach (var error in modelStateVal.Errors)
-            {
-
-                Console.WriteLine($"{modelStateKey}: {error.ErrorMessage}");
-            }
-        }
         if (!ModelState.IsValid)
         {
             return View(nameof(UserProfile), userData); // Return the view with validation errors
@@ -116,7 +105,8 @@ public class DashboardController : Controller
         try
         {
             var userId = User.FindFirstValue("UserId");
-            var id = int.Parse(userId);
+            int id = int.Parse(userId);
+            
             _dashboardService.EditUserProfile(id, userData);
             TempData["success"] = "Profile Updated Successfully";
             return RedirectToAction("UserProfile");
@@ -129,7 +119,6 @@ public class DashboardController : Controller
 
     }
 
-    // [HttpGet("/Dashboard/Documents/{RequestId}")]
     public async Task<IActionResult> Documents(int RequestId)
     {
         try

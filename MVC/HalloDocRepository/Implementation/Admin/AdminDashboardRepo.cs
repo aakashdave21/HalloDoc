@@ -79,6 +79,7 @@ public (IEnumerable<Request> requests, int totalCount) GetActiveStatusRequest(st
 
 
     int totalCount = query.Count();
+    
         query = query.Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize);
 

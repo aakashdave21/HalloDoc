@@ -39,6 +39,7 @@ namespace HalloDocService.ViewModels
         public string Notes {get; set;}
         public int RequestType {get; set;}
         public string PhysicianName {get; set;}
+        public int? PhysicianId {get; set;}
         public string ServiceDate {get; set;}
         public string Region {get; set;}
        

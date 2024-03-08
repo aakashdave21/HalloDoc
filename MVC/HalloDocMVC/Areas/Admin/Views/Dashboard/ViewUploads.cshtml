@@ -184,11 +184,14 @@
                     window.URL.revokeObjectURL(url);
                     document.body.removeChild(a); *@
                 },
-                error: function() {
-                    // Handle error
+                error: function (xhr,status,error) {
+                      if(xhr.status==401){
+                        window.location.href = '/admin/login';                
+                    }
                     window.location.href = `/Admin/Dashboard/ViewUploads?RequestId=${@ViewBag.requestId}`
                     console.error('Error occurred during download');
-                }
+                  
+            }
             })    
         })
 
@@ -223,11 +226,14 @@
                     document.body.removeChild(a); *@
                     console.log("Successfully deleted files");
                 },
-                error: function() {
-                    // Handle error
+                error: function (xhr,status,error) {
+                      if(xhr.status==401){
+                        window.location.href = '/admin/login';                
+                    }
                     window.location.href = `/Admin/Dashboard/ViewUploads?RequestId=${@ViewBag.requestId}`
                     console.error('Error occurred during download');
-                }
+                  
+            }
             })    
         })
         
@@ -252,11 +258,14 @@
                 success: function(response) {
                      window.location.href = `/Admin/Dashboard/ViewUploads?RequestId=@ViewBag.requestId`
                 },
-                error: function() {
-                    // Handle error
+                error: function (xhr,status,error) {
+                      if(xhr.status==401){
+                        window.location.href = '/admin/login';                
+                    }
                     window.location.href = `/Admin/Dashboard/ViewUploads?RequestId=${@ViewBag.requestId}`
                     console.error('Error occurred during download');
-                }
+                  
+            }
             })    
     });
     </script>

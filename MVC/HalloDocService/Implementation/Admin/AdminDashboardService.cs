@@ -14,7 +14,7 @@ public class AdminDashboardService : IAdminDashboardService
         _dashboardRepo = dashboardRepo;
     }
     // Patient Request Implementation
-    public (List<RequestViewModel>, int totalCount) GetNewStatusRequest(string searchBy, int reqTypeId, int pageNumber, int pageSize)
+    public (List<RequestViewModel>, int totalCount) GetNewStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize)
     {
 
         var result = _dashboardRepo.GetNewRequest(searchBy, reqTypeId, pageNumber, pageSize);
@@ -40,7 +40,7 @@ public class AdminDashboardService : IAdminDashboardService
     }
 
 
-   public (List<RequestViewModel>, int totalCount) GetPendingStatusRequest(string searchBy, int reqTypeId, int pageNumber, int pageSize)
+   public (List<RequestViewModel>, int totalCount) GetPendingStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize)
     {
         var result = _dashboardRepo.GetPendingStatusRequest(searchBy, reqTypeId, pageNumber, pageSize);
         var (requests, totalCount) = result;
@@ -59,13 +59,14 @@ public class AdminDashboardService : IAdminDashboardService
             Address = r.PropertyName != null ? "Room No/Property : " + r.PropertyName : r.Requestclients.FirstOrDefault()?.Street + ", " + r.Requestclients.FirstOrDefault()?.City + ", " + r.Requestclients.FirstOrDefault()?.State + ", " + r.Requestclients.FirstOrDefault()?.Zipcode,
             Notes = r.Symptoms != null ? r.Symptoms : r.Requestclients.FirstOrDefault()?.Notes,
             RequestType = r.Requesttypeid,
+            PhysicianId = r.Physicianid,
             PhysicianName = r.Physician != null ? r.Physician?.Firstname + ", " + r.Physician?.Lastname : "-",
             ServiceDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss")
         });
 
          return (requestViewModels.ToList(), totalCount);
     }
-    public (List<RequestViewModel>, int totalCount) GetActiveStatusRequest(string searchBy, int reqTypeId, int pageNumber, int pageSize)
+    public (List<RequestViewModel>, int totalCount) GetActiveStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize)
     {
         var result = _dashboardRepo.GetActiveStatusRequest(searchBy, reqTypeId, pageNumber, pageSize);
         var (requests, totalCount) = result;
@@ -84,6 +85,7 @@ public class AdminDashboardService : IAdminDashboardService
             Address = r.PropertyName != null ? "Room No/Property : " + r.PropertyName : r.Requestclients.FirstOrDefault()?.Street + ", " + r.Requestclients.FirstOrDefault()?.City + ", " + r.Requestclients.FirstOrDefault()?.State + ", " + r.Requestclients.FirstOrDefault()?.Zipcode,
             Notes = r.Symptoms != null ? r.Symptoms : r.Requestclients.FirstOrDefault()?.Notes,
             RequestType = r.Requesttypeid,
+            PhysicianId = r.Physicianid,
             PhysicianName = r.Physician != null ? r.Physician?.Firstname + ", " + r.Physician?.Lastname : "-",
             ServiceDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss")
             // Add other properties as needed
@@ -91,7 +93,7 @@ public class AdminDashboardService : IAdminDashboardService
 
          return (requestViewModels.ToList(), totalCount);
     }
-    public (List<RequestViewModel>, int totalCount) GetConcludeStatusRequest(string searchBy, int reqTypeId, int pageNumber, int pageSize)
+    public (List<RequestViewModel>, int totalCount) GetConcludeStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize)
     {
         var result = _dashboardRepo.GetConcludeStatusRequest(searchBy, reqTypeId, pageNumber, pageSize);
         var (requests, totalCount) = result;
@@ -110,6 +112,7 @@ public class AdminDashboardService : IAdminDashboardService
             Address = r.PropertyName != null ? "Room No/Property : " + r.PropertyName : r.Requestclients.FirstOrDefault()?.Street + ", " + r.Requestclients.FirstOrDefault()?.City + ", " + r.Requestclients.FirstOrDefault()?.State + ", " + r.Requestclients.FirstOrDefault()?.Zipcode,
             Notes = r.Symptoms != null ? r.Symptoms : r.Requestclients.FirstOrDefault()?.Notes,
             RequestType = r.Requesttypeid,
+            PhysicianId = r.Physicianid,
             PhysicianName = r.Physician != null ? r.Physician?.Firstname + ", " + r.Physician?.Lastname : "-",
             ServiceDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss")
             // Add other properties as needed
@@ -117,7 +120,7 @@ public class AdminDashboardService : IAdminDashboardService
 
          return (requestViewModels.ToList(), totalCount);
     }
-    public (List<RequestViewModel>, int totalCount) GetCloseStatusRequest(string searchBy, int reqTypeId, int pageNumber, int pageSize)
+    public (List<RequestViewModel>, int totalCount) GetCloseStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize)
     {
         var result = _dashboardRepo.GetCloseStatusRequest(searchBy, reqTypeId, pageNumber, pageSize);
         var (requests, totalCount) = result;
@@ -136,6 +139,7 @@ public class AdminDashboardService : IAdminDashboardService
             Address = r.PropertyName != null ? "Room No/Property : " + r.PropertyName : r.Requestclients.FirstOrDefault()?.Street + ", " + r.Requestclients.FirstOrDefault()?.City + ", " + r.Requestclients.FirstOrDefault()?.State + ", " + r.Requestclients.FirstOrDefault()?.Zipcode,
             Notes = r.Symptoms != null ? r.Symptoms : r.Requestclients.FirstOrDefault()?.Notes,
             RequestType = r.Requesttypeid,
+            PhysicianId = r.Physicianid,
             PhysicianName = r.Physician != null ? r.Physician?.Firstname + ", " + r.Physician?.Lastname : "-",
             ServiceDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
             Region = r.Requestclients.FirstOrDefault()?.Region?.Name ?? "-"
@@ -143,7 +147,7 @@ public class AdminDashboardService : IAdminDashboardService
 
          return (requestViewModels.ToList(), totalCount);
     }
-    public (List<RequestViewModel>, int totalCount) GetUnpaidStatusRequest(string searchBy, int reqTypeId, int pageNumber, int pageSize)
+    public (List<RequestViewModel>, int totalCount) GetUnpaidStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize)
     {
      
        var result = _dashboardRepo.GetUnpaidStatusRequest(searchBy, reqTypeId, pageNumber, pageSize);
@@ -163,6 +167,7 @@ public class AdminDashboardService : IAdminDashboardService
             Address = r.PropertyName != null ? "Room No/Property : " + r.PropertyName : r.Requestclients.FirstOrDefault()?.Street + ", " + r.Requestclients.FirstOrDefault()?.City + ", " + r.Requestclients.FirstOrDefault()?.State + ", " + r.Requestclients.FirstOrDefault()?.Zipcode,
             Notes = r.Symptoms != null ? r.Symptoms : r.Requestclients.FirstOrDefault()?.Notes,
             RequestType = r.Requesttypeid,
+            PhysicianId = r.Physicianid,
             PhysicianName = r.Physician != null ? r.Physician?.Firstname + ", " + r.Physician?.Lastname : "-",
             ServiceDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
             Region = r.Requestclients.FirstOrDefault()?.Region?.Name ?? "-"
@@ -351,5 +356,10 @@ public class AdminDashboardService : IAdminDashboardService
 
     public void SetClearCase(int RequestId){
         _dashboardRepo.ChangeStatusOfRequest(RequestId,10);
+    }
+
+    public void SetTransferCase(int reqId,int oldphyId,int physician,string description){
+        _dashboardRepo.AddPhysicianToRequest(reqId,physician);
+        _dashboardRepo.AddStatusLog(reqId,2,2,description,null,null,physician);
     }
 }

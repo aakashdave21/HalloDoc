@@ -2,8 +2,6 @@
 @{
     ViewData["Title"] = "Send Order Page";
     Layout = "~/Views/Shared/_AdminDashboard.cshtml";
-    Console.WriteLine(Model.ProfessionLists);
-    @* Console.WriteLine(Model.ProfessionLists.Count()); *@
 }
 <style>
     .send-order-section .form-select {
@@ -25,16 +23,18 @@
                 <input type="hidden" asp-for="ReqId" value="@ViewBag.RequestId" />
                 <div class="col-md-6 col-12 mb-3">
                     <select asp-for="ProfessionId" class="form-select mt-2" name="ProfessionId" id="professionDropdown" aria-label="Default select example" >
-                        <option value="" selected disabled>Select Professions</option>
+                        <option value=0 selected disabled>Select Professions</option>
                         @foreach(var item in Model.ProfessionLists){
                             <option value="@item.ProfessionId" >@item.ProfessionName</option>
                         }
                     </select>
+                    <span asp-validation-for="ProfessionId" class="text-danger"></span>
                 </div>
                 <div class="col-md-6 col-12 mb-3">
                     <select asp-for="BusinessId" class="form-select mt-2" name="BusinessId" id="businessDropdown" aria-label="Default select example" >
                         <option value="" selected disabled>Select Business</option>
                     </select>
+                    <span asp-validation-for="BusinessId" class="text-danger"></span>
                 </div>
                 <div class="col-md-6 mb-3">
                         <div class="form-floating ">
@@ -90,7 +90,7 @@
 </main>
 
 <script>
-    $("#professionDropdown").change(function(){
+    $("#professionDropdown").on('click',function(){
         $("#businessContact").val("")
         $("#businessEmail").val("")
         $("#faxNum").val("")
@@ -99,20 +99,20 @@
             url : "/admin/dashboard/GetBusinessByProfession",
             data : { professionId : $("#professionDropdown").val() },
             success : function(response){
-                console.log(response);
                 $('#businessDropdown').empty();
                 $('#businessDropdown').append('<option value="" disabled selected>Select Business</option>');
                 $.each(response, function(index, item) {
                     $('#businessDropdown').append('<option value="' + item.businessId + '">' + item.businessName + '</option>');
                 });
             },
-            error: function(xhr, textStatus, errorThrown) {
-                console.log('Error:', errorThrown);
+           error: function (xhr,status,error) {
+                if(xhr.status==401){
+                    window.location.href = '/admin/login';                
+                }
             }
         });
     })
     $("#businessDropdown").change(function(){
-        console.log("business changes");
         $.ajax({
             type : "GET",
             url : "/admin/dashboard/GetBusinessDetails",
@@ -122,8 +122,10 @@
                 $("#businessEmail").val(response.businessEmail)
                 $("#faxNum").val(response.faxNumber)
             },
-            error: function(xhr, textStatus, errorThrown) {
-                console.log('Error:', errorThrown);
+            error: function (xhr,status,error) {
+                if(xhr.status==401){
+                    window.location.href = '/admin/login';                
+                }
             }
         });
     })

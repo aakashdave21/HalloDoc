@@ -173,11 +173,15 @@
                     window.URL.revokeObjectURL(url);
                     document.body.removeChild(a);
                 },
-                error: function() {
-                    // Handle error
+                error: function (xhr,status,error) {
+                      if(xhr.status==401){
+                        window.location.href = '/admin/login';                
+                    }
+                     // Handle error
                     window.location.href = `/Patient/Dashboard/Documents?RequestId=${@ViewBag.requestId }`
                     console.error('Error occurred during download');
-                }
+                  
+            }
             })    
         })
     </script>

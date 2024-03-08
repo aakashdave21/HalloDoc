@@ -33,5 +33,4 @@ public class UtilityService : IUtilityService
 
                 client.Send(mailMessage);
     }
-
 }
