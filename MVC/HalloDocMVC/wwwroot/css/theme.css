@@ -25,11 +25,12 @@ th{
 [data-bs-theme=dark]{
     /* --bs-body-bg: #333333; */
     --bs-body-bg: #000000;
+    /* --bs-body-bg: #0E2954; */
     /* --bs-body-bg: #001f3f; */
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
     height: 2px;
   }
   

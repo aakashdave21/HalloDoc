@@ -13,6 +13,9 @@ using System.IO.Compression;
 using Newtonsoft.Json;
 using System.Net.Mail;
 using System.Net;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Runtime.InteropServices.JavaScript;
 
 namespace HalloDocMVC.Controllers.Admin;
 
@@ -39,9 +42,7 @@ public class DashboardController : Controller
     public async Task<IActionResult> Index(string status)
     {
         (List<RequestViewModel> req, int totalCount) myresult;
-        Console.WriteLine(status + "<<<<<<<<<<<<<<<<This is Status");
         ViewBag.statusType = string.IsNullOrEmpty(status) ? "new" : status;
-        Console.WriteLine(ViewBag.statusType + "<<<<<<<<<<<<<<<<This is Status");
 
         var viewModel = new AdminDashboardViewModel();
         var countDictionary = _adminDashboardService.CountRequestByType();
@@ -133,6 +134,13 @@ public class DashboardController : Controller
         // Check if the request is made via AJAX
         if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
         {
+            // var JsonData = new {
+            //     PartialView = PartialView("_AdminDashboardTable", viewModel).RenderToString(),
+            //     otherData = viewModel
+            // };
+
+            // return Json(JsonData);
+            
             return PartialView("_AdminDashboardTable", viewModel);
         }
         else
@@ -140,6 +148,21 @@ public class DashboardController : Controller
             return View(viewModel);
         }
     }
+
+    public IActionResult CountCards(){
+        try
+        {
+            var countDictionary = _adminDashboardService.CountRequestByType();
+            return Json(countDictionary);
+        }
+        catch (System.Exception e)
+        {
+            Console.WriteLine(e);
+            TempData["error"] = "Internal Server Error";
+            return Redirect("/Admin/Dashboard/Index");
+        }
+    }
+
 
     public IActionResult ViewCase(int id)
     {
@@ -680,15 +703,25 @@ public class DashboardController : Controller
         }
     }
 
-    public IActionResult sendAgreement(IFormCollection formData){
+    public IActionResult SendAgreement(IFormCollection formData){
         try
         {
             int reqId = int.Parse(formData["request_id"]);
             string Email = formData["Email"];
             string Mobile = formData["Mobile"];
-
-             Services.SmsSender.SendSMS();
             
+            string token = Guid.NewGuid().ToString();
+            string callbackUrl = Url.Action("Index", "Agreement", new { area="Patient", reqId, token }, protocol: HttpContext.Request.Scheme);
+            DateTime expirationTime = DateTime.UtcNow.AddHours(1);
+
+            _adminDashboardService.StoreAcceptToken(reqId,token,expirationTime);
+
+            Console.WriteLine(callbackUrl);
+
+            string rcvrMail = "aakashdave21@gmail.com";
+             Services.SmsSender.SendSMS();
+            //  _utilityService.EmailSend(callbackUrl,rcvrMail);
+            TempData["success"] = "Agreement Sent To Patient";
             return Ok();
         }
         catch (System.Exception ex)
@@ -696,6 +729,12 @@ public class DashboardController : Controller
             TempData["error"] = "Internal Server Error";
             return BadRequest("Error occurred while fetching businesses: " + ex.Message);
         }
+    }
+
+    public IActionResult CloseCase(string RequestId){
+        Console.WriteLine("------------------------------------------------");
+        Console.WriteLine(RequestId);
+        return View();
     }
 
     public async Task<IActionResult> LogOut()

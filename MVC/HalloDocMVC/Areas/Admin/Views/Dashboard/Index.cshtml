@@ -10,7 +10,7 @@
     <div class="container-fluid p-4 mt-3">
 
         @* Cards HTML *@
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 g-4">
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 g-4 dashboard-cards">
             <div class="col newUserTip active-col">
                 <div class="card p-2 ps-4 newUserCard active" id="newUserCard" data-action="new">
                     <div class="card-head ">
@@ -322,11 +322,26 @@
             type: 'GET',
             data: requestData,
             success: function (response,status,xhr) {
-                console.log(status);
-                console.log(xhr);
                 $('#render-content').empty();
                 $('#render-content').html(response);
                 tabData = response;
+            },
+            error: function (xhr,status,error) {
+                if(xhr.status==401){
+                    window.location.href = '/admin/login';                
+                }
+            }
+        });
+        $.ajax({
+            url: '/admin/dashboard/CountCards',
+            type: 'GET',
+            success: function (response,status,xhr) {
+                $("#newUserCard h3").html(response.new);
+                $("#pendingUserCard h3").html(response.pending);
+                $("#activeUserCard h3").html(response.active);
+                $("#concludeUserCard h3").html(response.conclude);
+                $("#closeUserCard h3").html(response.close);
+                $("#unpaidUserCard h3").html(response.unpaid);
             },
             error: function (xhr,status,error) {
                 if(xhr.status==401){

@@ -27,7 +27,14 @@ $("#theme-btn").click(function(){
     }
 })
 
+$("#adminDashTab li").click(function(e) {
+    localStorage.setItem('tab', $(this).data("id"));
+})
+
+
+
 $(document).ready(function() {
+    
     var themePreference = getThemePreference();
     if (themePreference) {
         $("html").attr("data-bs-theme", themePreference);

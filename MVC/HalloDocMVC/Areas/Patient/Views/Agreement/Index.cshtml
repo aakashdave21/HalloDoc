@@ -1,5 +1,7 @@
 @{
     ViewData["Title"] = "Home Page";
+    var reqId = Context.Request.Query["reqId"];
+    var token = Context.Request.Query["token"];
 }
 
 
@@ -9,8 +11,12 @@
             To provide best medical service, we cannot determine the cost right away. If you agree to our service, so we will provide care and follow-up until all care is completed. So with this points, if you like us to provide care to you click on "Agree" and we'll get started immediately, if you do not agree simply click "Cancel".
         </p>
         <div class="d-flex justify-content-around ps-5 pe-5">
-            <a href="#" class="btn btn-success">I Agree</a>
-            <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Cancle</a>
+             @using(Html.BeginForm("AgreementSubmit", "Agreement", new { area = "Patient" }, FormMethod.Post)){
+                    <input type="hidden" name="RequestId" value="@reqId"/>
+                    <input type="hidden" name="RequestToken" value="@token"/>
+                    <button type="submit" class="btn btn-success">I Agree</button>
+                }
+            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Cancle</a>
         </div>
     </div>
 </main>
@@ -24,17 +30,22 @@
                 <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Cancle Confirmation</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+             @using(Html.BeginForm("AgreementCancel", "Agreement", new { area = "Patient" }, FormMethod.Post)){
             <div class="modal-body">
-                <h4>Test Test</h4>
                 <div class="form-floating">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="Symptoms" style="height: 100px"></textarea>
-                    <label  for="Symptoms" style="white-space: normal;">Please Provide brief explanation for your cancelation</label>
+                    <textarea class="form-control" name="reason" placeholder="Leave a comment here" id="reason" style="height: 100px"></textarea>
+                    <label  for="reason" style="white-space: normal;">Please Provide brief explanation for your cancelation</label>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn secondary-theme-btn">Confirm</button>
+               
+                    <input type="hidden" name="RequestId" value="@reqId"/>
+                    <input type="hidden" name="RequestToken" value="@token"/>
+                     <button type="submit" class="btn secondary-theme-btn">Confirm</button>
                 <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
             </div>
+                }
+
         </div>
     </div>
 </div>

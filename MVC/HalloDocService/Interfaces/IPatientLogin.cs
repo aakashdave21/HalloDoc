@@ -18,4 +18,5 @@ public interface IPatientLogin
     void UpdatePassword(int AspUserId, string password);
 
     string GetAspUserEmail(int userId);
+
 }

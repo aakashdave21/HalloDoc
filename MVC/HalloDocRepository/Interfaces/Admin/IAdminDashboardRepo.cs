@@ -39,6 +39,10 @@ public interface IAdminDashboardRepo
    IEnumerable<Healthprofessional> GetBusinessByProfession(int professionId);
    Healthprofessional GetBusinessDetails(int businessId);
    void AddOrderDetails(Orderdetail order);
+   void StoreAcceptToken(int reqId,string token,DateTime expirationTime);
+
+   void AgreementAccept(int reqId);
+   void AgreementReject(int reqId);
 
 
 }

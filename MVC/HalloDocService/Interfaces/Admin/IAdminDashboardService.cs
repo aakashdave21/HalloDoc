@@ -39,4 +39,9 @@ public interface IAdminDashboardService
     void SetClearCase(int RequestId);
 
     void SetTransferCase(int reqId,int oldphyId,int physician,string description);
+
+    void StoreAcceptToken(int reqId,string token,DateTime expirationTime);
+
+    void AgreementAccept(int reqId);
+    void AgreementReject(int reqId,string reason);
 }

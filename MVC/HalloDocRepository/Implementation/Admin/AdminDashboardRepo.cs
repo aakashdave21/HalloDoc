@@ -333,4 +333,33 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         _dbContext.SaveChanges();
     }
 
+    public void StoreAcceptToken(int reqId,string token,DateTime expirationTime){
+        Request reqData = _dbContext.Requests.FirstOrDefault(req=>req.Id == reqId);
+        if(reqData!=null){
+            reqData.Updatedat = DateTime.Now;
+            reqData.AcceptToken = token;
+            reqData.AcceptExpiry = expirationTime;
+            _dbContext.SaveChanges();
+        }
+    }
+
+    public void AgreementAccept(int reqId){
+        Request reqData = _dbContext.Requests.FirstOrDefault(req=>req.Id == reqId);
+        if(reqData!=null){
+            reqData.Updatedat = DateTime.Now;
+            reqData.Status = 4; // Accept request
+            reqData.Accepteddate = DateTime.Now;
+            _dbContext.SaveChanges();
+        }
+    }
+    public void AgreementReject(int reqId){
+        Request reqData = _dbContext.Requests.FirstOrDefault(req=>req.Id == reqId);
+        if(reqData!=null){
+            reqData.Updatedat = DateTime.Now;
+            reqData.Status = 7; // Closed By Patient
+            reqData.Accepteddate = null;
+            _dbContext.SaveChanges();
+        }
+    }
+
 }

@@ -362,4 +362,20 @@ public class AdminDashboardService : IAdminDashboardService
         _dashboardRepo.AddPhysicianToRequest(reqId,physician);
         _dashboardRepo.AddStatusLog(reqId,2,2,description,null,null,physician);
     }
+
+    public void StoreAcceptToken(int reqId,string token,DateTime expirationTime){
+        _dashboardRepo.StoreAcceptToken( reqId, token, expirationTime);
+    }
+    public void AgreementAccept(int reqId){
+        _dashboardRepo.AgreementAccept(reqId);
+        short newStatus = 4;
+        short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
+        _dashboardRepo.AddStatusLog(reqId,newStatus,oldStatus,null,null,null,null);
+    }
+    public void AgreementReject(int reqId,string reason){
+        _dashboardRepo.AgreementReject(reqId);
+        short newStatus = 7;
+        short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
+        _dashboardRepo.AddStatusLog(reqId,newStatus,oldStatus,reason,null,null,null);
+    }
 }

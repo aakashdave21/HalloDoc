@@ -126,6 +126,12 @@ public partial class Request
 
     public bool? IsBlocked { get; set; }
 
+    [Column("acceptToken")]
+    public string? AcceptToken { get; set; }
+
+    [Column("acceptExpiry")]
+    public DateTime? AcceptExpiry { get; set; }
+
     [InverseProperty("Request")]
     public virtual Blockrequest? Blockrequest { get; set; }
 

@@ -44,7 +44,7 @@
     color: #01bce9;
 }
 
-.dashboard-header ul li a:active {
+.dashboard-header ul li a:active, .dashboard-header ul li a.active{
     border-bottom: 2px solid #01bce9;
     color: #01bce9;
 }

@@ -422,12 +422,11 @@ const populateSendAgreement=(reqId,Email,Phone)=>{
                     </div>
                     <span  id="invalid-phone" class="text-danger" id="mobile-valid"></span>
                 </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn secondary-theme-btn" onclick="submitSendAgreement()">Confirm</button>
-                    <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
-                </div>
             </div>
+            <div class="modal-footer">
+                    <button type="button" class="btn secondary-theme-btn" id="submitAgreement" onclick="submitSendAgreement()">Confirm</button>
+                    <button type="button" class="btn theme-btn" id="cancleAgreement" data-bs-dismiss="modal">Cancle</button>
+                </div>
         </form>
         
     </div>
@@ -439,6 +438,8 @@ const populateSendAgreement=(reqId,Email,Phone)=>{
 
 function submitSendAgreement(){
     try {
+
+        
         let form = document.querySelector('#sendAgreementForm');
         let formData = new FormData(form);
         if($("#email").val() == ""){
@@ -468,6 +469,11 @@ function submitSendAgreement(){
                 }
             }
         })
+        $("#submitAgreement").prop('disabled',true);
+        $("#cancleAgreement").prop('disabled',true);
+        $("#sendAgreementForm .modal-body").html(`<div class="spinner-grow text-info d-flex m-auto" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>`);
 
     } catch (error) {
         console.error("Error Submitting:", error)

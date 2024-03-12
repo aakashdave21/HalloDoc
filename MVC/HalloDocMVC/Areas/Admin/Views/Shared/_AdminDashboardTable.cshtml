@@ -203,20 +203,31 @@
                                                             </ul> 
                                                           break;
                                             case "conclude" : <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item" onclick="populateAssignCaseModal('@item.Id')">Assign Case</a></li>
-                                                            <li><a class="dropdown-item" onclick="populateCancleCaseModal('@item.Firstname','@item.Lastname','@item.Id')">Cancle Case</a></li>
-                                                            <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
-                                                            <li><a class="dropdown-item" href="/admin/dashboard/ViewNotes/@item.Id">View Notes</a></li>
-                                                            <li><a class="dropdown-item" onclick="populateBlockCaseModal('@item.Id','@item.Firstname','@item.Lastname')">Block Case</a></li>
-                                                          </ul> 
+                                                                <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
+                                                                <li>
+                                                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id"> View Uploads </a>
+                                                                </li>
+                                                                <li><a class="dropdown-item" href="/admin/dashboard/ViewNotes/@item.Id">View Notes</a></li>
+                                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="SendOrder" asp-route-RequestId="@item.Id">Orders</a></li>
+                                                                <li><a class="dropdown-item" >Encounter</a></li>
+                                                            </ul> 
                                                           break;
                                             case "close" : <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item" onclick="populateAssignCaseModal('@item.Id')">Assign Case</a></li>
-                                                            <li><a class="dropdown-item" onclick="populateCancleCaseModal('@item.Firstname','@item.Lastname','@item.Id')">Cancle Case</a></li>
-                                                            <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
-                                                            <li><a class="dropdown-item" href="/admin/dashboard/ViewNotes/@item.Id">View Notes</a></li>
-                                                            <li><a class="dropdown-item" onclick="populateBlockCaseModal('@item.Id','@item.Firstname','@item.Lastname')">Block Case</a></li>
-                                                          </ul> 
+                                                                <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
+                                                                <li>
+                                                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id"> View Uploads </a>
+                                                                </li>
+                                                                <li><a class="dropdown-item" href="/admin/dashboard/ViewNotes/@item.Id">View Notes</a></li>
+                                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="SendOrder" asp-route-RequestId="@item.Id">Orders</a></li>
+                                                                <li>
+                                                                     @using(Html.BeginForm("CloseCase", "Dashboard", new { area = "Admin" }, FormMethod.Post)){
+                                                                        <input type="hidden" name="RequestId" value="@item.Id"/>
+                                                                        <a class="dropdown-item"><button type="submit" style="all:unset;">Close Case</button></a> 
+                                                                    }
+                                                                </li>
+                                                                <li><a class="dropdown-item" onclick="populateClearCase('@item.Id')">Clear Case</a></li>
+                                                                <li><a class="dropdown-item" >Encounter</a></li>
+                                                            </ul> 
                                                           break;
                                             case "unpaid" : <ul class="dropdown-menu">
                                                             <li><a class="dropdown-item" onclick="populateAssignCaseModal('@item.Id')">Assign Case</a></li>
