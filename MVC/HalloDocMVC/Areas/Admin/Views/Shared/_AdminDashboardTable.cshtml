@@ -99,9 +99,9 @@
                                             }
                                             @fullname
                                         </span>
-                                        <button class="btn">
+                                        <a class="btn" href="mailto:@item.Email">
                                             <i class="fas fa-envelope"></i>
-                                        </button>
+                                        </a>
                                     </div>
 
                                 </td>
@@ -135,9 +135,9 @@
                                 @if (ViewBag.statusType != "close")
                                 {
                                     <td>
-                                        <button class="btn user-phone">
+                                        <a class="btn user-phone" href="tel:@item.Phonenumber">
                                             @item.Phonenumber
-                                        </button>
+                                        </a>
                                         <small>(patient)</small>
                                     </td>
                                 }

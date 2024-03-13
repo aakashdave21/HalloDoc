@@ -130,3 +130,49 @@ function submitForm(){
 window.addEventListener('popstate', function () {
     window.location.reload(true); // Reload the page, forcing server reload
 });
+
+function sendAjaxRequest(url, method="GET", data=null) {
+    return new Promise(function(resolve, reject) {
+        $.ajax({
+            type: method,
+            url: url,
+            data: data,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+               
+                resolve(response);
+            },
+            error: function(xhr, status, error) {
+                if (xhr.status == 401) {
+                    window.location.href = '/admin/login';
+                } else {
+                    reject(xhr.responseText || error);
+                }
+            }
+        });
+    });
+}
+
+function ToastSuccess(message){
+    Toastify({
+        text: message,
+        duration : 3000,
+        className: "success", // Use "success" class for styling success message
+        close: true,
+        style: {
+             background: "linear-gradient(to right, #28a745, #218838)"
+        }
+    }).showToast();
+}
+function ToastError(message){
+    Toastify({
+        text: message,
+        duration : 3000,
+        close : true,
+        className: "error", // Use "error" class for styling error message
+        style: {
+            background: "linear-gradient(to right, #dc3545, #c82333)", // Red background for error message
+        }
+    }).showToast();
+}

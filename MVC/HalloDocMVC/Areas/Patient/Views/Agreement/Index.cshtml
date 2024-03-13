@@ -32,6 +32,7 @@
             </div>
              @using(Html.BeginForm("AgreementCancel", "Agreement", new { area = "Patient" }, FormMethod.Post)){
             <div class="modal-body">
+                <h4 style="color: #01bce9;">@ViewBag.PatientName</h4>
                 <div class="form-floating">
                     <textarea class="form-control" name="reason" placeholder="Leave a comment here" id="reason" style="height: 100px"></textarea>
                     <label  for="reason" style="white-space: normal;">Please Provide brief explanation for your cancelation</label>

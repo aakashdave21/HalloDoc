@@ -20,6 +20,7 @@ public class AgreementController : Controller
     {
         var tokenDetails = _adminDashboardService.GetSingleRequest(int.Parse(reqId));
         if(reqId!=null && token!=null && tokenDetails.Accepteddate==null && tokenDetails.AcceptToken!=null && tokenDetails.AcceptToken == token && tokenDetails.AcceptExpiry > DateTime.UtcNow && tokenDetails.Status == 2){
+            ViewBag.PatientName = tokenDetails.Requestclients.FirstOrDefault()?.Firstname + " " + tokenDetails.Requestclients.FirstOrDefault()?.Lastname;
             return View();
         }
         TempData["error"] = "Something went wrong !";

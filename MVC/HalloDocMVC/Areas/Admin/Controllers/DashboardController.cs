@@ -16,6 +16,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Runtime.InteropServices.JavaScript;
+using System.Globalization;
 
 namespace HalloDocMVC.Controllers.Admin;
 
@@ -703,6 +704,7 @@ public class DashboardController : Controller
         }
     }
 
+    // Send Agreements
     public IActionResult SendAgreement(IFormCollection formData){
         try
         {
@@ -731,10 +733,53 @@ public class DashboardController : Controller
         }
     }
 
+
+    // Close Case
     public IActionResult CloseCase(string RequestId){
-        Console.WriteLine("------------------------------------------------");
-        Console.WriteLine(RequestId);
-        return View();
+        try
+        {
+            CloseCaseViewModel CloseCaseView = _adminDashboardService.CloseCase(int.Parse(RequestId));
+            return View(CloseCaseView);
+        }catch (System.Exception ex)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("Index");
+        }
+    }
+
+
+    [HttpPost]
+    public IActionResult CloseCasePost(CloseCaseViewModel closeCaseView){
+        try
+        {
+            _adminDashboardService.CloseCaseSubmit(closeCaseView.ReqId);
+            TempData["success"] = "Case Closed Successfully";
+
+            return RedirectToAction("Index");
+        }catch (System.Exception ex)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("Index");
+        }
+    }
+
+    [HttpPost]
+    public IActionResult CloseCaseEdit(IFormCollection formdata){
+        try
+        {   
+            var Email = formdata["Email"];
+            var Phone = formdata["phone"];
+            var patientId = int.Parse(formdata["patientId"]);
+            var requestId = int.Parse(formdata["ReqId"]);
+            _adminDashboardService.EditPatientInfo(Email,Phone,patientId,requestId);
+            TempData["success"] = "Edited Successfully!";
+            return Json(new { success = true, message = "Edited successfully" });
+
+        }catch (System.Exception ex)
+        {
+            TempData["error"] = "Internal Server Error";
+            return BadRequest("Error: " + ex.Message);
+        }
     }
 
     public async Task<IActionResult> LogOut()
@@ -742,6 +787,7 @@ public class DashboardController : Controller
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Index", "Login");
     }
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
