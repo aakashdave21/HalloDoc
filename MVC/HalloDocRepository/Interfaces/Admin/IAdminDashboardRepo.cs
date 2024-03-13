@@ -44,5 +44,6 @@ public interface IAdminDashboardRepo
    void AgreementAccept(int reqId);
    void AgreementReject(int reqId);
 
+   void EditPatientInfo(string Email,string Phone,int patientId,int requestId);
 
 }

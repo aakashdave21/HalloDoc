@@ -3,15 +3,18 @@ using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
 using System.Globalization;
+using HalloDocRepository.Interfaces;
 
 namespace HalloDocService.Admin.Implementation;
 public class AdminDashboardService : IAdminDashboardService
 {
 
     private readonly IAdminDashboardRepo _dashboardRepo;
-    public AdminDashboardService(IAdminDashboardRepo dashboardRepo)
+    private readonly IDashboardRepo _patientDashboardRepo;
+    public AdminDashboardService(IAdminDashboardRepo dashboardRepo,IDashboardRepo patientDashboardRepo)
     {
         _dashboardRepo = dashboardRepo;
+        _patientDashboardRepo = patientDashboardRepo;
     }
     // Patient Request Implementation
     public (List<RequestViewModel>, int totalCount) GetNewStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize)
@@ -377,5 +380,47 @@ public class AdminDashboardService : IAdminDashboardService
         short newStatus = 7;
         short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
         _dashboardRepo.AddStatusLog(reqId,newStatus,oldStatus,reason,null,null,null);
+    }
+
+    public CloseCaseViewModel CloseCase(int RequestId){
+        var PatientData = _dashboardRepo.GetSingleRequest(RequestId);
+         var DocumentRecords = _patientDashboardRepo.GetAllRequestedDocuments(RequestId);
+
+        IEnumerable<ViewDocuments> viewModel = DocumentRecords.Select(d => new ViewDocuments
+        {
+            DocumentId = d.Id,
+            FilePath = d.Filename,
+            FileName = Path.GetFileName(d.Filename),
+            UploaderName = d.Request.Createduser != null ? d.Request.Createduser.Firstname : d.Request.Firstname,
+            UploadDate = d.Createddate.ToString("yyyy-MM-dd"),
+            PatientName = d.Request.User != null ? (d.Request.User.Firstname + " " + d.Request.User.Lastname) :
+                (d.Request.Requestclients.FirstOrDefault()?.Firstname.ToUpper() + " " + d.Request.Requestclients.FirstOrDefault()?.Lastname.ToUpper())
+        }).ToList();
+
+        int month = DateTime.ParseExact(PatientData.Requestclients.FirstOrDefault().Strmonth, "MMMM", CultureInfo.InvariantCulture).Month;
+        DateTime dt = new DateTime((int)PatientData.Requestclients.FirstOrDefault().Intyear, month, (int)PatientData.Requestclients.FirstOrDefault().Intdate);
+                
+        CloseCaseViewModel CloseCaseView = new(){
+            ReqId = PatientData.Id,
+            PatientId = PatientData.Requestclients.FirstOrDefault().Id,
+            Firstname = PatientData.Requestclients.FirstOrDefault().Firstname,
+            Lastname = PatientData.Requestclients.FirstOrDefault().Lastname,
+            Email = PatientData.Requestclients.FirstOrDefault().Email,
+            Phone = PatientData.Requestclients.FirstOrDefault().Phonenumber,
+            DateOfBirth = dt.ToString("yyyy-MM-dd"),
+            documentList = viewModel
+        };
+        
+           
+
+        return CloseCaseView;
+    }
+
+    public void EditPatientInfo(string Email,string Phone,int patientId,int requestId){
+        _dashboardRepo.EditPatientInfo(Email,Phone,patientId,requestId);
+    }
+
+    public void CloseCaseSubmit(int reqId){
+        _dashboardRepo.ChangeStatusOfRequest(reqId,9);
     }
 }

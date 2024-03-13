@@ -44,4 +44,10 @@ public interface IAdminDashboardService
 
     void AgreementAccept(int reqId);
     void AgreementReject(int reqId,string reason);
-}
+
+    CloseCaseViewModel CloseCase(int RequestId);
+
+    void EditPatientInfo(string Email,string Phone,int patientId,int requestId);
+
+    void CloseCaseSubmit(int reqId);
+    }

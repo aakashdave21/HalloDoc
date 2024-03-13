@@ -362,4 +362,13 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         }
     }
 
+    public void EditPatientInfo(string Email,string Phone,int patientId,int requestId){
+        Requestclient patientInfo = _dbContext.Requestclients.FirstOrDefault(patient => patient.Id == patientId);
+        if(patientInfo!=null){
+            patientInfo.Email = Email;
+            patientInfo.Phonenumber = Phone;
+            _dbContext.SaveChanges();
+        }
+    }
+
 }
