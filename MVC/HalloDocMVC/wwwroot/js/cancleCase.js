@@ -28,21 +28,21 @@ async function populateCancleCaseModal(patientName, patientLastName, reqId) {
                 </div>
             </div>`;
 
-            try {
-                // GET Casetag From Database
-                const casetags = await $.get("/admin/dashboard/GetCaseTag");
-                const reasonCancleDropdown = $("#reasonCancle");
-                reasonCancleDropdown.empty();
-                reasonCancleDropdown.append(`<option value="" selected disabled>Choose Region</option>`);
-                casetags.forEach(casetag => {
-                    reasonCancleDropdown.append(`<option value="${casetag.name}">${casetag.name}</option>`);
-                });
-            } catch (error) {
-                console.error("Error loading regions:", error);
-            }finally{
-                var modalInstance = new bootstrap.Modal(modal);
-                modalInstance.show();
-            }
+    try {
+        // GET Casetag From Database
+        const casetags = await $.get("/admin/dashboard/GetCaseTag");
+        const reasonCancleDropdown = $("#reasonCancle");
+        reasonCancleDropdown.empty();
+        reasonCancleDropdown.append(`<option value="" selected disabled>Choose Region</option>`);
+        casetags.forEach(casetag => {
+            reasonCancleDropdown.append(`<option value="${casetag.name}">${casetag.name}</option>`);
+        });
+    } catch (error) {
+        console.error("Error loading regions:", error);
+    } finally {
+        var modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
+    }
 }
 
 function cancleCaseSubmit() {
@@ -64,9 +64,9 @@ function cancleCaseSubmit() {
         success: function () {
             location.href = '/admin/dashboard'
         },
-        error: function (xhr,status,error) {
-            if(xhr.status==401){
-                window.location.href = '/admin/login';                
+        error: function (xhr, status, error) {
+            if (xhr.status == 401) {
+                window.location.href = '/admin/login';
             }
         }
     })
@@ -119,23 +119,25 @@ const populateAssignCaseModal = async (reqId) => {
         });
     } catch (error) {
         console.error("Error loading regions:", error);
-    }finally{
+    } finally {
         var modalInstance = new bootstrap.Modal(modal);
         modalInstance.show();
     }
 }
 
-const getPhysicianByRegion = async(physicianId=null)=>{
+const getPhysicianByRegion = async (physicianId = null) => {
     try {
-         $("#physicianSelectDropdown").removeAttr("disabled");
-         const regionValue = $("#regionSelectDropdown").val();
-         const physicians = await $.get('/admin/dashboard/GetPhysicians',{RegionId : regionValue})
-         let PhysicianDropdown = $("#physicianSelectDropdown")
-         PhysicianDropdown.empty();
-         PhysicianDropdown.append(`<option value="" selected disabled>Choose Physician</option>`);
-         console.log(physicians);
-         physicians.forEach(phy => {
-            if(physicianId!=phy.id){
+        $("#physicianSelectDropdown").removeAttr("disabled");
+        const regionValue = $("#regionSelectDropdown").val();
+        const physicians = await $.get('/admin/dashboard/GetPhysicians', {
+            RegionId: regionValue
+        })
+        let PhysicianDropdown = $("#physicianSelectDropdown")
+        PhysicianDropdown.empty();
+        PhysicianDropdown.append(`<option value="" selected disabled>Choose Physician</option>`);
+        console.log(physicians);
+        physicians.forEach(phy => {
+            if (physicianId != phy.id) {
                 PhysicianDropdown.append(`<option value="${phy.id}">${phy.id}. ${phy.firstname}</option>`);
             }
         });
@@ -144,21 +146,21 @@ const getPhysicianByRegion = async(physicianId=null)=>{
     }
 }
 
-const assignCaseSubmit = ()=>{
+const assignCaseSubmit = () => {
     try {
         let form = document.querySelector('#assignCaseForm');
         let formData = new FormData(form);
         const regionDropdown = document.getElementById("regionSelectDropdown").value;
         const physicianDropdown = document.getElementById("physicianSelectDropdown").value;
-        if(regionDropdown == "" || regionDropdown ==null){
+        if (regionDropdown == "" || regionDropdown == null) {
             $("#regionValidation").html("Please Choose Region");
-        }else{
+        } else {
             $("#regionValidation").empty();
         }
-        if(physicianDropdown == "" || physicianDropdown == null){
+        if (physicianDropdown == "" || physicianDropdown == null) {
             $("#physicianValidation").html("Please Choose Physician");
             return;
-        }else{
+        } else {
             $("#physicianValidation").empty();
         }
         $.ajax({
@@ -171,9 +173,9 @@ const assignCaseSubmit = ()=>{
             success: function () {
                 location.href = '/admin/dashboard'
             },
-            error: function (xhr,status,error) {
-                if(xhr.status==401){
-                    window.location.href = '/admin/login';                
+            error: function (xhr, status, error) {
+                if (xhr.status == 401) {
+                    window.location.href = '/admin/login';
                 }
             }
         })
@@ -186,7 +188,7 @@ const assignCaseSubmit = ()=>{
 
 
 // Block Case Javascript
-const populateBlockCaseModal = async(reqId,firstname,lastname)=>{
+const populateBlockCaseModal = async (reqId, firstname, lastname) => {
     var modal = document.getElementById('blockCaseModal');
     modal.innerHTML = `<div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -213,16 +215,16 @@ const populateBlockCaseModal = async(reqId,firstname,lastname)=>{
     </div>
 </div>`
 
-        var modalInstance = new bootstrap.Modal(modal);
-        modalInstance.show();
+    var modalInstance = new bootstrap.Modal(modal);
+    modalInstance.show();
 }
 
-const blockCaseSubmit = ()=>{
+const blockCaseSubmit = () => {
     try {
         let form = document.querySelector('#blockCaseForm');
         let formData = new FormData(form);
 
-        if($("#block-reason").val()==""){
+        if ($("#block-reason").val() == "") {
             $("#blockReasonValidation").html("Please Provide Reason For Block.");
             return;
         }
@@ -237,9 +239,9 @@ const blockCaseSubmit = ()=>{
             success: function () {
                 location.href = '/admin/dashboard'
             },
-            error: function (xhr,status,error) {
-                if(xhr.status==401){
-                    window.location.href = '/admin/login';                
+            error: function (xhr, status, error) {
+                if (xhr.status == 401) {
+                    window.location.href = '/admin/login';
                 }
             }
         })
@@ -275,8 +277,8 @@ const populateClearCase = async (reqId) => {
                                 </div>
                             </div>
                         </div>`;
-            var modalInstance = new bootstrap.Modal(modal);
-            modalInstance.show();
+    var modalInstance = new bootstrap.Modal(modal);
+    modalInstance.show();
 }
 const clearCase = (reqId) => {
     try {
@@ -289,9 +291,9 @@ const clearCase = (reqId) => {
             success: function () {
                 location.href = '/admin/dashboard'
             },
-            error: function (xhr,status,error) {
-                if(xhr.status==401){
-                    window.location.href = '/admin/login';                
+            error: function (xhr, status, error) {
+                if (xhr.status == 401) {
+                    window.location.href = '/admin/login';
                 }
             }
         })
@@ -301,7 +303,7 @@ const clearCase = (reqId) => {
 }
 
 // Transfer Case
-const populateTransferCase = async (reqId,physicianId) => {
+const populateTransferCase = async (reqId, physicianId) => {
     var modal = document.getElementById('assignCaseModal');
     modal.innerHTML = `
     <div class="modal-dialog modal-dialog-centered">
@@ -347,27 +349,27 @@ const populateTransferCase = async (reqId,physicianId) => {
         });
     } catch (error) {
         console.error("Error loading regions:", error);
-    }finally{
+    } finally {
         var modalInstance = new bootstrap.Modal(modal);
         modalInstance.show();
     }
 }
 
-const transferCaseSubmit = ()=>{
+const transferCaseSubmit = () => {
     try {
         let form = document.querySelector('#transferCaseForm');
         let formData = new FormData(form);
         const regionTransferDropdown = document.getElementById("regionSelectDropdown").value;
         const physicianTransferDropdown = document.getElementById("physicianSelectDropdown").value;
-        if(regionTransferDropdown == "" || regionTransferDropdown ==null){
+        if (regionTransferDropdown == "" || regionTransferDropdown == null) {
             $("#regionTransferValidation").html("Please Choose Region");
-        }else{
+        } else {
             $("#regionTransferValidation").empty();
         }
-        if(physicianTransferDropdown == "" || physicianTransferDropdown == null){
+        if (physicianTransferDropdown == "" || physicianTransferDropdown == null) {
             $("#physicianTransferValidation").html("Please Choose Physician");
             return;
-        }else{
+        } else {
             $("#physicianTransferValidation").empty();
         }
         $.ajax({
@@ -380,9 +382,9 @@ const transferCaseSubmit = ()=>{
             success: function () {
                 location.href = '/admin/dashboard'
             },
-            error: function (xhr,status,error) {
-                if(xhr.status==401){
-                    window.location.href = '/admin/login';                
+            error: function (xhr, status, error) {
+                if (xhr.status == 401) {
+                    window.location.href = '/admin/login';
                 }
             }
         })
@@ -394,7 +396,7 @@ const transferCaseSubmit = ()=>{
 
 
 // Send Agreement
-const populateSendAgreement=(reqId,Email,Phone)=>{
+const populateSendAgreement = (reqId, Email, Phone) => {
     var modal = document.getElementById('sendAgreementModal');
     modal.innerHTML = `
     <div class="modal-dialog modal-dialog-centered">
@@ -436,17 +438,17 @@ const populateSendAgreement=(reqId,Email,Phone)=>{
     modalInstance.show();
 }
 
-function submitSendAgreement(){
+function submitSendAgreement() {
     try {
 
-        
+
         let form = document.querySelector('#sendAgreementForm');
         let formData = new FormData(form);
-        if($("#email").val() == ""){
+        if ($("#email").val() == "") {
             $("#invalid-email").html("Email is Required");
             return;
         }
-        if($("#phone").val() == ""){
+        if ($("#phone").val() == "") {
             $("#invalid-phone").html("Phone is Required");
             return;
         }
@@ -463,14 +465,14 @@ function submitSendAgreement(){
             success: function () {
                 location.href = '/admin/dashboard'
             },
-            error: function (xhr,status,error) {
-                if(xhr.status==401){
-                    window.location.href = '/admin/login';                
+            error: function (xhr, status, error) {
+                if (xhr.status == 401) {
+                    window.location.href = '/admin/login';
                 }
             }
         })
-        $("#submitAgreement").prop('disabled',true);
-        $("#cancleAgreement").prop('disabled',true);
+        $("#submitAgreement").prop('disabled', true);
+        $("#cancleAgreement").prop('disabled', true);
         $("#sendAgreementForm .modal-body").html(`<div class="spinner-grow text-info d-flex m-auto" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>`);
@@ -478,4 +480,69 @@ function submitSendAgreement(){
     } catch (error) {
         console.error("Error Submitting:", error)
     }
+}
+
+const populateEncounter = (reqId) => {
+
+    try {
+        var buttonClicked = '';
+
+        var modal = document.getElementById('encounterModal');
+        modal.innerHTML = `
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #01bce9;">
+            <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Encounter</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="encounter-body">
+            <button class="btn theme-btn" id="houseCall">House-Call</button>
+            <button class="btn theme-btn" id="consult">Consult</button>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn secondary-theme-btn" id="saveEncounterChanges">Save</button>
+            <button type="button" class="btn theme-btn"data-bs-dismiss="modal">Cancle</button>
+        </div>
+    </div>
+</div>`;
+
+        $("#encounter-body button").click(function () {
+                $("#encounter-body button").removeClass('secondary-theme-btn');
+                $(this).addClass('secondary-theme-btn');
+                buttonClicked = $(this).attr('id');
+            })
+
+            $("#saveEncounterChanges").click(function(){
+                saveEncounterChanges(buttonClicked,reqId);
+            });
+
+        var modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
+
+    } catch (error) {
+        console.log(error);
+    }
+
+
+}
+
+const saveEncounterChanges = (buttonValue,requestId) => {
+    if(buttonValue==="consult"){
+       $.ajax({
+        type: "POST",
+        url: '/admin/dashboard/ConsultEncounter',
+        data: {requestId:requestId},
+        success: function(response) {
+            console.log(response);
+        },
+        error: function(xhr, status, error) {
+            if (xhr.status == 401) {
+                window.location.href = '/admin/login';
+            } else {
+                console.log(xhr.responseText || error);
+            }
+        }
+    });
+    }
+    console.log(buttonValue);
 }

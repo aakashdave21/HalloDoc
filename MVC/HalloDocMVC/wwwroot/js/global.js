@@ -31,11 +31,7 @@ $("#adminDashTab li").click(function(e) {
     localStorage.setItem('tab', $(this).data("id"));
 })
 
-
-
-$(document).ready(function() {
-    
-    var themePreference = getThemePreference();
+var themePreference = getThemePreference();
     if (themePreference) {
         $("html").attr("data-bs-theme", themePreference);
         if (themePreference === "dark") {
@@ -46,7 +42,7 @@ $(document).ready(function() {
             $("#theme-btn .fa-sun").css("display", "none");
         }
     }
-});
+
 
 const hiddenInputMobile = document.querySelector("#hiddenInput");
 
@@ -131,16 +127,15 @@ window.addEventListener('popstate', function () {
     window.location.reload(true); // Reload the page, forcing server reload
 });
 
-function sendAjaxRequest(url, method="GET", data=null) {
+function sendAjaxRequest(url, method="GET", data=null, content=false, process=false) {
     return new Promise(function(resolve, reject) {
         $.ajax({
             type: method,
             url: url,
             data: data,
-            contentType: false,
-            processData: false,
+            contentType: content,
+            processData: process,
             success: function(response) {
-               
                 resolve(response);
             },
             error: function(xhr, status, error) {

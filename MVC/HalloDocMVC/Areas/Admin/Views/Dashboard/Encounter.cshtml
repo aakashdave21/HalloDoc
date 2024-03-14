@@ -1,0 +1,292 @@
+@* @using HalloDocService.ViewModels;
+@model CloseCaseViewModel; *@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Encounter Form";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+    <link rel="stylesheet" href="~/css/PatientRequest.css" />
+}
+<style>
+    label{
+        width: 100% !important;
+    }
+</style>
+
+<main class="patient-request-section container-sm mt-sm-5">
+    <div class="d-flex justify-content-end mt-4">
+        <a href="/admin/dashboard" class="btn btn-sm back-link"><i
+                class="fa-solid fa-chevron-left"></i> Back</a>
+    </div>
+
+    <form asp-action="PatientPost" id="myForm" method="post" enctype="multipart/form-data">
+    <div class="d-flex">
+        <h3>Encounter Form</h3>
+    </div>
+        <div class="patient-request-form border p-4 mt-3 mb-3 rounded shadow">
+            <div>
+                <div>
+                    <h2 class="fw-bold text-center mb-4" style="color: #01bce9;">Medical Report Confidential</h2>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="fname"
+                                placeholder="first name" readonly>
+                            <label  for="floatingInput">First Name</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input  type="text" class="form-control" id="lname"
+                                placeholder="last name" readonly>
+                            <label  for="floatingInput">Last Name</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <div class="form-floating ">
+                            <input  type="text" class="form-control" id="location"
+                                placeholder="location" readonly>
+                            <label  for="location">Location</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="date" class="form-control" id="dob"
+                                placeholder="Date Of Birth" readonly>
+                            <label for="floatingInput">Date Of Birth</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="date" class="form-control" id="date"
+                                placeholder="Date" readonly>
+                            <label for="date">Date</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                     <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input  id="Mobile" class="form-control" type="tel" name="Mobile" readonly/>
+                            <input type="hidden" id="phone_hidden" name="full_phone" />
+                        </div>
+                        <span  class="text-danger" id="mobile-valid"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input  type="email" class="form-control" id="Email" placeholder="email" readonly>
+                            <label  for="Email">Email</label>
+                        </div>
+                        <span  class="text-danger" id="email-valid"></span>
+                    </div>
+
+                    @* Above all Fields are Read only and can not be changed / Below all Fields are can be changed*@
+
+
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="History of present illness or injury" id="HistoryIllness"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="HistoryIllness" style="white-space: normal;">History of present illness or injury</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Medical History" id="MedicalHistory"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="MedicalHistory" style="white-space: normal;">Medical History</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Medication" id="Medication"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="Medication" style="white-space: normal;">Medication</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Allergies" id="Allergies"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="Allergies" style="white-space: normal;">Allergies</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    @* Two Row Remaining *@
+                    <div class="col-md-4 mb-3">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="Temp"
+                                placeholder="Temp" >
+                            <label for="Temp">Temp</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="HR"
+                                placeholder="HR" >
+                            <label for="HR">HR</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="RR"
+                                placeholder="RR" >
+                            <label for="RR">RR</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="SBP"
+                                placeholder="Blood Pressure(SBP)" >
+                            <label for="SBP">Blood Pressure(SBP)</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="DBP"
+                                placeholder="Blood Pressure(DBP)" >
+                            <label for="DBP">Blood Pressure(DBP)</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="O2"
+                                placeholder="O2" >
+                            <label for="O2">O2</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="Pain"
+                                placeholder="Pain">
+                            <label for="Pain">Pain</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Heent" id="Heent"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="Heent" style="white-space: normal;">Heent</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="CV" id="CV"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="CV" style="white-space: normal;">CV</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Chest" id="Chest"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="Chest" style="white-space: normal;">Chest</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="ABD" id="ABD"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="ABD" style="white-space: normal;">ABD</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Extr" id="Extr"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="Extr" style="white-space: normal;">Extr</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Skin" id="Skin"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="Skin" style="white-space: normal;">Skin</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Neuro" id="Neuro"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="Neuro" style="white-space: normal;">Neuro</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Other" id="Other"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="Other" style="white-space: normal;">Other</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Diagnosis" id="Diagnosis"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="Diagnosis" style="white-space: normal;">Diagnosis</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Treatment plan" id="TreatmentPlan"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="TreatmentPlan" style="white-space: normal;">Treatment plan</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Medication dispensed" id="MedicationDispensed"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="MedicationDispensed" style="white-space: normal;">Medication dispensed</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Procedures" id="Procedures"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="Procedures" style="white-space: normal;">Procedures</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    <div class="col-12 mb-3">
+                       <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Follow-up" id="Follow-up"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label for="Follow-up" style="white-space: normal;">Follow-up</label>
+                        </div>
+                        <span  class="text-danger"></span>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="mt-5 mb-3 d-flex justify-content-end gap-2">
+                <button class="btn secondary-theme-btn">Save Changes</button>
+                <button class="btn theme-btn">Cancel</button>
+            </div>
+
+        </div>
+    </form>
+</main>

@@ -288,7 +288,10 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
     }
 
     public Request GetSingleRequestDetails(int reqId){
-        return _dbContext.Requests.Include(req => req.Requestclients).FirstOrDefault(req => req.Id == reqId);
+        return _dbContext.Requests
+                      .Include(req => req.Requestclients)
+                      .Include(req => req.Physician)
+                      .FirstOrDefault(req => req.Id == reqId);
     }
 
     public void SetBlockFieldRequest(int reqId){
@@ -307,7 +310,7 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
     }
 
     public Request GetSingleRequest(int reqId){
-        return _dbContext.Requests.Include(req => req.User).Include(req=>req.Requestclients).FirstOrDefault(req => req.Id == reqId);
+        return _dbContext.Requests.Include(req => req.User).Include(req=>req.Requestclients).Include(req => req.Physician).FirstOrDefault(req => req.Id == reqId);
     }
 
     public void DeleteDocument(int docId){

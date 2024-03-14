@@ -782,6 +782,25 @@ public class DashboardController : Controller
         }
     }
 
+    public IActionResult Encounter(){
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult ConsultEncounter(string requestId){
+        try
+        {   
+            Console.WriteLine(requestId);
+            Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            return Ok(new {message=requestId});
+
+        }catch (System.Exception ex)
+        {
+            TempData["error"] = "Internal Server Error";
+            return BadRequest("Error: " + ex.Message);
+        }
+    }
+
     public async Task<IActionResult> LogOut()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
