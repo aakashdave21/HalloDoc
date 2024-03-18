@@ -485,39 +485,68 @@ function submitSendAgreement() {
 const populateEncounter = (reqId) => {
 
     try {
+        var modal = document.getElementById('encounterModal');
+
+        sendAjaxRequest('/admin/dashboard/GetRequestStatusEncounter','GET',{requestId : reqId},"application/x-www-form-urlencoded; charset=UTF-8",true)
+        .then(function(response){
+            if(response.requestStatus===5){
+                modal.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #01bce9;">
+                        <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Encounter</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="encounter-body">
+                    <small class="text-muted">A physician is currently on-site. If the consultation has been completed, please click on the "Complete" button below.</small>
+                    <button class="btn theme-btn mt-2" onclick="saveEncounterChanges('complete','${reqId}')">Complete House-Call</button>
+                    </div>
+                </div>
+            </div>`;  
+            }
+           
+        })
         var buttonClicked = '';
 
-        var modal = document.getElementById('encounterModal');
+        
         modal.innerHTML = `
-    <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-        <div class="modal-header" style="background-color: #01bce9;">
-            <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Encounter</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body" id="encounter-body">
-            <button class="btn theme-btn" id="houseCall">House-Call</button>
-            <button class="btn theme-btn" id="consult">Consult</button>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn secondary-theme-btn" id="saveEncounterChanges">Save</button>
-            <button type="button" class="btn theme-btn"data-bs-dismiss="modal">Cancle</button>
-        </div>
-    </div>
-</div>`;
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #01bce9;">
+                    <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Encounter</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="encounter-body">
+                    <button class="btn theme-btn" id="houseCall">House-Call</button>
+                    <button class="btn theme-btn" id="consult">Consult</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn secondary-theme-btn" id="saveEncounterChanges">Save</button>
+                    <button type="button" class="btn theme-btn"data-bs-dismiss="modal">Cancle</button>
+                </div>
+            </div>
+        </div>`;
 
-        $("#encounter-body button").click(function () {
-                $("#encounter-body button").removeClass('secondary-theme-btn');
-                $(this).addClass('secondary-theme-btn');
-                buttonClicked = $(this).attr('id');
-            })
-
-            $("#saveEncounterChanges").click(function(){
-                saveEncounterChanges(buttonClicked,reqId);
-            });
+            
 
         var modalInstance = new bootstrap.Modal(modal);
         modalInstance.show();
+
+        $("#encounter-body button").click(function () {
+            $("#encounter-body button").removeClass('secondary-theme-btn');
+            $(this).addClass('secondary-theme-btn');
+            buttonClicked = $(this).attr('id');
+        })
+
+        $("#saveEncounterChanges").click(function(){
+            if(buttonClicked===""){
+                ToastError("Please Choose Call Type");
+                return;
+            }
+                saveEncounterChanges(buttonClicked,reqId);
+                modalInstance.hide();
+            
+        });
 
     } catch (error) {
         console.log(error);
@@ -527,22 +556,42 @@ const populateEncounter = (reqId) => {
 }
 
 const saveEncounterChanges = (buttonValue,requestId) => {
+    console.log(buttonValue,requestId);
+    
     if(buttonValue==="consult"){
        $.ajax({
         type: "POST",
         url: '/admin/dashboard/ConsultEncounter',
         data: {requestId:requestId},
         success: function(response) {
-            console.log(response);
+            window.location.href = `/admin/dashboard/Encounter?requestId=${requestId}`
         },
         error: function(xhr, status, error) {
-            if (xhr.status == 401) {
+            if (xhr.status == 401){
                 window.location.href = '/admin/login';
             } else {
+                ToastError("Internal Server Error");
                 console.log(xhr.responseText || error);
             }
         }
-    });
+        });
     }
-    console.log(buttonValue);
+    if(buttonValue==="houseCall"){
+        sendAjaxRequest('/admin/dashboard/houseCallEncounter','POST',{requestId:requestId, status:"onroute"},"application/x-www-form-urlencoded; charset=UTF-8",true)
+        .then(function (response) {
+            populateEncounter(requestId);
+            console.log(response);
+        }).catch(function(error){
+            console.error(error);
+        })
+    }
+    if(buttonValue==="complete"){
+        sendAjaxRequest('/admin/dashboard/houseCallEncounter','POST',{requestId:requestId, status:"complete"},"application/x-www-form-urlencoded; charset=UTF-8",true)
+        .then(function (response) {
+            window.location.href = `/admin/dashboard/Encounter?requestId=${requestId}`
+        }).catch(function(error){
+            ToastError("Internal Server Error");
+            console.error(error);
+        })
+    }
 }

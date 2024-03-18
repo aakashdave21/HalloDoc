@@ -1,0 +1,269 @@
+@using HalloDocService.ViewModels;
+@model AdminProfileViewModel;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Profile Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+    <link rel="stylesheet" href="~/css/PatientRequest.css" />
+}
+<style>
+    label {
+        width: 100% !important;
+    }
+
+    select {
+        height: 100%;
+    }
+</style>
+<main class="container-sm mt-sm-5">
+    
+        <div class="d-flex mt-2">
+            <h3>My Profile</h3>
+        </div>
+        <div class="patient-request-form border p-4 mt-3 mb-3 rounded shadow">
+            <div>
+                <div>
+                    <h5>Account Information</h5>
+                </div>
+                <input type="hidden" name="Id" asp-for="Id"/>
+                <input type="hidden" name="AdminId" asp-for="AdminId"/>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="UserName" type="text" class="form-control" id="username" placeholder="UserName" disabled>
+                            <label asp-for="UserName" for="UserName">User Name</label>
+                        </div>
+                        <span asp-validation-for="UserName"  class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="password" placeholder="password">
+                            <label for="password">Password</label>
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <select class="form-select mb-3" asp-for="Status" aria-label="Large select example" placeholder="Status"
+                                disabled>
+                                <option selected disabled>Status</option>
+                                <option value="0">Inactive</option>
+                                <option value="1">Active</option>
+                            </select>
+                            <label asp-for="Status" for="Status">Status</label>
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <select asp-for="Role" class="form-select mb-3" aria-label="Large select example" placeholder="Role"
+                                disabled>
+                                <option selected disabled>Role</option>
+                                @foreach(var item in Model.roleSelect){
+                                     <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
+                            <label asp-for="Role" for="Status">Role</label>
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex justify-content-end">
+                            <button class="btn theme-btn">
+                                Reset Password
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* Administration Info *@
+            <form asp-area="Admin" asp-controller="Profile" asp-action="EditAdminInformation" method="post" id="AdminForm">
+                <input type="hidden" name="Id" asp-for="Id"/>
+                <input type="hidden" name="AdminId" asp-for="AdminId"/>
+                 <div class="mt-4" id="adminInfoSection">
+                <h5>Administrator Information</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="FirstName" type="text" class="form-control" id="firstname" placeholder="firstname" disabled>
+                            <label asp-for="FirstName" for="firstname">First Name</label>
+                        </div>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="LastName" type="text" class="form-control" id="lastname" placeholder="lastname" disabled>
+                            <label asp-for="LastName" for="lastname">Last Name</label>
+                        </div>
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Email" type="email" class="form-control" id="Email" placeholder="email" disabled>
+                            <label asp-for="Email" for="Email">Email</label>
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger" id="email-valid"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="ConfirmEmail" type="email" class="form-control" id="ConfirmEmail" placeholder="ConfirmEmail"
+                                disabled>
+                            <label asp-for="ConfirmEmail" for="ConfirmEmail">Confirm Email</label>
+                        </div>
+                        <span asp-validation-for="ConfirmEmail" class="text-danger" id="email-valid"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Mobile" id="Mobile" class="form-control" type="tel" name="Mobile" disabled />
+                            <input asp-for="Mobile" type="hidden" id="phone_hidden" name="full_phone" disabled />
+                        </div>
+                        <span asp-validation-for="Mobile" class="text-danger" id="mobile-valid"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex flex-wrap gap-2" id="RegionSelect">
+                            @foreach(var item in Model.regionSelect){
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="@item.Id" id="inputCheckBox-@item.Id" checked
+                                        disabled>
+                                    <label class="form-check-label" for="inputCheckBox-@item.Id">
+                                        @item.Name
+                                    </label>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn secondary-theme-btn" id="editInfoBtn"
+                                onclick="adminInfoEdit()">
+                                Edit
+                            </button>
+                            <div id="saveAdminBtns" style="display: none; gap: 10px;">
+                                <button type="button" class="btn secondary-theme-btn" onclick="submitEditInfo()">
+                                    Save
+                                </button>
+                                <button type="button" class="btn theme-btn" onclick="cancelEdit()">
+                                    Cancle
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
+           
+
+            <div class="mt-4" id="billingInfoSection">
+                <h5>Mailing and Billing Information</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Address1" type="text" class="form-control" id="Address1" placeholder="Address1" disabled>
+                            <label asp-for="Address1" for="Address1">Address1</label>
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Address2" type="text" class="form-control" id="Address2" placeholder="Address2" disabled>
+                            <label asp-for="Address2" for="Address2">Address2</label>
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="City" type="text" class="form-control" id="city" placeholder="city" disabled>
+                            <label asp-for="City" for="city">City</label>
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="State" type="text" class="form-control" id="state" placeholder="state" disabled>
+                            <label asp-for="State" for="state">State</label>
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="ZipCode" type="text" class="form-control" id="zipcode" placeholder="zipcode" disabled>
+                            <label asp-for="ZipCode" for="zipcode">Zip Code</label>
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Phone" id="Phone" class="form-control" type="tel" name="Phone" disabled />
+                            <input asp-for="Phone" type="hidden" id="phone_hidden" name="full_phone" disabled />
+                        </div>
+                        <span asp-validation-for="Phone" class="text-danger" id="mobile-valid"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn secondary-theme-btn" id="editBiilingInfoBtn"
+                                onclick="adminBillingInfoEdit()">
+                                Edit
+                            </button>
+                            <div id="saveBillingAdminBtns" style="display: none; gap: 10px;">
+                                <button type="button" class="btn secondary-theme-btn">
+                                    Save
+                                </button>
+                                <button type="button" class="btn theme-btn" onclick="cancelBillingEdit()">
+                                    Cancle
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</main>
+
+<script>
+    const adminInfoEdit = () => {
+        $("#saveAdminBtns").css('display', 'flex');
+        $("#editInfoBtn").css('display', 'none');
+        $("#adminInfoSection input").attr('disabled', false);
+    }
+    const cancelEdit = () => {
+        $("#saveAdminBtns").css('display', 'none');
+        $("#editInfoBtn").css('display', 'flex');
+        $("#adminInfoSection input").attr('disabled', true);
+
+    }
+    const adminBillingInfoEdit = () => {
+        $("#saveBillingAdminBtns").css('display', 'flex');
+        $("#editBiilingInfoBtn").css('display', 'none');
+        $("#billingInfoSection input").attr('disabled', false);
+
+    }
+    const cancelBillingEdit = () => {
+        $("#saveBillingAdminBtns").css('display', 'none');
+        $("#editBiilingInfoBtn").css('display', 'flex');
+        $("#billingInfoSection input").attr('disabled', true);
+
+    }
+    const submitEditInfo = () => {
+        let unCheckedRegions = [];
+        $("#RegionSelect input").each(function(){
+            if (!$(this).prop('checked')){
+                unCheckedRegions.push($(this).val());
+            }
+        })
+
+        unCheckedRegions.forEach(function(regionId) {
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'UnCheckedRegions',
+                value: regionId
+            }).appendTo('form');
+        });
+
+
+        $("#AdminForm").submit();
+         console.log(unCheckedRegions);
+    }
+</script>

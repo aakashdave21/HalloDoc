@@ -11,7 +11,7 @@ public class AdminDashboardService : IAdminDashboardService
 
     private readonly IAdminDashboardRepo _dashboardRepo;
     private readonly IDashboardRepo _patientDashboardRepo;
-    public AdminDashboardService(IAdminDashboardRepo dashboardRepo,IDashboardRepo patientDashboardRepo)
+    public AdminDashboardService(IAdminDashboardRepo dashboardRepo, IDashboardRepo patientDashboardRepo)
     {
         _dashboardRepo = dashboardRepo;
         _patientDashboardRepo = patientDashboardRepo;
@@ -43,7 +43,7 @@ public class AdminDashboardService : IAdminDashboardService
     }
 
 
-   public (List<RequestViewModel>, int totalCount) GetPendingStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize)
+    public (List<RequestViewModel>, int totalCount) GetPendingStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize)
     {
         var result = _dashboardRepo.GetPendingStatusRequest(searchBy, reqTypeId, pageNumber, pageSize);
         var (requests, totalCount) = result;
@@ -67,7 +67,7 @@ public class AdminDashboardService : IAdminDashboardService
             ServiceDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss")
         });
 
-         return (requestViewModels.ToList(), totalCount);
+        return (requestViewModels.ToList(), totalCount);
     }
     public (List<RequestViewModel>, int totalCount) GetActiveStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize)
     {
@@ -94,7 +94,7 @@ public class AdminDashboardService : IAdminDashboardService
             // Add other properties as needed
         });
 
-         return (requestViewModels.ToList(), totalCount);
+        return (requestViewModels.ToList(), totalCount);
     }
     public (List<RequestViewModel>, int totalCount) GetConcludeStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize)
     {
@@ -121,7 +121,7 @@ public class AdminDashboardService : IAdminDashboardService
             // Add other properties as needed
         });
 
-         return (requestViewModels.ToList(), totalCount);
+        return (requestViewModels.ToList(), totalCount);
     }
     public (List<RequestViewModel>, int totalCount) GetCloseStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize)
     {
@@ -148,12 +148,12 @@ public class AdminDashboardService : IAdminDashboardService
             Region = r.Requestclients.FirstOrDefault()?.Region?.Name ?? "-"
         });
 
-         return (requestViewModels.ToList(), totalCount);
+        return (requestViewModels.ToList(), totalCount);
     }
     public (List<RequestViewModel>, int totalCount) GetUnpaidStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize)
     {
-     
-       var result = _dashboardRepo.GetUnpaidStatusRequest(searchBy, reqTypeId, pageNumber, pageSize);
+
+        var result = _dashboardRepo.GetUnpaidStatusRequest(searchBy, reqTypeId, pageNumber, pageSize);
         var (requests, totalCount) = result;
 
         // Convert each Request object to RequestViewModel
@@ -176,7 +176,7 @@ public class AdminDashboardService : IAdminDashboardService
             Region = r.Requestclients.FirstOrDefault()?.Region?.Name ?? "-"
         });
 
-         return (requestViewModels.ToList(), totalCount);
+        return (requestViewModels.ToList(), totalCount);
     }
     public Dictionary<string, int> CountRequestByType()
     {
@@ -259,47 +259,54 @@ public class AdminDashboardService : IAdminDashboardService
         _dashboardRepo.SaveAdditionalNotes(AdditionalNote, noteId, reqId);
     }
 
-    public void CancleRequestCase(int reqId,string reason,string additionalNotes){
+    public void CancleRequestCase(int reqId, string reason, string additionalNotes)
+    {
         short newStatus = 3;
         int adminId = 1;
         Nullable<int> physicianId = null;
         short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
         int? noteId = _dashboardRepo.GetNoteIdFromRequestId(reqId);
 
-        _dashboardRepo.ChangeStatusOfRequest(reqId,newStatus);
-        _dashboardRepo.AddStatusLog(reqId,newStatus,oldStatus,reason,adminId,physicianId,null);
+        _dashboardRepo.ChangeStatusOfRequest(reqId, newStatus);
+        _dashboardRepo.AddStatusLog(reqId, newStatus, oldStatus, reason, adminId, physicianId, null);
 
-        if(noteId != null) _dashboardRepo.SaveAdditionalNotes(additionalNotes, (int)noteId, reqId);
+        if (noteId != null) _dashboardRepo.SaveAdditionalNotes(additionalNotes, (int)noteId, reqId);
         else _dashboardRepo.SaveAdditionalNotes(additionalNotes, 0, reqId);
-        
+
     }
 
-    public async Task<IEnumerable<Region>> GetRegions(){
+    public async Task<IEnumerable<Region>> GetRegions()
+    {
         return await _dashboardRepo.GetRegions();
     }
-    public async Task<IEnumerable<Casetag>> GetCaseTag(){
+    public async Task<IEnumerable<Casetag>> GetCaseTag()
+    {
         return await _dashboardRepo.GetCaseTag();
     }
 
-    public async Task<IEnumerable<Physician>> GetPhysicianByRegion(int regionId){
+    public async Task<IEnumerable<Physician>> GetPhysicianByRegion(int regionId)
+    {
         return await _dashboardRepo.GetPhysicianByRegion(regionId);
     }
 
-    public async Task AssignRequestCase(int reqId,int transPhyId,int? adminId,string desc){
+    public async Task AssignRequestCase(int reqId, int transPhyId, int? adminId, string desc)
+    {
         short newStatus = 2;
         short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
-        _dashboardRepo.ChangeStatusOfRequest(reqId,newStatus);
-        _dashboardRepo.AddStatusLog(reqId,newStatus,oldStatus,desc,adminId,null,transPhyId);
-        _dashboardRepo.AddPhysicianToRequest(reqId,transPhyId);
+        _dashboardRepo.ChangeStatusOfRequest(reqId, newStatus);
+        _dashboardRepo.AddStatusLog(reqId, newStatus, oldStatus, desc, adminId, null, transPhyId);
+        _dashboardRepo.AddPhysicianToRequest(reqId, transPhyId);
     }
 
-    public async Task BlockRequestCase(int reqId,int? adminId,string reason){
+    public async Task BlockRequestCase(int reqId, int? adminId, string reason)
+    {
         Request requestData = _dashboardRepo.GetSingleRequestDetails(reqId);
         short status = 11; //Blocked
-        _dashboardRepo.ChangeStatusOfRequest(reqId,status);
+        _dashboardRepo.ChangeStatusOfRequest(reqId, status);
         _dashboardRepo.SetBlockFieldRequest(reqId);
 
-        Blockrequest newBlockRequest = new(){
+        Blockrequest newBlockRequest = new()
+        {
             Requestid = reqId,
             Phonenumber = requestData.Requestclients.FirstOrDefault()?.Phonenumber,
             Email = requestData.Requestclients.FirstOrDefault()?.Email,
@@ -309,33 +316,41 @@ public class AdminDashboardService : IAdminDashboardService
         _dashboardRepo.AddBlockRequest(newBlockRequest);
     }
 
-    public Request GetSingleRequest(int reqId){
+    public Request GetSingleRequest(int reqId)
+    {
         return _dashboardRepo.GetSingleRequest(reqId);
     }
 
-    public void DeleteDocument(int docId){
-         _dashboardRepo.DeleteDocument(docId);
+    public void DeleteDocument(int docId)
+    {
+        _dashboardRepo.DeleteDocument(docId);
     }
 
-    public IEnumerable<ProfessionList> GetAllProfessions(){
+    public IEnumerable<ProfessionList> GetAllProfessions()
+    {
         IEnumerable<Healthprofessionaltype> healthProfessionals = _dashboardRepo.GetAllProfessions();
-        IEnumerable<ProfessionList> Porfessions = healthProfessionals.Select(prof => new ProfessionList{
+        IEnumerable<ProfessionList> Porfessions = healthProfessionals.Select(prof => new ProfessionList
+        {
             ProfessionId = prof.Id,
             ProfessionName = prof.Professionname
         }).ToList();
         return Porfessions;
     }
 
-    public IEnumerable<BusinessList> GetBusinessByProfession(int ProfessionId){
-       IEnumerable<BusinessList> businessLists = _dashboardRepo.GetBusinessByProfession(ProfessionId).Select(prof => new BusinessList{
-        BusinessId = prof.Id,
-        BusinessName = prof.Vendorname
-       });
-       return businessLists;
+    public IEnumerable<BusinessList> GetBusinessByProfession(int ProfessionId)
+    {
+        IEnumerable<BusinessList> businessLists = _dashboardRepo.GetBusinessByProfession(ProfessionId).Select(prof => new BusinessList
+        {
+            BusinessId = prof.Id,
+            BusinessName = prof.Vendorname
+        });
+        return businessLists;
     }
-    public SendOrderViewModel GetBusinessDetails(int businessId){
+    public SendOrderViewModel GetBusinessDetails(int businessId)
+    {
         Healthprofessional vendor = _dashboardRepo.GetBusinessDetails(businessId);
-        SendOrderViewModel SendOrders = new(){
+        SendOrderViewModel SendOrders = new()
+        {
             BusinessContact = vendor.Phonenumber,
             BusinessEmail = vendor.Email,
             FaxNumber = vendor.Faxnumber
@@ -343,8 +358,10 @@ public class AdminDashboardService : IAdminDashboardService
         return SendOrders;
     }
 
-    public void AddOrderDetails(SendOrderViewModel sendOrders){
-        Orderdetail newOrder = new(){
+    public void AddOrderDetails(SendOrderViewModel sendOrders)
+    {
+        Orderdetail newOrder = new()
+        {
             Vendorid = sendOrders.BusinessId,
             Requestid = sendOrders.ReqId,
             Faxnumber = sendOrders.FaxNumber,
@@ -357,34 +374,40 @@ public class AdminDashboardService : IAdminDashboardService
         _dashboardRepo.AddOrderDetails(newOrder);
     }
 
-    public void SetClearCase(int RequestId){
-        _dashboardRepo.ChangeStatusOfRequest(RequestId,10);
+    public void SetClearCase(int RequestId)
+    {
+        _dashboardRepo.ChangeStatusOfRequest(RequestId, 10);
     }
 
-    public void SetTransferCase(int reqId,int oldphyId,int physician,string description){
-        _dashboardRepo.AddPhysicianToRequest(reqId,physician);
-        _dashboardRepo.AddStatusLog(reqId,2,2,description,null,null,physician);
+    public void SetTransferCase(int reqId, int oldphyId, int physician, string description)
+    {
+        _dashboardRepo.AddPhysicianToRequest(reqId, physician);
+        _dashboardRepo.AddStatusLog(reqId, 2, 2, description, null, null, physician);
     }
 
-    public void StoreAcceptToken(int reqId,string token,DateTime expirationTime){
-        _dashboardRepo.StoreAcceptToken( reqId, token, expirationTime);
+    public void StoreAcceptToken(int reqId, string token, DateTime expirationTime)
+    {
+        _dashboardRepo.StoreAcceptToken(reqId, token, expirationTime);
     }
-    public void AgreementAccept(int reqId){
+    public void AgreementAccept(int reqId)
+    {
         _dashboardRepo.AgreementAccept(reqId);
         short newStatus = 4;
         short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
-        _dashboardRepo.AddStatusLog(reqId,newStatus,oldStatus,null,null,null,null);
+        _dashboardRepo.AddStatusLog(reqId, newStatus, oldStatus, null, null, null, null);
     }
-    public void AgreementReject(int reqId,string reason){
+    public void AgreementReject(int reqId, string reason)
+    {
         _dashboardRepo.AgreementReject(reqId);
         short newStatus = 7;
         short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
-        _dashboardRepo.AddStatusLog(reqId,newStatus,oldStatus,reason,null,null,null);
+        _dashboardRepo.AddStatusLog(reqId, newStatus, oldStatus, reason, null, null, null);
     }
 
-    public CloseCaseViewModel CloseCase(int RequestId){
+    public CloseCaseViewModel CloseCase(int RequestId)
+    {
         var PatientData = _dashboardRepo.GetSingleRequest(RequestId);
-         var DocumentRecords = _patientDashboardRepo.GetAllRequestedDocuments(RequestId);
+        var DocumentRecords = _patientDashboardRepo.GetAllRequestedDocuments(RequestId);
 
         IEnumerable<ViewDocuments> viewModel = DocumentRecords.Select(d => new ViewDocuments
         {
@@ -399,8 +422,9 @@ public class AdminDashboardService : IAdminDashboardService
 
         int month = DateTime.ParseExact(PatientData.Requestclients.FirstOrDefault().Strmonth, "MMMM", CultureInfo.InvariantCulture).Month;
         DateTime dt = new DateTime((int)PatientData.Requestclients.FirstOrDefault().Intyear, month, (int)PatientData.Requestclients.FirstOrDefault().Intdate);
-                
-        CloseCaseViewModel CloseCaseView = new(){
+
+        CloseCaseViewModel CloseCaseView = new()
+        {
             ReqId = PatientData.Id,
             PatientId = PatientData.Requestclients.FirstOrDefault().Id,
             Firstname = PatientData.Requestclients.FirstOrDefault().Firstname,
@@ -410,17 +434,143 @@ public class AdminDashboardService : IAdminDashboardService
             DateOfBirth = dt.ToString("yyyy-MM-dd"),
             documentList = viewModel
         };
-        
-           
+
+
 
         return CloseCaseView;
     }
 
-    public void EditPatientInfo(string Email,string Phone,int patientId,int requestId){
-        _dashboardRepo.EditPatientInfo(Email,Phone,patientId,requestId);
+    public void EditPatientInfo(string Email, string Phone, int patientId, int requestId)
+    {
+        _dashboardRepo.EditPatientInfo(Email, Phone, patientId, requestId);
     }
 
-    public void CloseCaseSubmit(int reqId){
-        _dashboardRepo.ChangeStatusOfRequest(reqId,9);
+    public void CloseCaseSubmit(int reqId)
+    {
+        _dashboardRepo.ChangeStatusOfRequest(reqId, 9);
     }
+
+
+
+    public EncounterFormViewModel GetEncounterDetails(int reqId)
+    {
+        Request encounterData = _dashboardRepo.GetEncounterDetails(reqId);
+        DateTime date = DateTime.ParseExact(encounterData.Requestclients.FirstOrDefault()?.Strmonth, "MMMM", CultureInfo.InvariantCulture);
+        int year = encounterData.Requestclients.FirstOrDefault().Intyear ?? 0000;
+        int day = encounterData.Requestclients.FirstOrDefault().Intdate ?? 1;
+        date = new DateTime(year, date.Month, day);
+        DateTime createdDate = (DateTime)encounterData.Createdat;
+
+        EncounterFormViewModel encounterFormViewModel = new()
+        {
+            ReqId = encounterData.Id,
+            FirstName = encounterData.Requestclients.FirstOrDefault()?.Firstname,
+            LastName = encounterData.Requestclients.FirstOrDefault()?.Lastname,
+            Location = encounterData.Requestclients.FirstOrDefault()?.Street + ", " + encounterData.Requestclients.FirstOrDefault()?.City + ", " + encounterData.Requestclients.FirstOrDefault()?.State + ", " + encounterData.Requestclients.FirstOrDefault()?.Zipcode,
+            DateOfBirth = date.ToString("yyyy-MM-dd"),
+            Mobile = encounterData.User.Mobile,
+            Email = encounterData.User.Email,
+            Date = createdDate.ToString("yyyy-MM-dd")
+        };
+        if (encounterData.Encounterform != null)
+        {
+            encounterFormViewModel = new EncounterFormViewModel()
+            {
+                ReqId = encounterData.Id,
+                FirstName = encounterData.Requestclients.FirstOrDefault()?.Firstname,
+                LastName = encounterData.Requestclients.FirstOrDefault()?.Lastname,
+                Location = encounterData.Requestclients.FirstOrDefault()?.Street + ", " + encounterData.Requestclients.FirstOrDefault()?.City + ", " + encounterData.Requestclients.FirstOrDefault()?.State + ", " + encounterData.Requestclients.FirstOrDefault()?.Zipcode,
+                DateOfBirth = date.ToString("yyyy-MM-dd"),
+                Mobile = encounterData.User.Mobile,
+                Email = encounterData.User.Email,
+                Date = createdDate.ToString("yyyy-MM-dd"),
+                Id = encounterData.Encounterform.Id,
+                HistoryOfPresentIllness = encounterData.Encounterform.Historyofpresentillness,
+                MedicalHistory = encounterData.Encounterform.Medicalhistory,
+                Medications = encounterData.Encounterform.Medications,
+                Allergies = encounterData.Encounterform.Allergies,
+                Temperature = encounterData.Encounterform.Temperature,
+                HeartRate = encounterData.Encounterform.Heartrate,
+                RespiratoryRate = encounterData.Encounterform.Respiratoryrate,
+                BloodPressureDBP = encounterData.Encounterform.Bloodpressure.Split("/")[1],
+                BloodPressureSBP = encounterData.Encounterform.Bloodpressure.Split("/")[0],
+                O2 = encounterData.Encounterform.O2,
+                Pain = encounterData.Encounterform.Pain,
+                HEENT = encounterData.Encounterform.Heent,
+                CV = encounterData.Encounterform.Cv,
+                Chest = encounterData.Encounterform.Chest,
+                ABD = encounterData.Encounterform.Abd,
+                Extr = encounterData.Encounterform.Extr,
+                Skin = encounterData.Encounterform.Skin,
+                Neuro = encounterData.Encounterform.Neuro,
+                Other = encounterData.Encounterform.Other,
+                Diagnosis = encounterData.Encounterform.Diagnosis,
+                TreatmentPlan = encounterData.Encounterform.Treatmentplan,
+                MedicationDispensed = encounterData.Encounterform.Medicationdispensed,
+                Procedures = encounterData.Encounterform.Procedures,
+                FollowUp = encounterData.Encounterform.Followup
+            };
+        }
+        return encounterFormViewModel;
+    }
+
+    public void ConsultEncounter(int reqId)
+    {
+        _dashboardRepo.ChangeStatusOfRequest(reqId, 6);
+        _dashboardRepo.AddCallType(1,reqId); // Consult
+    }
+
+    public void HouseCallEncounter(int reqId, string status)
+    {
+        if (status == "onroute")
+        {
+            _dashboardRepo.ChangeStatusOfRequest(reqId, 5);
+        }
+        else if (status == "complete")
+        {
+            _dashboardRepo.ChangeStatusOfRequest(reqId, 6);
+        }
+        _dashboardRepo.AddCallType(0,reqId); // House-call
+    }
+
+    public void SubmitEncounter(EncounterFormViewModel encounterForm)
+    {
+
+        string BloodPressureVal = encounterForm.BloodPressureSBP != null && encounterForm.BloodPressureDBP != null ? encounterForm.BloodPressureSBP + "/" + encounterForm.BloodPressureDBP : "0/0";
+
+        Encounterform newEncounterForm = new()
+        {
+            Id = encounterForm.Id,
+            RequestId = encounterForm.ReqId,
+            Historyofpresentillness = encounterForm.HistoryOfPresentIllness,
+            Medicalhistory = encounterForm.MedicalHistory,
+            Medications = encounterForm.Medications,
+            Allergies = encounterForm.Allergies,
+            Temperature = encounterForm.Temperature,
+            Heartrate = encounterForm.HeartRate,
+            Respiratoryrate = encounterForm.RespiratoryRate,
+            Bloodpressure = BloodPressureVal,
+            O2 = encounterForm.O2,
+            Pain = encounterForm.Pain,
+            Heent = encounterForm.HEENT,
+            Cv = encounterForm.CV,
+            Chest = encounterForm.Chest,
+            Abd = encounterForm.ABD,
+            Extr = encounterForm.Extr,
+            Skin = encounterForm.Skin,
+            Neuro = encounterForm.Neuro,
+            Other = encounterForm.Other,
+            Diagnosis = encounterForm.Diagnosis,
+            Treatmentplan = encounterForm.TreatmentPlan,
+            Medicationdispensed = encounterForm.MedicationDispensed,
+            Procedures = encounterForm.Procedures,
+            Followup = encounterForm.FollowUp
+        };
+        _dashboardRepo.SubmitEncounter(newEncounterForm);
+    }
+
+    public IEnumerable<Request> FetchAllRequest(){
+        return _dashboardRepo.FetchAllRequest();
+    }
+
 }

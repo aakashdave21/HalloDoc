@@ -374,4 +374,59 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         }
     }
 
+    public Request GetEncounterDetails(int reqId){
+        return _dbContext.Requests.Include(req=>req.Encounterform).Include(req=>req.Requestclients).Include(req=>req.User).FirstOrDefault(req => req.Id == reqId);
+    }
+
+    public void SubmitEncounter(Encounterform encounterform){
+        if (encounterform.Id == null || encounterform.Id == 0)
+        {
+            _dbContext.Encounterforms.Add(encounterform);
+            
+        }else{
+            Encounterform encounter = _dbContext.Encounterforms.FirstOrDefault(enc => enc.Id == encounterform.Id);
+            if(encounter!=null){
+                encounter.Historyofpresentillness = encounterform.Historyofpresentillness;
+                encounter.Medicalhistory = encounterform.Medicalhistory;
+                encounter.Medications = encounterform.Medications;
+                encounter.Allergies = encounterform.Allergies;
+                encounter.Temperature = encounterform.Temperature;
+                encounter.Heartrate = encounterform.Heartrate;
+                encounter.Respiratoryrate = encounterform.Respiratoryrate;
+                encounter.Bloodpressure = encounterform.Bloodpressure;
+                encounter.O2 = encounterform.O2;
+                encounter.Pain = encounterform.Pain;
+                encounter.Heent = encounterform.Heent;
+                encounter.Cv = encounterform.Cv;
+                encounter.Chest = encounterform.Chest;
+                encounter.Abd = encounterform.Abd;
+                encounter.Extr = encounterform.Extr;
+                encounter.Skin = encounterform.Skin;
+                encounter.Neuro = encounterform.Neuro;
+                encounter.Other = encounterform.Other;
+                encounter.Diagnosis = encounterform.Diagnosis;
+                encounter.Treatmentplan = encounterform.Treatmentplan;
+                encounter.Medicationdispensed = encounterform.Medicationdispensed;
+                encounter.Procedures = encounterform.Procedures;
+                encounter.Followup = encounterform.Followup;
+                encounter.Updatedat = DateTime.Now;
+            }
+
+        }
+         _dbContext.SaveChanges();
+    }
+
+    public void AddCallType(short callType,int reqId){
+        var reqData = _dbContext.Requests.FirstOrDefault(req => req.Id == reqId);
+        if(reqData!=null){
+            reqData.Calltype = callType;
+            reqData.Updatedat = DateTime.Now;
+            _dbContext.SaveChanges();
+        }
+    }
+
+    public IEnumerable<Request> FetchAllRequest(){
+        return _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Physician).Include(req=>req.User);
+    }
+
 }

@@ -1,5 +1,6 @@
 @using HalloDocService.ViewModels;
 @model AdminDashboardViewModel;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Shared/_AdminDashboard.cshtml";
@@ -91,10 +92,10 @@
                     <button class="btn secondary-theme-btn">
                         <i class="fas fa-file-export"></i> <span class="d-none d-md-inline">Exports
                         </span> </button>
-                    <button class="btn secondary-theme-btn">
+                    <a class="btn secondary-theme-btn" asp-area="Admin" asp-controller="Dashboard" asp-action="ExportAll">
                         <i class="fa-regular fa-share-from-square"></i> <span class="d-none d-md-inline">Exports
                             All</span>
-                    </button>
+                    </a>
                     <button class="btn secondary-theme-btn" data-bs-toggle="modal" data-bs-target="#reqSupportModal">
                         <i class="fas fa-user-alt"></i> <span class="d-none d-md-inline">Request DTY Support</span>
                     </button>

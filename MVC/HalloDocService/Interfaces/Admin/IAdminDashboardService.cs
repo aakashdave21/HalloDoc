@@ -50,4 +50,14 @@ public interface IAdminDashboardService
     void EditPatientInfo(string Email,string Phone,int patientId,int requestId);
 
     void CloseCaseSubmit(int reqId);
+
+    void ConsultEncounter(int reqId);
+
+    EncounterFormViewModel GetEncounterDetails(int reqId);
+
+    void HouseCallEncounter(int reqId,string status);
+
+    void SubmitEncounter(EncounterFormViewModel encounterForm);
+
+    IEnumerable<Request> FetchAllRequest();
     }

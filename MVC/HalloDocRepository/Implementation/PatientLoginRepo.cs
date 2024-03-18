@@ -24,7 +24,7 @@ public class PatientLoginRepo : IPatientLoginRepo
     }
 
     public User UserDetailsFetch(string email){
-        return _dbContext.Users.FirstOrDefault(q => q.Email == email);
+        return _dbContext.Users.Include(user=>user.Aspnetuser).FirstOrDefault(q => q.Email == email);
     }
 
     public void StoreResetToken(int AspUserId, string token, DateTime expiry){

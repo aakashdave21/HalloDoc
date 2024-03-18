@@ -70,6 +70,7 @@ public class LoginController : Controller
                         new Claim(ClaimTypes.Role,"Admin"),
                         new Claim(ClaimTypes.NameIdentifier,userView.Email),
                         new Claim(ClaimTypes.Name,userEmail.Username),
+                        new Claim("AspUserId",userDetails.Aspnetuser.Id.ToString()),
                         new Claim("UserId",userDetails.Id.ToString()),
                     };
 

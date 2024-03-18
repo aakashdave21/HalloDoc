@@ -46,4 +46,10 @@ public interface IAdminDashboardRepo
 
    void EditPatientInfo(string Email,string Phone,int patientId,int requestId);
 
+   Request GetEncounterDetails(int reqId);
+   void SubmitEncounter(Encounterform encounterform);
+
+   void AddCallType(short callType,int reqId);
+
+   IEnumerable<Request> FetchAllRequest();
 }

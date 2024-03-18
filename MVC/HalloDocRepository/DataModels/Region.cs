@@ -28,6 +28,9 @@ public partial class Region
     public DateTime? Updatedat { get; set; }
 
     [InverseProperty("Region")]
+    public virtual ICollection<Adminregion> Adminregions { get; } = new List<Adminregion>();
+
+    [InverseProperty("Region")]
     public virtual ICollection<Admin> Admins { get; } = new List<Admin>();
 
     [InverseProperty("Region")]

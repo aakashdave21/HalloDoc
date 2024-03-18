@@ -140,6 +140,9 @@ public partial class Request
     public virtual User? Createduser { get; set; }
 
     [InverseProperty("Request")]
+    public virtual Encounterform? Encounterform { get; set; }
+
+    [InverseProperty("Request")]
     public virtual ICollection<Orderdetail> Orderdetails { get; } = new List<Orderdetail>();
 
     [ForeignKey("Physicianid")]

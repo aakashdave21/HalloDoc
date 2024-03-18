@@ -212,7 +212,7 @@
                                                                 <li><a class="dropdown-item" href="/admin/dashboard/ViewNotes/@item.Id">View Notes</a></li>
                                                                 <li><a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="SendOrder" asp-route-RequestId="@item.Id">Orders</a></li>
                                                                 <li>
-                                                                    @Html.BeginForm("Encounter","Dashboard",new { area = "admin" }, FormMethod.Post){
+                                                                    @using(Html.BeginForm("Encounter","Dashboard",new { area = "admin" }, FormMethod.Post)){
                                                                         <input type="hidden" name="RequestId" value="@item.Id"/>
                                                                         <a class="dropdown-item"><button type="submit" style="all:unset;">Encounter</button></a> 
                                                                     }
@@ -234,7 +234,7 @@
                                                                     }
                                                                 </li>
                                                                 <li><a class="dropdown-item" onclick="populateClearCase('@item.Id')">Clear Case</a></li>
-                                                                <li><a class="dropdown-item" >Encounter</a></li>
+                                                                
                                                             </ul> 
                                                           break;
                                             case "unpaid" : <ul class="dropdown-menu">

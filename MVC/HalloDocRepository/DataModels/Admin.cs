@@ -82,6 +82,9 @@ public partial class Admin
     [Column("updatedat", TypeName = "timestamp without time zone")]
     public DateTime? Updatedat { get; set; }
 
+    [InverseProperty("Admin")]
+    public virtual ICollection<Adminregion> Adminregions { get; } = new List<Adminregion>();
+
     [ForeignKey("Aspnetuserid")]
     [InverseProperty("AdminAspnetusers")]
     public virtual Aspnetuser Aspnetuser { get; set; } = null!;

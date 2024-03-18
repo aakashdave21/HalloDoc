@@ -17,6 +17,8 @@ public partial class HalloDocContext : DbContext
 
     public virtual DbSet<Admin> Admins { get; set; }
 
+    public virtual DbSet<Adminregion> Adminregions { get; set; }
+
     public virtual DbSet<Aspnetrole> Aspnetroles { get; set; }
 
     public virtual DbSet<Aspnetuser> Aspnetusers { get; set; }
@@ -28,6 +30,8 @@ public partial class HalloDocContext : DbContext
     public virtual DbSet<Casetag> Casetags { get; set; }
 
     public virtual DbSet<Concierge> Concierges { get; set; }
+
+    public virtual DbSet<Encounterform> Encounterforms { get; set; }
 
     public virtual DbSet<Healthprofessional> Healthprofessionals { get; set; }
 
@@ -84,6 +88,22 @@ public partial class HalloDocContext : DbContext
             entity.HasOne(d => d.Region).WithMany(p => p.Admins).HasConstraintName("admin_regionid_fkey");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Admins).HasConstraintName("admin_roleid_fkey");
+        });
+
+        modelBuilder.Entity<Adminregion>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("adminregion_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.Admin).WithMany(p => p.Adminregions)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("adminregion_adminid_fkey");
+
+            entity.HasOne(d => d.Region).WithMany(p => p.Adminregions)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("adminregion_regionid_fkey");
         });
 
         modelBuilder.Entity<Aspnetrole>(entity =>
@@ -146,6 +166,17 @@ public partial class HalloDocContext : DbContext
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             entity.HasOne(d => d.Region).WithMany(p => p.Concierges).HasConstraintName("concierge_regionid_fkey");
+        });
+
+        modelBuilder.Entity<Encounterform>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("encounterform_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Isfinalized).HasDefaultValueSql("false");
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.Request).WithOne(p => p.Encounterform).HasConstraintName("encounterform_request_id_fkey");
         });
 
         modelBuilder.Entity<Healthprofessional>(entity =>

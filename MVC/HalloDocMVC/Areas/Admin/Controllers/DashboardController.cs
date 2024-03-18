@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Runtime.InteropServices.JavaScript;
 using System.Globalization;
+using ClosedXML.Excel;
 
 namespace HalloDocMVC.Controllers.Admin;
 
@@ -30,7 +31,7 @@ public class DashboardController : Controller
     private readonly IUtilityService _utilityService;
     private readonly IWebHostEnvironment _hostingEnvironment;
 
-    public DashboardController(ILogger<DashboardController> logger, IAdminDashboardService adminDashboardService, IDashboardService dashboardService, IWebHostEnvironment hostingEnvironment,IUtilityService utilityService)
+    public DashboardController(ILogger<DashboardController> logger, IAdminDashboardService adminDashboardService, IDashboardService dashboardService, IWebHostEnvironment hostingEnvironment, IUtilityService utilityService)
     {
         _logger = logger;
         _adminDashboardService = adminDashboardService;
@@ -59,7 +60,7 @@ public class DashboardController : Controller
 
         string? searchBy = Request.Query["searchBy"];
         int pageNumber = Request.Query.TryGetValue("pageNumber", out var pageNumberValue) ? int.Parse(pageNumberValue) : 1;
-        
+
         int pageSize = Request.Query.TryGetValue("pageSize", out var pageSizeValue) ? int.Parse(pageSizeValue) : 5;
 
         int reqType = 0;
@@ -141,7 +142,7 @@ public class DashboardController : Controller
             // };
 
             // return Json(JsonData);
-            
+
             return PartialView("_AdminDashboardTable", viewModel);
         }
         else
@@ -150,7 +151,8 @@ public class DashboardController : Controller
         }
     }
 
-    public IActionResult CountCards(){
+    public IActionResult CountCards()
+    {
         try
         {
             var countDictionary = _adminDashboardService.CountRequestByType();
@@ -346,14 +348,15 @@ public class DashboardController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> TransferCase(IFormCollection formData){
-         try
-        {   
+    public async Task<IActionResult> TransferCase(IFormCollection formData)
+    {
+        try
+        {
             int reqId = int.Parse(formData["reqId"]);
             int oldphyId = int.Parse(formData["phyId"]);
             int physician = int.Parse(formData["physician"]);
             string description = formData["description"];
-            _adminDashboardService.SetTransferCase(reqId,oldphyId,physician,description);
+            _adminDashboardService.SetTransferCase(reqId, oldphyId, physician, description);
             TempData["success"] = "Request Transfered Successfully!";
             return Json(new { success = true, message = "Form data received successfully" });
         }
@@ -629,8 +632,9 @@ public class DashboardController : Controller
         }
     }
 
-    public IActionResult SendOrder(int RequestId){
-        
+    public IActionResult SendOrder(int RequestId)
+    {
+
         try
         {
             SendOrderViewModel sendOrders = new SendOrderViewModel
@@ -648,17 +652,23 @@ public class DashboardController : Controller
     }
 
     [HttpPost]
-    public IActionResult SendOrder(SendOrderViewModel sendOrders){
-        if(sendOrders.ProfessionId == 0){
-            ModelState.AddModelError("ProfessionId","Please Select Profession");
+    public IActionResult SendOrder(SendOrderViewModel sendOrders)
+    {
+        if (sendOrders.ProfessionId == 0)
+        {
+            ModelState.AddModelError("ProfessionId", "Please Select Profession");
         }
-        if(sendOrders.BusinessId == 0){
-            if(sendOrders.ProfessionId != 0){
-                ModelState.AddModelError("BusinessId","Please Choose Profession Again, Then Select Business");
-            }else{
-                ModelState.AddModelError("BusinessId","Please Select Business");
+        if (sendOrders.BusinessId == 0)
+        {
+            if (sendOrders.ProfessionId != 0)
+            {
+                ModelState.AddModelError("BusinessId", "Please Choose Profession Again, Then Select Business");
             }
-            
+            else
+            {
+                ModelState.AddModelError("BusinessId", "Please Select Business");
+            }
+
         }
         if (!ModelState.IsValid)
         {
@@ -671,19 +681,20 @@ public class DashboardController : Controller
         {
             _adminDashboardService.AddOrderDetails(sendOrders);
             TempData["success"] = "Order Sent Successfully!";
-            return RedirectToAction("SendOrder",new {RequestId = sendOrders.ReqId});
+            return RedirectToAction("SendOrder", new { RequestId = sendOrders.ReqId });
         }
         catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
-            return RedirectToAction("SendOrder",new {RequestId = sendOrders.ReqId});
+            return RedirectToAction("SendOrder", new { RequestId = sendOrders.ReqId });
         }
     }
-    public IActionResult GetBusinessByProfession(int professionId){
+    public IActionResult GetBusinessByProfession(int professionId)
+    {
         try
         {
             IEnumerable<BusinessList> businessLists = _adminDashboardService.GetBusinessByProfession(professionId);
-           return Json(businessLists);
+            return Json(businessLists);
         }
         catch (Exception ex)
         {
@@ -691,11 +702,12 @@ public class DashboardController : Controller
             return BadRequest("Error occurred while fetching businesses: " + ex.Message);
         }
     }
-    public IActionResult GetBusinessDetails(int businessId){
+    public IActionResult GetBusinessDetails(int businessId)
+    {
         try
         {
             SendOrderViewModel viewData = _adminDashboardService.GetBusinessDetails(businessId);
-           return Json(viewData);
+            return Json(viewData);
         }
         catch (Exception ex)
         {
@@ -705,23 +717,24 @@ public class DashboardController : Controller
     }
 
     // Send Agreements
-    public IActionResult SendAgreement(IFormCollection formData){
+    public IActionResult SendAgreement(IFormCollection formData)
+    {
         try
         {
             int reqId = int.Parse(formData["request_id"]);
             string Email = formData["Email"];
             string Mobile = formData["Mobile"];
-            
+
             string token = Guid.NewGuid().ToString();
-            string callbackUrl = Url.Action("Index", "Agreement", new { area="Patient", reqId, token }, protocol: HttpContext.Request.Scheme);
+            string callbackUrl = Url.Action("Index", "Agreement", new { area = "Patient", reqId, token }, protocol: HttpContext.Request.Scheme);
             DateTime expirationTime = DateTime.UtcNow.AddHours(1);
 
-            _adminDashboardService.StoreAcceptToken(reqId,token,expirationTime);
+            _adminDashboardService.StoreAcceptToken(reqId, token, expirationTime);
 
             Console.WriteLine(callbackUrl);
 
             string rcvrMail = "aakashdave21@gmail.com";
-             Services.SmsSender.SendSMS();
+            Services.SmsSender.SendSMS();
             //  _utilityService.EmailSend(callbackUrl,rcvrMail);
             TempData["success"] = "Agreement Sent To Patient";
             return Ok();
@@ -735,12 +748,14 @@ public class DashboardController : Controller
 
 
     // Close Case
-    public IActionResult CloseCase(string RequestId){
+    public IActionResult CloseCase(string RequestId)
+    {
         try
         {
             CloseCaseViewModel CloseCaseView = _adminDashboardService.CloseCase(int.Parse(RequestId));
             return View(CloseCaseView);
-        }catch (System.Exception ex)
+        }
+        catch (System.Exception ex)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Index");
@@ -749,14 +764,16 @@ public class DashboardController : Controller
 
 
     [HttpPost]
-    public IActionResult CloseCasePost(CloseCaseViewModel closeCaseView){
+    public IActionResult CloseCasePost(CloseCaseViewModel closeCaseView)
+    {
         try
         {
             _adminDashboardService.CloseCaseSubmit(closeCaseView.ReqId);
             TempData["success"] = "Case Closed Successfully";
 
             return RedirectToAction("Index");
-        }catch (System.Exception ex)
+        }
+        catch (System.Exception ex)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Index");
@@ -764,40 +781,154 @@ public class DashboardController : Controller
     }
 
     [HttpPost]
-    public IActionResult CloseCaseEdit(IFormCollection formdata){
+    public IActionResult CloseCaseEdit(IFormCollection formdata)
+    {
         try
-        {   
+        {
             var Email = formdata["Email"];
             var Phone = formdata["phone"];
             var patientId = int.Parse(formdata["patientId"]);
             var requestId = int.Parse(formdata["ReqId"]);
-            _adminDashboardService.EditPatientInfo(Email,Phone,patientId,requestId);
+            _adminDashboardService.EditPatientInfo(Email, Phone, patientId, requestId);
             TempData["success"] = "Edited Successfully!";
             return Json(new { success = true, message = "Edited successfully" });
 
-        }catch (System.Exception ex)
+        }
+        catch (System.Exception ex)
         {
             TempData["error"] = "Internal Server Error";
             return BadRequest("Error: " + ex.Message);
         }
     }
 
-    public IActionResult Encounter(){
-        return View();
-    }
-
-    [HttpPost]
-    public IActionResult ConsultEncounter(string requestId){
+    public IActionResult GetRequestStatusEncounter(string requestId)
+    {
         try
-        {   
-            Console.WriteLine(requestId);
-            Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            return Ok(new {message=requestId});
+        {
+            var requestData = _adminDashboardService.GetSingleRequest(int.Parse(requestId));
+            return Json(new { success = true, message = "SuccessFully Consulted", requestStatus = requestData.Status });
 
-        }catch (System.Exception ex)
+        }
+        catch (System.Exception ex)
         {
             TempData["error"] = "Internal Server Error";
             return BadRequest("Error: " + ex.Message);
+        }
+    }
+
+    public IActionResult Encounter(string RequestId)
+    {
+        var encounterDetails = _adminDashboardService.GetEncounterDetails(int.Parse(RequestId));
+        return View(encounterDetails);
+    }
+
+    public IActionResult EncounterPost(EncounterFormViewModel encounterForm)
+    {
+        try
+        {
+
+            _adminDashboardService.SubmitEncounter(encounterForm);
+            TempData["success"] = "Report Submitted Successfully";
+            return RedirectToAction("Encounter", new { RequestId = encounterForm.ReqId });
+
+        }
+        catch (System.Exception ex)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("Encounter", new { RequestId = encounterForm.ReqId });
+        }
+    }
+
+    [HttpPost]
+    public IActionResult ConsultEncounter(string requestId)
+    {
+        try
+        {
+            _adminDashboardService.ConsultEncounter(int.Parse(requestId));
+            return Json(new { success = true, message = "SuccessFully Consulted", requestId });
+
+        }
+        catch (System.Exception ex)
+        {
+            TempData["error"] = "Internal Server Error";
+            return BadRequest("Error: " + ex.Message);
+        }
+    }
+
+
+
+    [HttpPost]
+    public IActionResult HouseCallEncounter(string requestId, string status)
+    {
+        try
+        {
+            _adminDashboardService.HouseCallEncounter(int.Parse(requestId), status);
+
+            return Json(new { success = true, message = "Successfully Completed", requestId, status });
+
+        }
+        catch (System.Exception ex)
+        {
+            return BadRequest("Error: " + ex.Message);
+        }
+    }
+
+    public IActionResult ExportAll()
+    {
+        try
+        {
+            var data = _adminDashboardService.FetchAllRequest();
+
+            if (data == null)
+            {
+                // Handle case where data is null
+                TempData["error"] = "No data found";
+                return RedirectToAction("Index");
+            }
+
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Sheet1");
+
+            worksheet.Cell(1, 1).Value = "FirstName";
+            worksheet.Cell(1, 2).Value = "EmailId";
+            worksheet.Cell(1, 3).Value = "Dob";
+            worksheet.Cell(1, 4).Value = "Patient Contact";
+            worksheet.Cell(1, 5).Value = "Address";
+
+            int row = 2;
+            foreach (var item in data)
+            {
+                // Check for null references in the item and related entities
+                if (item != null && item.Requestclients != null && item.User != null)
+                {
+                    worksheet.Cell(row, 1).Value = item.Requestclients.FirstOrDefault()?.Firstname + " " + item.Requestclients.FirstOrDefault()?.Lastname;
+                    worksheet.Cell(row, 2).Value = item.User.Email;
+                    worksheet.Cell(row, 3).Value = item.User.Birthdate.ToString();
+                    worksheet.Cell(row, 4).Value = item.User.Mobile;
+                    worksheet.Cell(row, 5).Value = item.Requestclients.FirstOrDefault()?.Street + ", " + item.Requestclients.FirstOrDefault()?.City + ", " + item.Requestclients.FirstOrDefault()?.State + ", " + item.Requestclients.FirstOrDefault()?.Zipcode;
+                    row++;
+                }
+                else
+                {
+                    // Log the null reference or handle it appropriately
+                    Console.WriteLine("Null reference detected in item: " + item);
+                }
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                workbook.SaveAs(stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                var content = stream.ToArray();
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "data.xlsx");
+            }
+        }
+        catch (Exception e)
+        {
+            // Log the exception
+            Console.WriteLine(e);
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("Index");
         }
     }
 

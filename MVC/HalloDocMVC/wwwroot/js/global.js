@@ -27,6 +27,16 @@ $("#theme-btn").click(function(){
     }
 })
 
+var storedTab = localStorage.getItem("tab");
+if(storedTab){
+    $("#adminDashTab li").each(function(){
+        if($(this).data("id")==storedTab){
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+        }
+    })
+}
+
 $("#adminDashTab li").click(function(e) {
     localStorage.setItem('tab', $(this).data("id"));
 })
