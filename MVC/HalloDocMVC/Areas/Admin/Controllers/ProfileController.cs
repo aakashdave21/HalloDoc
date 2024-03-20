@@ -6,6 +6,7 @@ using HalloDocService.ViewModels;
 using HalloDocService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using HalloDocService.Admin.Interfaces;
+using HalloDocMVC.Services;
 namespace HalloDocMVC.Controllers.Admin;
 
 [Area("Admin")]
@@ -25,9 +26,7 @@ public class ProfileController : Controller
         try
         {
             var AspUserId = User.FindFirstValue("AspUserId");
-
             AdminProfileViewModel adminProfileView  = _profileService.GetAdminData(int.Parse(AspUserId));
-               
             return View(adminProfileView);
         }
         catch (System.Exception)
@@ -41,23 +40,51 @@ public class ProfileController : Controller
     public IActionResult EditAdminInformation(AdminProfileViewModel adminView){
         try
         {
-            Console.WriteLine(adminView.FirstName + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-            Console.WriteLine(adminView.Id + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-            Console.WriteLine(adminView.AdminId + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-            Console.WriteLine(adminView.LastName + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-            Console.WriteLine(adminView.Email + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-            Console.WriteLine(adminView.ConfirmEmail + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-            Console.WriteLine(adminView.Mobile + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-            // foreach (var item in adminView.UnCheckedRegions)
-            // {
-            //     Console.WriteLine(item + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-            // }
-
             _profileService.UpdateAdminInfo(adminView);
             TempData["success"] = "Admin Information Updated Successfully!";    
             return RedirectToAction("Index");
         }
-        catch (System.Exception)
+        catch (Exception)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("Index");
+        }
+    }
+    [HttpPost]
+    public IActionResult EditBillingInformation(AdminProfileViewModel adminView){
+        try
+        {
+            _profileService.UpdateBillingInfo(adminView);
+            TempData["success"] = "Admin Information Updated Successfully!";    
+            return RedirectToAction("Index");
+        }
+        catch (Exception)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("Index");
+        }
+    }
+    [HttpPost]
+    public IActionResult ResetPassword(AdminProfileViewModel adminView){
+        try
+        {
+            string userPassword = _profileService.GetPassword(adminView.Id);
+            // bool isVerified = PasswordHasher.VerifyPassword(adminView.Password, userPassword);
+            Console.WriteLine(userPassword);
+            Console.WriteLine(adminView.Password);
+            bool isVerified = userPassword == adminView.Password;
+            if(isVerified){
+                TempData["error"] = "Password Already Exits, Enter new Password!";    
+                return RedirectToAction("Index");
+            }
+
+            string hashedPassword = PasswordHasher.HashPassword(adminView.Password);
+            // _profileService.UpdatePassword(adminView.Id, adminView.Password);
+            _profileService.UpdatePassword(adminView.Id, hashedPassword);
+            TempData["success"] = "Password Updated Successfully!";    
+            return RedirectToAction("Index");
+        }
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Index");

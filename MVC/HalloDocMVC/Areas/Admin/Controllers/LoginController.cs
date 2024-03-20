@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using HalloDocService.ViewModels;
 using HalloDocService.Interfaces;
+using HalloDocMVC.Services;
 
 namespace HalloDocMVC.Controllers.Admin;
 
@@ -59,9 +60,11 @@ public class LoginController : Controller
             if (userEmail != null)
             {
                 string storedHashPassword = userEmail.Passwordhash;
-                var isPasswordCorrect = _userLogin.VerifyPassword(userView.Passwordhash, storedHashPassword);
+                
+                var isPasswordCorrectHashed = PasswordHasher.VerifyPassword(userView.Passwordhash , storedHashPassword);
+                // var isPasswordCorrect = _userLogin.VerifyPassword(userView.Passwordhash, storedHashPassword);
 
-                if (isPasswordCorrect && IsAdmin)
+                if (isPasswordCorrectHashed && IsAdmin)
                 {
                     var userDetails = _userLogin.UserDetailsFetch(userEmail.Email);
 
@@ -70,7 +73,7 @@ public class LoginController : Controller
                         new Claim(ClaimTypes.Role,"Admin"),
                         new Claim(ClaimTypes.NameIdentifier,userView.Email),
                         new Claim(ClaimTypes.Name,userEmail.Username),
-                        new Claim("AspUserId",userDetails.Aspnetuser.Id.ToString()),
+                        new Claim("AspUserId",userDetails.Aspnetuser.Id.ToString() ?? ""),
                         new Claim("UserId",userDetails.Id.ToString()),
                     };
 

@@ -68,7 +68,7 @@ body{
 .submit-request-page .custom-button-group a{
     position: relative;
     text-decoration: none;
-    padding: 5px 0 0 12px;
+    padding: 5px 0 14px 12px;
     border-radius: 5px;
     transition: all 0.2s;
 }

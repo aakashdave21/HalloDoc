@@ -2,6 +2,7 @@ using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using AdminTable = HalloDocRepository.DataModels.Admin;
+using System.Data.Common;
 
 namespace HalloDocRepository.Admin.Implementation;
 public class ProfileRepo : IProfileRepo
@@ -46,5 +47,65 @@ public class ProfileRepo : IProfileRepo
         }else{
             throw new Exception();
         }
+    }
+
+    public void RemoveRegions(int AdminId, List<int> UncheckedRegion){
+        if(AdminId!=null && UncheckedRegion!=null){
+            var UncheckedRegions = _dbContext.Adminregions.Where(adRegion => adRegion.Adminid == AdminId && UncheckedRegion.Contains(adRegion.Regionid));
+            _dbContext.RemoveRange(UncheckedRegions);
+           _dbContext.SaveChanges();
+        }
+    }
+    public void AddNewRegions(int AdminId, List<int> UncheckedRegion){
+        if(AdminId!=null && UncheckedRegion!=null){
+            IEnumerable<Adminregion> adminRegionsToAdd = UncheckedRegion.Select(regionId => new Adminregion
+            {
+                Adminid = AdminId,
+                Regionid = regionId,
+                Updatedat = DateTime.Now 
+            }).ToList();
+            _dbContext.Adminregions.AddRange(adminRegionsToAdd);
+            _dbContext.SaveChanges();
+        }
+    }
+
+    public void UpdateBillingInfo(AdminTable adminInfo,int AdminId){
+        if(AdminId!=null){
+            AdminTable adminTableData = _dbContext.Admins.FirstOrDefault(user=>user.Id == AdminId);
+            if(adminTableData!=null){
+                adminTableData.Address1 = adminInfo.Address1;
+                adminTableData.Address2 = adminInfo.Address2;
+                adminTableData.City = adminInfo.City;
+                adminTableData.Zip = adminInfo.Zip;
+                adminTableData.Altphone = adminInfo.Altphone;
+                adminTableData.Regionid = adminInfo.Regionid;
+
+                _dbContext.SaveChanges();
+                return;
+            }
+        }
+        throw new Exception();
+    }
+    public string GetPassword(int aspUserId){
+        if(aspUserId!=null){
+            return _dbContext.Aspnetusers.FirstOrDefault(user => user.Id == aspUserId).Passwordhash;
+        }
+        throw new Exception();
+    }
+
+    public void UpdatePassword(int aspUserId,string password){
+        if(aspUserId!=null){
+            Aspnetuser aspUserDetails = _dbContext.Aspnetusers.FirstOrDefault(user => user.Id == aspUserId);
+            if(aspUserDetails!=null){
+                aspUserDetails.Passwordhash = password;
+                _dbContext.SaveChanges();
+                return;
+            }
+        }
+        throw new Exception();
+    }
+
+    public IEnumerable<Region> GetAllRegions(){
+        return _dbContext.Regions;
     }
 }

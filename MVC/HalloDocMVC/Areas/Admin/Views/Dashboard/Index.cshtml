@@ -1,6 +1,7 @@
 @using HalloDocService.ViewModels;
 @model AdminDashboardViewModel;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Shared/_AdminDashboard.cshtml";
@@ -89,7 +90,7 @@
                     <button class="btn secondary-theme-btn">
                         <i class="far fa-sticky-note"></i> <span class="d-none d-md-inline">Create Request</span>
                     </button>
-                    <button class="btn secondary-theme-btn">
+                    <button class="btn secondary-theme-btn" onclick="ExportData()">
                         <i class="fas fa-file-export"></i> <span class="d-none d-md-inline">Exports
                         </span> </button>
                     <a class="btn secondary-theme-btn" asp-area="Admin" asp-controller="Dashboard" asp-action="ExportAll">
@@ -113,8 +114,8 @@
                         </div>
                         <div class="form-group has-search">
                             <span class="fa fa-search form-control-feedback"></span>
-                            <select class="form-control form-select" id="regionDropdown">
-                                <option value="all" selected>All Regions</option>
+                            <select class="form-control form-select" id="regionDropdown" onchange="searchByRegion()">
+                                <option value="0" selected>All Regions</option>
                                 @foreach(var item in Model.RegionList){
                                     <option value="@item.Id">@item.Name</option>
                                 }
@@ -123,16 +124,16 @@
                     </div>
                     <div
                         class="col-md-6 table-info-btn border-sm-top d-flex justify-content-between align-items-center">
-                        <button class="btn" onclick="getAllRecords()"">All</button>
-                        <a id="patient-only" href="#" onclick="getOnlyPatient()"><span class="dot green-dot"></span>
+                        <button class="btn" onclick="getAllRecords()">All</button>
+                        <a id="patient-only"  onclick="getOnlyPatient()"><span class="dot green-dot"></span>
                             Patient</a>
-                        <a id="family-only" href="#" onclick="getOnlyFamily()"><span class="dot orange-dot"></span>
+                        <a id="family-only"  onclick="getOnlyFamily()"><span class="dot orange-dot"></span>
                             Family/Friend</a>
-                        <a id="concierge-only" href="#" onclick="getOnlyConcierge()"><span class="dot blue-dot"></span>
+                        <a id="concierge-only"  onclick="getOnlyConcierge()"><span class="dot blue-dot"></span>
                             Concierge</a>
-                        <a id="business-only" href="#" onclick="getOnlyBusiness()"><span class="dot pink-dot"></span>
+                        <a id="business-only"  onclick="getOnlyBusiness()"><span class="dot pink-dot"></span>
                             Business</a>
-                        <a href="#"><span class="dot purple-dot"></span> VIP</a>
+                        @* <a><span class="dot purple-dot"></span> VIP</a> *@
                     </div>
 
                     <div id="render-content">
@@ -145,6 +146,7 @@
             </div>
         </section>
     </div>
+    
 </main>
 
 @* Request Support Modal *@
@@ -172,9 +174,7 @@
         </div>
     </div>
 </div>
-
-@* Send Mail Modal *@
-<div class="modal fade shadow-lg " id="sendMailModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+<div class="modal fade shadow-lg" id="sendMailModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -183,52 +183,57 @@
                     Request </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <div class="form-floating ">
-                        <input type="text" class="form-control" id="fname" placeholder="first name">
-                        <label for="floatingInput">First Name</label>
+            <form asp-area="Admin" asp-controller="Dashboard" asp-action="SendCreationLink" method="post" id="activationLinkForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="fname" name="FirstName" placeholder="first name">
+                            <label for="floatingInput">First Name</label>
+                        </div>
+                        <span class="text-danger" id="fName-validation"></span>
                     </div>
-                    <span class="text-danger"></span>
-                </div>
-                <div class=" mb-3">
-                    <div class="form-floating ">
-                        <input type="text" class="form-control" id="lname" placeholder="last name">
-                        <label for="floatingInput">Last Name</label>
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="lname" name="LastName" placeholder="last name">
+                            <label for="floatingInput">Last Name</label>
+                        </div>
+                        <span class="text-danger" id="lName-validation"></span>
                     </div>
-                    <span class="text-danger"></span>
-                </div>
-                <div class=" mb-3">
-                    <div class="form-floating ">
-                        <input type="email" class="form-control" id="Email" placeholder="email"
-                            oninput="debounce(verifyEmail, 2000)">
-                        <label for="Email">Email</label>
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="Email" name="Email" placeholder="email">
+                            <label for="Email">Email</label>
+                        </div>
+                        <span class="text-danger" id="email-validation"></span>
                     </div>
-                    <span class="text-danger" id="email-valid"></span>
-                </div>
-                <div class=" mb-3">
-                    <div class="form-floating">
-                        <input id="Mobile" class="form-control" type="tel" name="Mobile" />
-                        <input type="hidden" id="phone_hidden" name="full_phone" />
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input id="Mobile" class="form-control" type="tel" name="Mobile" />
+                            <input  type="hidden" id="phone_hidden" name="full_phone" />
+                        </div>
+                        <span class="text-danger" id="mobile-validation"></span>
                     </div>
-                    <span class="text-danger" id="mobile-valid"></span>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn secondary-theme-btn">Confirm</button>
-                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn secondary-theme-btn" onclick="sendAccountCreationLink()">Confirm</button>
+                    <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
         </div>
-    </div>
+    </div>    
 </div>
+
+
 
 <script>
     
-    let params, tabData, searchKeyword=null, reqTypes=null, pageNum = 1,pageRecord = 5;
+    let params = { status: "new" }, tabData, searchKeyword=null, reqTypes=null, pageNum = 1,pageRecord = 5, regionId = 0;
 
     $(".card").click(function () {
         $(".dot").closest("a").removeClass("fw-bold")
         let action = $(this).data('action');
+        $("#searchKeyword").val('');
+        $("#regionDropdown").val(0);
         let showStatus = document.querySelector("#showStatus");
         showStatus.innerHTML = `(${action})`;
 
@@ -263,6 +268,7 @@
         }
         pageNum = 1;
         pageRecord = 5;
+        regionId = 0;
         makeAjaxRequest(`/admin/dashboard/Index?pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
     })
     let timeoutId;
@@ -274,7 +280,7 @@
         searchKeyword = document.getElementById("searchKeyword").value.toLowerCase();
         pageNum = 1;
         pageRecord = 5;
-        makeAjaxRequest(`/admin/dashboard?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
+        makeAjaxRequest(`/admin/dashboard?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}&region=${regionId}`, params);
     }
 
     const getOnlyPatient = () => {
@@ -302,19 +308,22 @@
         reqTypes = reqTypeId;
         pageNum = 1;
         pageRecord = 5;
-        if(searchKeyword){
-            makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypeId}&pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
+        if(searchKeyword || regionId!=0){
+            makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypeId}&pageNumber=${pageNum}&pageSize=${pageRecord}&region=${regionId}`, params);
         }else{
             makeAjaxRequest(`/admin/dashboard/Index?requesttype=${reqTypeId}&pageNumber=${pageNum}&pageSize=${pageRecord}`,params);
         }
     }
 
     const getAllRecords = ()=>{
+         $("#searchKeyword").val('');
+        $("#regionDropdown").val(0);
         reqTypes = 0;
         pageNum = 1;
         pageRecord = 5;
+        regionId = 0;
         $(".dot").closest("a").removeClass("fw-bold")
-        makeAjaxRequest(`/admin/dashboard/Index?pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
+        makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&region=${regionId}&pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
     }
 
     function makeAjaxRequest(url, requestData) {
@@ -325,7 +334,7 @@
             success: function (response,status,xhr) {
                 $('#render-content').empty();
                 $('#render-content').html(response);
-                tabData = response;
+                @* tabData = response; *@
             },
             error: function (xhr,status,error) {
                 if(xhr.status==401){
@@ -353,11 +362,10 @@
     }
 
     function pageChange() {
-        
         searchKeyword = document.getElementById("searchKeyword").value.toLowerCase();
         const pageChange = document.querySelector(".pageChange");
         pageNum = pageChange.value;
-        makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
+        makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}&region=${regionId}`, params);
     }
 
     function pageRecordChange(){
@@ -365,6 +373,76 @@
         searchKeyword = document.getElementById("searchKeyword").value.toLowerCase();
         const pageRecordChange = document.querySelector(".pageRecordChange");
         pageRecord = pageRecordChange.value;
-        makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
+        makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}&region=${regionId}`, params);
+    }
+
+    function searchByRegion(){
+        const regionDropdown = document.getElementById("regionDropdown").value;
+        regionId = regionDropdown;
+        pageNum = 1;
+        pageRecord = 5;
+        makeAjaxRequest(`/admin/dashboard?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}&region=${regionId}`, params);
+
+    }
+
+    function ExportData(){
+        var url = `/admin/dashboard/ExportData?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}&region=${regionId}`;
+    
+        fetch(url, {
+            method: 'GET',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            var url = window.URL.createObjectURL(blob);
+            var link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'data.xlsx');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link); // Clean up the DOM element
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+
+    function sendAccountCreationLink(){
+            $("#fName-validation").text("");
+            $("#lName-validation").text("");
+            $("#email-validation").text("");
+            $("#mobile-validation").text("");
+            var firstName = $("#fname").val().trim();
+            if (firstName === "") {
+                $("#fName-validation").text("First name is required");
+                return;
+            }
+            var lastName = $("#lname").val().trim();
+            if (lastName === "") {
+                $("#lName-validation").text("Last name is required");
+                return;
+            }
+            var email = $("#Email").val().trim();
+            if (email === "") {
+                $("#email-validation").text("Email is required");
+                return;
+            }
+            var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            if (!emailRegex.test(email)) {
+                $("#email-validation").text("Invalid email format");
+                return;
+            }
+            var mobile = $("#Mobile").val().trim();
+            if (mobile === "") {
+                $("#mobile-validation").text("Mobile number is required");
+                return;
+            }
+
+            $("#activationLinkForm").submit();
     }
 </script>

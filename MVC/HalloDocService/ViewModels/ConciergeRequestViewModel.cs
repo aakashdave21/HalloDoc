@@ -29,7 +29,7 @@ namespace HalloDocService.ViewModels
         public string? ConciergeCity { get; set; }
 
         [Required(ErrorMessage = "State is required.")]
-        public string? ConciergeState { get; set; }
+        public int? ConciergeState { get; set; }
 
         [Required(ErrorMessage = "Zip Code is required.")]
         public string? ConciergeZipcode { get; set; }
@@ -58,6 +58,9 @@ namespace HalloDocService.ViewModels
 
         [StringLength(250)]
         public string? Roomnoofpatient { get; set; }
+
+        public IEnumerable<RegionList> AllRegionList {get; set;} = new List<RegionList>();
+
        
 
     }

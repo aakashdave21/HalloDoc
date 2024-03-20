@@ -6,9 +6,11 @@ namespace HalloDocService.ViewModels
     public class AdminProfileViewModel
     {
         // Account Information
+        
         public int Id { get; set; }
         public int AdminId { get; set; }
         public string UserName { get; set; }
+        
         public string Password { get; set; }
         public int Status { get; set; }
         public int? Role { get; set; }
@@ -27,14 +29,18 @@ namespace HalloDocService.ViewModels
         public string Address1 { get; set; }
         public string Address2 { get; set; }
         public string City { get; set; }
-        public string State { get; set; }
+        // [Required(ErrorMessage = "State is required")]
+        public int? State { get; set; }
         public string ZipCode { get; set; }
         public string Phone { get; set; }
 
-        public IEnumerable<RoleList> roleSelect {get; set;}
-        public IEnumerable<RegionList> regionSelect {get; set;}
+        public IEnumerable<RoleList> roleSelect {get; set;} = new List<RoleList>();
+        public IEnumerable<RegionList> regionSelect {get; set;} = new List<RegionList>();
+        public IEnumerable<RegionList> RegionUnSelect {get; set;} = new List<RegionList>();
+        public IEnumerable<RegionList> AllRegionList {get; set;} = new List<RegionList>();
 
-        public List<int> UnCheckedRegions { get; set; }
+        public List<int> UnCheckedRegions { get; set; } = new List<int>();
+        public List<int> CheckedRegions { get; set; } = new List<int>();
     }
 
     public class RoleList{

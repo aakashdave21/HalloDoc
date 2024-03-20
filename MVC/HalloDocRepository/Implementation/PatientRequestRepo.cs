@@ -68,5 +68,13 @@ public class PatientRequestRepo : IPatientRequestRepo
             _dbContext.SaveChanges();
         }
     }
+    public Region GetSingleRegion(int regionId){
+        return _dbContext.Regions.FirstOrDefault(m => m.Id == regionId);
+    }
+
+    public void NewRoleAdded(Aspnetuserrole aspnetuserrole){
+        _dbContext.Aspnetuserroles.Add(aspnetuserrole);
+        _dbContext.SaveChanges();
+    }
      
 }

@@ -108,8 +108,10 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
-                                <input asp-for="Mobile" id="Phone" class="form-control" type="tel" />
-                                <input type="hidden" id="phone_hidden" name="full_phone" />
+                                <input asp-for="Mobile" id="Phone" class="form-control" type="tel" name="Phone" />
+                                <input asp-for="Mobile" type="hidden" id="phone_hidden" name="full_phone" />
+                                @* <input asp-for="Mobile" id="Phone" class="form-control" type="tel" />
+                                <input type="hidden" id="phone_hidden" name="full_phone" /> *@
                             </div>
                             <span asp-validation-for="Mobile" class="text-danger" id="mobile-valid"></span>
                         </div>
@@ -133,10 +135,15 @@
                         </div>
                         <span asp-validation-for="City" class="text-danger"></span>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="form-floating">
-                            <input asp-for="State" type="text" class="form-control" id="state" placeholder="state">
-                            <label asp-for="State" for="floatingInput">State</label>
+                     <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <select asp-for="State" class="form-select mb-3" aria-label="Large select example" placeholder="State">
+                                <option selected disabled>State</option>
+                                @foreach(var item in Model.AllRegionList){
+                                     <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
+                            <label asp-for="State" for="State">State</label>
                         </div>
                         <span asp-validation-for="State" class="text-danger"></span>
                     </div>

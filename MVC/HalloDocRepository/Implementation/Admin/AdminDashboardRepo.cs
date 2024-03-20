@@ -14,7 +14,7 @@ public class AdminDashboardRepo : IAdminDashboardRepo
         _dbContext = dbContext;
     }
 
-    public (IEnumerable<Request> requests, int totalCount) GetNewRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2)
+    public (IEnumerable<Request> requests, int totalCount) GetNewRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2,int region=0)
     {   
         IQueryable<Request> query = _dbContext.Requests
             .Include(req => req.Requestclients)
@@ -23,6 +23,9 @@ public class AdminDashboardRepo : IAdminDashboardRepo
 
         if(reqTypeId>0){
             query = query.Where(req => req.Requesttypeid == reqTypeId);
+        }
+        if(region!=0){
+            query = query.Where(req=>req.Requestclients.FirstOrDefault().Regionid == region);
         }
         if (!string.IsNullOrWhiteSpace(searchBy))
         {
@@ -37,7 +40,7 @@ public class AdminDashboardRepo : IAdminDashboardRepo
         return (query.ToList(),totalCount);
     }
 
-public (IEnumerable<Request> requests, int totalCount) GetPendingStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2)
+public (IEnumerable<Request> requests, int totalCount) GetPendingStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2,int region=0)
 {
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
@@ -47,6 +50,9 @@ public (IEnumerable<Request> requests, int totalCount) GetPendingStatusRequest(s
     if(reqTypeId>0){
         query = query.Where(req => req.Requesttypeid == reqTypeId);
     }
+    if(region!=0){
+            query = query.Where(req=>req.Requestclients.FirstOrDefault().Regionid == region);
+        }
     if (!string.IsNullOrWhiteSpace(searchBy))
     {
         query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
@@ -61,7 +67,7 @@ public (IEnumerable<Request> requests, int totalCount) GetPendingStatusRequest(s
         return (query.ToList(),totalCount);
 }
 
-public (IEnumerable<Request> requests, int totalCount) GetActiveStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2)
+public (IEnumerable<Request> requests, int totalCount) GetActiveStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2,int region=0)
 {
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
@@ -71,6 +77,9 @@ public (IEnumerable<Request> requests, int totalCount) GetActiveStatusRequest(st
     if(reqTypeId>0){
         query = query.Where(req => req.Requesttypeid == reqTypeId);
     }
+    if(region!=0){
+            query = query.Where(req=>req.Requestclients.FirstOrDefault().Regionid == region);
+        }
     if (!string.IsNullOrWhiteSpace(searchBy))
     {
         query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
@@ -86,7 +95,7 @@ public (IEnumerable<Request> requests, int totalCount) GetActiveStatusRequest(st
         return (query.ToList(),totalCount);
 }
 
-public (IEnumerable<Request> requests, int totalCount) GetConcludeStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2)
+public (IEnumerable<Request> requests, int totalCount) GetConcludeStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2,int region=0)
 {
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
@@ -96,6 +105,9 @@ public (IEnumerable<Request> requests, int totalCount) GetConcludeStatusRequest(
     if(reqTypeId>0){
         query = query.Where(req => req.Requesttypeid == reqTypeId);
     }
+    if(region!=0){
+            query = query.Where(req=>req.Requestclients.FirstOrDefault().Regionid == region);
+        }
     if (!string.IsNullOrWhiteSpace(searchBy))
     {
         query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
@@ -110,7 +122,7 @@ public (IEnumerable<Request> requests, int totalCount) GetConcludeStatusRequest(
         return (query.ToList(),totalCount);
 }
 
-public (IEnumerable<Request> requests, int totalCount) GetCloseStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2)
+public (IEnumerable<Request> requests, int totalCount) GetCloseStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2,int region=0)
 {
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
@@ -121,6 +133,9 @@ public (IEnumerable<Request> requests, int totalCount) GetCloseStatusRequest(str
      if(reqTypeId>0){
         query = query.Where(req => req.Requesttypeid == reqTypeId);
     }
+    if(region!=0){
+            query = query.Where(req=>req.Requestclients.FirstOrDefault().Regionid == region);
+        }
     if (!string.IsNullOrWhiteSpace(searchBy))
     {
         query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
@@ -135,7 +150,7 @@ public (IEnumerable<Request> requests, int totalCount) GetCloseStatusRequest(str
         return (query.ToList(),totalCount);
 }
 
-public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2)
+public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2,int region=0)
 {
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
@@ -146,6 +161,9 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         query = query.Where(req => req.Requesttypeid == reqTypeId);
         Console.WriteLine(query);
     }
+    if(region!=0){
+            query = query.Where(req=>req.Requestclients.FirstOrDefault().Regionid == region);
+        }
     if (!string.IsNullOrWhiteSpace(searchBy))
     {
         query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));

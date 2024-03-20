@@ -101,11 +101,16 @@
                           <span asp-validation-for="City" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <div class="form-floating">
-                            <input asp-for="State" type="text" class="form-control" id="State" placeholder="state">
-                            <label asp-for="State" for="State">State</label>
-                          </div>
-                          <span asp-validation-for="State" class="text-danger"></span>
+                        <div class="form-floating ">
+                            <select asp-for="State" class="form-select mb-3" aria-label="Large select example" placeholder="State">
+                                <option selected disabled>State</option>
+                                @foreach(var item in Model.AllRegionList){
+                                     <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
+                            <label asp-for="State" for="Status">State</label>
+                        </div>
+                        <span asp-validation-for="State" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
@@ -179,6 +184,9 @@
             $.ajax({
                 url: '@Url.Action("VerifyEmail", "Request")',
                 type: 'POST',
+                headers: {
+                    'Not-Auth-Required': true 
+                },
                 data: { email: email },
                 success: function (response) {
                     // Handle the response from the server
@@ -208,9 +216,9 @@
                     }
                 },
                 error: function (xhr,status,error) {
-                    if(xhr.status==401){
+                    @* if(xhr.status==401){
                         window.location.href = '/admin/login';                
-                    }
+                    } *@
                     Toastify({
                         text: "Error occurred while verifying email.",
                         duration : 3000,

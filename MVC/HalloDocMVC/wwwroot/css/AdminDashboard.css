@@ -272,7 +272,9 @@ tbody tr td .btn:hover{
         from {border: 10px solid #ffefbd;}
         to {border: 0 solid #ffefbd;}
       }
-
+.table-info-btn a{
+    cursor: pointer;
+}
 @media only screen and (max-width: 1024px){
     .table-info-btn a{
         font-size: 12px;

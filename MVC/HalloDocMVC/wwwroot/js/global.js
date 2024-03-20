@@ -27,19 +27,19 @@ $("#theme-btn").click(function(){
     }
 })
 
-var storedTab = localStorage.getItem("tab");
-if(storedTab){
-    $("#adminDashTab li").each(function(){
-        if($(this).data("id")==storedTab){
-            $("#adminDashTab li a").removeClass("active");
-            $(this).addClass("active").find("a").addClass("active");
-        }
-    })
-}
+// var storedTab = localStorage.getItem("tab");
+// if(storedTab){
+//     $("#adminDashTab li").each(function(){
+//         if($(this).data("id")==storedTab){
+//             $("#adminDashTab li a").removeClass("active");
+//             $(this).addClass("active").find("a").addClass("active");
+//         }
+//     })
+// }
 
-$("#adminDashTab li").click(function(e) {
-    localStorage.setItem('tab', $(this).data("id"));
-})
+// $("#adminDashTab li").click(function(e) {
+//     localStorage.setItem('tab', $(this).data("id"));
+// })
 
 var themePreference = getThemePreference();
     if (themePreference) {
@@ -73,12 +73,6 @@ const flagAnswer = contactWithFlag(MobileField);
 const flagAnswer1 = phoneInputField && contactWithFlag(phoneInputField)
 
 const flagAnswer2 = contactWithFlag(phoneInputPatientField);
-
-
-
-
-
-
 
 function submitForm(){
     
@@ -121,10 +115,10 @@ function submitForm(){
     }
     if(phoneNumber1){
         if(phoneNumber.includes("+")){
-            const fullPhone = `${phoneNumber}`;
+            const fullPhone = `${phoneNumber1}`;
             $("#Mobile").val(fullPhone);
         }else{
-            const fullPhone = `+${countryCode}${phoneNumber}`;
+            const fullPhone = `+${countryCodeForSecondPhone}${phoneNumber1}`;
             $("#Mobile").val(fullPhone);
         }
     }
@@ -180,4 +174,37 @@ function ToastError(message){
             background: "linear-gradient(to right, #dc3545, #c82333)", // Red background for error message
         }
     }).showToast();
+}
+
+
+
+function AddCountryCode(){
+    const countryCode = flagAnswer && flagAnswer.s.dialCode;
+    const countryCodeForSecondPhone = flagAnswer1 && flagAnswer1.s.dialCode;
+    const phoneNumber = $("#Mobile").val();
+    const phoneNumber1 = $("#Phone").val();
+    if(phoneNumber){
+        if(phoneNumber.includes("+")){
+            const fullPhone = `${phoneNumber}`;
+            $("#Mobile").val(fullPhone);
+            
+        }else{
+            const fullPhone = `+${countryCode}${phoneNumber}`;
+            $("#Mobile").val(fullPhone);
+        }
+    }
+    if(phoneNumber1){
+        if(phoneNumber1.includes("+")){
+            const fullPhone = `${phoneNumber1}`;
+            $("#Phone").val(fullPhone);
+        }else{
+            const fullPhone = `+${countryCodeForSecondPhone}${phoneNumber1}`;
+            $("#Phone").val(fullPhone);
+        }
+    }
+}
+
+const SubmitFormWithPhone = (FormId) => {
+    AddCountryCode();
+    $(`#${FormId}`).submit();
 }

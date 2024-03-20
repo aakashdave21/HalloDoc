@@ -246,16 +246,7 @@
                                                           </ul> 
                                                           break;
                                         }
-                                    }
-                                   
-                                        @* <li><a class="dropdown-item" href="#">View Uploads</a></li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#transferModal">Transfer</a></li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#clearCaseModal">Clear Case</a></li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#sendAgreementModal">Send Agreement</a></li> *@
-                                    
+                                    }  
                                 </td>
                             </tr>
                         }
@@ -332,7 +323,7 @@
                                                 </a>
                                             </div>
                                             <div class="col-6">
-                                                <a class="btn btn-sm btn-danger">
+                                                <a class="btn btn-sm btn-danger" onclick="populateCancleCaseModal('@item.Firstname','@item.Lastname','@item.Id')">
                                                     Cancle Case
                                                 </a>
                                             </div>
@@ -342,14 +333,14 @@
                                                 </a>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-danger">
+                                                <button class="btn btn-sm btn-danger" onclick="populateBlockCaseModal('@item.Id','@item.Firstname','@item.Lastname')">
                                                     Block Patient
                                                 </button>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" href="mailto:@item.Email">
                                                     Email
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -388,6 +379,11 @@
                             </h2>
                             <div id="panelsStayOpen-collapse-@index" class="accordion-collapse collapse">
                                 <div class="accordion-body">
+                                    <div class="d-flex justify-content-end">
+                                        <a class="btn btn-sm btn-secondary" href="/admin/dashboard/ViewCase/@item.Id">
+                                            View Case
+                                        </a>
+                                    </div>
                                     <div>
                                         <p>Date of Birth : <span>@item.BirthDate</span> </p>
                                         <p>Email : <span>@item.Email</span> </p>
@@ -401,34 +397,34 @@
                                     <div class="req-btns mt-2">
                                         <div class="row g-2">
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-warning">
-                                                    Send Agreement
+                                                <button class="btn btn-sm btn-warning" onclick="populateSendAgreement('@item.Id','@item.Email','@item.Phonenumber')">
+                                                    Send Agreement 
                                                 </button>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" href="/admin/dashboard/ViewNotes/@item.Id">
                                                     View Notes
-                                                </button>
+                                                </a>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-info">
+                                                <button class="btn btn-sm btn-info" onclick="populateTransferCase('@item.Id','@item.PhysicianId')">
                                                     Transfer
                                                 </button>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success"  asp-area="Admin" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id">
                                                     View Uplaods
-                                                </button>
+                                                </a>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-warning">
+                                                <button class="btn btn-sm btn-warning" onclick="populateClearCase('@item.Id')">
                                                     Clear Case
                                                 </button>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" href="mailto:@item.Email">
                                                     Email
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -467,6 +463,11 @@
                             </h2>
                             <div id="panelsStayOpen-collapse-@index" class="accordion-collapse collapse">
                                 <div class="accordion-body">
+                                    <div class="d-flex justify-content-end">
+                                        <a class="btn btn-sm btn-secondary" href="/admin/dashboard/ViewCase/@item.Id">
+                                            View Case
+                                        </a>
+                                    </div>
                                     <div>
                                         <p>Date of Birth : <span>@item.BirthDate</span> </p>
                                         <p>Email : <span>@item.Email</span> </p>
@@ -482,34 +483,30 @@
                                     <div class="req-btns mt-2">
                                         <div class="row g-2">
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" href="/admin/dashboard/ViewNotes/@item.Id">
                                                     View Notes
-                                                </button>
+                                                </a>
                                             </div>
+                
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
-                                                    Doctor Notes
-                                                </button>
-                                            </div>
-                                            <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" asp-area="Admin" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id">
                                                     View Uploads
-                                                </button>
+                                                </a>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <button class="btn btn-sm btn-success" onclick="populateEncounter('@item.Id')">
                                                     Encounter
                                                 </button>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-warning">
+                                                <button class="btn btn-sm btn-warning" asp-area="Admin" asp-controller="Dashboard" asp-action="SendOrder" asp-route-RequestId="@item.Id">
                                                     Orders
                                                 </button>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" href="mailto:@item.Email">
                                                     Email
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -548,6 +545,11 @@
                             </h2>
                             <div id="panelsStayOpen-collapse-@index" class="accordion-collapse collapse">
                                 <div class="accordion-body">
+                                    <div class="d-flex justify-content-end">
+                                        <a class="btn btn-sm btn-secondary" href="/admin/dashboard/ViewCase/@item.Id">
+                                            View Case
+                                        </a>
+                                    </div>
                                     <div>
                                         <p>Date of Birth : <span>@item.BirthDate</span> </p>
                                         <p>Email : <span>@item.Email</span> </p>
@@ -559,34 +561,34 @@
                                     <div class="req-btns mt-2">
                                         <div class="row g-2">
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" href="/admin/dashboard/ViewNotes/@item.Id">
                                                     View Notes
-                                                </button>
+                                                </a>
                                             </div>
+                                          
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
-                                                    Doctor Notes
-                                                </button>
-                                            </div>
-                                            <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" asp-area="Admin" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id">
                                                     View Uploads
-                                                </button>
+                                                </a>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                @using(Html.BeginForm("Encounter","Dashboard",new { area = "admin" }, FormMethod.Post)){
+                                                                        <input type="hidden" name="RequestId" value="@item.Id"/>
+                                                                        <a class="btn btn-sm btn-success"><button type="submit" style="all:unset;">Encounter</button></a> 
+                                                                    }
+                                                @* <button class="btn btn-sm btn-success">
                                                     Encounter
-                                                </button>
+                                                </button> *@
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-warning">
+                                                <a class="btn btn-sm btn-warning" asp-area="Admin" asp-controller="Dashboard" asp-action="SendOrder" asp-route-RequestId="@item.Id">
                                                     Orders
-                                                </button>
+                                                </a>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" href="mailto:@item.Email">
                                                     Email
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -625,6 +627,11 @@
                             </h2>
                             <div id="panelsStayOpen-collapse-@index" class="accordion-collapse collapse">
                                 <div class="accordion-body">
+                                    <div class="d-flex justify-content-end">
+                                        <a class="btn btn-sm btn-secondary" href="/admin/dashboard/ViewCase/@item.Id">
+                                            View Case
+                                        </a>
+                                    </div>
                                     <div>
                                         <p>Date of Birth : <span>@item.BirthDate</span> </p>
                                         <p>Email : <span>@item.Email</span> </p>
@@ -639,39 +646,41 @@
                                     <div class="req-btns mt-2">
                                         <div class="row g-2">
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-danger">
-                                                    Close Case
-                                                </button>
+                                                 @using(Html.BeginForm("CloseCase", "Dashboard", new { area = "Admin" }, FormMethod.Post)){
+                                                                        <input type="hidden" name="RequestId" value="@item.Id"/>
+                                                                        <a class="btn btn-sm btn-danger"><button type="submit" style="all:unset;">Close Case</button></a> 
+                                                                    }
+                                              
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" href="/admin/dashboard/ViewNotes/@item.Id">
                                                     View Notes
-                                                </button>
+                                                </a>
                                             </div>
+                                           
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
-                                                    Doctor Notes
-                                                </button>
-                                            </div>
-                                            <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" asp-area="Admin" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id">
                                                     View Uploads
-                                                </button>
+                                                </a>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                @using(Html.BeginForm("Encounter","Dashboard",new { area = "admin" }, FormMethod.Post)){
+                                                                        <input type="hidden" name="RequestId" value="@item.Id"/>
+                                                                        <a  class="btn btn-sm btn-success"><button type="submit" style="all:unset;">Encounter</button></a> 
+                                                                    }
+                                                @* <button class="btn btn-sm btn-success" >
                                                     Encounter
-                                                </button>
+                                                </button> *@
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-warning">
+                                                <button class="btn btn-sm btn-warning" onclick="populateClearCase('@item.Id')">
                                                     Clear Case
                                                 </button>
                                             </div>
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" href="mailto:@item.Email">
                                                     Email
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -710,6 +719,11 @@
                             </h2>
                             <div id="panelsStayOpen-collapse-@index" class="accordion-collapse collapse">
                                 <div class="accordion-body">
+                                    <div class="d-flex justify-content-end">
+                                        <a class="btn btn-sm btn-secondary" href="/admin/dashboard/ViewCase/@item.Id">
+                                            View Case
+                                        </a>
+                                    </div>
                                     <div>
                                         <p>Email : <span>@item.Email</span> </p>
                                         <p>Patient : <span>@item.Firstname , @item.Lastname</span> </p>
@@ -722,21 +736,21 @@
                                         <div class="row g-2">
 
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" href="/admin/dashboard/ViewNotes/@item.Id">
                                                     View Notes
-                                                </button>
+                                                </a>
                                             </div>
 
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" asp-area="Admin" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id">
                                                     View Uploads
-                                                </button>
+                                                </a>
                                             </div>
 
                                             <div class="col-6">
-                                                <button class="btn btn-sm btn-success">
+                                                <a class="btn btn-sm btn-success" href="mailto:@item.Email">
                                                     Email
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>

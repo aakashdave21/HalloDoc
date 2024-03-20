@@ -12,5 +12,9 @@ public interface IPatientRequestService
     Task<int> ProcessBusinessRequestAsync(BusinessRequestViewModel businessView);
     
     void StoreActivationToken(int AspUserId , string token, DateTime expiry);
+
+    IEnumerable<RegionList> GetAllRegions();
+
+    
     
 }

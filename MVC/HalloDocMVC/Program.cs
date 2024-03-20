@@ -89,7 +89,7 @@ app.Use(async (context, next) =>
 {
 
     ClaimsPrincipal claimUser = context.User;
-    if (context.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && claimUser.Identity.IsAuthenticated==false){
+    if (context.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && claimUser.Identity.IsAuthenticated==false && context.Request.Headers["Not-Auth-Required"] != "true"){
         Console.WriteLine("In this Middlewear");
         context.Response.StatusCode = 401;
         return;

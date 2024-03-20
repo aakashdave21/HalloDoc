@@ -23,12 +23,16 @@ public class DashboardController : Controller
     private readonly IDashboardService _dashboardService;
     private readonly IWebHostEnvironment _hostingEnvironment;
     private readonly IPatientRequestService _patientRequestService;
+    private readonly IUtilityService _utilityService;
 
-    public DashboardController(IDashboardService dashboardService, IWebHostEnvironment hostingEnvironment,IPatientRequestService patientRequestService)
+
+    public DashboardController(IDashboardService dashboardService, IWebHostEnvironment hostingEnvironment,IPatientRequestService patientRequestService,IUtilityService utilityService)
     {
         _dashboardService = dashboardService;
         _hostingEnvironment = hostingEnvironment;
         _patientRequestService = patientRequestService;
+        _utilityService = utilityService;
+
     }
 
     public async Task<IActionResult> Index()
@@ -266,6 +270,8 @@ public class DashboardController : Controller
                 Email = userData.Email,
                 Mobile = userData.Mobile
             };
+            newPatientRequest.AllRegionList = _patientRequestService.GetAllRegions();
+        
             return View(newPatientRequest);
         }
         catch (Exception e)
@@ -279,18 +285,9 @@ public class DashboardController : Controller
     [HttpPost]
     public async Task<IActionResult> NewRequestPost(PatientRequestViewModel viewRequest,IFormFile file){
         Console.WriteLine("ModelState errors:");
-            foreach (var modelStateKey in ModelState.Keys)
-            {
-                var modelStateVal = ModelState[modelStateKey];
-                foreach (var error in modelStateVal.Errors)
-                {
-
-                    Console.WriteLine($"{modelStateKey}: {error.ErrorMessage}");
-                }
-            }
-
         if (!ModelState.IsValid)
         {   
+            viewRequest.AllRegionList = _patientRequestService.GetAllRegions();
             TempData["error"] = "Something went wrong! Please enter your details correct";
             return View(nameof(NewRequest), viewRequest); // Return the view with validation errors
         }
@@ -339,24 +336,18 @@ public class DashboardController : Controller
             FamilyEmail = userData.Email,
             FamilyPhonenumber = userData.Mobile
         };
+
+        familyRequest.AllRegionList = _patientRequestService.GetAllRegions();
+
         
         return View(familyRequest);
     }
 
     [HttpPost]
     public async Task<IActionResult> AnotherUserRequestPost(FamilyRequestViewModel familyRequest,IFormFile file){
-        Console.WriteLine("ModelState errors:");
-                foreach (var modelStateKey in ModelState.Keys)
-                {
-                    var modelStateVal = ModelState[modelStateKey];
-                    foreach (var error in modelStateVal.Errors)
-                    {
-
-                        Console.WriteLine($"{modelStateKey}: {error.ErrorMessage}");
-                    }
-                }
             if (!ModelState.IsValid)
             {   
+                familyRequest.AllRegionList = _patientRequestService.GetAllRegions();
                 TempData["error"] = "Something went wrong! Please enter your details correct";
                 return View(nameof(AnotherUserRequest), familyRequest); // Return the view with validation errors
             }
@@ -379,6 +370,14 @@ public class DashboardController : Controller
                     // Update the view model with the file path
                     familyRequest.FilePath = filePath;
                 }
+                int userId = await _patientRequestService.ProcessFamilyRequestAsync(familyRequest);
+
+                if(userId!=0){
+                    TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
+                    SendCreationLink(userId);
+                }else{
+                    TempData["success"] = "Request Submitted Successfully";
+                }
                 await _patientRequestService.ProcessFamilyRequestAsync(familyRequest);
                 TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
                 return RedirectToAction("Index", "PatientLogin");
@@ -389,6 +388,25 @@ public class DashboardController : Controller
                 TempData["error"] = "An error occurred while saving the data.";
                 return View(nameof(AnotherUserRequest), familyRequest);
             }
+    }
+
+    private async Task SendCreationLink(int userId){
+        try
+        {
+            // Activation Email Sent To Patient
+                string token = Guid.NewGuid().ToString();
+                var createAccountLink = Url.Action("Index","SignUp",new { area = "Patient", userId, token }, Request.Scheme);
+                DateTime expirationTime = DateTime.UtcNow.AddHours(1);
+                _patientRequestService.StoreActivationToken(userId,token,expirationTime);
+                string rcvrMail = "aakashdave21@gmail.com";
+                await _utilityService.EmailSend(createAccountLink,rcvrMail);
+        }
+        catch (Exception e)
+        {
+            TempData["error"] = "Error While Sending Mail";
+            throw;
+        }
+                
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

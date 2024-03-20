@@ -9,6 +9,7 @@ using HalloDocService.ViewModels;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using HalloDocMVC.Services;
 
 
 namespace HalloDocMVC.Controllers;
@@ -65,10 +66,11 @@ public class PatientLoginController : Controller
         if (userEmail != null)
         {
             string storedHashPassword = userEmail.Passwordhash;
-            // var isPasswordCorrect = PasswordHasher.VerifyPassword(user.Passwordhash , storedHashPassword);  <<<<<<< For Hashing
-            var isPasswordCorrect = _patientLoginService.VerifyPassword(user.Passwordhash, storedHashPassword);
+            var isPasswordCorrectHashed = PasswordHasher.VerifyPassword(user.Passwordhash , storedHashPassword);
+            // Console.WriteLine(isPasswordCorrectHashed + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+            // var isPasswordCorrect = _patientLoginService.VerifyPassword(user.Passwordhash, storedHashPassword);
 
-            if (isPasswordCorrect && IsPatient)
+            if (isPasswordCorrectHashed && IsPatient)
             {
                 var userDetails = _patientLoginService.UserDetailsFetch(userEmail.Email);
 
@@ -79,7 +81,7 @@ public class PatientLoginController : Controller
                     new Claim(ClaimTypes.NameIdentifier, user.Email),
                     new Claim(ClaimTypes.Name, userEmail.Username),
                     new Claim("UserId", userDetails.Id.ToString()),
-                    new Claim("OtherProperties","Example Role")
+                    new Claim("AspUserId",userDetails.Aspnetuser.Id.ToString() ?? ""),
                 };
                 
                 if(IsAdmin){

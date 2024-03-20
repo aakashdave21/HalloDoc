@@ -58,15 +58,19 @@ public class DashboardController : Controller
         viewModel.ToCloseState = countDictionary["close"];
         viewModel.UnPaidState = countDictionary["unpaid"];
 
-        string? searchBy = Request.Query["searchBy"];
+        string? searchBy = null;
+            if(Request.Query["searchBy"] != "null"){
+                searchBy = Request.Query["searchBy"];
+            }
+        int Regions = 0;
+        if(Request.Query["region"] != "0"){
+            Regions = !string.IsNullOrEmpty(Request.Query["region"]) ? int.TryParse(Request.Query["region"], out int regionValue) ? regionValue : 0 : 0;
+        }
         int pageNumber = Request.Query.TryGetValue("pageNumber", out var pageNumberValue) ? int.Parse(pageNumberValue) : 1;
-
         int pageSize = Request.Query.TryGetValue("pageSize", out var pageSizeValue) ? int.Parse(pageSizeValue) : 5;
-
         int reqType = 0;
         ViewBag.currentPage = pageNumber;
         ViewBag.currentPageSize = pageSize;
-
         int startIndex = (pageNumber - 1) * pageSize + 1;
 
         if (!string.IsNullOrEmpty(Request.Query["requesttype"]))
@@ -76,73 +80,44 @@ public class DashboardController : Controller
         switch (status)
         {
             case "new":
-                myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize);
-                viewModel.TotalPage = myresult.totalCount;
-                viewModel.Requests = myresult.req;
-                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
-                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
-                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
+                myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+ 
                 break;
             case "pending":
-                myresult = _adminDashboardService.GetPendingStatusRequest(searchBy, reqType, pageNumber, pageSize);
-                viewModel.TotalPage = myresult.totalCount;
-                viewModel.Requests = myresult.req;
-                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
-                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
-                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
+                myresult = _adminDashboardService.GetPendingStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+  
                 break;
             case "active":
-                myresult = _adminDashboardService.GetActiveStatusRequest(searchBy, reqType, pageNumber, pageSize);
-                viewModel.TotalPage = myresult.totalCount;
-                viewModel.Requests = myresult.req;
-                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
-                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
-                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
+                myresult = _adminDashboardService.GetActiveStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+       
                 break;
             case "conclude":
-                myresult = _adminDashboardService.GetConcludeStatusRequest(searchBy, reqType, pageNumber, pageSize);
-                viewModel.TotalPage = myresult.totalCount;
-                viewModel.Requests = myresult.req;
-                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
-                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
-                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
+                myresult = _adminDashboardService.GetConcludeStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+               
                 break;
             case "close":
-                myresult = _adminDashboardService.GetCloseStatusRequest(searchBy, reqType, pageNumber, pageSize);
-                viewModel.TotalPage = myresult.totalCount;
-                viewModel.Requests = myresult.req;
-                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
-                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
-                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
+                myresult = _adminDashboardService.GetCloseStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                
                 break;
             case "unpaid":
-                myresult = _adminDashboardService.GetUnpaidStatusRequest(searchBy, reqType, pageNumber, pageSize);
-                viewModel.TotalPage = myresult.totalCount;
-                viewModel.Requests = myresult.req;
-                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
-                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
-                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
+                myresult = _adminDashboardService.GetUnpaidStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+
                 break;
             default:
-                myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize);
-                viewModel.TotalPage = myresult.totalCount;
+                myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                
+                break;
+        }
+
+        viewModel.TotalPage = myresult.totalCount;
                 viewModel.Requests = myresult.req;
                 viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
                 viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
                 viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
-                break;
-        }
 
         // Check if the request is made via AJAX
         if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
         {
-            // var JsonData = new {
-            //     PartialView = PartialView("_AdminDashboardTable", viewModel).RenderToString(),
-            //     otherData = viewModel
-            // };
-
-            // return Json(JsonData);
-
             return PartialView("_AdminDashboardTable", viewModel);
         }
         else
@@ -855,8 +830,6 @@ public class DashboardController : Controller
         }
     }
 
-
-
     [HttpPost]
     public IActionResult HouseCallEncounter(string requestId, string status)
     {
@@ -870,6 +843,25 @@ public class DashboardController : Controller
         catch (System.Exception ex)
         {
             return BadRequest("Error: " + ex.Message);
+        }
+    }
+    [HttpPost]
+    public IActionResult SendCreationLink(IFormCollection formData)
+    {
+        try
+        {
+            Console.WriteLine(formData["email"] + "<<<<<<<<<<<<<<<<<<<<<<<<");
+            string CreateServiceLink = Url.Action("Patient", "Request", new { area = "Patient" }, Request.Scheme);
+            string rcvrMail = "aakashdave21@gmail.com";
+            Console.WriteLine(CreateServiceLink + "<<<<<<<<<<<<<<<<<<<<<<<<");
+            _utilityService.EmailSend(CreateServiceLink, rcvrMail);
+            TempData["success"] = "Account Creation Link Send !";
+            return RedirectToAction("Index");
+        }
+        catch (System.Exception ex)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("Index");
         }
     }
 
@@ -889,11 +881,28 @@ public class DashboardController : Controller
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Sheet1");
 
-            worksheet.Cell(1, 1).Value = "FirstName";
+            // Set header text, style, and borders
+            var headerStyle = worksheet.Range("A1:E1").Style;
+            headerStyle.Font.Bold = true;
+            headerStyle.Fill.BackgroundColor = XLColor.LightGray;
+            headerStyle.Border.BottomBorder = XLBorderStyleValues.Thin;
+            headerStyle.Fill.BackgroundColor = XLColor.FromHtml("#4F81BD");
+            headerStyle.Font.FontColor = XLColor.FromHtml("#DCE6F1");
+
+            worksheet.Cell(1, 1).Value = "PatientName";
+            worksheet.Column(1).Width = 15;
+
             worksheet.Cell(1, 2).Value = "EmailId";
+            worksheet.Column(2).Width = 30;
+
             worksheet.Cell(1, 3).Value = "Dob";
+            worksheet.Column(3).Width = 15;
+
             worksheet.Cell(1, 4).Value = "Patient Contact";
+            worksheet.Column(4).Width = 15;
+
             worksheet.Cell(1, 5).Value = "Address";
+            worksheet.Column(5).Width = 50;
 
             int row = 2;
             foreach (var item in data)
@@ -904,8 +913,14 @@ public class DashboardController : Controller
                     worksheet.Cell(row, 1).Value = item.Requestclients.FirstOrDefault()?.Firstname + " " + item.Requestclients.FirstOrDefault()?.Lastname;
                     worksheet.Cell(row, 2).Value = item.User.Email;
                     worksheet.Cell(row, 3).Value = item.User.Birthdate.ToString();
-                    worksheet.Cell(row, 4).Value = item.User.Mobile;
+                    worksheet.Cell(row, 4).Value = item.User.Mobile.ToString();
                     worksheet.Cell(row, 5).Value = item.Requestclients.FirstOrDefault()?.Street + ", " + item.Requestclients.FirstOrDefault()?.City + ", " + item.Requestclients.FirstOrDefault()?.State + ", " + item.Requestclients.FirstOrDefault()?.Zipcode;
+
+                    // Apply data body styling
+                    var dataRange = worksheet.Range(worksheet.Cell(row, 1), worksheet.Cell(row, 5));
+                    var dataCellStyle = dataRange.Style;
+                    dataCellStyle.Fill.BackgroundColor = XLColor.FromHtml("#DCE6F1") ;
+                    dataCellStyle.Font.FontColor = XLColor.FromHtml("#4F81BD");
                     row++;
                 }
                 else
@@ -932,12 +947,148 @@ public class DashboardController : Controller
         }
     }
 
+    public IActionResult ExportData(string status)
+    {
+        try
+        {
+            AdminDashboardViewModel viewModel = new();
+            (List<RequestViewModel> req, int totalCount) myresult;
+            string? searchBy = null;
+            if(Request.Query["searchBy"] != "null"){
+                searchBy = Request.Query["searchBy"];
+            }
+            int pageNumber = Request.Query.TryGetValue("pageNumber", out var pageNumberValue) ? int.Parse(pageNumberValue) : 1;
+            int pageSize = Request.Query.TryGetValue("pageSize", out var pageSizeValue) ? int.Parse(pageSizeValue) : 5;
+            int reqType = 0;
+            if (!string.IsNullOrEmpty(Request.Query["requesttype"]))
+            {
+                int.TryParse(Request.Query["requesttype"], out reqType);
+            }
+            int Regions = 0;
+            if(Request.Query["region"] != "0"){
+                Regions = !string.IsNullOrEmpty(Request.Query["region"]) ? int.TryParse(Request.Query["region"], out int regionValue) ? regionValue : 0 : 0;
+            }
+
+
+            switch (status)
+            {
+                case "new":
+                    myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    break;
+                case "pending":
+                    myresult = _adminDashboardService.GetPendingStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    break;
+                case "active":
+                    myresult = _adminDashboardService.GetActiveStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    break;
+                case "conclude":
+                    myresult = _adminDashboardService.GetConcludeStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    break;
+                case "close":
+                    myresult = _adminDashboardService.GetCloseStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    break;
+                case "unpaid":
+                    myresult = _adminDashboardService.GetUnpaidStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    break;
+                default:
+                    myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    break;
+            }
+
+            viewModel.TotalPage = myresult.totalCount;
+            viewModel.Requests = myresult.req;
+
+            if (myresult.req == null)
+            {
+                // Handle case where data is null
+                TempData["error"] = "No data found";
+                return BadRequest(new {message = "No data found"});
+            }
+
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("DataSheet1");
+
+            // Set header text, style, and borders
+            var headerStyle = worksheet.Range("A1:J1").Style;
+            headerStyle.Font.Bold = true;
+            headerStyle.Fill.BackgroundColor = XLColor.FromHtml("#4F81BD");
+            headerStyle.Font.FontColor = XLColor.FromHtml("#DCE6F1");
+            headerStyle.Border.BottomBorder = XLBorderStyleValues.Thin;
+            headerStyle.Border.BottomBorderColor = XLColor.Black;
+
+            worksheet.Cell(1, 1).Value = "RequestId";
+            worksheet.Cell(1, 2).Value = "Patient Name";
+            worksheet.Column(2).Width = 20;
+            worksheet.Cell(1, 3).Value = "Dob";
+            worksheet.Column(3).Width = 15;
+            worksheet.Cell(1, 4).Value = "Requestor";
+            worksheet.Column(4).Width = 15;
+            worksheet.Cell(1, 5).Value = "Requested Date";
+            worksheet.Column(5).Width = 15;
+            worksheet.Cell(1, 6).Value = "Patient Contact";
+            worksheet.Column(6).Width = 15;
+            worksheet.Cell(1, 7).Value = "Patient Address";
+            worksheet.Column(7).Width = 45;
+            worksheet.Cell(1, 8).Value = "Notes";
+            worksheet.Column(8).Width = 40;
+            worksheet.Cell(1, 9).Value = "Physician";
+            worksheet.Column(9).Width = 15;
+            worksheet.Cell(1, 10).Value = "Region";
+            worksheet.Column(10).Width = 15;
+        
+
+            int row = 2;
+            foreach (var item in myresult.req)
+            {
+                // Check for null references in the item and related entities
+                if (item != null)
+                {
+                    worksheet.Cell(row, 1).Value = item.Id;
+                    worksheet.Cell(row, 2).Value = item.Firstname + " " + item.Lastname;
+                    worksheet.Cell(row, 3).Value = item.BirthDate;
+                    worksheet.Cell(row, 4).Value = item.Requestor;
+                    worksheet.Cell(row, 5).Value = item.RequestedDate;
+                    worksheet.Cell(row, 6).Value = item.Phonenumber;
+                    worksheet.Cell(row, 7).Value = item.Address;
+                    worksheet.Cell(row, 8).Value = item.Notes;
+                    worksheet.Cell(row, 9).Value = item.PhysicianName;
+                    worksheet.Cell(row, 10).Value = item.Region;
+
+                    // Apply data body styling
+                    var dataRange = worksheet.Range(worksheet.Cell(row, 1), worksheet.Cell(row, 10));
+                    var dataCellStyle = dataRange.Style;
+                     dataCellStyle.Fill.BackgroundColor = XLColor.FromHtml("#DCE6F1") ;
+                        dataCellStyle.Font.FontColor = XLColor.FromHtml("#4F81BD");
+                    row++;
+                }
+                else
+                {
+                    // Log the null reference or handle it appropriately
+                    Console.WriteLine("Null reference detected in item: " + item);
+                }
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                workbook.SaveAs(stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                var content = stream.ToArray();
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "data.xlsx");
+            }
+        }
+        catch (Exception e)
+        {
+            // Log the exception
+            Console.WriteLine(e);
+            TempData["error"] = "Internal Server Error";
+            return BadRequest(new { message = "Exported Successfully" });
+        }
+    }
     public async Task<IActionResult> LogOut()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Index", "Login");
     }
-
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

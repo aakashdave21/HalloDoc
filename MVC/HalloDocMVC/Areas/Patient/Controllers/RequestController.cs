@@ -3,12 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using HalloDocMVC.Models;
 using HalloDocService.Interfaces;
 using HalloDocService.ViewModels;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+using HalloDocMVC.Services;
 
 namespace HalloDocMVC.Controllers;
 
@@ -31,26 +26,18 @@ public class RequestController : Controller
     // Patient Request Page
     public IActionResult Patient()
     {
-        return View();
+        PatientRequestViewModel newPatientRequest = new();
+        newPatientRequest.AllRegionList = _patientRequestService.GetAllRegions();
+        return View(newPatientRequest);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> PatientPost(PatientRequestViewModel viewRequest,IFormFile file)
     {   
-          Console.WriteLine("ModelState errors:");
-            foreach (var modelStateKey in ModelState.Keys)
-            {
-                var modelStateVal = ModelState[modelStateKey];
-                foreach (var error in modelStateVal.Errors)
-                {
-
-                    Console.WriteLine($"{modelStateKey}: {error.ErrorMessage}");
-                }
-            }
-
             if (!ModelState.IsValid)
             {   
+                viewRequest.AllRegionList = _patientRequestService.GetAllRegions();
                 TempData["error"] = "Something went wrong! Please enter your details correct";
                 return View(nameof(Patient), viewRequest); // Return the view with validation errors
             }
@@ -75,6 +62,9 @@ public class RequestController : Controller
                 viewRequest.FilePath = filePath;
             }
 
+                string hashedPassword = PasswordHasher.HashPassword(viewRequest.Passwordhash);
+                viewRequest.Passwordhash = hashedPassword;
+
                 await _patientRequestService.ProcessPatientRequestAsync(viewRequest);
                 TempData["success"] = "Request Submitted Successfully";
                 return RedirectToAction("Index", "PatientLogin");
@@ -89,8 +79,6 @@ public class RequestController : Controller
     }
 
 
-
-    // EMAIL VERIFICATION AT REQUEST PAGE
     [HttpPost]
     public async Task<IActionResult> VerifyEmail(string email)
     {
@@ -120,23 +108,15 @@ public class RequestController : Controller
     // Family Request Page
     public IActionResult Family()
     {
-        return View();
+        FamilyRequestViewModel newFamilyRequest = new();
+        newFamilyRequest.AllRegionList = _patientRequestService.GetAllRegions();
+        return View(newFamilyRequest);
     }
 
     public async Task<IActionResult> FamilyPost(FamilyRequestViewModel familyRequest,IFormFile file){
-
-            Console.WriteLine("ModelState errors:");
-                foreach (var modelStateKey in ModelState.Keys)
-                {
-                    var modelStateVal = ModelState[modelStateKey];
-                    foreach (var error in modelStateVal.Errors)
-                    {
-
-                        Console.WriteLine($"{modelStateKey}: {error.ErrorMessage}");
-                    }
-                }
             if (!ModelState.IsValid)
             {   
+                familyRequest.AllRegionList = _patientRequestService.GetAllRegions();
                 TempData["error"] = "Something went wrong! Please enter your details correct";
                 return View(nameof(Family), familyRequest); // Return the view with validation errors
             }
@@ -145,29 +125,24 @@ public class RequestController : Controller
                 // File Upload Logic
                 if(file!=null && file.Length > 0){
                     var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                    // Ensure the uploads folder exists, create it if not
                     if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
-                    // Generate a unique file name for the uploaded file
                     var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(file.FileName);
-                    // Combine the uploads folder path with the unique file name to get the full file path
                     var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    // Adding or copying the uploaded file to Server
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
                     }
-                    // Update the view model with the file path
                     familyRequest.FilePath = filePath;
                 }
                 int userId = await _patientRequestService.ProcessFamilyRequestAsync(familyRequest);
 
                 if(userId!=0){
+                    TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
                     SendCreationLink(userId);
+                }else{
+                    TempData["success"] = "Request Submitted Successfully";
                 }
                 
-
-
-                TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
                 return RedirectToAction("Index", "PatientLogin");
             }
             catch{
@@ -179,23 +154,15 @@ public class RequestController : Controller
     }
 
     public IActionResult Concierge(){
-        return View();
+        ConciergeRequestViewModel newConciergeRequest = new();
+        newConciergeRequest.AllRegionList = _patientRequestService.GetAllRegions();
+        return View(newConciergeRequest);
     }
 
     public async Task<IActionResult> ConciergePost(ConciergeRequestViewModel conciergeRequest){
-
-            Console.WriteLine("ModelState errors:");
-                foreach (var modelStateKey in ModelState.Keys)
-                {
-                    var modelStateVal = ModelState[modelStateKey];
-                    foreach (var error in modelStateVal.Errors)
-                    {
-
-                        Console.WriteLine($"{modelStateKey}: {error.ErrorMessage}");
-                    }
-                }
             if (!ModelState.IsValid)
             {   
+                conciergeRequest.AllRegionList = _patientRequestService.GetAllRegions();
                 TempData["error"] = "Something went wrong! Please enter your details correct";
                 return View(nameof(Concierge), conciergeRequest); // Return the view with validation errors
             }
@@ -203,9 +170,12 @@ public class RequestController : Controller
                 int userId = await _patientRequestService.ProcessConciergeRequestAsync(conciergeRequest);
                 
                 if(userId!=0){
+                    TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
                     SendCreationLink(userId);
+                }else{
+                    TempData["success"] = "Request Submitted Successfully";
                 }
-                TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
+
                 return RedirectToAction("Index", "PatientLogin");
             }
             catch{
@@ -221,22 +191,15 @@ public class RequestController : Controller
 
     // Business Request
     public IActionResult Business(){
-        return View();
+         BusinessRequestViewModel newBusinessRequest = new();
+        newBusinessRequest.AllRegionList = _patientRequestService.GetAllRegions();
+        return View(newBusinessRequest);
     }
 
         public async Task<IActionResult> BusinessPost(BusinessRequestViewModel businessRequests){
-            Console.WriteLine("ModelState errors:");
-                foreach (var modelStateKey in ModelState.Keys)
-                {
-                    var modelStateVal = ModelState[modelStateKey];
-                    foreach (var error in modelStateVal.Errors)
-                    {
-
-                        Console.WriteLine($"{modelStateKey}: {error.ErrorMessage}");
-                    }
-                }
             if (!ModelState.IsValid)
             {   
+                businessRequests.AllRegionList = _patientRequestService.GetAllRegions();
                 TempData["error"] = "Something went wrong! Please enter your details correct";
                 return View(nameof(Business), businessRequests); // Return the view with validation errors
             }
@@ -245,9 +208,11 @@ public class RequestController : Controller
 
                 int userId = await _patientRequestService.ProcessBusinessRequestAsync(businessRequests);
                  if(userId!=0){
+                    TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
                     SendCreationLink(userId);
+                }else{
+                    TempData["success"] = "Request Submitted Successfully";
                 }
-                TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
                 return RedirectToAction("Index", "PatientLogin");
             }
             catch{

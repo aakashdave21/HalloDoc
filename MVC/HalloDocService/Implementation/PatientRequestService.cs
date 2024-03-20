@@ -2,18 +2,21 @@ using HalloDocRepository.Interfaces;
 using HalloDocService.Interfaces;
 using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
+using HalloDocRepository.Admin.Interfaces;
 
 namespace HalloDocService.Implementation;
 public class PatientRequestService : IPatientRequestService
 {
     private readonly IPatientRequestRepo _patientRequestRepo;
     private readonly IPatientLoginRepo _patientLoginRepo;
+    private readonly IProfileRepo _profileRepo;
 
     // Patient Request Implementation
-    public PatientRequestService(IPatientRequestRepo patientRequestRepo, IPatientLoginRepo patientLoginRepo)
+    public PatientRequestService(IPatientRequestRepo patientRequestRepo, IPatientLoginRepo patientLoginRepo,IProfileRepo profileRepo)
     {
         _patientRequestRepo = patientRequestRepo;
         _patientLoginRepo = patientLoginRepo;
+        _profileRepo = profileRepo;
     }
 
     public async Task ProcessPatientRequestAsync(PatientRequestViewModel patientView)
@@ -34,13 +37,13 @@ public class PatientRequestService : IPatientRequestService
     private async Task ProcessExistingUserRequestAsync(PatientRequestViewModel viewRequest)
     {
         var existUserData = _patientRequestRepo.FindUserByEmailFromUser(viewRequest.Email);
+        var RegionDetails = _patientRequestRepo.GetSingleRegion((int)viewRequest.State);
 
         var newRequestForExistedUser = new Request
         {
             Userid = existUserData.Id,
             Symptoms = viewRequest.Symptoms,
             Roomnoofpatient = viewRequest.Roomnoofpatient,
-            // Documentsofpatient = viewRequest.Documentsofpatient,
             Status = 1, // For Unassigned,
             Firstname = viewRequest.Firstname,
             Lastname = viewRequest.Lastname,
@@ -60,7 +63,8 @@ public class PatientRequestService : IPatientRequestService
             Street = viewRequest.Street,
             Notes = viewRequest.Symptoms,
             City = viewRequest.City,
-            State = viewRequest.State,
+            State = RegionDetails.Name,
+            Regionid = viewRequest.State,
             Zipcode = viewRequest.Zipcode,
             Strmonth = DateOnly.Parse(viewRequest.Birthdate).ToString("MMMM"),
             Intyear = DateOnly.Parse(viewRequest.Birthdate).Year,
@@ -85,6 +89,7 @@ public class PatientRequestService : IPatientRequestService
         string email = viewRequest.Email;
         string[] parts = email.Split('@');
         string userName = parts[0];
+        var RegionDetails = _patientRequestRepo.GetSingleRegion((int)viewRequest.State);
 
         var newUser = new Aspnetuser
         {
@@ -104,7 +109,8 @@ public class PatientRequestService : IPatientRequestService
             Mobile = viewRequest.Mobile,
             Street = viewRequest.Street,
             City = viewRequest.City,
-            State = viewRequest.State,
+            State = RegionDetails.Name,
+            Regionid = viewRequest.State,
             Zipcode = viewRequest.Zipcode,
             Birthdate = DateOnly.Parse(viewRequest.Birthdate),
             Createddate = DateTime.Now
@@ -113,12 +119,17 @@ public class PatientRequestService : IPatientRequestService
         // _context.Users.Add(newPatient);
         // await _context.SaveChangesAsync();
 
+        Aspnetuserrole newRole = new(){
+            Userid = newUser.Id,
+            Roleid = 3 //Patient
+        };
+        _patientRequestRepo.NewRoleAdded(newRole);
+
         var newRequest = new Request
         {
             Userid = newPatient.Id,
             Symptoms = viewRequest.Symptoms,
             Roomnoofpatient = viewRequest.Roomnoofpatient,
-            // Documentsofpatient = viewRequest.Documentsofpatient,
             Status = 1, // For Unassigned,
             Firstname = viewRequest.Firstname,
             Lastname = viewRequest.Lastname,
@@ -138,7 +149,8 @@ public class PatientRequestService : IPatientRequestService
             Street = viewRequest.Street,
             Notes = viewRequest.Symptoms,
             City = viewRequest.City,
-            State = viewRequest.State,
+            State = RegionDetails.Name,
+            Regionid = viewRequest.State,
             Zipcode = viewRequest.Zipcode,
             Strmonth = DateOnly.Parse(viewRequest.Birthdate).ToString("MMMM"),
             Intyear = DateOnly.Parse(viewRequest.Birthdate).Year,
@@ -183,6 +195,7 @@ public class PatientRequestService : IPatientRequestService
     private async Task<int> ProcessExistingUserFamilyRequestAsync(FamilyRequestViewModel familyRequest)
     {
         var existUserData = _patientRequestRepo.FindUserByEmailFromUser(familyRequest.Email);
+        var RegionDetails = _patientRequestRepo.GetSingleRegion((int)familyRequest.State);
 
         var newRequestForExistedUser = new Request
         {
@@ -209,7 +222,8 @@ public class PatientRequestService : IPatientRequestService
             Street = familyRequest.Street,
             Notes = familyRequest.Symptoms,
             City = familyRequest.City,
-            State = familyRequest.State,
+            State = RegionDetails.Name,
+            Regionid = familyRequest.State,
             Zipcode = familyRequest.Zipcode,
             Strmonth = DateOnly.Parse(familyRequest.Birthdate).ToString("MMMM"),
             Intyear = DateOnly.Parse(familyRequest.Birthdate).Year,
@@ -237,6 +251,8 @@ public class PatientRequestService : IPatientRequestService
         string email = familyRequest.Email;
         string[] parts = email.Split('@');
         string userName = parts[0];
+        var RegionDetails = _patientRequestRepo.GetSingleRegion((int)familyRequest.State);
+
 
         var newUser = new Aspnetuser
         {
@@ -255,7 +271,8 @@ public class PatientRequestService : IPatientRequestService
             Mobile = familyRequest.Mobile,
             Street = familyRequest.Street,
             City = familyRequest.City,
-            State = familyRequest.State,
+            State = RegionDetails.Name,
+            Regionid = familyRequest.State,
             Zipcode = familyRequest.Zipcode,
             Birthdate = DateOnly.Parse(familyRequest.Birthdate),
             Createddate = DateTime.Now
@@ -276,6 +293,12 @@ public class PatientRequestService : IPatientRequestService
         };
         _patientRequestRepo.NewRequestAdd(newRequest);
 
+        Aspnetuserrole newRole = new(){
+            Userid = newUser.Id,
+            Roleid = 3 //Patient
+        };
+        _patientRequestRepo.NewRoleAdded(newRole);
+
         var newPatientInfo = new Requestclient
         {
             Requestid = newRequest.Id,
@@ -285,7 +308,8 @@ public class PatientRequestService : IPatientRequestService
             Email = familyRequest.Email,
             Street = familyRequest.Street,
             City = familyRequest.City,
-            State = familyRequest.State,
+            State = RegionDetails.Name,
+            Regionid = familyRequest.State,
             Notes = familyRequest.Symptoms,
             Zipcode = familyRequest.Zipcode,
             Strmonth = DateOnly.Parse(familyRequest.Birthdate).ToString("MMMM"),
@@ -329,6 +353,8 @@ public class PatientRequestService : IPatientRequestService
     private async Task<int> ProcessExistingUserBusinessRequestAsync(BusinessRequestViewModel businessRequests)
     {
         var existUserData = _patientRequestRepo.FindUserByEmailFromUser(businessRequests.Email);
+        var RegionDetails = _patientRequestRepo.GetSingleRegion((int)businessRequests.State);
+
 
         var newRequestForExistedUser = new Request
         {
@@ -356,7 +382,8 @@ public class PatientRequestService : IPatientRequestService
             Street = businessRequests.Street,
             Notes = businessRequests.Symptoms,
             City = businessRequests.City,
-            State = businessRequests.State,
+            State = RegionDetails.Name,
+            Regionid = businessRequests.State,
             Zipcode = businessRequests.Zipcode,
             Strmonth = DateOnly.Parse(businessRequests.Birthdate).ToString("MMMM"),
             Intyear = DateOnly.Parse(businessRequests.Birthdate).Year,
@@ -372,6 +399,7 @@ public class PatientRequestService : IPatientRequestService
         string email = businessRequests.Email;
         string[] parts = email.Split('@');
         string userName = parts[0];
+        var RegionDetails = _patientRequestRepo.GetSingleRegion((int)businessRequests.State);
 
         var newUser = new Aspnetuser
         {
@@ -390,12 +418,20 @@ public class PatientRequestService : IPatientRequestService
             Mobile = businessRequests.Mobile,
             Street = businessRequests.Street,
             City = businessRequests.City,
-            State = businessRequests.State,
+            State = RegionDetails.Name,
+            Regionid = businessRequests.State,
             Zipcode = businessRequests.Zipcode,
             Birthdate = DateOnly.Parse(businessRequests.Birthdate),
             Createddate = DateTime.Now
         };
         _patientRequestRepo.NewUserAdd(newPatient);
+
+        Aspnetuserrole newRole = new(){
+            Userid = newUser.Id,
+            Roleid = 3 //Patient
+        };
+        _patientRequestRepo.NewRoleAdded(newRole);
+
         var newRequest = new Request
         {
             Userid = newPatient.Id,
@@ -422,7 +458,8 @@ public class PatientRequestService : IPatientRequestService
             Street = businessRequests.Street,
             City = businessRequests.City,
             Notes = businessRequests.Symptoms,
-            State = businessRequests.State,
+            State = RegionDetails.Name,
+            Regionid = businessRequests.State,
             Zipcode = businessRequests.Zipcode,
             Strmonth = DateOnly.Parse(businessRequests.Birthdate).ToString("MMMM"),
             Intyear = DateOnly.Parse(businessRequests.Birthdate).Year,
@@ -451,6 +488,7 @@ public class PatientRequestService : IPatientRequestService
     private async Task<int> ProcessExistingUserConciergeRequestAsync(ConciergeRequestViewModel conciergeRequest)
     {
         var existUserData = _patientRequestRepo.FindUserByEmailFromUser(conciergeRequest.Email);
+        var RegionDetails = _patientRequestRepo.GetSingleRegion((int)conciergeRequest.ConciergeState);
 
         var newRequestForExistedUser = new Request
         {
@@ -487,7 +525,8 @@ public class PatientRequestService : IPatientRequestService
             Conciergename = conciergeRequest.Firstname,
             Street = conciergeRequest.ConciergeStreet,
             City = conciergeRequest.ConciergeCity,
-            State = conciergeRequest.ConciergeState,
+            State = RegionDetails.Name,
+            Regionid = conciergeRequest.ConciergeState,
             Zipcode = conciergeRequest.ConciergeZipcode
         };
         _patientRequestRepo.ConciergeDetailsAdd(newConcierge);
@@ -507,6 +546,8 @@ public class PatientRequestService : IPatientRequestService
         string email = conciergeRequest.Email;
         string[] parts = email.Split('@');
         string userName = parts[0];
+        var RegionDetails = _patientRequestRepo.GetSingleRegion((int)conciergeRequest.ConciergeState);
+
 
         var newUser = new Aspnetuser
         {
@@ -527,6 +568,12 @@ public class PatientRequestService : IPatientRequestService
             Createddate = DateTime.Now
         };
         _patientRequestRepo.NewUserAdd(newPatient);
+
+        Aspnetuserrole newRole = new(){
+            Userid = newUser.Id,
+            Roleid = 3 //Patient
+        };
+        _patientRequestRepo.NewRoleAdded(newRole);
 
         var newRequest = new Request
         {
@@ -563,7 +610,8 @@ public class PatientRequestService : IPatientRequestService
             Conciergename = conciergeRequest.Firstname,
             Street = conciergeRequest.ConciergeStreet,
             City = conciergeRequest.ConciergeCity,
-            State = conciergeRequest.ConciergeState,
+            State = RegionDetails.Name,
+            Regionid = conciergeRequest.ConciergeState,
             Zipcode = conciergeRequest.ConciergeZipcode
         };
         _patientRequestRepo.ConciergeDetailsAdd(newConciergeForNewUser);
@@ -582,6 +630,14 @@ public class PatientRequestService : IPatientRequestService
 
     public void StoreActivationToken(int AspUserId , string token, DateTime expiry){
         _patientRequestRepo.StoreActivationToken(AspUserId , token, expiry);
+    }
+
+    public IEnumerable<RegionList> GetAllRegions(){
+        var RegionsList = _profileRepo.GetAllRegions().Select(reg => new RegionList(){
+                Id = reg.Id,
+                Name = reg.Name
+            }).ToList();
+            return RegionsList;
     }
 }
 
