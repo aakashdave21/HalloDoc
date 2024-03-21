@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "qe60/FjYBGRIFBZILuF1lMndJp0arVQt3hl1qgJhCMQ=",
+  "Hash": "x+8dtPbxHtjYOYo/Jo0aGYgKRDUaz6Hhcx2/ZjjXCvk=",
   "Source": "HalloDocMVC",
   "BasePath": "_content/HalloDocMVC",
   "Mode": "Default",
@@ -1394,12 +1394,12 @@
       "OriginalItemSpec": "wwwroot\\images\\not_found.png"
     },
     {
-      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\adminDashboardRequest.js",
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\adminDashboard.js",
       "SourceId": "HalloDocMVC",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
       "BasePath": "_content/HalloDocMVC",
-      "RelativePath": "js/adminDashboardRequest.js",
+      "RelativePath": "js/adminDashboard.js",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -1408,7 +1408,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\js\\adminDashboardRequest.js"
+      "OriginalItemSpec": "wwwroot\\js\\adminDashboard.js"
     },
     {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\cancleCase.js",

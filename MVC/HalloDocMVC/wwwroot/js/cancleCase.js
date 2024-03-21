@@ -440,8 +440,6 @@ const populateSendAgreement = (reqId, Email, Phone) => {
 
 function submitSendAgreement() {
     try {
-
-
         let form = document.querySelector('#sendAgreementForm');
         let formData = new FormData(form);
         if ($("#email").val() == "") {

@@ -1,0 +1,65 @@
+<table class="table" id="provider-table">
+    <thead>
+        <tr>
+            <th style="width: 10%;">Stop Notification</th>
+            @{
+                if (ViewBag.order == "desc")
+                {
+                    <th style="white-space: nowrap; cursor: pointer;" id="providerNameHeader">
+                        Provider Name <i class="fa-solid fa-chevron-down sorting-icons"></i>
+                    </th>
+                }
+                else
+                {
+                    <th style="white-space: nowrap; cursor: pointer;" id="providerNameHeader">
+                        Provider Name <i class="fa-solid fa-chevron-up sorting-icons"></i>
+                    </th>
+                }
+            }
+
+            <th style="white-space:nowrap;">Role</th>
+            <th style="width: 15%;">On Call Status</th>
+            <th style="white-space:nowrap;">Status</th>
+            <th style="white-space:nowrap; width:20%;">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.AllPhysicianList)
+        {
+            <tr>
+                @if (item.IsNotificationStopped == true)
+                {
+                    <td>
+                        <input type="checkbox" id="checkbox-@item.Id" value="@item.Id" class="form-check-input selectRow stoppedNotification" style="cursor: pointer;"
+                            checked>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <input type="checkbox" id="checkbox-@item.Id" value="@item.Id" class="form-check-input selectRow runningNotification" style="cursor: pointer;">
+                    </td>
+                }
+                <td>@item.PhysicianName</td>
+                <td>@item.Role</td>
+                <td>@item.OnCallStatus</td>
+                <td>@item.Status</td>
+                <td>
+                    <div class="d-flex gap-2">
+                        <button class="btn theme-btn" onclick="openContactModal('@item.Id')"> Contact
+                        </button>
+                        <a class="btn theme-btn"> Edit </a>
+                        @using (Html.BeginForm("SaveNotification", "Provider", new { area = "Admin" },
+                       FormMethod.Post))
+                        {
+                            <input type="hidden" value="@item.Id" />
+                            <button class="btn secondary-theme-btn" style="display: none;" id="save-btn-@item.Id"> Save
+                            </button>
+                        }
+                    </div>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

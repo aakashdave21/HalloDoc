@@ -81,8 +81,8 @@
       "PackagePath": "staticwebassets\\images\\not_found.png"
     },
     {
-      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\adminDashboardRequest.js",
-      "PackagePath": "staticwebassets\\js\\adminDashboardRequest.js"
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\adminDashboard.js",
+      "PackagePath": "staticwebassets\\js\\adminDashboard.js"
     },
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\cancleCase.js",

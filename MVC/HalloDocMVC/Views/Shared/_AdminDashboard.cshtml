@@ -72,8 +72,15 @@
                         <li data-id="3">
                             <a asp-area="Admin" asp-controller="Profile" asp-action="Index" >My Profile</a>
                         </li>
-                        <li data-id="4">
-                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" >Provider</a>
+                        <li data-id="4" class="InnerNav">
+                            <div class="inner-nav">
+                                <a href="#">Provider <i class="fa-solid fa-caret-down"></i></a>
+                                <ul class="shadow" style="display: none;">
+                                    <li><a asp-area="Admin" asp-controller="Provider" asp-action="Index" class="dropdown-item">Provider</a></li>
+                                    <li><a asp-area="Admin" asp-controller="Scheduling" asp-action="Index" class="dropdown-item">Scheduling</a></li>
+                                    <li><a asp-area="Admin" asp-controller="Invoicing" asp-action="Index"  class="dropdown-item">Invoicing</a></li>
+                                </ul>
+                            </div>
                         </li>
                         <li data-id="5">
                             <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" >Partners</a>
@@ -88,6 +95,7 @@
                 </div>
             </nav>
         </header>
+       
 
          @RenderBody()
         
@@ -100,17 +108,14 @@
             </div>
         </footer>
     </div>
-
-
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/global.js" asp-append-version="true"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/adminDashboardRequest.js" asp-append-version="true"></script>
     <script src="~/js/cancleCase.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/adminDashboard.js" asp-append-version="true"></script>
     <script src="https://kit.fontawesome.com/3bcc8c09be.js" crossorigin="anonymous"></script>
 </body>
 

@@ -52,8 +52,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUHJvZmlsZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Admin/Views/Provider/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUHJvdmlkZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Admin/Views/Shared/_AdminDashboardTable.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9BZG1pbkRhc2hib2FyZFRhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Admin/Views/Shared/_ProviderListPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9Qcm92aWRlckxpc3RQYXJ0aWFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Admin/Views/_ViewImports.cshtml]

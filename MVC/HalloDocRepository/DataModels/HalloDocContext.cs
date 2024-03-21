@@ -219,6 +219,7 @@ public partial class HalloDocContext : DbContext
 
             entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.Createddate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.IsNotificationStop).HasDefaultValueSql("false");
             entity.Property(e => e.Isdeleted).HasDefaultValueSql("false");
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
 

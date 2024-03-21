@@ -38,6 +38,8 @@ builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 builder.Services.AddScoped<IUtilityService, UtilityService>();
 builder.Services.AddScoped<IProfileService,ProfileService>();
 builder.Services.AddScoped<IProfileRepo,ProfileRepo>();
+builder.Services.AddScoped<IProviderService,ProviderService>();
+builder.Services.AddScoped<IProviderRepo,ProviderRepo>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

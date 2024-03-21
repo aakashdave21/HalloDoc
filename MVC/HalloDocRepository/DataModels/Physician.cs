@@ -135,6 +135,10 @@ public partial class Physician
     [Column("updatedat", TypeName = "timestamp without time zone")]
     public DateTime? Updatedat { get; set; }
 
+    public bool? IsNotificationStop { get; set; }
+
+    public short? OnCallStatus { get; set; }
+
     [ForeignKey("Aspnetuserid")]
     [InverseProperty("PhysicianAspnetusers")]
     public virtual Aspnetuser? Aspnetuser { get; set; }

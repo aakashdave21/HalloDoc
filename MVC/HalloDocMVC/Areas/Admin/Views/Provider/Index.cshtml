@@ -1,0 +1,217 @@
+@using HalloDocService.ViewModels;
+@model AdminProviderViewModel;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Provider Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+    @* <link rel="stylesheet" href="~/css/PatientRequest.css" /> *@
+}
+<style>
+    @@media only screen and (max-width: 400px) {
+
+        .Provider-Section #provider-header div,
+        #provider-header div .btn {
+            width: 100%;
+        }
+
+    }
+</style>
+
+<main class="Provider-Section container-sm mt-sm-5">
+    <div class="d-flex mt-4">
+        <h4 class="fw-bold">Provider Information</h4>
+    </div>
+    <div class="p-4 mt-3 mb-3 rounded shadow">
+        <div id="provider-header" class="d-flex justify-content-between flex-wrap align-items-center gap-2">
+            <div class="form-group has-search">
+                <span class="fa fa-search form-control-feedback"></span>
+                <select class="form-control form-select" id="regionDropdown" onchange="searchPhysicianByRegion()">
+                    <option value="0" selected>All Regions</option>
+                    @foreach (var item in Model.AllRegionList)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <a class="btn secondary-theme-btn " id="save-changes-btn" style="display: none;">Save Changes</a>
+                <a class="btn theme-btn">Create Provider Account</a>
+            </div>
+        </div>
+
+        <div id="Provider-body">
+            <div class="table-responsive">
+                <partial name="_ProviderListPartial" />
+            </div>
+        </div>
+    </div>
+</main>
+
+@* Contact Provider Modal *@
+<div class="modal fade shadow-lg " id="contactProviderModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+
+</div>
+
+<script>
+    let stopNotificationIds = [];
+    let startNotificationIds = [];
+    let regionValue;
+
+    $(document).on('change', '#provider-table .form-check-input', function () {
+        var showButton = false;
+        if ($(this).hasClass("stoppedNotification")) {
+            var physicianId = $(this).val();
+            if (!$(this).is(":checked")) {
+                stopNotificationIds.push(physicianId);
+            } else {
+                stopNotificationIds = stopNotificationIds.filter(id => id !== physicianId);
+            }
+        }
+        if ($(this).hasClass("runningNotification")) {
+            var physicianId = $(this).val();
+            if ($(this).is(":checked")) {
+                startNotificationIds.push(physicianId);
+            } else {
+                startNotificationIds = startNotificationIds.filter(id => id !== physicianId);
+            }
+        }
+        console.log(startNotificationIds);
+        console.log(stopNotificationIds);
+        if (stopNotificationIds.length > 0 || startNotificationIds.length > 0) {
+            showButton = true;
+        }
+        if (showButton) {
+            $("#save-changes-btn").css('display', 'block');
+        } else {
+            $("#save-changes-btn").css('display', 'none');
+            stopNotificationIds = [];
+            startNotificationIds = [];
+        }
+    })
+
+    function searchPhysicianByRegion() {
+        let regionId = $("#regionDropdown").val();
+        regionValue = regionId;
+        if (regionId == 0) {
+            location.reload();
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Provider/Index",
+                data: {
+                    regionId: regionId
+                },
+                success: function (response) {
+                    $("#Provider-body").empty();
+                    $("#Provider-body").append(response);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    }
+
+    $(document).on('click', '#save-changes-btn', function () {
+        var data = {
+            stopNotificationIds: stopNotificationIds,
+            startNotificationIds: startNotificationIds
+        };
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Provider/notificationChange",
+            data: data,
+            success: function (response) {
+                if (regionValue) {
+                    ToastSuccess("Changes Are Saved Successfully");
+                    searchPhysicianByRegion();
+                } else {
+                    window.location.reload();
+                }
+            },
+            error: function (error) {
+                ToastError("Internal Server Error");
+                console.log(error);
+            }
+        });
+    });
+
+    $(document).on('click', '#providerNameHeader', function () {
+        $(".sorting-icons").toggleClass("fa-chevron-up fa-chevron-down");
+        var sortOrder = $(".sorting-icons").hasClass("fa-chevron-up") ? "asc" : "desc";
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Provider/Index",
+            data: {
+                order: sortOrder,
+                regionId: regionValue,
+            },
+            success: function (response) {
+                $("#Provider-body").empty();
+                $("#Provider-body").append(response);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
+    function openContactModal(physicianId) {
+        let modal = document.getElementById("contactProviderModal");
+        modal.innerHTML = `
+            <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Contact Your Provider</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/admin/provider/contactProvider" method="post" id="contactForm">
+            <div class="modal-body">
+
+                    <p class="text-muted">Choose Communication to send Message</p>
+                    <input type="hidden" name="id" value="${physicianId}">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="communication" id="flexRadioDefault1" value="SMS" checked>
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            SMS
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="communication" id="flexRadioDefault2"  value="Email" 
+                            >
+                        <label class="form-check-label" for="flexRadioDefault2">
+                            Email
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="communication" id="flexRadioDefault3"  value="Both" 
+                            >
+                        <label class="form-check-label" for="flexRadioDefault3">
+                            Both
+                        </label>
+                    </div>
+                    <div class="form-floating mt-2">
+                        <textarea class="form-control" placeholder="Message" name="message" id="MessagePhysciain"
+                            style="height: 80px; resize:none;"></textarea>
+                        <label for="MessagePhysciain" style="white-space: normal;">Message</label>
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="submitBtn" class="btn secondary-theme-btn" onclick="submitbCommunication()">Send</button>
+                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+            </div>
+            </form>
+        </div>
+    </div>
+        `;
+        var modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
+    }
+    function submitbCommunication() {
+        $("#submitBtn").attr('disabled', true);
+        $("#contactForm").submit();
+    }
+</script>
