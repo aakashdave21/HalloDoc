@@ -48,14 +48,20 @@
                     <div class="d-flex gap-2">
                         <button class="btn theme-btn" onclick="openContactModal('@item.Id')"> Contact
                         </button>
-                        <a class="btn theme-btn"> Edit </a>
-                        @using (Html.BeginForm("SaveNotification", "Provider", new { area = "Admin" },
-                       FormMethod.Post))
-                        {
-                            <input type="hidden" value="@item.Id" />
-                            <button class="btn secondary-theme-btn" style="display: none;" id="save-btn-@item.Id"> Save
-                            </button>
-                        }
+                        @using (Html.BeginForm("Edit", "Provider", new { area = "Admin" },
+                        FormMethod.Post))
+                            {
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn theme-btn"> Edit
+                                </button>
+                            }
+                        @* @using (Html.BeginForm("SaveNotification", "Provider", new { area = "Admin" },
+                        FormMethod.Post))
+                            {
+                                <input type="hidden" value="@item.Id" />
+                                <button class="btn secondary-theme-btn" style="display: none;" id="save-btn-@item.Id"> Save
+                                </button>
+                            } *@
                     </div>
 
                 </td>

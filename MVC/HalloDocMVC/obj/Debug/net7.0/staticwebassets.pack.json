@@ -505,6 +505,18 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\js\\bootstrap.min.js.map"
     },
     {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\0934f0a3-0bc6-4307-9931-abea8650b471_pexels-apunto-group-agencia-de-publicidad-7752846.jpg",
+      "PackagePath": "staticwebassets\\uploads\\0934f0a3-0bc6-4307-9931-abea8650b471_pexels-apunto-group-agencia-de-publicidad-7752846.jpg"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\1cad0b4d-c862-4828-aa7d-ae76f4d8de14_SRS-23-24-Trainees-2Feb24.pdf",
+      "PackagePath": "staticwebassets\\uploads\\1cad0b4d-c862-4828-aa7d-ae76f4d8de14_SRS-23-24-Trainees-2Feb24.pdf"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\226f2007-6619-4e70-9e55-f8beeeebbc29_Fig3. Admin Dashboard.jpg",
+      "PackagePath": "staticwebassets\\uploads\\226f2007-6619-4e70-9e55-f8beeeebbc29_Fig3. Admin Dashboard.jpg"
+    },
+    {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\391055e1-ec5d-4fe9-bb48-6a01a5f810c7_Untitled.png",
       "PackagePath": "staticwebassets\\uploads\\391055e1-ec5d-4fe9-bb48-6a01a5f810c7_Untitled.png"
     },
@@ -529,12 +541,20 @@
       "PackagePath": "staticwebassets\\uploads\\6c70a5f8-f9d1-43b9-85df-1c40fc0ec11b_471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png"
     },
     {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\8e4a66ae-1b84-4f09-a7ba-b3e9fa49d1d9_logo.png",
+      "PackagePath": "staticwebassets\\uploads\\8e4a66ae-1b84-4f09-a7ba-b3e9fa49d1d9_logo.png"
+    },
+    {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\a07c4d6f-413d-44c5-b11f-765cce335434_.net-Whole-Plane-2024.pdf",
       "PackagePath": "staticwebassets\\uploads\\a07c4d6f-413d-44c5-b11f-765cce335434_.net-Whole-Plane-2024.pdf"
     },
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\cc60e440-1a33-4fd4-ace9-ab80ea9b0a97_Untitled.pdf",
       "PackagePath": "staticwebassets\\uploads\\cc60e440-1a33-4fd4-ace9-ab80ea9b0a97_Untitled.pdf"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\db16f2cc-e599-4859-8e4c-a4f8000f55b5_Fig3. Admin Dashboard.jpg",
+      "PackagePath": "staticwebassets\\uploads\\db16f2cc-e599-4859-8e4c-a4f8000f55b5_Fig3. Admin Dashboard.jpg"
     },
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\e1abdeaf-d363-4044-a247-aa5a14bd13fc_Test Instructions.pdf",
@@ -547,6 +567,10 @@
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\f85e9526-e434-42d2-b80d-8b9cfc97c283_SRS-23-24-Trainees-21Feb24.pdf",
       "PackagePath": "staticwebassets\\uploads\\f85e9526-e434-42d2-b80d-8b9cfc97c283_SRS-23-24-Trainees-21Feb24.pdf"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\fea58967-11b3-43d3-9e56-2a8a200e3b9e_logo.png",
+      "PackagePath": "staticwebassets\\uploads\\fea58967-11b3-43d3-9e56-2a8a200e3b9e_logo.png"
     },
     {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.HalloDocMVC.Microsoft.AspNetCore.StaticWebAssets.props",

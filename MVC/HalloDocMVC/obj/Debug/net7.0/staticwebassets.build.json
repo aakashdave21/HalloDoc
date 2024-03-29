@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "x+8dtPbxHtjYOYo/Jo0aGYgKRDUaz6Hhcx2/ZjjXCvk=",
+  "Hash": "JuLKpwmWDVXZvJLrx7PTyUmIYb7anexRlxOAF0wavPo=",
   "Source": "HalloDocMVC",
   "BasePath": "_content/HalloDocMVC",
   "Mode": "Default",
@@ -3196,6 +3196,57 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\LICENSE.txt"
     },
     {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\0934f0a3-0bc6-4307-9931-abea8650b471_pexels-apunto-group-agencia-de-publicidad-7752846.jpg",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/0934f0a3-0bc6-4307-9931-abea8650b471_pexels-apunto-group-agencia-de-publicidad-7752846.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\0934f0a3-0bc6-4307-9931-abea8650b471_pexels-apunto-group-agencia-de-publicidad-7752846.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\1cad0b4d-c862-4828-aa7d-ae76f4d8de14_SRS-23-24-Trainees-2Feb24.pdf",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/1cad0b4d-c862-4828-aa7d-ae76f4d8de14_SRS-23-24-Trainees-2Feb24.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\1cad0b4d-c862-4828-aa7d-ae76f4d8de14_SRS-23-24-Trainees-2Feb24.pdf"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\226f2007-6619-4e70-9e55-f8beeeebbc29_Fig3. Admin Dashboard.jpg",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/226f2007-6619-4e70-9e55-f8beeeebbc29_Fig3. Admin Dashboard.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\226f2007-6619-4e70-9e55-f8beeeebbc29_Fig3. Admin Dashboard.jpg"
+    },
+    {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\391055e1-ec5d-4fe9-bb48-6a01a5f810c7_Untitled.png",
       "SourceId": "HalloDocMVC",
       "SourceType": "Discovered",
@@ -3298,6 +3349,23 @@
       "OriginalItemSpec": "wwwroot\\uploads\\6c70a5f8-f9d1-43b9-85df-1c40fc0ec11b_471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png"
     },
     {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\8e4a66ae-1b84-4f09-a7ba-b3e9fa49d1d9_logo.png",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/8e4a66ae-1b84-4f09-a7ba-b3e9fa49d1d9_logo.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\8e4a66ae-1b84-4f09-a7ba-b3e9fa49d1d9_logo.png"
+    },
+    {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\a07c4d6f-413d-44c5-b11f-765cce335434_.net-Whole-Plane-2024.pdf",
       "SourceId": "HalloDocMVC",
       "SourceType": "Discovered",
@@ -3330,6 +3398,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\cc60e440-1a33-4fd4-ace9-ab80ea9b0a97_Untitled.pdf"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\db16f2cc-e599-4859-8e4c-a4f8000f55b5_Fig3. Admin Dashboard.jpg",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/db16f2cc-e599-4859-8e4c-a4f8000f55b5_Fig3. Admin Dashboard.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\db16f2cc-e599-4859-8e4c-a4f8000f55b5_Fig3. Admin Dashboard.jpg"
     },
     {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\e1abdeaf-d363-4044-a247-aa5a14bd13fc_Test Instructions.pdf",
@@ -3381,6 +3466,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\f85e9526-e434-42d2-b80d-8b9cfc97c283_SRS-23-24-Trainees-21Feb24.pdf"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\fea58967-11b3-43d3-9e56-2a8a200e3b9e_logo.png",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/fea58967-11b3-43d3-9e56-2a8a200e3b9e_logo.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\fea58967-11b3-43d3-9e56-2a8a200e3b9e_logo.png"
     }
   ]
 }

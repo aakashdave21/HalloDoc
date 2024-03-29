@@ -1,0 +1,32 @@
+<div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="main-head">
+                        <th scope="col">Staff</th>
+                        <th scope="col">Sun 3</th>
+                        <th scope="col">Mon 4</th>
+                        <th scope="col">Tue 5</th>
+                        <th scope="col">Wed 6</th>
+                        <th scope="col">Thu 7</th>
+                        <th scope="col">Fri 8</th>
+                        <th scope="col">Sat 9</th>
+                    </tr>
+                    <tr class="coverage">
+                        <td>Coverage</td>
+                        @for(int i=0;i<7;i++){
+                            <th scope="col" class="text-muted">0/24</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(int j=0; j < 25; j++){
+                        <tr>
+                            <td scope="row" class="d-flex"> <img src="~/images/bg_login.png" > Aakash Dave</td>
+                            @for(int i = 0; i < 7 ; i++) {
+                                <td scope="col"></td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>

@@ -21,7 +21,7 @@
     <div class="d-flex mt-4">
         <h4 class="fw-bold">Provider Information</h4>
     </div>
-    <div class="p-4 mt-3 mb-3 rounded shadow">
+    <div class="p-4 mt-3 mb-3 rounded shadow border">
         <div id="provider-header" class="d-flex justify-content-between flex-wrap align-items-center gap-2">
             <div class="form-group has-search">
                 <span class="fa fa-search form-control-feedback"></span>
@@ -35,7 +35,7 @@
             </div>
             <div class="d-flex gap-2 flex-wrap">
                 <a class="btn secondary-theme-btn " id="save-changes-btn" style="display: none;">Save Changes</a>
-                <a class="btn theme-btn">Create Provider Account</a>
+                <a class="btn theme-btn" asp-area="admin" asp-controller="provider" asp-action="Create">Create Provider Account</a>
             </div>
         </div>
 

@@ -28,6 +28,9 @@ th{
     /* --bs-body-bg: #0E2954; */
     /* --bs-body-bg: #001f3f; */
 }
+[data-bs-theme=dark] .shadow{
+    box-shadow: 5px 5px 10px rgba(255, 255, 255, 0.2) !important;
+}
 
 ::-webkit-scrollbar {
     width: 8px;

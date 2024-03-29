@@ -1,0 +1,73 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Provider Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+}
+
+<main class="Access-Section container-sm mt-sm-5">
+    <div class="d-flex justify-content-end mt-4">
+        <a asp-area="Admin" asp-controller="Access" asp-action="Index" class="btn btn-sm back-link"><i
+                class="fa-solid fa-chevron-left"></i> Back</a>
+    </div>
+    <div class="d-flex mt-4">
+        <h4 class="fw-bold">Create Role</h4>
+    </div>
+    <div class="p-4 mt-3 mb-3 rounded shadow border">
+        <div id="Access-create-body">
+            <h6 class="fw-bold">Details</h6>
+        </div>
+        <form asp-area="admin" asp-controller="Access" asp-action="Create" method="post" id="CreateAccessForm">
+            <div class="role-input">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" name="rolename" id="rolename"
+                                placeholder="rolename">
+                            <label for="rolename">Role Name</label>
+                        </div>
+                        <span id="role-valid" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <select class="form-select mb-3" aria-label="Large select example" name="accountType"
+                                id="accountType" placeholder="accountType" onchange="getMenuByAccountType()">
+                                <option selected value="0">All</option>
+                                <option value="1">Admin</option>
+                                <option value="2">Physician</option>
+                            </select>
+                            <label for="accountType">Account Type</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="MenuItems">
+                <partial name="_MenuList" />
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button type="button" class="btn secondary-theme-btn" onclick="CreateNewRole()">Save</button>
+                <button type="reset" class="btn theme-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+
+<script>
+    function getMenuByAccountType() {
+        let accountTypeValue = $("#accountType").val();
+        sendAjaxRequest('/admin/access/getMenuByAccountType', 'POST', { accountId: accountTypeValue }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                $("#MenuItems").empty();
+                $("#MenuItems").append(response);
+            }).catch(function (error) {
+                ToastError("Internal Server Error");
+            })
+    }
+    function CreateNewRole(){
+        if ($("#rolename").val().trim() === "") {
+            $("#role-valid").text("Role Name is required.");
+            return;
+        }
+        $("#CreateAccessForm").submit();
+    }
+</script>

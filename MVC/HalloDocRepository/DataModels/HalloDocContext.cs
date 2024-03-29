@@ -37,9 +37,13 @@ public partial class HalloDocContext : DbContext
 
     public virtual DbSet<Healthprofessionaltype> Healthprofessionaltypes { get; set; }
 
+    public virtual DbSet<Menu> Menus { get; set; }
+
     public virtual DbSet<Orderdetail> Orderdetails { get; set; }
 
     public virtual DbSet<Physician> Physicians { get; set; }
+
+    public virtual DbSet<Physicianfile> Physicianfiles { get; set; }
 
     public virtual DbSet<Physicianregion> Physicianregions { get; set; }
 
@@ -60,6 +64,14 @@ public partial class HalloDocContext : DbContext
     public virtual DbSet<Requestwisefile> Requestwisefiles { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
+
+    public virtual DbSet<Rolemenu> Rolemenus { get; set; }
+
+    public virtual DbSet<Shift> Shifts { get; set; }
+
+    public virtual DbSet<Shiftdetail> Shiftdetails { get; set; }
+
+    public virtual DbSet<Shiftdetailregion> Shiftdetailregions { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -200,6 +212,14 @@ public partial class HalloDocContext : DbContext
             entity.Property(e => e.Isdeleted).HasDefaultValueSql("false");
         });
 
+        modelBuilder.Entity<Menu>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("menu_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
         modelBuilder.Entity<Orderdetail>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("orderdetails_pkey");
@@ -232,6 +252,18 @@ public partial class HalloDocContext : DbContext
             entity.HasOne(d => d.Region).WithMany(p => p.Physicians).HasConstraintName("physician_regionid_fkey");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Physicians).HasConstraintName("physician_roleid_fkey");
+        });
+
+        modelBuilder.Entity<Physicianfile>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("physicianfile_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.Physician).WithOne(p => p.Physicianfile)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("physicianfile_physicianid_fkey");
         });
 
         modelBuilder.Entity<Physicianregion>(entity =>
@@ -359,9 +391,77 @@ public partial class HalloDocContext : DbContext
             entity.HasKey(e => e.Id).HasName("role_pkey");
 
             entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
-            entity.Property(e => e.Createddate).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.Isdeleted).HasDefaultValueSql("false");
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
+        modelBuilder.Entity<Rolemenu>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("rolemenu_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.Menu).WithMany(p => p.Rolemenus)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("rolemenu_menuid_fkey");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Rolemenus)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("rolemenu_roleid_fkey");
+        });
+
+        modelBuilder.Entity<Shift>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("shift_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Weekdays).IsFixedLength();
+
+            entity.HasOne(d => d.CreatedbyNavigation).WithMany(p => p.Shifts)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("shift_createdby_fkey");
+
+            entity.HasOne(d => d.Physician).WithMany(p => p.Shifts)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("shift_physicianid_fkey");
+        });
+
+        modelBuilder.Entity<Shiftdetail>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("shiftdetail_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.CreatedbyNavigation).WithMany(p => p.ShiftdetailCreatedbyNavigations)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("shiftdetail_createdby_fkey");
+
+            entity.HasOne(d => d.ModifiedbyNavigation).WithMany(p => p.ShiftdetailModifiedbyNavigations).HasConstraintName("shiftdetail_modifiedby_fkey");
+
+            entity.HasOne(d => d.Region).WithMany(p => p.Shiftdetails).HasConstraintName("shiftdetail_regionid_fkey");
+
+            entity.HasOne(d => d.Shift).WithOne(p => p.Shiftdetail)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("shiftdetail_shiftid_fkey");
+        });
+
+        modelBuilder.Entity<Shiftdetailregion>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("shiftdetailregion_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.Region).WithMany(p => p.Shiftdetailregions)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("shiftdetailregion_regionid_fkey");
+
+            entity.HasOne(d => d.Shiftdetail).WithMany(p => p.Shiftdetailregions)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("shiftdetailregion_shiftdetailid_fkey");
         });
 
         modelBuilder.Entity<User>(entity =>

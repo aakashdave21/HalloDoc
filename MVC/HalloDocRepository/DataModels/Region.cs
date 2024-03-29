@@ -49,5 +49,11 @@ public partial class Region
     public virtual ICollection<Requestclient> Requestclients { get; } = new List<Requestclient>();
 
     [InverseProperty("Region")]
+    public virtual ICollection<Shiftdetailregion> Shiftdetailregions { get; } = new List<Shiftdetailregion>();
+
+    [InverseProperty("Region")]
+    public virtual ICollection<Shiftdetail> Shiftdetails { get; } = new List<Shiftdetail>();
+
+    [InverseProperty("Region")]
     public virtual ICollection<User> Users { get; } = new List<User>();
 }

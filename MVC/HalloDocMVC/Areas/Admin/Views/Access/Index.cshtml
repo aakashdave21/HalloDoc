@@ -1,0 +1,90 @@
+@using HalloDocService.ViewModels;
+@model AdminAccessViewModel;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Provider Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+    @* <link rel="stylesheet" href="~/css/PatientRequest.css" /> *@
+}
+
+<main class="Access-Section container-sm mt-sm-5">
+    <div class="d-flex mt-4">
+        <h4 class="fw-bold">Account Access</h4>
+    </div>
+    <div class="p-4 mt-3 mb-3 rounded shadow border">
+        <div id="provider-header" class="d-flex justify-content-end flex-wrap align-items-center gap-2 mb-3">
+            <a class="btn secondary-theme-btn" asp-area="Admin" asp-controller="Access" asp-action="Account">Create Admin</a>
+            <a class="btn theme-btn" asp-area="Admin" asp-controller="Access" asp-action="Create">Create Access</a>
+        </div>
+
+        <div id="Access-body">
+            <div class="table-responsive">
+                <table class="table" id="Access-table">
+                    <thead>
+                        <tr>
+                            <th style="white-space:nowrap; width:40%;">Name</th>
+                            <th style="white-space:nowrap; width:50%;">Account Type</th>
+                            <th style="white-space:nowrap; ">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.AccessRoleList)
+                        {
+                            <tr>
+                                <td>@item.RoleName</td>
+                                <td>@item.AccountType</td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        @using(Html.BeginForm("Edit","Access", new {area = "Admin"})){
+                                            <input type="hidden" name="Id" value="@item.Id"/>
+                                            <button class="btn theme-btn">Edit</button>
+                                        }
+                                        <button class="btn theme-btn"
+                                            onclick="deleteConfirmModal('@item.Id','@item.RoleName','@item.AccountType')">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+@* Confirmation Delete Modal *@
+<div class="modal fade shadow-lg " id="deleteAccessConfirmation" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    
+</div>
+
+<script>
+    function deleteConfirmModal(roleId, rolename, roletype) {
+        let modal = document.getElementById("deleteAccessConfirmation");
+        modal.innerHTML = `
+            <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Confirm Deletion</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/admin/access/Delete" method="post" id="contactForm">
+            <div class="modal-body">
+                <input type="hidden" name="id" value="${roleId}">
+                <p class="text-muted fw-bold"> Are you sure you want to delete this access role? </p>
+                <p class="text-muted"> Role :  <span style="color:#01bce9;">${rolename}</span>  </p>
+                <p class="text-muted"> Account Type : <span style="color:#01bce9;"> ${roletype}</span> </p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="submitBtn" class="btn btn-danger">Confirm</button>
+                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+            </div>
+            </form>
+        </div>
+    </div>
+        `;
+        let modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
+    }
+</script>

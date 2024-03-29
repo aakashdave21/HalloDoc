@@ -37,7 +37,6 @@ public partial class Physician
     public string? Medicallicense { get; set; }
 
     [Column("photo")]
-    [StringLength(100)]
     public string? Photo { get; set; }
 
     [Column("adminnotes")]
@@ -116,7 +115,6 @@ public partial class Physician
     public bool? Islicensedoc { get; set; }
 
     [Column("signature")]
-    [StringLength(100)]
     public string? Signature { get; set; }
 
     [Column("iscredentialdoc")]
@@ -152,6 +150,9 @@ public partial class Physician
     public virtual Aspnetuser? ModifiedbyNavigation { get; set; }
 
     [InverseProperty("Physician")]
+    public virtual Physicianfile? Physicianfile { get; set; }
+
+    [InverseProperty("Physician")]
     public virtual ICollection<Physicianregion> Physicianregions { get; } = new List<Physicianregion>();
 
     [ForeignKey("Regionid")]
@@ -173,4 +174,7 @@ public partial class Physician
     [ForeignKey("Roleid")]
     [InverseProperty("Physicians")]
     public virtual Role? Role { get; set; }
+
+    [InverseProperty("Physician")]
+    public virtual ICollection<Shift> Shifts { get; } = new List<Shift>();
 }

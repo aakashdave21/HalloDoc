@@ -3736,7 +3736,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "HalloDocRepository": "1.0.0"
+          "HalloDocRepository": "1.0.0",
+          "Microsoft.AspNetCore.Http": "2.2.2"
         },
         "compile": {
           "bin/placeholder/HalloDocService.dll": {}

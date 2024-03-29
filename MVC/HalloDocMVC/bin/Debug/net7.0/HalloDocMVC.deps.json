@@ -2302,7 +2302,8 @@
       },
       "HalloDocService/1.0.0": {
         "dependencies": {
-          "HalloDocRepository": "1.0.0"
+          "HalloDocRepository": "1.0.0",
+          "Microsoft.AspNetCore.Http": "2.2.2"
         },
         "runtime": {
           "HalloDocService.dll": {}

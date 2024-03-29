@@ -201,11 +201,11 @@ table tr td{
 /* tbody tr td .btn{
     border: 1px solid black;
 } */
-[data-bs-theme=dark] tbody tr td .btn{
+[data-bs-theme=dark] #render-content tbody tr td .btn{
     color: white;
     border: 1px solid white;
 }
-tbody tr td .btn:hover{
+#render-content tbody tr td .btn:hover{
     border: 1px solid rgb(199, 199, 199);
 }
 .patient-sm-address{

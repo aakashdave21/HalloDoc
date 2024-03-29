@@ -70,8 +70,6 @@ public class ProfileController : Controller
         {
             string userPassword = _profileService.GetPassword(adminView.Id);
             // bool isVerified = PasswordHasher.VerifyPassword(adminView.Password, userPassword);
-            Console.WriteLine(userPassword);
-            Console.WriteLine(adminView.Password);
             bool isVerified = userPassword == adminView.Password;
             if(isVerified){
                 TempData["error"] = "Password Already Exits, Enter new Password!";    

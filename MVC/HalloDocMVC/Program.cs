@@ -12,6 +12,7 @@ using HalloDocService.Admin.Interfaces;
 using HalloDocService.Admin.Implementation;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Security.Claims;
+using NUnit.Framework;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,10 @@ builder.Services.AddScoped<IProfileService,ProfileService>();
 builder.Services.AddScoped<IProfileRepo,ProfileRepo>();
 builder.Services.AddScoped<IProviderService,ProviderService>();
 builder.Services.AddScoped<IProviderRepo,ProviderRepo>();
+builder.Services.AddScoped<IAccessService,AccessService>();
+builder.Services.AddScoped<IAccessRepo,AccessRepo>();
+builder.Services.AddScoped<IScheduleRepo,ScheduleRepo>();
+builder.Services.AddScoped<IScheduleService,ScheduleService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

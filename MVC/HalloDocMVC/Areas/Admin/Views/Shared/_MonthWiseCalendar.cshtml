@@ -1,0 +1,89 @@
+<style>
+    .month-coverage .day {
+        background-color: #ffacf5 !important;
+    }
+
+    .month-table table th,
+    .month-table table td {
+        white-space: nowrap;
+        min-width: 150px;
+    }
+    .month-table .active-provider td{
+        background-color: #9f9f9f !important;
+        color: white;
+        min-width: 220px;
+    }
+    .staff-table tr td {
+        cursor: pointer;
+    }
+
+</style>
+<div class="table-responsive d-flex month-table">
+    <div>
+        <table class="table table-bordered staff-table">
+            <thead>
+                <tr class="main-head">
+                    <th scope="col">Staff</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="active-provider">
+                    <td><img src="~/images/bg_login.png" > Aakash Dave</td>
+                </tr>
+                @for(int i=0;i<15;i++){
+                    <tr>
+                        <td><img src="~/images/bg_login.png" > Aakash Dave</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr class="main-head">
+                <th scope="col">Sun</th>
+                <th scope="col">Mon</th>
+                <th scope="col">Tue</th>
+                <th scope="col">Wed</th>
+                <th scope="col">Thu</th>
+                <th scope="col">Fri</th>
+                <th scope="col">Sat</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < 5; i++)
+            {
+                <tr class="month-coverage">
+                    @for (int j = 0; j < 7; j++)
+                    {
+
+
+                        var day = i * 7 + j + 1;
+                        if (day <= 31)
+                        {
+                            <td scope="col" class="day">@day</td>
+                        }
+                        else
+                        {
+                            <td scope="col"></td>
+                        }
+                    }
+                </tr>
+
+                <!-- Add blank rows -->
+                @if (i < 5)
+                {
+                    for (int k = 0; k < 5; k++)
+                    {
+                        <tr>
+                            @for (int l = 0; l < 7; l++)
+                            {
+                                <td scope="col"></td>
+                            }
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>

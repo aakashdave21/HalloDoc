@@ -1,0 +1,189 @@
+@using HalloDocService.ViewModels;
+@model SchedulingViewModel;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Scheduling Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+}
+<style>
+    .shiftBadge span {
+        min-width: 51px;
+        min-height: 29px;
+        background-color: red;
+        border-radius: 10px;
+        border: 1px solid black;
+    }
+    .shiftBadge{
+        cursor: pointer;
+    }
+    .shiftBadge .pending-badge {
+        background-color: #ffacf5;
+        border-color: #ff8ef2;
+    }
+
+    .shiftBadge .approved-badge {
+        background-color: #aacba8;
+        border-color: #89cc85;
+    }
+    .render-calendar th, .render-calendar td{
+        background-color: transparent;
+    }
+    .main-head th{
+        background-color: gray;
+        color: white;
+    }
+    .coverage th:not(:first-child) {
+        background-color: #ffacf5;
+    }
+    .render-calendar tbody img{
+        max-width: 30px;
+        max-height: 30px;
+    }
+    .render-calendar th, .render-calendar td{
+        height: 35px;
+    }
+</style>
+<main class="Scheduling-Section container-sm mt-sm-5">
+    <div class="d-flex mt-4">
+        <h4 class="fw-bold">Scheduling</h4>
+    </div>
+    <div class="mt-4 d-flex justify-content-between flex-wrap gap-2">
+        <div class="form-group has-search">
+            <span class="fa fa-search form-control-feedback"></span>
+            <select class="form-control form-select" id="regionDropdown" onchange="searchPhysicianByRegion()">
+                <option value="0" selected>All Regions</option>
+                @* @foreach (var item in Model.AllRegionList)
+                {
+                <option value="@item.Id">@item.Name</option>
+                } *@
+            </select>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn secondary-theme-btn">
+                Providers on Call
+            </button>
+            <button class="btn secondary-theme-btn">
+                Shifts for Review
+            </button>
+            <button class="btn secondary-theme-btn">
+                Add new Shifts
+            </button>
+        </div>
+    </div>
+    <div class="mt-4">
+        <h5 id="showDate" class="fw-bold"></h5>
+    </div>
+    <div class="mt-4 shiftBadge d-flex justify-content-md-end justify-content-start flex-wrap gap-2">
+        <div id="pendingShiftBadge" data-filer="1" class="d-flex align-items-center gap-1 filterByStatus">
+            <span class="pending-badge">
+            </span>
+            <p>Pending Shifts</p>
+        </div>
+        <div id="approvedBadge" data-filer="2" class="d-flex align-items-center gap-1 filterByStatus">
+            <span class="approved-badge">
+            </span>
+            <p>Approved Shifts</p>
+        </div>
+    </div>
+    <div class="mt-4 d-flex justify-content-between flex-wrap gap-2 mt-4 align-items-center">
+        <div class="d-flex gap-2 align-items-center">
+            <button id="prev-btn" class="btn secondary-theme-btn rounded-circle">
+                <i class="fa-solid fa-angle-left"></i>
+            </button>
+            <p>
+                <i class="fa-solid fa-calendar-days"></i>
+            </p>
+            <button id="next-btn" class="btn secondary-theme-btn rounded-circle">
+                <i class="fa-solid fa-angle-right"></i>
+            </button>
+        </div>
+        <div class="d-flex align-items-center flex-wrap gap-2">
+            <button class="btn theme-btn calendarTypeBtn" data-id="1">
+                Day
+            </button>
+            <button class="btn theme-btn calendarTypeBtn " data-id="2">
+                Week
+            </button>
+            <button class="btn theme-btn calendarTypeBtn " data-id="3">
+                Month
+            </button>
+        </div>
+    </div>
+
+    <div id="render-calendar" class="render-calendar mt-5 mb-5">
+        <partial name="_DayWiseCalendar" />
+        @* <partial name="_WeekWiseCalendar" />
+        <partial name="_MonthWiseCalendar" /> *@
+    </div>
+</main>
+
+<script>
+    let CalendarType = 1;
+    let Status = null;
+    var currentDate = new Date();
+    $("#showDate").html(formattedDate(currentDate));
+    $(".calendarTypeBtn[data-id='1']").addClass("secondary-theme-btn");
+    $(".calendarTypeBtn").click(function() {
+        $(".calendarTypeBtn").removeClass("secondary-theme-btn");
+        $(this).addClass("secondary-theme-btn");
+        CalendarType = parseInt($(this).data("id"));
+        CallAjax(currentDate.toISOString().split('T')[0],'');
+    });
+
+    $("#next-btn").click(function(){
+        removeStatus();
+        if (CalendarType === 1) {
+            currentDate.setDate(currentDate.getDate() + 1);
+            $("#showDate").html(formattedDate(currentDate));
+            CallAjax(currentDate.toISOString().split('T')[0],Status);
+        } 
+    })
+    $("#prev-btn").click(function(){
+        removeStatus();
+        if (CalendarType === 1) {
+            currentDate.setDate(currentDate.getDate() - 1);
+            $("#showDate").html(formattedDate(currentDate));
+            CallAjax(currentDate.toISOString().split('T')[0],Status);
+        } 
+    })
+    function removeStatus(){
+        Status = "";
+        $("#approvedBadge span,#approvedBadge p").removeClass("fw-bold");
+        $("#pendingShiftBadge span,#pendingShiftBadge p").removeClass("fw-bold");
+    }
+    $(".filterByStatus").click(function(){
+        let status = $(this).data("filer");
+        if (status === 1) {
+            Status = 1;
+            $("#pendingShiftBadge span,#pendingShiftBadge p").addClass("fw-bold");
+            $("#approvedBadge span,#approvedBadge p").removeClass("fw-bold");
+        } else {
+            Status = 2;
+            $("#pendingShiftBadge span,#pendingShiftBadge p").removeClass("fw-bold");
+            $("#approvedBadge span,#approvedBadge p").addClass("fw-bold");
+        }
+        CallAjax(currentDate.toISOString().split('T')[0],Status);
+    })
+
+    @* function FilterStatus(changeStatus){
+        Status = changeStatus;
+        CallAjax(currentDate.toISOString().split('T')[0],Status);
+    } *@
+
+     function formattedDate(date){
+        return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function CallAjax(date,currentstatus){
+        sendAjaxRequest('/admin/Scheduling/GetDayWiseData', 'GET', { startDate: date, status : currentstatus }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                $("#render-calendar").html(response);
+            }).catch(function (error) {
+                ToastError("Internal Server Error");
+            })
+    }
+
+    
+
+   
+</script>
