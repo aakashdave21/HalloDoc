@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using HalloDocService.Admin.Interfaces;
 using HalloDocService.ViewModels;
+using System.Security.Claims;
 namespace HalloDocMVC.Controllers.Admin;
 
 [Area("Admin")]
@@ -23,7 +24,7 @@ public class SchedulingController : Controller
             {
                 startDate = DateTime.Today.ToString("yyyy-MM-dd");
             }
-            SchedulingViewModel ScheduleList = _scheduleService.ShiftsLists(startDate);
+            SchedulingViewModel ScheduleList = _scheduleService.ShiftsLists(startDate,startDate);
             return View(ScheduleList);
         }
         catch (Exception)
@@ -36,17 +37,38 @@ public class SchedulingController : Controller
     public IActionResult GetDayWiseData(string startDate = "",string? Status = null){
          try
         {
-            Console.WriteLine(Status + "-------------------------------------");
             if (string.IsNullOrEmpty(startDate))
             {
                 startDate = DateTime.Today.ToString("yyyy-MM-dd");
             }
-            SchedulingViewModel ScheduleList = _scheduleService.ShiftsLists(startDate,Status);
+            SchedulingViewModel ScheduleList = _scheduleService.ShiftsLists(startDate,startDate,Status);
             return PartialView("_DayWiseCalendar",ScheduleList);
         }
         catch (Exception e)
         {
             return BadRequest(new {message = e});
         }
+    }
+    public IActionResult GetWeekWiseData(string startDate = "", string endDate = "" , string? Status = null){
+         try
+        {
+            if (string.IsNullOrEmpty(startDate))
+            {
+                startDate = DateTime.Today.ToString("yyyy-MM-dd");
+            }
+            SchedulingViewModel ScheduleList = _scheduleService.ShiftsLists(startDate,endDate,Status);
+            return PartialView("_WeekWiseCalendar",ScheduleList);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new {message = e});
+        }
+    }
+
+    [HttpPost]
+    public IActionResult CreateShift(SchedulingViewModel scheduleView){
+        int AspUserId = int.Parse(User.FindFirstValue("AspUserId"));
+        _scheduleService.AddShift(scheduleView,AspUserId);
+        return RedirectToAction("Index");
     }
 }

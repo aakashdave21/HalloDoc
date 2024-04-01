@@ -443,7 +443,7 @@ public partial class HalloDocContext : DbContext
 
             entity.HasOne(d => d.Region).WithMany(p => p.Shiftdetails).HasConstraintName("shiftdetail_regionid_fkey");
 
-            entity.HasOne(d => d.Shift).WithOne(p => p.Shiftdetail)
+            entity.HasOne(d => d.Shift).WithMany(p => p.Shiftdetails)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("shiftdetail_shiftid_fkey");
         });

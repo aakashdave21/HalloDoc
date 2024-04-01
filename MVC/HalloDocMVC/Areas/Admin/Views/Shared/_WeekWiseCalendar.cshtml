@@ -3,13 +3,10 @@
                 <thead>
                     <tr class="main-head">
                         <th scope="col">Staff</th>
-                        <th scope="col">Sun 3</th>
-                        <th scope="col">Mon 4</th>
-                        <th scope="col">Tue 5</th>
-                        <th scope="col">Wed 6</th>
-                        <th scope="col">Thu 7</th>
-                        <th scope="col">Fri 8</th>
-                        <th scope="col">Sat 9</th>
+                        @for (int i = 0; i < 7; i++)
+                        {
+                            <th scope="col" class="weekDays"></th>
+                        }
                     </tr>
                     <tr class="coverage">
                         <td>Coverage</td>
@@ -19,9 +16,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for(int j=0; j < 25; j++){
+                    @foreach (var provider in Model.AllProvidersList){
                         <tr>
-                            <td scope="row" class="d-flex"> <img src="~/images/bg_login.png" > Aakash Dave</td>
+                            <td scope="row" class="d-flex" style="white-space:nowrap;">
+                                @if (!string.IsNullOrEmpty(provider.PhotoPath))
+                                {
+                                    <img src="~/@provider.PhotoPath" class="me-2" />
+                                }
+                                else
+                                {
+                                    <i class="fa-regular fa-user me-2"></i>
+                                }
+                                @provider.FullName
+                            </td>
                             @for(int i = 0; i < 7 ; i++) {
                                 <td scope="col"></td>
                             }

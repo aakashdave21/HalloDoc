@@ -13,9 +13,11 @@
         border-radius: 10px;
         border: 1px solid black;
     }
-    .shiftBadge{
+
+    .shiftBadge {
         cursor: pointer;
     }
+
     .shiftBadge .pending-badge {
         background-color: #ffacf5;
         border-color: #ff8ef2;
@@ -25,21 +27,28 @@
         background-color: #aacba8;
         border-color: #89cc85;
     }
-    .render-calendar th, .render-calendar td{
+
+    .render-calendar th,
+    .render-calendar td {
         background-color: transparent;
     }
-    .main-head th{
+
+    .main-head th {
         background-color: gray;
         color: white;
     }
+
     .coverage th:not(:first-child) {
         background-color: #ffacf5;
     }
-    .render-calendar tbody img{
+
+    .render-calendar tbody img {
         max-width: 30px;
         max-height: 30px;
     }
-    .render-calendar th, .render-calendar td{
+
+    .render-calendar th,
+    .render-calendar td {
         height: 35px;
     }
 </style>
@@ -52,10 +61,10 @@
             <span class="fa fa-search form-control-feedback"></span>
             <select class="form-control form-select" id="regionDropdown" onchange="searchPhysicianByRegion()">
                 <option value="0" selected>All Regions</option>
-                @* @foreach (var item in Model.AllRegionList)
+                @foreach (var item in Model.AllRegions)
                 {
-                <option value="@item.Id">@item.Name</option>
-                } *@
+                    <option value="@item.Id">@item.Name</option>
+                }
             </select>
         </div>
         <div class="d-flex flex-wrap gap-2">
@@ -65,7 +74,7 @@
             <button class="btn secondary-theme-btn">
                 Shifts for Review
             </button>
-            <button class="btn secondary-theme-btn">
+            <button class="btn secondary-theme-btn" data-bs-toggle="modal" data-bs-target="#createShiftModal">
                 Add new Shifts
             </button>
         </div>
@@ -112,10 +121,138 @@
 
     <div id="render-calendar" class="render-calendar mt-5 mb-5">
         <partial name="_DayWiseCalendar" />
-        @* <partial name="_WeekWiseCalendar" />
-        <partial name="_MonthWiseCalendar" /> *@
+         <partial name="_WeekWiseCalendar" />
+        @* <partial name="_MonthWiseCalendar" />  *@
     </div>
 </main>
+
+<div class="modal fade shadow-lg " id="createShiftModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Create Shift</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-area="admin" asp-controller="scheduling" asp-action="CreateShift" method="post" id="createShift">
+                <div class="modal-body">
+                    <small class="text-muted">To assign this shift, search and select physician.</small>
+                    <div class="row">
+                        <div class="col-12">
+                            <select asp-for="RegionId" name="RegionId" class="form-select" id="regionScheduleDropdown"
+                                aria-label="Default select example" onchange="getPhysiciansSchedule()">
+                                <option value="" selected disabled>Regions</option>
+                                @foreach (var item in Model.AllRegions)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
+                            <span id="Schedule-Region" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <select asp-for="Physicianid" name="Physicianid" class="form-select mt-2" id="physicianSelectDropdown"
+                                aria-label="Default select example" disabled>
+                                <option value="" selected>Select Physician</option>
+                            </select>
+                            <span id="Schedule-Physician" class="text-danger" id="physicianValidation"></span>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating mt-2">
+                                <input asp-for="ShiftDate" type="date" class="form-control" id="shiftdate" placeholder="shiftdate" min="">
+                                <label asp-for="ShiftDate" for="shiftdate">shift date</label>
+                            </div>
+                            <span id="Schedule-ShiftDate" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mt-2">
+                                <input asp-for="StartTime" type="time" class="form-control" id="shiftStart" placeholder="shiftStart">
+                                <label asp-for="StartTime" for="shiftStart">start Time</label>
+                            </div>
+                            <span id="Schedule-StartTime" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mt-2">
+                                <input asp-for="EndTime" type="time" class="form-control" id="shiftEnd" placeholder="shiftEnd">
+                                <label asp-for="EndTime" for="shiftEnd">end time</label>
+                            </div>
+                            <span id="Schedule-endtime" class="text-danger"></span>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <div class="form-check form-switch">
+                                <input asp-for="IsRepeat" class="form-check-input" type="checkbox" role="switch" id="RepeatSwitch">
+                                <label asp-for="IsRepeat" class="form-check-label" for="RepeatSwitch">Repeat</label>
+                            </div>
+                            <span asp-validation-for="IsRepeat" class="text-danger"></span>
+                        </div>
+                        <div class="col-12 mt-3" id="repeatDetailsSection" style="display: none;">
+                            <p class="text-muted mb-3">Repeat Days</p>
+                            <div class="d-flex flex-wrap gap-3 mb-3">
+                                @for(int i=0;i<Model.RepeatDaysList.Count;i++){
+                                    <div class="form-check">
+                                        <input type="hidden" asp-for="@Model.RepeatDaysList[i].Id">
+                                        <input class="form-check-input" type="checkbox" id="repeat-@Model.RepeatDaysList[i].Id" asp-for="@Model.RepeatDaysList[i].IsSelected">
+                                        <label for="repeat-@Model.RepeatDaysList[i].Id" class="form-check-label">@Model.RepeatDaysList[i].DayName</label>
+                                    </div>
+                                }
+                                
+                            </div>
+                            <div class="form-floating">
+                                <select class="form-select" asp-for="RepeatTime" id="repeatTime"
+                                    aria-label="Default select example">
+                                    <option value="1" selected>1 Times</option>
+                                    <option value="2">2 Times</option>
+                                    <option value="3">3 Times</option>
+                                </select>
+                                <label asp-for="RepeatTime" for="repeatTime">Repeat-time</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="validateForm()" class="btn secondary-theme-btn">Confirm</button>
+                    <button type="reset" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js" integrity="sha512-4F1cxYdMiAW98oomSLaygEwmCnIP38pb4Kx70yQYqRwLVCs3DbRumfBq82T08g/4LJ/smbFGFpmeFlQgoDccgg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    var today = new Date();
+    var formattedDate = today.toISOString().split('T')[0];
+    $('#shiftdate').attr('min', formattedDate);
+
+
+    function getCurrentWeekDates() {
+        moment.updateLocale('en', {
+            week: {
+                dow: 0
+            }
+        });
+        var currentWeekNumber = moment().week();
+        var startDate = moment().startOf('week');
+        var endDate = moment().endOf('week');
+        return {
+            currentWeekNumber: currentWeekNumber,
+            startDate: startDate.format('YYYY-MM-DD'),
+            endDate: endDate.format('YYYY-MM-DD')
+        };
+    }
+    function displayWeekDays(startDate, endDate) {
+        var weekDaysElements  = $('.weekDays');
+        weekDaysElements.empty();
+        var currentDate = moment(startDate);
+        while (currentDate.isSameOrBefore(endDate)) {
+            var formattedDate = currentDate.format('ddd D');
+            console.log(formattedDate);
+            weekDaysElements.eq(currentDate.day()).text(formattedDate);
+            currentDate.add(1, 'day');
+        }
+    }
+</script>
 
 <script>
     let CalendarType = 1;
@@ -123,35 +260,44 @@
     var currentDate = new Date();
     $("#showDate").html(formattedDate(currentDate));
     $(".calendarTypeBtn[data-id='1']").addClass("secondary-theme-btn");
-    $(".calendarTypeBtn").click(function() {
+    $(".calendarTypeBtn").click(function () {
         $(".calendarTypeBtn").removeClass("secondary-theme-btn");
         $(this).addClass("secondary-theme-btn");
         CalendarType = parseInt($(this).data("id"));
-        CallAjax(currentDate.toISOString().split('T')[0],'');
+        if (CalendarType == 1) {
+            var currentDate = new Date();
+            $("#showDate").html(formattedDate(currentDate));
+            CallAjax(currentDate.toISOString().split('T')[0], '');
+        } else if (CalendarType == 2) {
+            var weekDates = getCurrentWeekDates();
+             $("#showDate").html(moment(weekDates.startDate).format("DD MMMM YYYY") + " - " + moment(weekDates.endDate).format("DD MMMM YYYY"));
+            GetWeekWiseDataAjax(weekDates.startDate, weekDates.endDate,'');
+            
+        }
     });
 
-    $("#next-btn").click(function(){
+    $("#next-btn").click(function () {
         removeStatus();
         if (CalendarType === 1) {
             currentDate.setDate(currentDate.getDate() + 1);
             $("#showDate").html(formattedDate(currentDate));
-            CallAjax(currentDate.toISOString().split('T')[0],Status);
-        } 
+            CallAjax(currentDate.toISOString().split('T')[0], Status);
+        }
     })
-    $("#prev-btn").click(function(){
+    $("#prev-btn").click(function () {
         removeStatus();
         if (CalendarType === 1) {
             currentDate.setDate(currentDate.getDate() - 1);
             $("#showDate").html(formattedDate(currentDate));
-            CallAjax(currentDate.toISOString().split('T')[0],Status);
-        } 
+            CallAjax(currentDate.toISOString().split('T')[0], Status);
+        }
     })
-    function removeStatus(){
+    function removeStatus() {
         Status = "";
         $("#approvedBadge span,#approvedBadge p").removeClass("fw-bold");
         $("#pendingShiftBadge span,#pendingShiftBadge p").removeClass("fw-bold");
     }
-    $(".filterByStatus").click(function(){
+    $(".filterByStatus").click(function () {
         let status = $(this).data("filer");
         if (status === 1) {
             Status = 1;
@@ -162,28 +308,109 @@
             $("#pendingShiftBadge span,#pendingShiftBadge p").removeClass("fw-bold");
             $("#approvedBadge span,#approvedBadge p").addClass("fw-bold");
         }
-        CallAjax(currentDate.toISOString().split('T')[0],Status);
+        CallAjax(currentDate.toISOString().split('T')[0], Status);
     })
 
-    @* function FilterStatus(changeStatus){
-        Status = changeStatus;
-        CallAjax(currentDate.toISOString().split('T')[0],Status);
-    } *@
-
-     function formattedDate(date){
+    function formattedDate(date) {
         return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
     }
 
-    function CallAjax(date,currentstatus){
-        sendAjaxRequest('/admin/Scheduling/GetDayWiseData', 'GET', { startDate: date, status : currentstatus }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+    function CallAjax(date, currentstatus) {
+        sendAjaxRequest('/admin/Scheduling/GetDayWiseData', 'GET', { startDate: date, status: currentstatus }, "application/x-www-form-urlencoded; charset=UTF-8", true)
             .then(function (response) {
                 $("#render-calendar").html(response);
             }).catch(function (error) {
                 ToastError("Internal Server Error");
             })
     }
+    function GetWeekWiseDataAjax(startDate, endDate, currentstatus) {
+        sendAjaxRequest('/admin/Scheduling/GetWeekWiseData', 'GET', { startDate, endDate , status: currentstatus }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                $("#render-calendar").html(response);
+                displayWeekDays(startDate, endDate);
+            }).catch(function (error) {
+                console.log(error)
+                ToastError("Internal Server Error");
+            })
+    }
 
-    
+    const getPhysiciansSchedule = async (physicianId = null) => {
+        try {
+            $("#physicianSelectDropdown").removeAttr("disabled");
+            const regionValue = $("#regionScheduleDropdown").val();
+            const physicians = await $.get('/admin/dashboard/GetPhysicians', {
+                RegionId: regionValue
+            })
+            let PhysicianDropdown = $("#physicianSelectDropdown")
+            PhysicianDropdown.empty();
+            PhysicianDropdown.append(`<option value="" selected disabled>Choose Physician</option>`);
+            physicians.forEach(phy => {
+                if (physicianId != phy.id) {
+                    PhysicianDropdown.append(`<option value="${phy.id}">${phy.firstname}</option>`);
+                }
+            });
+        } catch (error) {
+            console.error("Error loading Physician:", error)
+        }
+    }
 
-   
+    $("#RepeatSwitch").change(function(){
+        checkCheckboxStatus();
+    });
+    function checkCheckboxStatus() {
+      if ($("#RepeatSwitch").is(":checked")) {
+        $("#repeatDetailsSection").css('display','block');
+      } else {
+        $("#repeatDetailsSection").css('display','none');
+      }
+    }
+
+
+
+
+function validateForm() {
+        
+        var region = document.getElementById("regionScheduleDropdown").value;
+        var physician = document.getElementById("physicianSelectDropdown").value;
+        var shiftDate = document.getElementById("shiftdate").value;
+        var startTime = document.getElementById("shiftStart").value;
+        var endTime = document.getElementById("shiftEnd").value;
+
+           
+            
+            
+        if (region == "") {
+            $("#Schedule-Region").html("Please select a region.");
+            return;
+        }
+        if (physician == "") {
+            $("#Schedule-Physician").html("Please select a physician.");
+            return;
+        }
+        if (shiftDate == "") {
+            $("#Schedule-ShiftDate").html("Please select a shift date.");
+            return ;
+        }
+        if (startTime == "") {
+            $("#Schedule-StartTime").html("Please enter a start time.");
+            return;
+        }
+        if (endTime == "") {
+            $("#Schedule-endtime").html("Please enter an end time.");
+            return;
+        }
+        if (startTime && endTime) {
+            if (startTime > endTime) {
+                ToastError("Please Choose Valid Time");
+                return;
+            }
+            var startTotalMinutes = parseInt(startTime.split(':')[0]) * 60 + parseInt(startTime.split(':')[1]);
+            var endTotalMinutes = parseInt(endTime.split(':')[0]) * 60 + parseInt(endTime.split(':')[1]);
+            if (endTotalMinutes - startTotalMinutes < 60) {
+                ToastError("Please choose a valid time with at least 1 hour gap.");
+                return;
+            }
+        }
+        $("#createShift").submit();
+    }
 </script>

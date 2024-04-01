@@ -13,16 +13,40 @@ public class ScheduleRepo : IScheduleRepo
         _dbContext = dbContext;
     }
 
-    public IEnumerable<Shift> ShiftsLists(string startDate,string? status = null){
-        if (!DateOnly.TryParse(startDate, out DateOnly parsedDate))
+    public IEnumerable<Shiftdetail> ShiftsLists(string startDate,string endDate,string? status = null)
+    {
+         if (!DateOnly.TryParse(startDate, out DateOnly parsedStartDate) || 
+        !DateOnly.TryParse(endDate, out DateOnly parsedEndDate))
         {
             throw new ArgumentException("Invalid date format", nameof(startDate));
         }
-        Console.WriteLine(status+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        IEnumerable<Shift> shiftDetails = _dbContext.Shifts.Include(sd => sd.Shiftdetail).Where(sf => sf.Startdate == parsedDate).ToList();
-        if(!string.IsNullOrEmpty(status)){
-            shiftDetails = shiftDetails.Where(sf => sf?.Shiftdetail?.Status == short.Parse(status));
+        
+        IEnumerable<Shiftdetail> shiftdetailsInfo = _dbContext.Shiftdetails
+    .Include(sd => sd.Shift)
+    .Where(sf => sf.Shiftdate.Date >= parsedStartDate.ToDateTime(new TimeOnly()).Date &&
+                     sf.Shiftdate.Date <= parsedEndDate.ToDateTime(new TimeOnly()).Date)
+    .ToList();
+
+        if (!string.IsNullOrEmpty(status))
+        {
+            shiftdetailsInfo = shiftdetailsInfo.Where(sf => sf?.Status == short.Parse(status));
         }
-        return shiftDetails;
+        return shiftdetailsInfo;
+    }
+
+    public void CreateShift(Shift shiftData)
+    {
+        _dbContext.Shifts.Add(shiftData);
+        _dbContext.SaveChanges();
+    }
+    public void CreateShiftDetails(Shiftdetail shiftData)
+    {
+        _dbContext.Shiftdetails.Add(shiftData);
+        _dbContext.SaveChanges();
+    }
+    public void CreateShiftDetailsList(List<Shiftdetail> shiftDetailsList)
+    {
+        _dbContext.Shiftdetails.AddRange(shiftDetailsList);
+        _dbContext.SaveChanges();
     }
 }

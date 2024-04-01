@@ -51,5 +51,5 @@ public partial class Shift
     public virtual Physician Physician { get; set; } = null!;
 
     [InverseProperty("Shift")]
-    public virtual Shiftdetail? Shiftdetail { get; set; }
+    public virtual ICollection<Shiftdetail> Shiftdetails { get; } = new List<Shiftdetail>();
 }

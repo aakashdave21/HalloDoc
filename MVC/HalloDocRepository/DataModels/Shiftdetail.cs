@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 namespace HalloDocRepository.DataModels;
 
 [Table("shiftdetail")]
-[Index("Shiftid", Name = "shiftdetail_shiftid_key", IsUnique = true)]
 public partial class Shiftdetail
 {
     [Key]
@@ -70,7 +69,7 @@ public partial class Shiftdetail
     public virtual Region? Region { get; set; }
 
     [ForeignKey("Shiftid")]
-    [InverseProperty("Shiftdetail")]
+    [InverseProperty("Shiftdetails")]
     public virtual Shift Shift { get; set; } = null!;
 
     [InverseProperty("Shiftdetail")]
