@@ -1,39 +1,136 @@
+<style>
+    [data-bs-theme=dark] .weekwisetab .pink-bg{
+        border: 2px solid #ffacf5 !important;
+        background-color: transparent;
+        color: #ffacf5;
+    }
+    [data-bs-theme=dark] .weekwisetab .green-bg{
+        border: 2px solid #aacba8 !important;
+        background-color: transparent;
+        color: #aacba8;
+    }
+    .weekwisetab .pink-bg, [data-bs-theme=dark] .weekwisetab .pink-bg:hover  {
+        background-color: #ffacf5 ;
+        cursor: pointer;
+        color: black;
+    }
+    .weekwisetab .green-bg, [data-bs-theme=dark] .weekwisetab .green-bg:hover {
+        background-color: #aacba8;
+        cursor: pointer;
+        color: black;
+    }
+    .weekwisetab .pink-bg:hover  {
+        color: white !important;
+    }
+    .weekwisetab .green-bg:hover {
+        color: white !important;
+    }
+    .weekwisetab td {
+        min-height: 35px !important;
+        height: auto !important;
+    }
+    .weekwisetab td ul li {
+        padding-left: 5px;
+        list-style: none;
+    }
+    .weekwisetab td ul li small {
+        white-space: nowrap;
+    }
+    .weekwisetab tbody tr td[scope="col"] {
+        padding: 0 !important;
+    }
+</style>
 <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr class="main-head">
-                        <th scope="col">Staff</th>
-                        @for (int i = 0; i < 7; i++)
+    <table class="table table-bordered weekwisetab" >
+        <thead>
+            <tr class="main-head">
+                <th scope="col">Staff</th>
+                @for (int i = 0; i < 7; i++)
+                {
+                    <th scope="col" class="weekDays"></th>
+                }
+            </tr>
+            <tr class="coverage">
+                <td>Coverage</td>
+                @for (int i = 0; i < 7; i++)
+                {
+                    <th scope="col" class="text-muted">0/24</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var provider in Model.AllProvidersList)
+            {
+                <tr>
+                    <td scope="row">
+                        <div class="d-flex" style="white-space:nowrap;">
+                            @if (!string.IsNullOrEmpty(provider.PhotoPath))
+                            {
+                                <img src="~/@provider.PhotoPath" class="me-2" />
+                            }
+                            else
+                            {
+                                <i class="fa-regular fa-user me-2"></i>
+                            }
+                            @provider.FullName
+                        </div>
+
+                    </td>
+                    @{
+                        for (int day = 0; day < 7; day++)
                         {
-                            <th scope="col" class="weekDays"></th>
-                        }
-                    </tr>
-                    <tr class="coverage">
-                        <td>Coverage</td>
-                        @for(int i=0;i<7;i++){
-                            <th scope="col" class="text-muted">0/24</th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var provider in Model.AllProvidersList){
-                        <tr>
-                            <td scope="row" class="d-flex" style="white-space:nowrap;">
-                                @if (!string.IsNullOrEmpty(provider.PhotoPath))
+                            List<ShiftDetailsInfo> shiftNumber = new List<ShiftDetailsInfo>();
+                            @foreach (var shift in Model.AllShiftList)
+                            {
+                                DateTime date = DateTime.ParseExact(shift.StartDate, "yyyy-MM-dd",
+                                System.Globalization.CultureInfo.InvariantCulture);
+                                DayOfWeek dayOfWeek = date.DayOfWeek;
+                                int dayOfWeekNumeric = (int)dayOfWeek;
+                                if (shift.ProviderId == provider.Id && dayOfWeekNumeric == day)
                                 {
-                                    <img src="~/@provider.PhotoPath" class="me-2" />
+                                    shiftNumber.Add(shift);
                                 }
-                                else
-                                {
-                                    <i class="fa-regular fa-user me-2"></i>
-                                }
-                                @provider.FullName
-                            </td>
-                            @for(int i = 0; i < 7 ; i++) {
+                            }
+                            if (shiftNumber.Any())
+                            {
+                                <td scope="col">
+                                    <ul>
+                                        @foreach (var shift in shiftNumber)
+                                        {
+                                            if (shift.Status == 1)
+                                            {
+                                                <li class="pink-bg">
+                                                    <small>@shift.StartTimeHour:@shift.StartTimeMinute -
+                                                        @shift.EndTimeHour:@shift.EndTimeMinute</small>
+                                                    <br>
+                                                    <small>
+                                                        @provider.FullName
+                                                    </small>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li class="green-bg"><small>@shift.StartTimeHour:@shift.StartTimeMinute -
+                                                        @shift.EndTimeHour:@shift.EndTimeMinute</small>
+                                                    <br>
+                                                    <small>
+                                                        @provider.FullName
+                                                    </small>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </td>
+                            }
+                            else
+                            {
                                 <td scope="col"></td>
                             }
-                        </tr>
+                        }
                     }
-                </tbody>
-            </table>
-        </div>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

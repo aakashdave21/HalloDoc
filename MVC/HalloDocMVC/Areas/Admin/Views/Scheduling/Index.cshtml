@@ -51,6 +51,10 @@
     .render-calendar td {
         height: 35px;
     }
+
+    .current-time {
+        color: #01bce9;
+    }
 </style>
 <main class="Scheduling-Section container-sm mt-sm-5">
     <div class="d-flex mt-4">
@@ -80,7 +84,7 @@
         </div>
     </div>
     <div class="mt-4">
-        <h5 id="showDate" class="fw-bold"></h5>
+        <h5 id="showDate" class="fw-bold current-time"></h5>
     </div>
     <div class="mt-4 shiftBadge d-flex justify-content-md-end justify-content-start flex-wrap gap-2">
         <div id="pendingShiftBadge" data-filer="1" class="d-flex align-items-center gap-1 filterByStatus">
@@ -121,11 +125,12 @@
 
     <div id="render-calendar" class="render-calendar mt-5 mb-5">
         <partial name="_DayWiseCalendar" />
-         <partial name="_WeekWiseCalendar" />
-        @* <partial name="_MonthWiseCalendar" />  *@
+        @* <partial name="_WeekWiseCalendar" /> *@
+        @* <partial name="_MonthWiseCalendar" /> *@
     </div>
 </main>
 
+@* Model For Create Shifts *@
 <div class="modal fade shadow-lg " id="createShiftModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -150,36 +155,40 @@
                             <span id="Schedule-Region" class="text-danger"></span>
                         </div>
                         <div class="col-12">
-                            <select asp-for="Physicianid" name="Physicianid" class="form-select mt-2" id="physicianSelectDropdown"
-                                aria-label="Default select example" disabled>
+                            <select asp-for="Physicianid" name="Physicianid" class="form-select mt-2"
+                                id="physicianSelectDropdown" aria-label="Default select example" disabled>
                                 <option value="" selected>Select Physician</option>
                             </select>
                             <span id="Schedule-Physician" class="text-danger" id="physicianValidation"></span>
                         </div>
                         <div class="col-12">
                             <div class="form-floating mt-2">
-                                <input asp-for="ShiftDate" type="date" class="form-control" id="shiftdate" placeholder="shiftdate" min="">
+                                <input asp-for="ShiftDate" type="date" class="form-control" id="shiftdate"
+                                    placeholder="shiftdate" min="">
                                 <label asp-for="ShiftDate" for="shiftdate">shift date</label>
                             </div>
                             <span id="Schedule-ShiftDate" class="text-danger"></span>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mt-2">
-                                <input asp-for="StartTime" type="time" class="form-control" id="shiftStart" placeholder="shiftStart">
+                                <input asp-for="StartTime" type="time" class="form-control" id="shiftStart"
+                                    placeholder="shiftStart">
                                 <label asp-for="StartTime" for="shiftStart">start Time</label>
                             </div>
                             <span id="Schedule-StartTime" class="text-danger"></span>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mt-2">
-                                <input asp-for="EndTime" type="time" class="form-control" id="shiftEnd" placeholder="shiftEnd">
+                                <input asp-for="EndTime" type="time" class="form-control" id="shiftEnd"
+                                    placeholder="shiftEnd">
                                 <label asp-for="EndTime" for="shiftEnd">end time</label>
                             </div>
                             <span id="Schedule-endtime" class="text-danger"></span>
                         </div>
                         <div class="col-12 mt-3">
                             <div class="form-check form-switch">
-                                <input asp-for="IsRepeat" class="form-check-input" type="checkbox" role="switch" id="RepeatSwitch">
+                                <input asp-for="IsRepeat" class="form-check-input" type="checkbox" role="switch"
+                                    id="RepeatSwitch">
                                 <label asp-for="IsRepeat" class="form-check-label" for="RepeatSwitch">Repeat</label>
                             </div>
                             <span asp-validation-for="IsRepeat" class="text-danger"></span>
@@ -187,14 +196,18 @@
                         <div class="col-12 mt-3" id="repeatDetailsSection" style="display: none;">
                             <p class="text-muted mb-3">Repeat Days</p>
                             <div class="d-flex flex-wrap gap-3 mb-3">
-                                @for(int i=0;i<Model.RepeatDaysList.Count;i++){
+                                @for (int i = 0; i < Model.RepeatDaysList.Count; i++)
+                                {
                                     <div class="form-check">
                                         <input type="hidden" asp-for="@Model.RepeatDaysList[i].Id">
-                                        <input class="form-check-input" type="checkbox" id="repeat-@Model.RepeatDaysList[i].Id" asp-for="@Model.RepeatDaysList[i].IsSelected">
-                                        <label for="repeat-@Model.RepeatDaysList[i].Id" class="form-check-label">@Model.RepeatDaysList[i].DayName</label>
+                                        <input class="form-check-input" type="checkbox"
+                                            id="repeat-@Model.RepeatDaysList[i].Id"
+                                            asp-for="@Model.RepeatDaysList[i].IsSelected">
+                                        <label for="repeat-@Model.RepeatDaysList[i].Id"
+                                            class="form-check-label">@Model.RepeatDaysList[i].DayName</label>
                                     </div>
                                 }
-                                
+
                             </div>
                             <div class="form-floating">
                                 <select class="form-select" asp-for="RepeatTime" id="repeatTime"
@@ -218,8 +231,9 @@
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js" integrity="sha512-4F1cxYdMiAW98oomSLaygEwmCnIP38pb4Kx70yQYqRwLVCs3DbRumfBq82T08g/4LJ/smbFGFpmeFlQgoDccgg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js"
+    integrity="sha512-4F1cxYdMiAW98oomSLaygEwmCnIP38pb4Kx70yQYqRwLVCs3DbRumfBq82T08g/4LJ/smbFGFpmeFlQgoDccgg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     var today = new Date();
     var formattedDate = today.toISOString().split('T')[0];
@@ -241,13 +255,20 @@
             endDate: endDate.format('YYYY-MM-DD')
         };
     }
+    function getCurrentMonthDates() {
+        let startDate = moment().startOf('month').format('YYYY-MM-DD');
+        let endDate = moment().endOf('month').format('YYYY-MM-DD');
+        return {
+            startDate,
+            endDate
+        }
+    }
     function displayWeekDays(startDate, endDate) {
-        var weekDaysElements  = $('.weekDays');
+        var weekDaysElements = $('.weekDays');
         weekDaysElements.empty();
         var currentDate = moment(startDate);
         while (currentDate.isSameOrBefore(endDate)) {
             var formattedDate = currentDate.format('ddd D');
-            console.log(formattedDate);
             weekDaysElements.eq(currentDate.day()).text(formattedDate);
             currentDate.add(1, 'day');
         }
@@ -257,46 +278,136 @@
 <script>
     let CalendarType = 1;
     let Status = null;
-    var currentDate = new Date();
+    let currentDate = new Date();
+    let weekStartDate = '';
+    let weekEndDate = '';
+    let monthStartDate = '';
+    let monthEndDate = '';
+
     $("#showDate").html(formattedDate(currentDate));
     $(".calendarTypeBtn[data-id='1']").addClass("secondary-theme-btn");
-    $(".calendarTypeBtn").click(function () {
-        $(".calendarTypeBtn").removeClass("secondary-theme-btn");
-        $(this).addClass("secondary-theme-btn");
-        CalendarType = parseInt($(this).data("id"));
-        if (CalendarType == 1) {
-            var currentDate = new Date();
-            $("#showDate").html(formattedDate(currentDate));
-            CallAjax(currentDate.toISOString().split('T')[0], '');
-        } else if (CalendarType == 2) {
-            var weekDates = getCurrentWeekDates();
-             $("#showDate").html(moment(weekDates.startDate).format("DD MMMM YYYY") + " - " + moment(weekDates.endDate).format("DD MMMM YYYY"));
-            GetWeekWiseDataAjax(weekDates.startDate, weekDates.endDate,'');
-            
-        }
-    });
 
-    $("#next-btn").click(function () {
-        removeStatus();
-        if (CalendarType === 1) {
-            currentDate.setDate(currentDate.getDate() + 1);
-            $("#showDate").html(formattedDate(currentDate));
-            CallAjax(currentDate.toISOString().split('T')[0], Status);
-        }
-    })
+    @* Daily/Weekly/Monthly calendar type button click event *@
+        $(".calendarTypeBtn").click(function () {
+            removeStatus();
+            $(".calendarTypeBtn").removeClass("secondary-theme-btn");
+            $(this).addClass("secondary-theme-btn");
+            CalendarType = parseInt($(this).data("id"));
+            if (CalendarType == 1) {
+                currentDate = new Date();
+                let now = new Date();
+                if (currentDate.getDate() === now.getDate()) { $("#showDate").addClass("current-time"); }
+                $("#showDate").html(formattedDate(currentDate));
+                CallAjax(currentDate.toISOString().split('T')[0], '');
+            } else if (CalendarType == 2) {
+                currentDate = new Date();
+                var weekDates = getCurrentWeekDates();
+                weekStartDate = weekDates.startDate;
+                weekEndDate = weekDates.endDate;
+                if (moment().isBetween(weekStartDate, weekEndDate, null, '[]')) {
+                    $("#showDate").addClass("current-time");
+                } else {
+                    $("#showDate").removeClass("current-time");
+                }
+                $("#showDate").html(moment(weekDates.startDate).format("DD MMMM YYYY") + " - " + moment(weekDates.endDate).format("DD MMMM YYYY"));
+                GetWeekWiseDataAjax(weekDates.startDate, weekDates.endDate, '');
+            } else if (CalendarType == 3) {
+                var monthsDates = getCurrentMonthDates();
+                monthStartDate = monthsDates.startDate;
+                monthEndDate = monthsDates.endDate;
+                if (moment().isBetween(monthStartDate, monthEndDate, null, '[]')) {
+                    $("#showDate").addClass("current-time");
+                } else {
+                    $("#showDate").removeClass("current-time");
+                }
+                $("#showDate").html(moment(monthsDates.startDate).format("MMMM YYYY"));
+                GetMonthWiseAjax(monthStartDate, monthEndDate, '');
+            }
+        });
+
+    @* next button *@
+        $("#next-btn").click(function () {
+            removeStatus();
+            if (CalendarType === 1) {
+                let now = new Date();
+                currentDate.setDate(currentDate.getDate() + 1);
+                if (currentDate.getDate() === now.getDate()) { $("#showDate").addClass("current-time"); }
+                else { $("#showDate").removeClass("current-time"); }
+                $("#showDate").html(formattedDate(currentDate));
+                CallAjax(currentDate.toISOString().split('T')[0], Status);
+            } else if (CalendarType === 2) {
+                currentDate = moment(currentDate).add(1, 'week').toDate();
+                var nextWeekStartDate = moment(currentDate).startOf('week');
+                var nextWeekEndDate = moment(currentDate).endOf('week');
+                weekStartDate = nextWeekStartDate.format('YYYY-MM-DD');
+                weekEndDate = nextWeekEndDate.format('YYYY-MM-DD');
+                $("#showDate").html(moment(nextWeekStartDate).format("DD MMMM YYYY") + " - " + moment(nextWeekEndDate).format("DD MMMM YYYY"));
+                if (moment().isBetween(nextWeekStartDate, nextWeekEndDate, null, '[]')) {
+                    $("#showDate").addClass("current-time");
+                } else {
+                    $("#showDate").removeClass("current-time");
+                }
+                GetWeekWiseDataAjax(weekStartDate, weekEndDate, '');
+            } else if (CalendarType === 3) {
+                let referenceMoment = moment(monthStartDate);
+                referenceMoment.add(1, 'months');
+                monthStartDate = referenceMoment.clone().startOf('month').format('YYYY-MM-DD');
+                monthEndDate = referenceMoment.clone().endOf('month').format('YYYY-MM-DD');
+                if (moment().isBetween(monthStartDate, monthEndDate, null, '[]')) {
+                    $("#showDate").addClass("current-time");
+                } else {
+                    $("#showDate").removeClass("current-time");
+                }
+                $("#showDate").html(moment(monthStartDate).format("MMMM YYYY"));
+                GetMonthWiseAjax(monthStartDate, monthEndDate, '');
+
+            }
+        });
+
     $("#prev-btn").click(function () {
         removeStatus();
         if (CalendarType === 1) {
+            let now = new Date();
             currentDate.setDate(currentDate.getDate() - 1);
+            if (currentDate.getDate() == now.getDate()) { $("#showDate").addClass("current-time"); }
+            else { $("#showDate").removeClass("current-time"); }
             $("#showDate").html(formattedDate(currentDate));
             CallAjax(currentDate.toISOString().split('T')[0], Status);
+        } else if (CalendarType === 2) {
+            currentDate = moment(currentDate).subtract(1, 'week').toDate();
+            var prevWeekStartDate = moment(currentDate).startOf('week');
+            var prevWeekEndDate = moment(currentDate).endOf('week');
+            weekStartDate = prevWeekStartDate.format('YYYY-MM-DD');
+            weekEndDate = prevWeekEndDate.format('YYYY-MM-DD');
+            $("#showDate").html(moment(prevWeekStartDate).format("DD MMMM YYYY") + " - " + moment(prevWeekEndDate).format("DD MMMM YYYY"));
+            if (moment().isBetween(prevWeekStartDate, prevWeekEndDate, null, '[]')) {
+                $("#showDate").addClass("current-time");
+            } else {
+                $("#showDate").removeClass("current-time");
+            }
+            GetWeekWiseDataAjax(weekStartDate, weekEndDate, '');
+        }else if(CalendarType === 3){
+                let referenceMoment = moment(monthStartDate);
+                referenceMoment.subtract(1, 'months');
+                monthStartDate = referenceMoment.clone().startOf('month').format('YYYY-MM-DD');
+                monthEndDate = referenceMoment.clone().endOf('month').format('YYYY-MM-DD');
+                if (moment().isBetween(monthStartDate, monthEndDate, null, '[]')) {
+                    $("#showDate").addClass("current-time");
+                } else {
+                    $("#showDate").removeClass("current-time");
+                }
+                $("#showDate").html(moment(monthStartDate).format("MMMM YYYY"));
+                GetMonthWiseAjax(monthStartDate, monthEndDate, '');
+
         }
-    })
+    });
+
     function removeStatus() {
         Status = "";
         $("#approvedBadge span,#approvedBadge p").removeClass("fw-bold");
         $("#pendingShiftBadge span,#pendingShiftBadge p").removeClass("fw-bold");
     }
+
     $(".filterByStatus").click(function () {
         let status = $(this).data("filer");
         if (status === 1) {
@@ -308,7 +419,12 @@
             $("#pendingShiftBadge span,#pendingShiftBadge p").removeClass("fw-bold");
             $("#approvedBadge span,#approvedBadge p").addClass("fw-bold");
         }
-        CallAjax(currentDate.toISOString().split('T')[0], Status);
+        console.log(CalendarType);
+        if (CalendarType === 1) {
+            CallAjax(currentDate.toISOString().split('T')[0], Status);
+        } else if (CalendarType === 2) {
+            GetWeekWiseDataAjax(weekStartDate, weekEndDate, Status);
+        }
     })
 
     function formattedDate(date) {
@@ -324,7 +440,17 @@
             })
     }
     function GetWeekWiseDataAjax(startDate, endDate, currentstatus) {
-        sendAjaxRequest('/admin/Scheduling/GetWeekWiseData', 'GET', { startDate, endDate , status: currentstatus }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+        sendAjaxRequest('/admin/Scheduling/GetWeekWiseData', 'GET', { startDate, endDate, status: currentstatus }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                $("#render-calendar").html(response);
+                displayWeekDays(startDate, endDate);
+            }).catch(function (error) {
+                console.log(error)
+                ToastError("Internal Server Error");
+            })
+    }
+    function GetMonthWiseAjax(startDate, endDate, currentstatus) {
+        sendAjaxRequest('/admin/Scheduling/GetMonthWiseData', 'GET', { startDate, endDate, status: currentstatus }, "application/x-www-form-urlencoded; charset=UTF-8", true)
             .then(function (response) {
                 $("#render-calendar").html(response);
                 displayWeekDays(startDate, endDate);
@@ -354,31 +480,25 @@
         }
     }
 
-    $("#RepeatSwitch").change(function(){
+
+    $("#RepeatSwitch").change(function () {
         checkCheckboxStatus();
     });
+
     function checkCheckboxStatus() {
-      if ($("#RepeatSwitch").is(":checked")) {
-        $("#repeatDetailsSection").css('display','block');
-      } else {
-        $("#repeatDetailsSection").css('display','none');
-      }
+        if ($("#RepeatSwitch").is(":checked")) {
+            $("#repeatDetailsSection").css('display', 'block');
+        } else {
+            $("#repeatDetailsSection").css('display', 'none');
+        }
     }
 
-
-
-
-function validateForm() {
-        
+    function validateForm() {
         var region = document.getElementById("regionScheduleDropdown").value;
         var physician = document.getElementById("physicianSelectDropdown").value;
         var shiftDate = document.getElementById("shiftdate").value;
         var startTime = document.getElementById("shiftStart").value;
         var endTime = document.getElementById("shiftEnd").value;
-
-           
-            
-            
         if (region == "") {
             $("#Schedule-Region").html("Please select a region.");
             return;
@@ -389,7 +509,7 @@ function validateForm() {
         }
         if (shiftDate == "") {
             $("#Schedule-ShiftDate").html("Please select a shift date.");
-            return ;
+            return;
         }
         if (startTime == "") {
             $("#Schedule-StartTime").html("Please enter a start time.");

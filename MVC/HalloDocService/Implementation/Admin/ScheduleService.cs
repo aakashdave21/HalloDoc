@@ -23,7 +23,7 @@ public class ScheduleService : IScheduleService
                 Id = sd.Id,
                 ProviderId = sd.Shift.Physicianid,
                 ShiftDetailId = sd?.Id,
-                StartDate = sd?.Shiftdate.ToString(),
+                StartDate = sd?.Shiftdate.ToString("yyyy-MM-dd"),
                 StartTimeHour = sd?.Starttime.Hour,
                 StartTimeMinute = sd?.Starttime.Minute,
                 EndTimeHour = sd?.Endtime.Hour,
@@ -46,6 +46,10 @@ public class ScheduleService : IScheduleService
                 IsSelected = false
             }).ToList()
         };
+        foreach (var item in scheduleView.AllShiftList)
+        {
+            Console.WriteLine(item.StartDate);    
+        }
         foreach (var repeatDay in scheduleView.RepeatDaysList)
         {
             repeatDay.DayName = "Every " + repeatDay.DayName;

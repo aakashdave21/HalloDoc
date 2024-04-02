@@ -64,6 +64,31 @@ public class SchedulingController : Controller
             return BadRequest(new {message = e});
         }
     }
+    public IActionResult GetMonthWiseData(string startDate = "", string endDate = "" , string? Status = null){
+         try
+        {
+            if (string.IsNullOrEmpty(startDate))
+            {
+                startDate = DateTime.Today.ToString("yyyy-MM-dd");
+            }
+            DateTime monthDate = DateTime.Parse(startDate);
+
+            DayOfWeek dayOfWeek = monthDate.DayOfWeek;
+            int dayOfWeekInt = (int)dayOfWeek;
+            ViewBag.NoOfDays = dayOfWeekInt;
+
+            int year = monthDate.Year;
+            int month = monthDate.Month;
+            ViewBag.lastDayOfMonth = DateTime.DaysInMonth(year, month); 
+            
+            SchedulingViewModel ScheduleList = _scheduleService.ShiftsLists(startDate,endDate,Status);
+            return PartialView("_MonthWiseCalendar",ScheduleList);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new {message = e});
+        }
+    }
 
     [HttpPost]
     public IActionResult CreateShift(SchedulingViewModel scheduleView){

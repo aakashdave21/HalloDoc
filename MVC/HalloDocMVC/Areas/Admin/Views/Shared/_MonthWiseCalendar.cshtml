@@ -1,3 +1,11 @@
+@{
+    int NoOfDays = ViewBag.NoOfDays;
+    int lastDayOfMonth = ViewBag.lastDayOfMonth;
+    Console.WriteLine(NoOfDays);
+    Console.WriteLine(lastDayOfMonth);
+    Console.WriteLine("----------------------------------------------------------------");
+}
+
 <style>
     .month-coverage .day {
         background-color: #ffacf5 !important;
@@ -8,36 +16,14 @@
         white-space: nowrap;
         min-width: 150px;
     }
-    .month-table .active-provider td{
+
+    .month-table .active-provider td {
         background-color: #9f9f9f !important;
         color: white;
         min-width: 220px;
     }
-    .staff-table tr td {
-        cursor: pointer;
-    }
-
 </style>
 <div class="table-responsive d-flex month-table">
-    <div>
-        <table class="table table-bordered staff-table">
-            <thead>
-                <tr class="main-head">
-                    <th scope="col">Staff</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="active-provider">
-                    <td><img src="~/images/bg_login.png" > Aakash Dave</td>
-                </tr>
-                @for(int i=0;i<15;i++){
-                    <tr>
-                        <td><img src="~/images/bg_login.png" > Aakash Dave</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
     <table class="table table-bordered">
         <thead>
             <tr class="main-head">
@@ -50,16 +36,16 @@
                 <th scope="col">Sat</th>
             </tr>
         </thead>
-        <tbody>
-            @for (int i = 0; i < 5; i++)
+        @* <tbody id="month-table-body">
+        </tbody> *@
+        @* <tbody>
+            @for (int i = 0; i < 6; i++)
             {
                 <tr class="month-coverage">
                     @for (int j = 0; j < 7; j++)
                     {
-
-
-                        var day = i * 7 + j + 1;
-                        if (day <= 31)
+                        var day = (i * 7 + j + 1 - NoOfDays);
+                        if (day >= 1 && day <= lastDayOfMonth)
                         {
                             <td scope="col" class="day">@day</td>
                         }
@@ -70,20 +56,78 @@
                     }
                 </tr>
 
-                <!-- Add blank rows -->
-                @if (i < 5)
+                for (int k = 0; k < 5; k++)
                 {
-                    for (int k = 0; k < 5; k++)
-                    {
-                        <tr>
-                            @for (int l = 0; l < 7; l++)
+                    <tr>
+
+                        @for (int l = 0; l < 7; l++)
+                        {
+                            
+                            var day = (i * 7 + l + 1 - NoOfDays);
+                            if (day >= 1 && day <= lastDayOfMonth)
+                            {
+                                string EmptyString = "";
+                                @foreach (var shift in Model.AllShiftList){
+                                    DateTime date = DateTime.ParseExact(shift.StartDate,"yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                                    string dayString = date.ToString("dd");
+                                    int dayOfWeekNumeric = int.Parse(dayString);
+                                    if(dayOfWeekNumeric==day){
+                                        EmptyString += shift.ShiftDetailId.ToString();
+                                    }
+                                }
+                                <td>@day @EmptyString</td>
+                            }
+                            else
                             {
                                 <td scope="col"></td>
                             }
-                        </tr>
-                    }
+                        }
+                    </tr>
                 }
+            }
+        </tbody> *@
+        <tbody>
+            @for (int i = 0; i < 6; i++)
+            {
+                <tr class="month-coverage">
+                    @for (int j = 0; j < 7; j++)
+                    {
+                        var day = (i * 7 + j + 1 - NoOfDays);
+                        if (day >= 1 && day <= lastDayOfMonth)
+                        {
+                            <td scope="col" class="day">@day</td>
+                        }
+                        else
+                        {
+                            <td scope="col"></td>
+                        }
+                    }
+                </tr>
+                <tr>
+                    @for (int l = 0; l < 7; l++)
+                    {
+                        var day = (i * 7 + l + 1 - NoOfDays);
+                        if (day >= 1 && day <= lastDayOfMonth)
+                        {
+                            string EmptyString = "";
+                            foreach (var shift in Model.AllShiftList)
+                            {
+                                DateTime date = DateTime.ParseExact(shift.StartDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                                if (date.Day == day)
+                                {
+                                    EmptyString += shift.ShiftDetailId.ToString() + "<br>";
+                                }
+                            }
+                            <td>@Html.Raw(EmptyString)</td>
+                        }
+                        else
+                        {
+                            <td scope="col"></td>
+                        }
+                    }
+                </tr>
             }
         </tbody>
     </table>
 </div>
+
