@@ -1,14 +1,16 @@
 @{
     int NoOfDays = ViewBag.NoOfDays;
     int lastDayOfMonth = ViewBag.lastDayOfMonth;
-    Console.WriteLine(NoOfDays);
-    Console.WriteLine(lastDayOfMonth);
-    Console.WriteLine("----------------------------------------------------------------");
 }
 
 <style>
     .month-coverage .day {
+        padding-left: 5px !important;
         background-color: #ffacf5 !important;
+    }
+    [data-bs-theme=dark] .month-coverage .day {
+        background-color: transparent !important;
+        border: 2px solid gray !important;
     }
 
     .month-table table th,
@@ -22,6 +24,69 @@
         color: white;
         min-width: 220px;
     }
+
+    .month-table .month-table-body td ul li {
+        list-style: none;
+        height: 50px;
+    }
+
+    .month-table .month-table-body td[scope="col"] {
+        padding: 0;
+    }
+
+    .month-table .pink-bg,
+    [data-bs-theme=dark] .month-table .pink-bg:hover {
+        background-color: #ffacf5;
+        cursor: pointer;
+        color: black;
+    }
+
+    .month-table .green-bg,
+    [data-bs-theme=dark] .month-table .green-bg:hover {
+        background-color: #aacba8;
+        cursor: pointer;
+        color: black;
+    }
+
+    .month-table .pink-bg:hover {
+        color: white !important;
+    }
+
+    .month-table .green-bg:hover {
+        color: white !important;
+    }
+
+    [data-bs-theme=dark] .month-table .pink-bg {
+        border: 2px solid #ffacf5 !important;
+        background-color: transparent;
+        color: #ffacf5;
+    }
+
+    [data-bs-theme=dark] .month-table .green-bg {
+        border: 2px solid #aacba8 !important;
+        background-color: transparent;
+        color: #aacba8;
+    }
+    
+    .ViewAllShift{
+        display: flex;
+        margin: auto;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        text-decoration: none;
+        color: #01bce9;
+        height: 100%;
+    }
+    [data-bs-theme=dark] .ViewAllShift{
+        background-color: transparent;
+    }
+    .ViewAllShift:hover{
+        background-color: #01bce9;
+        color: white;
+    }
+    
+   
 </style>
 <div class="table-responsive d-flex month-table">
     <table class="table table-bordered">
@@ -39,54 +104,55 @@
         @* <tbody id="month-table-body">
         </tbody> *@
         @* <tbody>
-            @for (int i = 0; i < 6; i++)
-            {
-                <tr class="month-coverage">
-                    @for (int j = 0; j < 7; j++)
-                    {
-                        var day = (i * 7 + j + 1 - NoOfDays);
-                        if (day >= 1 && day <= lastDayOfMonth)
-                        {
-                            <td scope="col" class="day">@day</td>
-                        }
-                        else
-                        {
-                            <td scope="col"></td>
-                        }
-                    }
-                </tr>
+        @for (int i = 0; i < 6; i++)
+        {
+        <tr class="month-coverage">
+        @for (int j = 0; j < 7; j++)
+        {
+        var day = (i * 7 + j + 1 - NoOfDays);
+        if (day >= 1 && day <= lastDayOfMonth)
+        {
+        <td scope="col" class="day">@day</td>
+        }
+        else
+        {
+        <td scope="col"></td>
+        }
+        }
+        </tr>
 
-                for (int k = 0; k < 5; k++)
-                {
-                    <tr>
+        for (int k = 0; k < 5; k++)
+        {
+        <tr>
 
-                        @for (int l = 0; l < 7; l++)
-                        {
-                            
-                            var day = (i * 7 + l + 1 - NoOfDays);
-                            if (day >= 1 && day <= lastDayOfMonth)
-                            {
-                                string EmptyString = "";
-                                @foreach (var shift in Model.AllShiftList){
-                                    DateTime date = DateTime.ParseExact(shift.StartDate,"yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-                                    string dayString = date.ToString("dd");
-                                    int dayOfWeekNumeric = int.Parse(dayString);
-                                    if(dayOfWeekNumeric==day){
-                                        EmptyString += shift.ShiftDetailId.ToString();
-                                    }
-                                }
-                                <td>@day @EmptyString</td>
-                            }
-                            else
-                            {
-                                <td scope="col"></td>
-                            }
-                        }
-                    </tr>
-                }
-            }
+        @for (int l = 0; l < 7; l++)
+        {
+
+        var day = (i * 7 + l + 1 - NoOfDays);
+        if (day >= 1 && day <= lastDayOfMonth)
+        {
+        string EmptyString = "";
+        @foreach (var shift in Model.AllShiftList){
+        DateTime date = DateTime.ParseExact(shift.StartDate,"yyyy-MM-dd",
+        System.Globalization.CultureInfo.InvariantCulture);
+        string dayString = date.ToString("dd");
+        int dayOfWeekNumeric = int.Parse(dayString);
+        if(dayOfWeekNumeric==day){
+        EmptyString += shift.ShiftDetailId.ToString();
+        }
+        }
+        <td>@day @EmptyString</td>
+        }
+        else
+        {
+        <td scope="col"></td>
+        }
+        }
+        </tr>
+        }
+        }
         </tbody> *@
-        <tbody>
+        <tbody class="month-table-body">
             @for (int i = 0; i < 6; i++)
             {
                 <tr class="month-coverage">
@@ -109,20 +175,63 @@
                         var day = (i * 7 + l + 1 - NoOfDays);
                         if (day >= 1 && day <= lastDayOfMonth)
                         {
-                            string EmptyString = "";
+                            List<ShiftDetailsInfo> shiftDetail = new List<ShiftDetailsInfo>();
                             foreach (var shift in Model.AllShiftList)
                             {
-                                DateTime date = DateTime.ParseExact(shift.StartDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                                DateTime date = DateTime.ParseExact(shift.StartDate, "yyyy-MM-dd",
+                                System.Globalization.CultureInfo.InvariantCulture);
                                 if (date.Day == day)
                                 {
-                                    EmptyString += shift.ShiftDetailId.ToString() + "<br>";
+                                    shiftDetail.Add(shift);
                                 }
                             }
-                            <td>@Html.Raw(EmptyString)</td>
+                            <td scope="col">
+                                <ul>
+                                    @for (int k = 0; k < Math.Min(4, shiftDetail.Count); k++)
+                                    {
+                                        var StartingTime = shiftDetail[k].StartTimeHour.ToString() + ":" + shiftDetail[k].StartTimeMinute.ToString();
+                                        var EndingTime = shiftDetail[k].EndTimeHour.ToString() + ":" + shiftDetail[k].EndTimeMinute.ToString(); 
+                                        @if (shiftDetail[k].Status == 1)
+                                        {
+                                            <li class="border-bottom pink-bg ps-1" onclick="openShiftView('@shiftDetail[k].Id','@StartingTime','@EndingTime','@shiftDetail[k].FullName','@shiftDetail[k].StartDate','@shiftDetail[k].RegionName','@shiftDetail[k].ProviderId')">
+                                                <small>@shiftDetail[k].StartTimeHour:@shiftDetail[k].StartTimeMinute -
+                                                    @shiftDetail[k].EndTimeHour:@shiftDetail[k].EndTimeMinute</small> <br>
+                                                <small>@shiftDetail[k].FullName</small>
+                                            </li>
+                                        }
+                                        else if (shiftDetail[k].Status == 2)
+                                        {
+                                            <li class="border green-bg ps-1" onclick="openShiftView('@shiftDetail[k].Id','@StartingTime','@EndingTime','@shiftDetail[k].FullName','@shiftDetail[k].StartDate','@shiftDetail[k].RegionName','@shiftDetail[k].ProviderId')">
+                                                <small>@shiftDetail[k].StartTimeHour:@shiftDetail[k].StartTimeMinute -
+                                                    @shiftDetail[k].EndTimeHour:@shiftDetail[k].EndTimeMinute</small> <br>
+                                                <small>@shiftDetail[k].FullName</small>
+                                            </li>
+                                        }
+                                    }
+                                    @for (int k = shiftDetail.Count; k < 4; k++)
+                                    {
+                                        <li class="border-bottom"></li>
+                                    }
+                                     @if (shiftDetail.Count > 4)
+                                    {
+                                        <li class="border-bottom viewList">
+                                            <a href="#" class="ViewAllShift">View All</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </td>
                         }
                         else
                         {
-                            <td scope="col"></td>
+                            <td scope="col">
+                                <ul>
+
+                                    @for (int k = 0; k < 4; k++)
+                                    {
+                                        <li class="border-bottom"></li>
+                                    }
+                                </ul>
+                            </td>
                         }
                     }
                 </tr>
@@ -130,4 +239,3 @@
         </tbody>
     </table>
 </div>
-

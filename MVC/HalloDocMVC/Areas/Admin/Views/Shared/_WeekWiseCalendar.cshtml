@@ -97,9 +97,11 @@
                                     <ul>
                                         @foreach (var shift in shiftNumber)
                                         {
+                                            var StartingTime = shift.StartTimeHour.ToString() + ":" + shift.StartTimeMinute.ToString();
+                                            var EndingTime = shift.EndTimeHour.ToString() + ":" + shift.EndTimeMinute.ToString(); 
                                             if (shift.Status == 1)
                                             {
-                                                <li class="pink-bg">
+                                                <li class="pink-bg" onclick="openShiftView('@shift.Id','@StartingTime','@EndingTime','@shift.FullName','@shift.StartDate','@shift.RegionName','@shift.ProviderId')">
                                                     <small>@shift.StartTimeHour:@shift.StartTimeMinute -
                                                         @shift.EndTimeHour:@shift.EndTimeMinute</small>
                                                     <br>
@@ -110,7 +112,8 @@
                                             }
                                             else
                                             {
-                                                <li class="green-bg"><small>@shift.StartTimeHour:@shift.StartTimeMinute -
+                                                <li class="green-bg" onclick="openShiftView('@shift.Id','@StartingTime','@EndingTime','@shift.FullName','@shift.StartDate','@shift.RegionName','@shift.ProviderId')">
+                                                    <small>@shift.StartTimeHour:@shift.StartTimeMinute -
                                                         @shift.EndTimeHour:@shift.EndTimeMinute</small>
                                                     <br>
                                                     <small>

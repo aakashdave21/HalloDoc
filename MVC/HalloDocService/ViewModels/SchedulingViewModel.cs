@@ -39,6 +39,9 @@ namespace HalloDocService.ViewModels
     public class ShiftDetailsInfo{
         public int Id { get; set; }
         public int ProviderId { get; set; }
+        public string? RegionName {get; set;}
+        public string? FullName { get; set; }
+
         public int? ShiftDetailId { get; set; }
         public int? StartTimeHour {get; set;}
         public int? StartTimeMinute {get; set;}

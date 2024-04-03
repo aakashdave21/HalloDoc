@@ -3,23 +3,27 @@ using HalloDocRepository.Admin.Interfaces;
 using HalloDocRepository.DataModels;
 using HalloDocService.Admin.Interfaces;
 using HalloDocService.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace HalloDocService.Admin.Implementation;
 public class ScheduleService : IScheduleService
-{ 
+{
     private readonly IScheduleRepo _scheduleRepo;
     private readonly IProviderRepo _providerRepo;
     private readonly IProfileRepo _profileRepo;
-    public ScheduleService(IScheduleRepo scheduleRepo, IProviderRepo providerRepo,IProfileRepo profileRepo)
+    public ScheduleService(IScheduleRepo scheduleRepo, IProviderRepo providerRepo, IProfileRepo profileRepo)
     {
         _scheduleRepo = scheduleRepo;
         _providerRepo = providerRepo;
         _profileRepo = profileRepo;
     }
 
-    public SchedulingViewModel ShiftsLists(string startDate,string endDate,string? status = null){
-        SchedulingViewModel scheduleView = new(){
-            AllShiftList = _scheduleRepo.ShiftsLists(startDate,endDate,status).Select(sd => new ShiftDetailsInfo(){
+    public SchedulingViewModel ShiftsLists(string startDate, string endDate, string? status = null)
+    {
+        SchedulingViewModel scheduleView = new()
+        {
+            AllShiftList = _scheduleRepo.ShiftsLists(startDate, endDate, status).Select(sd => new ShiftDetailsInfo()
+            {
                 Id = sd.Id,
                 ProviderId = sd.Shift.Physicianid,
                 ShiftDetailId = sd?.Id,
@@ -28,14 +32,18 @@ public class ScheduleService : IScheduleService
                 StartTimeMinute = sd?.Starttime.Minute,
                 EndTimeHour = sd?.Endtime.Hour,
                 EndTimeMinute = sd?.Endtime.Minute,
+                FullName = sd?.Shift.Physician.Firstname + ", " + sd?.Shift.Physician.Lastname,
+                RegionName = sd?.Region?.Name,
                 Status = sd?.Status,
             }).ToList(),
-            AllProvidersList = _providerRepo.GetAllPhysician(true,null).Select(phy => new ProviderList(){
+            AllProvidersList = _providerRepo.GetAllPhysician(true, null).Select(phy => new ProviderList()
+            {
                 Id = phy.Id,
                 FullName = phy?.Firstname + " " + phy?.Lastname,
                 PhotoPath = phy?.Photo != null ? "uploads/" + Path.GetFileName(phy.Photo) : null
             }).ToList(),
-            AllRegions = _profileRepo.GetAllRegions().Select(reg => new RegionList(){
+            AllRegions = _profileRepo.GetAllRegions().Select(reg => new RegionList()
+            {
                 Id = reg.Id,
                 Name = reg.Name
             }).ToList(),
@@ -46,10 +54,6 @@ public class ScheduleService : IScheduleService
                 IsSelected = false
             }).ToList()
         };
-        foreach (var item in scheduleView.AllShiftList)
-        {
-            Console.WriteLine(item.StartDate);    
-        }
         foreach (var repeatDay in scheduleView.RepeatDaysList)
         {
             repeatDay.DayName = "Every " + repeatDay.DayName;
@@ -57,8 +61,10 @@ public class ScheduleService : IScheduleService
         return scheduleView;
     }
 
-    public void AddShift(SchedulingViewModel schedulingView,int AspUserId){
-        Shift newShift = new(){
+    public void AddShift(SchedulingViewModel schedulingView, int AspUserId)
+    {
+        Shift newShift = new()
+        {
             Physicianid = schedulingView.Physicianid,
             Startdate = DateOnly.ParseExact(schedulingView?.ShiftDate, "yyyy-MM-dd", null),
             Isrepeat = schedulingView.IsRepeat,
@@ -66,9 +72,11 @@ public class ScheduleService : IScheduleService
             Createdby = AspUserId
         };
         _scheduleRepo.CreateShift(newShift);
-        if(schedulingView.IsRepeat == false){
+        if (schedulingView.IsRepeat == false)
+        {
             DateOnly Startdate = DateOnly.ParseExact(schedulingView?.ShiftDate, "yyyy-MM-dd", null);
-            Shiftdetail newShiftDetails = new(){
+            Shiftdetail newShiftDetails = new()
+            {
                 Shiftid = newShift.Id,
                 Shiftdate = new DateTime(Startdate.Year, Startdate.Month, Startdate.Day, 0, 0, 0),
                 Regionid = schedulingView.RegionId,
@@ -78,19 +86,22 @@ public class ScheduleService : IScheduleService
                 Createdby = AspUserId
             };
             _scheduleRepo.CreateShiftDetails(newShiftDetails);
-        }else{
+        }
+        else
+        {
             List<Shiftdetail> shiftDetailsList = new();
-            
-            for(int i=0;i<schedulingView.RepeatTime;i++)
+
+            for (int i = 0; i < schedulingView.RepeatTime; i++)
             {
                 DateOnly shiftDate = DateOnly.ParseExact(schedulingView?.ShiftDate, "yyyy-MM-dd", null);
                 int StatrtDay = shiftDate.Day;
                 foreach (var item in schedulingView.RepeatDaysList)
                 {
-                    if(item.IsSelected){
+                    if (item.IsSelected)
+                    {
                         DateOnly shiftDates;
-                        if (item.Id-1 >= StatrtDay) shiftDates = shiftDate.AddDays((item.Id-1) - StatrtDay+ (i  * 7));
-                        else shiftDates = shiftDate.AddDays((7 - StatrtDay) + (item.Id-1) + (i * 7));
+                        if (item.Id - 1 >= StatrtDay) shiftDates = shiftDate.AddDays((item.Id - 1) - StatrtDay + (i * 7));
+                        else shiftDates = shiftDate.AddDays((7 - StatrtDay) + (item.Id - 1) + (i * 7));
                         Shiftdetail newShiftDetail = new()
                         {
                             Shiftid = newShift.Id,
@@ -104,7 +115,7 @@ public class ScheduleService : IScheduleService
 
                         shiftDetailsList.Add(newShiftDetail);
                     }
-                    
+
                 }
             }
             _scheduleRepo.CreateShiftDetailsList(shiftDetailsList);
@@ -114,5 +125,34 @@ public class ScheduleService : IScheduleService
     {
         int daysUntilTarget = ((int)targetDay - (int)startDate.DayOfWeek + 7) % 7;
         return startDate.AddDays(daysUntilTarget);
+    }
+
+    public void UpdateSchedule(IFormCollection? formData, int aspUserId)
+    {
+        int providerId = int.Parse(formData["providerId"]);
+        int shiftId = int.Parse(formData["shiftId"]);
+        string? shiftDate = formData["shiftDate"];
+        TimeOnly startTime = TimeOnly.FromDateTime(DateTime.ParseExact(formData["startTime"], "HH:mm", CultureInfo.InvariantCulture));
+        TimeOnly endTime = TimeOnly.FromDateTime(DateTime.ParseExact(formData["endTime"], "HH:mm", CultureInfo.InvariantCulture));
+        IEnumerable<Shiftdetail> shiftList = _scheduleRepo.GetShiftByProviderId(providerId);
+
+        var existingShift = shiftList.Where(shift => shift.Isdeleted == false && shift.Id != shiftId && shift.Shiftdate.ToString("yyyy-MM-dd") == shiftDate && (startTime >= shift.Starttime && startTime <= shift.Endtime || endTime >= shift.Starttime && endTime <= shift.Endtime));
+        if (existingShift.Any())
+        {
+            var ex = new Exception("A shift with this time already exists.");
+            ex.Data["IsShiftOverlap"] = true;
+            throw ex;
+        }
+        else
+        {
+            _scheduleRepo.UpdateShift(shiftId, DateTime.Parse(shiftDate), startTime, endTime, aspUserId);
+        }
+    }
+
+    public void ChangeStatus(int shiftId,int AspUserId){
+        _scheduleRepo.ChangeStatus(shiftId,AspUserId);
+    }
+    public void Delete(int shiftId,int AspUserId){
+        _scheduleRepo.Delete(shiftId,AspUserId);
     }
 }
