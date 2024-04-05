@@ -210,3 +210,7 @@ const SubmitFormWithPhone = (FormId) => {
 }
 
 
+// if (window.history.replaceState) {
+//     // Remove the current page from the session history
+//     window.history.replaceState(null, null, window.location.href);
+// }

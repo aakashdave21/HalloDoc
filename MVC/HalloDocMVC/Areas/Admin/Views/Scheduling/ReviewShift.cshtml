@@ -1,0 +1,138 @@
+@using HalloDocService.ViewModels;
+@model SchedulingViewModel;
+@{
+    ViewData["Title"] = "On Call Provider Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+
+}
+
+
+<main class="OnCall-Section container-sm mt-sm-5 mb-5">
+    <div class="d-flex justify-content-end mt-4">
+        <a onclick="history.back()" class="btn btn-sm back-link">
+            <i class="fa-solid fa-chevron-left"></i> Back
+        </a>
+    </div>
+    <div class="d-flex mt-4">
+        <h4 class="fw-bold">Requested Shifts</h4>
+    </div>
+    <div class="border p-4 rounded shadow">
+        <div class="d-flex justify-content-between flex-wrap gap-2">
+            <div class="form-group has-search">
+                <span class="fa fa-search form-control-feedback"></span>
+                <select class="form-control form-select" id="regionOnCall">
+                    <option value="0" selected>All Region</option>
+                    @foreach (var item in Model.AllRegions)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                @using (Html.BeginForm("Index", "Scheduling", new { area = "admin" }, FormMethod.Post))
+                {
+                    <input type="hidden" name="isMonth" value="1" />
+                    <button type="submit" class="btn btn-success">
+                        View Current Month Shifts
+                    </button>
+                }
+                <a class="btn btn-success" id="Approve-btn" style="display: none;">
+                    Approved Selected
+                </a>
+                <a class="btn btn-danger" id="Delete-btn" style="display: none;">
+                    Delete Selected
+                </a>
+            </div>
+        </div>
+        <div id="Review-Tab" class="mt-5">
+            <partial name="_ReviewShiftTable" />
+        </div>
+    </div>
+
+</main>
+
+<script>
+    let pageSize = 5;
+    let pageNum = 1;
+    let regionId = 0;
+    $("#regionOnCall").change(function () {
+        let RegVal = $("#regionOnCall").val();
+        regionId = RegVal;
+        pageNum = 1;
+        pageSize = 5;
+        order = 0;
+        CallReviewAjax();
+    })
+
+
+    const ReviewPageChange = async () => {
+        let pageNumber = $(".ReviewPageChange").val();
+        pageNum = pageNumber;
+        CallReviewAjax();
+    }
+    const pageRecordChange = () => {
+        let size = $(".ReviewPageRecordChange").val();
+        pageSize = size;
+        pageNum = 1;
+        CallReviewAjax();
+    }
+
+    const CallReviewAjax = () => {
+        sendAjaxRequest('/Admin/Scheduling/ReviewShift', 'POST', { regionId, pageSize, pageNum }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                $("#Review-Tab").empty();
+                $("#Review-Tab").html(response);
+            }).catch(function (error) {
+                ToastError("Internal Server Error");
+            })
+    };
+
+    $("#Approve-btn").click(function () {
+        var checkboxes = getCheckedList();
+        updateShiftList(checkboxes, false);
+    });
+    $("#Delete-btn").click(function () {
+        var checkboxes = getCheckedList();
+        updateShiftList(checkboxes, true);
+    });
+
+    function getCheckedList() {
+        return Array.from(table.querySelectorAll(".selectRow")).filter(function (checkbox) {
+            return checkbox.checked;
+        }).map(function (checkbox) {
+            return checkbox.value;
+        });
+    }
+
+    function updateShiftList(checkboxes, isDelete = false) {
+        console.log(checkboxes);
+        sendAjaxRequest('/admin/Scheduling/UpdateShift', 'POST', { shiftDetailIds: checkboxes, isDelete }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                if(isDelete){
+                    ToastSuccess("Shifts Deleted Successfully");
+                }else{
+                    ToastSuccess("Shifts Aprroved Successfully");
+                }
+                regionId=0;
+                pageSize = 5;
+                pageNum = 1;
+                CallReviewAjax();
+            }).catch(function (error) {
+                ToastError("Internal Server Error");
+            })
+    }
+
+
+</script>
+
+<script>
+    $("#adminDashTab li").each(function () {
+        if ($(this).data("id") == 4) {
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+            $(this).find(".inner-nav ul li a").removeClass("active");
+            $(this).find(".inner-nav ul li[data-inner-itemid='8'] a").addClass("active");
+            $(this).find(".showMenu").html(`Scheduling <i class="fa-solid fa-caret-down"></i>`);
+        }
+    })
+</script>

@@ -23,4 +23,6 @@ public interface IProviderRepo
 
     void DeleteProvider(int Id);
 
+    IEnumerable<Physicianlocation> GetAllProviderLocation();
+
 }

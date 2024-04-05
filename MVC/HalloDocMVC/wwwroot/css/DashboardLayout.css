@@ -51,16 +51,17 @@ main{
     white-space: nowrap;
 }
 
-.dashboard-header ul li a:hover,
-[data-bs-theme=dark] .dashboard-header ul li a:hover , .dashboard-header ul li a.active {
+.dashboard-header #adminDashTab>li > a:hover,
+[data-bs-theme=dark] .dashboard-header ul#adminDashTab > li a:hover , .dashboard-header ul#adminDashTab > li > a.active {
     border-bottom: 2px solid #01bce9;
     color: #01bce9;
 }
 
-.dashboard-header ul li a:active, .dashboard-header ul li a.active{
+.dashboard-header ul#adminDashTab > li > a:active, .dashboard-header ul#adminDashTab > li > a.active{
     border-bottom: 2px solid #01bce9;
     color: #01bce9;
 }
+
 
 [data-bs-theme=dark] .dashboard-header  ul li a {
     color: white;
@@ -96,7 +97,8 @@ main{
      text-decoration: none;
      border: 0 !important;
  }
- .inner-nav ul li a:hover {
+ .inner-nav ul li a:hover , .inner-nav ul li a.active{
      background-color: #bcf2ff86;
      border: 0 !important;
+     color: #01bce9;
  }

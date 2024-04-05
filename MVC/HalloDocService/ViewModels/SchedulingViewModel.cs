@@ -27,12 +27,24 @@ namespace HalloDocService.ViewModels
         public List<ProviderList> AllProvidersList { get; set; } = new();
         public List <ShiftDetailsInfo> AllShiftList { get; set; } = new();
         public List<RegionList> AllRegions {get; set;} = new();
+        public IEnumerable<ProviderList> OnCallPhysicianList {get; set;} = new List<ProviderList>();
+        public IEnumerable<ProviderList> UnAvailablePhysicianList {get; set;} = new List<ProviderList>();
+
+        public IEnumerable<ShiftDetailsInfo> AllReviewList {get; set;} = new List<ShiftDetailsInfo>();
+
+        public int TotalReview {get; set;}
+        public int CurrentPage {get; set;}
+        public int CurrentPageSize {get; set;}
+        public int PageRangeStart {get; set;}
+        public int PageRangeEnd {get; set;}
+        public int TotalPage {get; set;}
     }
 
     public class ProviderList {
         public int Id { get; set; }
         public string? FullName { get; set; }
         public string? PhotoPath { get; set; }
+        public string? OnCallStatus {get; set;}
         public bool? IsActive { get; set; } = false;
     }
 
@@ -41,7 +53,6 @@ namespace HalloDocService.ViewModels
         public int ProviderId { get; set; }
         public string? RegionName {get; set;}
         public string? FullName { get; set; }
-
         public int? ShiftDetailId { get; set; }
         public int? StartTimeHour {get; set;}
         public int? StartTimeMinute {get; set;}

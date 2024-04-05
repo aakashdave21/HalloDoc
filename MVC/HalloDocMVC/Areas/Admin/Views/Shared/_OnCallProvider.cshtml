@@ -1,0 +1,65 @@
+<style>
+    .oncall-section img {
+        width: 70px;
+        height: 70px;
+    }
+</style>
+<div class="oncall-section">
+    <h5 class="fw-bold mb-4">MD's On Call</h5>
+    @if (((IEnumerable<ProviderList>)Model.OnCallPhysicianList).Any())
+    {
+        <div class="row g-5">
+            @foreach (var item in Model.OnCallPhysicianList)
+            {
+                <div class="col-md-3 col-sm-4 col-6">
+                    <div class="d-flex gap-2">
+                        @{
+                            if (item.PhotoPath != null)
+                            {
+                                <img src="~/@item.PhotoPath" alt="">
+                            }
+                            else
+                            {
+                                <img src="~/images/DefaultUser.png" alt="">
+                            }
+                        }
+                        <p>@item.FullName</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">No physicians are currently on call.</p>
+    }
+
+    <h5 class="fw-bold mt-5 mb-4">Off Duty Physician</h5>
+    @if (((IEnumerable<ProviderList>)Model.UnAvailablePhysicianList).Any())
+    {
+        <div class="row g-5">
+            @foreach (var item in Model.UnAvailablePhysicianList)
+            {
+                <div class="col-md-3 col-sm-4 col-6">
+                    <div class="d-flex gap-2">
+                        @{
+                            if (item.PhotoPath != null)
+                            {
+                                <img src="~/@item.PhotoPath" alt="">
+                            }
+                            else
+                            {
+                                <img src="~/images/DefaultUser.png" alt="">
+                            }
+                        }
+                        <p>@item.FullName</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">No physicians are currently off duty.</p>
+    }
+</div>

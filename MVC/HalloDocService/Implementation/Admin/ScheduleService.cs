@@ -1,4 +1,5 @@
 using System.Globalization;
+using HalloDocRepository.Admin.Implementation;
 using HalloDocRepository.Admin.Interfaces;
 using HalloDocRepository.DataModels;
 using HalloDocService.Admin.Interfaces;
@@ -82,7 +83,7 @@ public class ScheduleService : IScheduleService
                 Regionid = schedulingView.RegionId,
                 Starttime = TimeOnly.ParseExact(schedulingView?.StartTime, "HH:mm", null),
                 Endtime = TimeOnly.ParseExact(schedulingView?.EndTime, "HH:mm", null),
-                Status = 1,
+                Status = 2,
                 Createdby = AspUserId
             };
             _scheduleRepo.CreateShiftDetails(newShiftDetails);
@@ -155,4 +156,66 @@ public class ScheduleService : IScheduleService
     public void Delete(int shiftId,int AspUserId){
         _scheduleRepo.Delete(shiftId,AspUserId);
     }
+
+    public SchedulingViewModel GetCallPhysician(int regionId = 0){
+        IEnumerable<Physician> physicianList = _scheduleRepo.GetCallPhysician(regionId);
+        SchedulingViewModel listView = new(){
+            AllRegions = _profileRepo.GetAllRegions().Select(reg => new RegionList()
+            {
+                Id = reg.Id,
+                Name = reg.Name
+            }).ToList(),
+            OnCallPhysicianList = physicianList.Where(phy => phy.OnCallStatus == 2).Select(phy => new ProviderList(){
+                Id = phy.Id,
+                FullName = phy.Firstname + " " + phy.Lastname,
+                PhotoPath = phy?.Photo != null ? "uploads/" + Path.GetFileName(phy.Photo) : null,
+                OnCallStatus = phy?.OnCallStatus.ToString()
+            }),
+            UnAvailablePhysicianList = physicianList.Where(phy => phy.OnCallStatus == 1).Select(phy => new ProviderList(){
+                Id = phy.Id,
+                FullName = phy.Firstname + " " + phy.Lastname,
+                PhotoPath = phy?.Photo != null ? "uploads/" + Path.GetFileName(phy.Photo) : null,
+                OnCallStatus = phy?.OnCallStatus.ToString()
+            }),
+        };
+        return listView;
+    }
+
+    public SchedulingViewModel ReviewShift(int RegionId=0,int PageSize=5,int PageNum=1){
+        ReviewShiftPage shiftInfo = _scheduleRepo.ReviewShift(RegionId,PageSize,PageNum);
+        int startIndex = (PageNum - 1) * PageSize + 1;
+
+        SchedulingViewModel schedulingView = new(){
+            AllRegions = _profileRepo.GetAllRegions().Select(reg => new RegionList()
+            {
+                Id = reg.Id,
+                Name = reg.Name
+            }).ToList(),
+            AllReviewList = shiftInfo.ShiftListsInfo.Select(sd => new ShiftDetailsInfo(){
+                ShiftDetailId = sd.Id,
+                Id = sd.Id,
+                FullName = sd.Shift.Physician.Firstname + " " + sd.Shift.Physician.Lastname,
+                ProviderId = sd.Shift.Physicianid,
+                StartDate = sd?.Shiftdate.ToString("yyyy-MM-dd"),
+                StartTimeHour = sd?.Starttime.Hour,
+                StartTimeMinute = sd?.Starttime.Minute,
+                EndTimeHour = sd?.Endtime.Hour,
+                EndTimeMinute = sd?.Endtime.Minute,
+                RegionName = sd?.Region?.Name
+            }).ToList(),
+            TotalReview = shiftInfo.TotalPage,
+            CurrentPage = PageNum,
+            CurrentPageSize = PageSize,
+            PageRangeStart = shiftInfo.TotalPage == 0 ? 0 : startIndex,
+            TotalPage = (int)Math.Ceiling((double)shiftInfo.TotalPage / PageSize),
+            PageRangeEnd = Math.Min(startIndex + PageSize - 1, shiftInfo.TotalPage)
+        };
+
+        return schedulingView;
+    }
+
+    public void UpdateShift(List<int> shiftDetailIds,int AspUserId,string IsDelete){
+        _scheduleRepo.UpdateShift(shiftDetailIds,AspUserId,IsDelete);
+    }
+
 }

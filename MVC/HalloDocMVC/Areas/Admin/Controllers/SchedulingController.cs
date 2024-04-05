@@ -17,7 +17,7 @@ public class SchedulingController : Controller
     }
 
 
-    public IActionResult Index(string startDate = "")
+    public IActionResult Index(string startDate = "",int IsMonth=0)
     {
         try
         {
@@ -25,6 +25,7 @@ public class SchedulingController : Controller
             {
                 startDate = DateTime.Today.ToString("yyyy-MM-dd");
             }
+            ViewBag.IsMonth = IsMonth;
             SchedulingViewModel ScheduleList = _scheduleService.ShiftsLists(startDate, startDate);
             return View(ScheduleList);
         }
@@ -144,6 +145,59 @@ public class SchedulingController : Controller
                 return BadRequest(new {message = ex.Message});
             }
             return BadRequest(new {message = "Internal Server Error"});
+        }
+    }
+
+    public IActionResult OnCallProvider(){
+        try
+        {
+            return View(_scheduleService.GetCallPhysician(0));
+        }
+        catch (System.Exception)
+        {
+            TempData["Error"] = "Internal Server Error";
+            return RedirectToAction("Index");
+        }
+    }
+    public IActionResult GetOnCallPhysicians(int RegionId){
+        try
+        {
+            return PartialView("_OnCallProvider", _scheduleService.GetCallPhysician(RegionId));
+        }
+        catch (System.Exception)
+        {
+            TempData["Error"] = "Internal Server Error";
+            return RedirectToAction("Index");
+        }
+    }
+    public IActionResult ReviewShift(int RegionId=0,int PageSize=5,int PageNum=1){
+        try
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_ReviewShiftTable", _scheduleService.ReviewShift(RegionId,PageSize,PageNum));
+            }
+            return View(_scheduleService.ReviewShift(RegionId,PageSize,PageNum));
+        }
+        catch (System.Exception)
+        {
+            TempData["Error"] = "Internal Server Error";
+            return RedirectToAction("Index");
+        }
+    }
+
+    [HttpPost]
+    public IActionResult UpdateShift(List<int> shiftDetailIds,string IsDelete="false"){
+        try
+        {
+            int AspUserId = int.Parse(User.FindFirstValue("AspUserId"));
+            Console.WriteLine(IsDelete);
+            _scheduleService.UpdateShift(shiftDetailIds,AspUserId,IsDelete);
+            return Ok(new {message = "Successfully Aprroved"});
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {message = "Internal Server Error" + ex});
         }
     }
 

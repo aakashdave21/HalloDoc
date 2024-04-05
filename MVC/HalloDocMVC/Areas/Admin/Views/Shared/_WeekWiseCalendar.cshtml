@@ -39,6 +39,9 @@
     .weekwisetab tbody tr td[scope="col"] {
         padding: 0 !important;
     }
+    .weekwisetab tbody tr img{
+        border-radius: 50%;
+    }
 </style>
 <div class="table-responsive">
     <table class="table table-bordered weekwisetab" >
@@ -70,7 +73,7 @@
                             }
                             else
                             {
-                                <i class="fa-regular fa-user me-2"></i>
+                                <img src="~/images/DefaultUser.png" alt="">
                             }
                             @provider.FullName
                         </div>

@@ -26,4 +26,6 @@ public interface IProviderService
     void DeleteProvider(int Id);
     AdminPhysicianCreateViewModel GetRoleAndState();
 
+    ProviderLocationViewModel GetAllProviderLocation();
+
 }

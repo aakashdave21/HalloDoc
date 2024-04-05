@@ -53,6 +53,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\images\\DefaultUser.png",
+      "PackagePath": "staticwebassets\\images\\DefaultUser.png"
+    },
+    {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\images\\bg_login.png",
       "PackagePath": "staticwebassets\\images\\bg_login.png"
     },

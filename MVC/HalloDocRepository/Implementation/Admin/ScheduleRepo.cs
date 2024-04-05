@@ -98,4 +98,53 @@ public class ScheduleRepo : IScheduleRepo
         }
         throw new Exception("Invalid shift");   
     }
+
+    public IEnumerable<Physician> GetCallPhysician(int regionId = 0){
+
+        IEnumerable<Physician> query = _dbContext.Physicians.Where(phy => phy.OnCallStatus == 1 || phy.OnCallStatus == 2);
+        if(regionId!=0){
+            List<int?> PhyId = _dbContext.Physicianregions.Where(phyReg => phyReg.Regionid == regionId).Select(phy => phy.Physicianid).ToList();
+            query = query.Where(phy => PhyId.Contains(phy.Id));
+        }
+        return query.ToList();
+    }
+    public ReviewShiftPage ReviewShift(int RegionId=0,int PageSize=5,int PageNum=1){
+        IEnumerable<Shiftdetail> query = _dbContext.Shiftdetails.Include(sd=>sd.Region).Include(sd=>sd.Shift).ThenInclude(s=>s.Physician).Where(sd => sd.Isdeleted == false && sd.Status == 1);
+        if(RegionId!=0){
+            query = query.Where(sd => sd.Regionid == RegionId);
+        }
+        query = query.OrderBy(sd => sd.Shift.Physician.Firstname);
+        
+        ReviewShiftPage reviewPage = new(){
+            TotalPage = query.Count(),
+            ShiftListsInfo = query.Skip((PageNum-1)*PageSize).Take(PageSize).ToList()
+        };
+        return reviewPage;
+    }
+
+    public void UpdateShift(List<int> shiftDetailIds,int AspUserId,string IsDelete){
+        foreach(int shiftDetailId in shiftDetailIds){
+            Shiftdetail? shiftDetail = _dbContext.Shiftdetails.FirstOrDefault(sd => sd.Id == shiftDetailId && sd.Isdeleted == false);
+            if (shiftDetail!= null)
+            {
+                if(!string.IsNullOrEmpty(IsDelete) && IsDelete == "true"){
+                    shiftDetail.Isdeleted = true;
+                }
+                if(!string.IsNullOrEmpty(IsDelete) && IsDelete == "false"){
+                    shiftDetail.Status = 2;
+                }
+                shiftDetail.Modifiedby = AspUserId;
+                shiftDetail.Updatedat = DateTime.Now;
+
+                _dbContext.SaveChanges();
+            }else{
+                throw new Exception($"The shift detail with id: {shiftDetailId} does not exist.");
+            }
+        }
+    }
+}
+
+public class ReviewShiftPage{
+    public int TotalPage {get; set;}
+    public IEnumerable<Shiftdetail> ShiftListsInfo {get; set;} = new List<Shiftdetail>();
 }

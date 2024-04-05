@@ -1,0 +1,68 @@
+@using HalloDocService.ViewModels;
+@model SchedulingViewModel;
+@{
+    ViewData["Title"] = "On Call Provider Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+}
+
+<main class="OnCall-Section container-sm mt-sm-5">
+    <div class="d-flex justify-content-end mt-4">
+        <a onclick="history.back()" class="btn btn-sm back-link">
+            <i class="fa-solid fa-chevron-left"></i> Back
+        </a>
+    </div>
+    <div class="d-flex mt-4">
+        <h4 class="fw-bold">MDs On Call</h4>
+    </div>
+    <div class="mt-4 d-flex justify-content-between flex-wrap gap-2">
+        <div class="form-group has-search">
+            <span class="fa fa-search form-control-feedback"></span>
+            <select class="form-control form-select" id="regionOnCall">
+                    <option value="0" selected>All Region</option>
+                @foreach (var item in Model.AllRegions)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn secondary-theme-btn" asp-area="Admin" asp-controller="Scheduling" asp-action="Index">
+                Calendar View
+            </a>
+            <a class="btn secondary-theme-btn" asp-area="Admin" asp-controller="Scheduling" asp-action="ReviewShift">
+                Shifts for Review
+            </a>
+        </div>
+    </div>
+   <div class="border p-4 mt-3 mb-3 rounded shadow">
+        <div id="render-physician">
+            <partial name="_OnCallProvider"/>
+        </div>
+   </div>
+
+</main>
+
+<script>
+    $("#regionOnCall").change(function(){
+        var regionId = $("#regionOnCall").val();
+        sendAjaxRequest('/Admin/Scheduling/GetOnCallPhysicians', 'GET', { regionId: regionId }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                $("#render-physician").empty();
+                $("#render-physician").append(response);
+            }).catch(function (error) {
+                ToastError("Internal Server Error");
+            })
+    })
+</script>
+
+<script>
+    $("#adminDashTab li").each(function(){
+        if($(this).data("id")==4){
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+            $(this).find(".inner-nav ul li a").removeClass("active");
+            $(this).find(".inner-nav ul li[data-inner-itemid='8'] a").addClass("active");
+            $(this).find(".showMenu").html(`Scheduling <i class="fa-solid fa-caret-down"></i>`);
+        }
+    })
+</script>

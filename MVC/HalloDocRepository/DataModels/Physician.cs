@@ -153,6 +153,9 @@ public partial class Physician
     public virtual Physicianfile? Physicianfile { get; set; }
 
     [InverseProperty("Physician")]
+    public virtual Physicianlocation? Physicianlocation { get; set; }
+
+    [InverseProperty("Physician")]
     public virtual ICollection<Physicianregion> Physicianregions { get; } = new List<Physicianregion>();
 
     [ForeignKey("Regionid")]

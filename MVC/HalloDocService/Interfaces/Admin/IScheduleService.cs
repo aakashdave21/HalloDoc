@@ -10,4 +10,9 @@ public interface IScheduleService
     void UpdateSchedule(IFormCollection? formData,int aspUserId);
     void ChangeStatus(int shiftId,int AspUserId);
     void Delete(int shiftId,int AspUserId);
+
+    SchedulingViewModel GetCallPhysician(int regionId=0);
+    SchedulingViewModel ReviewShift(int RegionId=0,int PageSize=5,int PageNum=1);
+
+    void UpdateShift(List<int> shiftDetailIds,int AspUserId,string IsDelete);
 }

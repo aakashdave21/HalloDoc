@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Scheduling Page";
     Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+    int IsMonth = ViewBag.IsMonth;
 }
 <style>
     .shiftBadge span {
@@ -76,15 +77,15 @@
             </select>
         </div>
         <div class="d-flex flex-wrap gap-2">
-            <button class="btn secondary-theme-btn">
+            <a class="btn secondary-theme-btn" asp-area="Admin" asp-controller="Scheduling" asp-action="OnCallProvider">
                 Providers on Call
-            </button>
-            <button class="btn secondary-theme-btn">
+            </a>
+            <a class="btn secondary-theme-btn" asp-area="Admin" asp-controller="Scheduling" asp-action="ReviewShift">
                 Shifts for Review
-            </button>
-            <button class="btn secondary-theme-btn" data-bs-toggle="modal" data-bs-target="#createShiftModal">
+            </a>
+            <a class="btn secondary-theme-btn" data-bs-toggle="modal" data-bs-target="#createShiftModal">
                 Add new Shifts
-            </button>
+            </a>
         </div>
     </div>
     <div class="mt-4">
@@ -461,14 +462,20 @@
             })
     }
     function GetMonthWiseAjax(startDate, endDate, currentstatus) {
-        sendAjaxRequest('/admin/Scheduling/GetMonthWiseData', 'GET', { startDate, endDate, status: currentstatus }, "application/x-www-form-urlencoded; charset=UTF-8", true)
-            .then(function (response) {
+        $.ajax({
+            url: '/admin/Scheduling/GetMonthWiseData',
+            type: 'GET',
+            data: { startDate: startDate, endDate: endDate, status: currentstatus },
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            success: function(response) {
                 $("#render-calendar").html(response);
                 displayWeekDays(startDate, endDate);
-            }).catch(function (error) {
-                console.log(error)
+            },
+            error: function(error) {
+                console.log(error);
                 ToastError("Internal Server Error");
-            })
+            }
+        });
     }
 
     const getPhysiciansSchedule = async (physicianId = null) => {
@@ -551,6 +558,8 @@
 
     function openShiftView(shiftId, startTime = "", endTime = "", providerName = "", shiftDate = "", regionName = "", providerId = "") {
         var modal = document.getElementById('viewShiftModel');
+        $("#ViewAllMonthlyShift").modal('hide');
+        
         if (startTime) {
             var parts = startTime.split(':');
             startTime = (parts[0].length === 1 ? '0' + parts[0] : parts[0]) + ':' + (parts[1].length === 1 ? '0' + parts[1] : parts[1]);
@@ -721,5 +730,25 @@
             }).catch(function (error) {
                 ToastError("Internal Server Error");
             })
+    }
+    if('@IsMonth'==1){
+        $(".calendarTypeBtn[data-id='3']").click();
+    }
+    
+</script>
+
+<script>
+    $("#adminDashTab li").each(function(){
+        if($(this).data("id")==4){
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+            $(this).find(".inner-nav ul li a").removeClass("active");
+            $(this).find(".inner-nav ul li[data-inner-itemid='8'] a").addClass("active");
+            $(this).find(".showMenu").html(`Scheduling <i class="fa-solid fa-caret-down"></i>`);
+        }
+    })
+
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
     }
 </script>

@@ -105,3 +105,7 @@ th{
 [data-bs-theme=dark] .iti__country-list{
     background-color: #000000;
 }
+.sortable{
+    cursor : pointer;
+    user-select: none;
+}

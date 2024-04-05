@@ -205,6 +205,10 @@ public class ProviderRepo : IProviderRepo
         throw new Exception("Physician not found");
     }
 
+    public IEnumerable<Physicianlocation> GetAllProviderLocation(){
+        return _dbContext.Physicianlocations.Include(loc => loc.Physician);
+    }
+
 
 
 }

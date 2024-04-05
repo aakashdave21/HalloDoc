@@ -16,6 +16,12 @@
     .tab-row td[scope="col"] div {
         height: 35px;
     }
+
+    tbody .tab-row img{
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+    }
 </style>
 
 <div class="table-responsive">
@@ -47,7 +53,7 @@
                         }
                         else
                         {
-                            <i class="fa-regular fa-user me-2"></i>
+                            <img src="~/images/DefaultUser.png" alt="">
                         }
                         @provider.FullName
                     </td>

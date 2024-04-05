@@ -205,4 +205,16 @@ public class ProviderService : IProviderService
         return adminView;
     }
     
+    public ProviderLocationViewModel GetAllProviderLocation(){
+        ProviderLocationViewModel locationList = new(){
+            ProviderLocationList = _providerRepo.GetAllProviderLocation().Select(loc => new ProviderLocation(){
+                Id = loc.Id,
+                Latitude = loc.Latitude ?? 0,
+                Longitude = loc.Longitude ?? 0,
+                PhyicianName = loc?.Physician?.Firstname + " " + loc?.Physician?.Lastname,
+                Address = loc?.Address
+            })
+        };
+        return locationList;
+    }
 }

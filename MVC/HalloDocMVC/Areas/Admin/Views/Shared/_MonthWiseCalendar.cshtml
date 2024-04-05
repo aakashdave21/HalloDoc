@@ -8,6 +8,7 @@
         padding-left: 5px !important;
         background-color: #ffacf5 !important;
     }
+
     [data-bs-theme=dark] .month-coverage .day {
         background-color: transparent !important;
         border: 2px solid gray !important;
@@ -67,8 +68,8 @@
         background-color: transparent;
         color: #aacba8;
     }
-    
-    .ViewAllShift{
+
+    .ViewAllShift {
         display: flex;
         margin: auto;
         align-items: center;
@@ -77,16 +78,29 @@
         text-decoration: none;
         color: #01bce9;
         height: 100%;
+        cursor: pointer;
     }
-    [data-bs-theme=dark] .ViewAllShift{
+
+    [data-bs-theme=dark] .ViewAllShift {
         background-color: transparent;
     }
-    .ViewAllShift:hover{
+
+    .ViewAllShift:hover {
         background-color: #01bce9;
         color: white;
     }
-    
-   
+    .modal-body .card{
+        cursor: default;
+    }
+    .modal-content{
+        max-height: 70vh;
+    }
+    .modal-body{
+        overflow: scroll;
+    }
+    .modal-body ul li:hover{
+        background-color: aliceblue;
+    }
 </style>
 <div class="table-responsive d-flex month-table">
     <table class="table table-bordered">
@@ -189,11 +203,14 @@
                                 <ul>
                                     @for (int k = 0; k < Math.Min(4, shiftDetail.Count); k++)
                                     {
-                                        var StartingTime = shiftDetail[k].StartTimeHour.ToString() + ":" + shiftDetail[k].StartTimeMinute.ToString();
-                                        var EndingTime = shiftDetail[k].EndTimeHour.ToString() + ":" + shiftDetail[k].EndTimeMinute.ToString(); 
+                                        var StartingTime = shiftDetail[k].StartTimeHour.ToString() + ":" +
+                                        shiftDetail[k].StartTimeMinute.ToString();
+                                        var EndingTime = shiftDetail[k].EndTimeHour.ToString() + ":" +
+                                        shiftDetail[k].EndTimeMinute.ToString();
                                         @if (shiftDetail[k].Status == 1)
                                         {
-                                            <li class="border-bottom pink-bg ps-1" onclick="openShiftView('@shiftDetail[k].Id','@StartingTime','@EndingTime','@shiftDetail[k].FullName','@shiftDetail[k].StartDate','@shiftDetail[k].RegionName','@shiftDetail[k].ProviderId')">
+                                            <li class="border-bottom pink-bg ps-1"
+                                                onclick="openShiftView('@shiftDetail[k].Id','@StartingTime','@EndingTime','@shiftDetail[k].FullName','@shiftDetail[k].StartDate','@shiftDetail[k].RegionName','@shiftDetail[k].ProviderId')">
                                                 <small>@shiftDetail[k].StartTimeHour:@shiftDetail[k].StartTimeMinute -
                                                     @shiftDetail[k].EndTimeHour:@shiftDetail[k].EndTimeMinute</small> <br>
                                                 <small>@shiftDetail[k].FullName</small>
@@ -201,7 +218,8 @@
                                         }
                                         else if (shiftDetail[k].Status == 2)
                                         {
-                                            <li class="border green-bg ps-1" onclick="openShiftView('@shiftDetail[k].Id','@StartingTime','@EndingTime','@shiftDetail[k].FullName','@shiftDetail[k].StartDate','@shiftDetail[k].RegionName','@shiftDetail[k].ProviderId')">
+                                            <li class="border green-bg ps-1"
+                                                onclick="openShiftView('@shiftDetail[k].Id','@StartingTime','@EndingTime','@shiftDetail[k].FullName','@shiftDetail[k].StartDate','@shiftDetail[k].RegionName','@shiftDetail[k].ProviderId')">
                                                 <small>@shiftDetail[k].StartTimeHour:@shiftDetail[k].StartTimeMinute -
                                                     @shiftDetail[k].EndTimeHour:@shiftDetail[k].EndTimeMinute</small> <br>
                                                 <small>@shiftDetail[k].FullName</small>
@@ -212,10 +230,12 @@
                                     {
                                         <li class="border-bottom"></li>
                                     }
-                                     @if (shiftDetail.Count > 4)
+                                    @if (shiftDetail.Count > 4)
                                     {
+                                        string shiftDetailJson = Newtonsoft.Json.JsonConvert.SerializeObject(shiftDetail);
+
                                         <li class="border-bottom viewList">
-                                            <a href="#" class="ViewAllShift">View All</a>
+                                            <a onclick="openAllRequestModal('@shiftDetailJson')" class="ViewAllShift">View All</a>
                                         </li>
                                     }
                                 </ul>
@@ -239,3 +259,58 @@
         </tbody>
     </table>
 </div>
+@* Model For Create Shifts *@
+<div class="modal fade shadow-lg " id="ViewAllMonthlyShift" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+
+</div>
+<script>
+
+    function openAllRequestModal(shiftDetailJson) {
+        var shiftDetail = JSON.parse(shiftDetailJson);
+        var modal = document.getElementById('ViewAllMonthlyShift');
+        modal.innerHTML = `<div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">View All Shift ${formatDate(shiftDetail[0].StartDate)}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <ul class="list-group list-group-flush">
+                        ${shiftDetail.map(shift => `
+                            <li class="list-group-item" onclick="openShiftView('${shift.Id}','${shift.StartTimeHour}:${shift.StartTimeMinute}','${shift.EndTimeHour}:${shift.EndTimeMinute}','${shift.FullName}','${shift.StartDate}','${shift.RegionName}','${shift.ProviderId}')">
+                                <div><strong>Region Name:</strong> ${shift.RegionName}</div>
+                                <div><strong>Full Name:</strong> ${shift.FullName}</div>
+                                <div><strong>Start Time:</strong> ${formatTime(shift.StartTimeHour, shift.StartTimeMinute)}</div>
+                                <div><strong>End Time:</strong> ${formatTime(shift.EndTimeHour, shift.EndTimeMinute)}</div>
+                                <div><strong>Status:</strong> <span class="${shift.Status === 1 ? 'text-success fw-bold' : 'text-danger fw-bold'}">${shift.Status === 1 ? 'Active' : 'Inactive'}</span> </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                    <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Close</button>
+            </div>
+                </form>
+        </div>
+    </div>`;
+
+        var modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
+
+        console.log(shiftDetail);
+        // Now you can use the shiftDetail object in your JavaScript code
+    }
+
+    function formatTime(hour, minute) {
+        var date = new Date();
+        date.setHours(hour, minute);
+        return date.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    }
+    function formatDate(dateString) {
+    var date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+</script>

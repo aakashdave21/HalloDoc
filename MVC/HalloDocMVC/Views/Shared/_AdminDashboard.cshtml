@@ -67,17 +67,17 @@
                             <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                         </li>
                         <li data-id="2">
-                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" >Provider Location</a>
+                            <a asp-area="Admin" asp-controller="ProviderLocation" asp-action="Index" >Provider Location</a>
                         </li>
                         <li data-id="3">
                             <a asp-area="Admin" asp-controller="Profile" asp-action="Index" >My Profile</a>
                         </li>
                         <li data-id="4" class="InnerNav">
+                            <a href="#" class="showMenu">Provider <i class="fa-solid fa-caret-down"></i></a>
                             <div class="inner-nav">
-                                <a href="#">Provider <i class="fa-solid fa-caret-down"></i></a>
-                                <ul class="shadow" style="display: none;">
-                                    <li><a asp-area="Admin" asp-controller="Provider" asp-action="Index" class="dropdown-item">Provider</a></li>
-                                    <li><a asp-area="Admin" asp-controller="Scheduling" asp-action="Index" class="dropdown-item">Scheduling</a></li>
+                                <ul class="inner-nav shadow" style="display: none;">
+                                    <li data-inner-itemid="4"><a asp-area="Admin" asp-controller="Provider" asp-action="Index" class="dropdown-item">Provider</a></li>
+                                    <li data-inner-itemid="8"><a asp-area="Admin" asp-controller="Scheduling" asp-action="Index" class="dropdown-item">Scheduling</a></li>
                                     <li><a asp-area="Admin" asp-controller="Invoicing" asp-action="Index"  class="dropdown-item">Invoicing</a></li>
                                 </ul>
                             </div>
@@ -85,7 +85,7 @@
                         <li data-id="5">
                             <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" >Partners</a>
                         </li>
-                        <li data-id="6">
+                        <li data-id="6" id="AccessId">
                             <a asp-area="Admin" asp-controller="Access" asp-action="Index">Access</a>
                         </li>
                         <li data-id="7">
@@ -109,7 +109,6 @@
         </footer>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    
     <script src="~/js/global.js" asp-append-version="true"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
@@ -118,6 +117,21 @@
     <script src="~/js/cancleCase.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/js/adminDashboard.js" asp-append-version="true"></script>
     <script src="https://kit.fontawesome.com/3bcc8c09be.js" crossorigin="anonymous"></script>
+    <script>
+        @* let AccessId = 1;
+        $("#adminDashTab li").each(function(){
+            if($(this).data("id")==AccessId){
+                $("#adminDashTab li a").removeClass("active");
+                $(this).addClass("active").find("a").addClass("active");
+            }
+        })
+        $("#adminDashTab li").click(function(){
+            AccessId = $(this).data("id");
+            console.log(AccessId);
+        }) *@
+    @* $("#AccessId").addClass("active").find("a").addClass("active"); *@
+
+    </script>
 </body>
 
 </html>
