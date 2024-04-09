@@ -1,0 +1,49 @@
+@using HalloDocService.ViewModels;
+@model RecordsViewModel;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Patient History Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+}
+<div class="mt-sm-5">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <th>Client Name</th>
+                <th>Created Date</th>
+                <th>Confirmation</th>
+                <th>Provider Name</th>
+                <th>Conclude Date</th>
+                <th>Status</th>
+                <th>Final Report</th>
+                <th>Actions</th>
+            </thead>
+            <tbody>
+                @if (((IEnumerable<PatientRequestView>)Model.PatientRequestList).Any())
+                {
+                    @foreach (var item in Model.PatientRequestList)
+                    {
+                        <tr>
+                            <td>@item.PatientName</td>
+                            <td>@item.CreatedDate</td>
+                            <td>@item.ConfirmationNumber</td>
+                            <td>@item.ProviderName</td>
+                            <td></td>
+                            <td>@item.Status</td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center">No records found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
