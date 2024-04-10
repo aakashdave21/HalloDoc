@@ -145,6 +145,9 @@ public partial class Physician
     [InverseProperty("PhysicianCreatedbyNavigations")]
     public virtual Aspnetuser? CreatedbyNavigation { get; set; }
 
+    [InverseProperty("Physician")]
+    public virtual ICollection<Emaillog> Emaillogs { get; } = new List<Emaillog>();
+
     [ForeignKey("Modifiedby")]
     [InverseProperty("PhysicianModifiedbyNavigations")]
     public virtual Aspnetuser? ModifiedbyNavigation { get; set; }
@@ -180,4 +183,7 @@ public partial class Physician
 
     [InverseProperty("Physician")]
     public virtual ICollection<Shift> Shifts { get; } = new List<Shift>();
+
+    [InverseProperty("Physician")]
+    public virtual ICollection<Smslog> Smslogs { get; } = new List<Smslog>();
 }

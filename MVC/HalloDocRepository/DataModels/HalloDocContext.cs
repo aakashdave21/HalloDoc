@@ -31,6 +31,8 @@ public partial class HalloDocContext : DbContext
 
     public virtual DbSet<Concierge> Concierges { get; set; }
 
+    public virtual DbSet<Emaillog> Emaillogs { get; set; }
+
     public virtual DbSet<Encounterform> Encounterforms { get; set; }
 
     public virtual DbSet<Healthprofessional> Healthprofessionals { get; set; }
@@ -74,6 +76,8 @@ public partial class HalloDocContext : DbContext
     public virtual DbSet<Shiftdetail> Shiftdetails { get; set; }
 
     public virtual DbSet<Shiftdetailregion> Shiftdetailregions { get; set; }
+
+    public virtual DbSet<Smslog> Smslogs { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -160,7 +164,9 @@ public partial class HalloDocContext : DbContext
             entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            entity.HasOne(d => d.Request).WithOne(p => p.Blockrequest).HasConstraintName("blockrequests_requestid_fkey");
+            entity.HasOne(d => d.Request).WithOne(p => p.Blockrequest)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("blockrequests_requestid_fkey");
         });
 
         modelBuilder.Entity<Casetag>(entity =>
@@ -182,6 +188,23 @@ public partial class HalloDocContext : DbContext
             entity.HasOne(d => d.Region).WithMany(p => p.Concierges).HasConstraintName("concierge_regionid_fkey");
         });
 
+        modelBuilder.Entity<Emaillog>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("emaillog_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.Admin).WithMany(p => p.Emaillogs).HasConstraintName("emaillog_adminid_fkey");
+
+            entity.HasOne(d => d.Physician).WithMany(p => p.Emaillogs).HasConstraintName("emaillog_physicianid_fkey");
+
+            entity.HasOne(d => d.Request).WithMany(p => p.Emaillogs)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("emaillog_requestid_fkey");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Emaillogs).HasConstraintName("emaillog_roleid_fkey");
+        });
+
         modelBuilder.Entity<Encounterform>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("encounterform_pkey");
@@ -190,7 +213,9 @@ public partial class HalloDocContext : DbContext
             entity.Property(e => e.Isfinalized).HasDefaultValueSql("false");
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            entity.HasOne(d => d.Request).WithOne(p => p.Encounterform).HasConstraintName("encounterform_request_id_fkey");
+            entity.HasOne(d => d.Request).WithOne(p => p.Encounterform)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("encounterform_request_id_fkey");
         });
 
         modelBuilder.Entity<Healthprofessional>(entity =>
@@ -230,7 +255,9 @@ public partial class HalloDocContext : DbContext
 
             entity.HasOne(d => d.CreatedbyNavigation).WithMany(p => p.Orderdetails).HasConstraintName("orderdetails_createdby_fkey");
 
-            entity.HasOne(d => d.Request).WithMany(p => p.Orderdetails).HasConstraintName("orderdetails_requestid_fkey");
+            entity.HasOne(d => d.Request).WithMany(p => p.Orderdetails)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("orderdetails_requestid_fkey");
 
             entity.HasOne(d => d.Vendor).WithMany(p => p.Orderdetails).HasConstraintName("orderdetails_vendorid_fkey");
         });
@@ -323,9 +350,7 @@ public partial class HalloDocContext : DbContext
 
             entity.HasOne(d => d.Region).WithMany(p => p.Requestclients).HasConstraintName("requestclient_regionid_fkey");
 
-            entity.HasOne(d => d.Request).WithMany(p => p.Requestclients)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("requestclient_requestid_fkey");
+            entity.HasOne(d => d.Request).WithMany(p => p.Requestclients).HasConstraintName("requestclient_requestid_fkey");
         });
 
         modelBuilder.Entity<Requestconcierge>(entity =>
@@ -336,9 +361,7 @@ public partial class HalloDocContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("requestconcierge_conciergeid_fkey");
 
-            entity.HasOne(d => d.Request).WithMany(p => p.Requestconcierges)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("requestconcierge_requestid_fkey");
+            entity.HasOne(d => d.Request).WithMany(p => p.Requestconcierges).HasConstraintName("requestconcierge_requestid_fkey");
         });
 
         modelBuilder.Entity<Requestnote>(entity =>
@@ -352,9 +375,7 @@ public partial class HalloDocContext : DbContext
 
             entity.HasOne(d => d.ModifiedbyNavigation).WithMany(p => p.RequestnoteModifiedbyNavigations).HasConstraintName("requestnotes_modifiedby_fkey");
 
-            entity.HasOne(d => d.Request).WithOne(p => p.Requestnote)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("requestnotes_requestid_fkey");
+            entity.HasOne(d => d.Request).WithOne(p => p.Requestnote).HasConstraintName("requestnotes_requestid_fkey");
         });
 
         modelBuilder.Entity<Requeststatuslog>(entity =>
@@ -369,9 +390,7 @@ public partial class HalloDocContext : DbContext
 
             entity.HasOne(d => d.Physician).WithMany(p => p.RequeststatuslogPhysicians).HasConstraintName("requeststatuslog_physicianid_fkey");
 
-            entity.HasOne(d => d.Request).WithMany(p => p.Requeststatuslogs)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("requeststatuslog_requestid_fkey");
+            entity.HasOne(d => d.Request).WithMany(p => p.Requeststatuslogs).HasConstraintName("requeststatuslog_requestid_fkey");
 
             entity.HasOne(d => d.Transtophysician).WithMany(p => p.RequeststatuslogTranstophysicians).HasConstraintName("requeststatuslog_transtophysicianid_fkey");
         });
@@ -392,9 +411,7 @@ public partial class HalloDocContext : DbContext
 
             entity.HasOne(d => d.Physician).WithMany(p => p.Requestwisefiles).HasConstraintName("requestwisefile_physicianid_fkey");
 
-            entity.HasOne(d => d.Request).WithMany(p => p.Requestwisefiles)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("requestwisefile_requestid_fkey");
+            entity.HasOne(d => d.Request).WithMany(p => p.Requestwisefiles).HasConstraintName("requestwisefile_requestid_fkey");
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -473,6 +490,23 @@ public partial class HalloDocContext : DbContext
             entity.HasOne(d => d.Shiftdetail).WithMany(p => p.Shiftdetailregions)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("shiftdetailregion_shiftdetailid_fkey");
+        });
+
+        modelBuilder.Entity<Smslog>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("smslog_pkey");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.Admin).WithMany(p => p.Smslogs).HasConstraintName("smslog_adminid_fkey");
+
+            entity.HasOne(d => d.Physician).WithMany(p => p.Smslogs).HasConstraintName("smslog_physicianid_fkey");
+
+            entity.HasOne(d => d.Request).WithMany(p => p.Smslogs)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("smslog_requestid_fkey");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Smslogs).HasConstraintName("smslog_roleid_fkey");
         });
 
         modelBuilder.Entity<User>(entity =>

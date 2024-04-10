@@ -5,7 +5,26 @@
     ViewData["Title"] = "Patient History Page";
     Layout = "~/Views/Shared/_AdminDashboard.cshtml";
 }
-<div class="mt-sm-5">
+<style>
+    table thead th {
+        background: transparent !important;
+        white-space: nowrap;
+    }
+    table thead tr {
+        background: rgba(97, 97, 97, 0.301);
+    }
+    table tbody tr:hover {
+        background: rgba(156, 232, 255, 0.103);
+        cursor: default;
+    }
+</style>
+<main class="Partner-Section container-fluid p-md-5 mt-sm-5 mb-3">
+    <div class="d-flex justify-content-end mt-4">
+        <a asp-area="Admin" asp-controller="Records" asp-action="PatientHistory" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+    </div>
+    <div class="d-flex mt-4">
+        <h4 class="fw-bold">Patient Records</h4>
+    </div>
     <div class="table-responsive">
         <table class="table">
             <thead>
@@ -28,10 +47,22 @@
                             <td>@item.CreatedDate</td>
                             <td>@item.ConfirmationNumber</td>
                             <td>@item.ProviderName</td>
-                            <td></td>
+                            <td>@item.ConcludedDate</td>
                             <td>@item.Status</td>
                             <td>
-                                
+                                -
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn theme-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
+                                        <li><a class="dropdown-item" href="#">Chat</a></li>
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id">Documents</a></li>
+                                    </ul>
+                                    </div>
                             </td>
                         </tr>
                     }
@@ -45,5 +76,6 @@
             </tbody>
         </table>
     </div>
-</div>
+</main>
+
 

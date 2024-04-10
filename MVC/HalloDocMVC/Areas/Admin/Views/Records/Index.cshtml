@@ -1,35 +1,242 @@
+@using HalloDocService.ViewModels;
+@model RecordsViewModel;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = "Patient Page";
+    ViewData["Title"] = "Patient History Page";
     Layout = "~/Views/Shared/_AdminDashboard.cshtml";
 }
+<style>
+    table thead th {
+        background: transparent !important;
+    }
 
-<main class="Partner-Section container-sm mt-sm-5 mb-3">
-    <div class="d-flex mt-4">
-        <h4 class="fw-bold">Vendor(s)</h4>
+    table thead tr {
+        background: rgba(97, 97, 97, 0.301);
+    }
+
+    table tbody tr:hover {
+        background: rgba(156, 232, 255, 0.103);
+        cursor: default;
+    }
+</style>
+<main class="Partner-Section container-fluid p-md-5 mt-sm-5 mt-2 mb-3">
+    <div class="d-flex justify-content-between flex-wrap">
+        <h4 class="fw-bold">Search Records</h4>
+        <button class="btn secondary-theme-btn" id="downloadExcel">
+            <i class="fa-solid fa-share"></i> Export Data to Excel
+        </button>
     </div>
     <div class="p-4 mt-3 mb-3 rounded shadow border">
-        <div id="partner-header" class="d-flex justify-content-between flex-wrap align-items-center gap-2">
-            <div class="d-flex gap-3">
-                <div class="form-group has-search">
-                    <span class="fa fa-search form-control-feedback"></span>
-                    <input type="text" id="searchKeyword" class="form-control" placeholder="Search Vendors"
-                        oninput="debounce(searchByVendor, 500)">
+        <div id="partner-header">
+            <form>
+                <div class="row g-2">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="form-floating">
+                            <select class="form-select" aria-label="Large select example" placeholder="Role">
+                                <option selected disabled>Select Request Status</option>
+                                <option value="1">Pending</option>
+                                <option value="2">Settled</option>
+                                <option value="3">Declined</option>
+                                <option value="4">Settled Offline</option>
+                            </select>
+                            <label for="Status">Request Status</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="patientName" placeholder="Patient name">
+                            <label for="patientName">Patient name</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="form-floating">
+                            <select class="form-select" id="reqType" aria-label="Large select example"
+                                placeholder="Role">
+                                <option selected disabled>Select Request Type</option>
+                                <option value="1">Patient</option>
+                                <option value="2">Family/Friend</option>
+                                <option value="3">Concierge</option>
+                                <option value="4">Business</option>
+                            </select>
+                            <label for="reqType">Request Type</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="form-floating ">
+                            <input type="date" class="form-control" id="fromDate" placeholder="fromDate">
+                            <label for="fromDate">From Date of Service</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="form-floating ">
+                            <input type="date" class="form-control" id="toDate" placeholder="toDate">
+                            <label for="toDate">To Date of Service</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="providerName" placeholder="Provider name">
+                            <label for="providerName">Provider name</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="Email" placeholder="Email">
+                            <label for="Email">Email</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="phone" placeholder="phone">
+                            <label for="phone">Phone</label>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group has-search">
-                    <span class="fa fa-search form-control-feedback"></span>
-                    <select class="form-control form-select" id="professionDropdown" onchange="sortProfession()">
-                      
-                    </select>
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <button type="reset" class="btn theme-btn" onclick="clearFilter()">Clear</button>
+                    <button type="button" class="btn secondary-theme-btn" onclick="searchRecords()">Search</button>
                 </div>
-            </div>
-            <div class="d-flex gap-2 flex-wrap">
-                <a class="btn theme-btn" asp-area="admin" asp-controller="Partner" asp-action="Create"> <i
-                        class="fa-solid fa-plus"></i> Add Business</a>
-            </div>
+            </form>
         </div>
-        <div id="PartnerTable-body" class="mt-3">
-            
+        <div id="records-render" class="mt-3">
+            <partial name="_RecordsTable" />
         </div>
     </div>
 </main>
+
+@* Confirmation Delete Modal *@
+<div class="modal fade shadow-lg " id="deleteVendorConfirmation" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+
+</div>
+
+<script>
+    let pageSize = 5;
+    let pageNum = 1;
+    let SearchBy = {
+        Status: 0,
+        InputRequestType: 0,
+        InputFromDate: "",
+        InputToDate: "",
+        PhysicianName: "",
+        PatientName: "",
+        Email: "",
+        PhoneNumber: ""
+    }
+
+    const searchRecords = () => {
+        getData();
+        CallAjax();
+    }
+
+    function RecordsPageChange() {
+        getData();
+        const pageChange = document.querySelector(".RecordsPageChange");
+        pageNum = pageChange.value;
+        CallAjax();
+    }
+
+    function pageRecordChange() {
+        pageNum = 1;
+        getData();
+        const pageRecordChange = document.querySelector(".ReqRecordsPageRecordChange").value;
+        pageSize = pageRecordChange
+        CallAjax();
+    }
+
+    function clearFilter() {
+        pageNum = 1;
+        pageSize = 5;
+        SearchBy = {
+            Status: 0,
+            InputRequestType: 0,
+            FromDate: "",
+            ToDate: "",
+            PhysicianName: "",
+            PatientName: "",
+            Email: "",
+            PhoneNumber: ""
+        }
+        CallAjax();
+    }
+
+    function CallAjax() {
+        sendAjaxRequest('/admin/records/Index', 'GET', { pageSize, pageNum, ...SearchBy }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                $("#records-render").empty();
+                $("#records-render").html(response);
+            }).catch(function (error) {
+                ToastError("Internal Server Error");
+            })
+    }
+
+    $("#downloadExcel").click(function(){
+        getData();
+        $.ajax({
+            url: '/admin/records/download',
+            type: 'GET',
+            traditional: true,      
+            data: { pageSize, pageNum, ...SearchBy },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (response) {
+                var url = window.URL.createObjectURL(response);
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = "Data.xlsx";
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    console.log("Successfully Download files");
+            },
+            error: function (xhr, status, error) {
+                if (xhr.status == 401) {
+                    window.location.href = '/admin/login';
+                }
+               ToastError("Internal Server Error");
+            }
+        })
+    })
+
+    function getData() {
+        SearchBy.PatientName = $("#patientName").val().toLowerCase();
+        SearchBy.PhysicianName = $("#providerName").val().toLowerCase();
+        SearchBy.Email = $("#Email").val().toLowerCase();
+        SearchBy.PhoneNumber = $("#phone").val().toLowerCase();
+        SearchBy.InputRequestType = $("#reqType").val();
+        if ($("#fromDate").val() > $("#toDate").val()) {
+            ToastError("Please Select Correct Date Range!");
+            return;
+        }
+        SearchBy.InputFromDate = $("#fromDate").val();
+        SearchBy.InputToDate = $("#toDate").val();
+    }
+
+    function openDeleteModal(reqId) {
+        let modal = document.getElementById("deleteVendorConfirmation");
+        modal.innerHTML = `
+            <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Confirm Deletion</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/admin/Records/Delete" method="post" id="contactForm">
+            <div class="modal-body">
+                <input type="hidden" name="id" value="${reqId}">
+                <p class="text-muted fw-bold"> Are you sure you want to delete this Record? </p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="submitBtn" class="btn btn-danger">Confirm</button>
+                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
+            </div>
+            </form>
+        </div>
+    </div>
+        `;
+        let modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
+    }
+</script>

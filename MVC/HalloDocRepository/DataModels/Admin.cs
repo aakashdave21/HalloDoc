@@ -93,6 +93,9 @@ public partial class Admin
     [InverseProperty("AdminCreatedbyNavigations")]
     public virtual Aspnetuser? CreatedbyNavigation { get; set; }
 
+    [InverseProperty("Admin")]
+    public virtual ICollection<Emaillog> Emaillogs { get; } = new List<Emaillog>();
+
     [ForeignKey("Modifiedby")]
     [InverseProperty("AdminModifiedbyNavigations")]
     public virtual Aspnetuser? ModifiedbyNavigation { get; set; }
@@ -110,4 +113,7 @@ public partial class Admin
     [ForeignKey("Roleid")]
     [InverseProperty("Admins")]
     public virtual Role? Role { get; set; }
+
+    [InverseProperty("Admin")]
+    public virtual ICollection<Smslog> Smslogs { get; } = new List<Smslog>();
 }

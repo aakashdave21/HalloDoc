@@ -2,10 +2,8 @@ using HalloDocService.Admin.Interfaces;
 using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
-using System.Globalization;
-using HalloDocRepository.Interfaces;
-using AdminTable = HalloDocRepository.DataModels.Admin;
-using System.Reflection;
+using static HalloDocRepository.Admin.Implementation.RecordsRepo;
+using HalloDocRepository.Admin.Implementation;
 
 namespace HalloDocService.Admin.Implementation;
 public class RecordsService : IRecordsService
@@ -53,20 +51,15 @@ public class RecordsService : IRecordsService
 
     public RecordsViewModel GetPatientRequest(int UserId,int RequestId){
         IEnumerable<Request> requestList = _recordsRepo.GetPatientRequest(UserId,RequestId);
-        foreach (var item in requestList)
-        {
-            Console.WriteLine(item.Id);
-            Console.WriteLine(item.Firstname);
-            Console.WriteLine("-------------------");
-        }
         RecordsViewModel patientRequest = new(){
             PatientRequestList = requestList.Select(req => new PatientRequestView(){
                 Id = req.Id,
                 PatientName = req?.Requestclients?.FirstOrDefault()?.Firstname + " " + req?.Requestclients?.FirstOrDefault()?.Lastname,
                 CreatedDate =  req?.Createdat?.ToString("MMM dd, yyyy"),
-                ConfirmationNumber = req?.Confirmationnumber,
-                ProviderName = req?.Physician?.Firstname,
-                Status = GetUserRequestType(req?.Status),
+                ConfirmationNumber = req?.Confirmationnumber ?? "-",
+                ProviderName = req?.Physician?.Firstname ?? "-",
+                Status = GetUserRequestType(req?.Status) ?? "-",
+                ConcludedDate = req?.Requeststatuslogs?.FirstOrDefault(r=>r.Requestid == req.Id && r.Status == 6)?.Createddate.ToString("MMM dd, yyyy") ?? "-"
             })
         };
         return patientRequest;
@@ -92,4 +85,75 @@ public class RecordsService : IRecordsService
             _ => "Unknown",
         };
     }
+
+
+    public RecordsViewModel GetAllRecords(RecordsView Parameters,int PageNum = 1,int PageSize = 5){
+        RecordsRepoView repoView = new(){
+            PatientName = Parameters.PatientName,
+            PhysicianName = Parameters.PhysicianName,
+            Email = Parameters.Email,
+            PhoneNumber = Parameters.PhoneNumber,
+            InputFromDate = Parameters.InputFromDate,
+            InputToDate = Parameters.InputToDate,
+            InputRequestStatus = Parameters.InputRequestStatus,
+            InputRequestType = Parameters.InputRequestType
+        };
+        var (RecordList, totalCount) = _recordsRepo.GetAllRecords(repoView, PageNum, PageSize);
+        
+        int startIndex = (PageNum - 1) * PageSize + 1;
+        RecordsViewModel recordData = new(){
+            RecordsRequestList = RecordList.Select(rec => new RecordsView(){
+                RequestId = rec.Id,
+                PatientName = $"{rec?.Requestclients?.FirstOrDefault()?.Firstname} {rec?.Requestclients?.FirstOrDefault()?.Lastname}" ?? "-",
+                Requestor = rec?.Firstname +" " +rec?.Lastname ?? "-",
+                DateOfService = rec?.Accepteddate != null ? rec.Accepteddate?.ToString("MMM dd ,yyyy") : "-",
+                Email = rec?.Requestclients?.FirstOrDefault()?.Email ?? "-",
+                PhoneNumber = rec?.Requestclients?.FirstOrDefault()?.Phonenumber ?? "-",
+                Address = string.IsNullOrEmpty(rec?.Requestclients?.FirstOrDefault()?.Street) && string.IsNullOrEmpty(rec?.Requestclients?.FirstOrDefault()?.City) && string.IsNullOrEmpty(rec?.Requestclients?.FirstOrDefault()?.State)
+                ? "-"
+                : $"{rec?.Requestclients?.FirstOrDefault()?.Street ?? ""}, {rec?.Requestclients?.FirstOrDefault()?.City ?? ""}, {rec?.Requestclients?.FirstOrDefault()?.State ?? ""}",
+                Zip = string.IsNullOrEmpty(rec?.Requestclients?.FirstOrDefault()?.Zipcode) ? "-" : rec?.Requestclients?.FirstOrDefault()?.Zipcode,
+                RequestStatus = GetUserRequestType(rec?.Status),
+                PhysicianId = rec?.Physicianid,
+                PhysicianName = rec?.Physician?.Firstname ?? "-",
+                PhysicianNote = rec?.Requestnote?.Physiciannotes ?? "-",
+                CancelledByProviderNote = rec?.Requeststatuslogs?.FirstOrDefault(r => r.Requestid == r.Id && r.Status == 3 && r.Physicianid != null)?.Notes ?? "-",
+                AdminNote = rec?.Requestnote?.Adminnotes ?? "-",
+                PatientNote = rec?.Symptoms ?? "-",
+            }),
+            TotalCount = totalCount,
+            CurrentPage = PageNum,
+            CurrentPageSize = PageSize,
+            PageRangeStart = totalCount == 0 ? 0 : startIndex,
+            PageRangeEnd = Math.Min(startIndex + PageSize - 1, totalCount),
+            TotalPage = (int)Math.Ceiling((double)totalCount / PageSize)
+        };
+
+        return recordData;
+    }
+
+    public void DeleteRecord(int ReqId){
+        _recordsRepo.DeleteRecord(ReqId);
+    }
+
+    // public RecordsViewModel EmailLogs(int PageNum = 1,int PageSize = 5){
+    //     var (RecordList, totalCount) = _recordsRepo.EmailLogs(PageNum, PageSize);
+        // int startIndex = (PageNum - 1) * PageSize + 1;
+        // RecordsViewModel recordData = new(){
+        //     EmailLogsList = RecordList.Select(rec => new EmailLogView(){
+        //         Id = rec.Id,
+        //         Email = rec.Email,
+        //         Subject = rec.Subject,s
+        //         Message = rec.Message,
+        //         CreatedDate = rec.Createddate.ToString("MMM dd, yyyy")
+        //     }),
+        //     TotalCount = totalCount,
+        //     CurrentPage = PageNum,
+        //     CurrentPageSize = PageSize,
+        //     PageRangeStart = totalCount == 0 ? 0 : startIndex,
+        //     PageRangeEnd = Math.Min(startIndex + PageSize - 1, totalCount),
+        //     TotalPage = (int)Math.Ceiling((double)totalCount / PageSize)
+        // };
+    // }
+
 }

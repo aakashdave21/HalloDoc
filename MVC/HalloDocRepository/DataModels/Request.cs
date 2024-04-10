@@ -140,6 +140,9 @@ public partial class Request
     public virtual User? Createduser { get; set; }
 
     [InverseProperty("Request")]
+    public virtual ICollection<Emaillog> Emaillogs { get; } = new List<Emaillog>();
+
+    [InverseProperty("Request")]
     public virtual Encounterform? Encounterform { get; set; }
 
     [InverseProperty("Request")]
@@ -167,6 +170,9 @@ public partial class Request
 
     [InverseProperty("Request")]
     public virtual ICollection<Requestwisefile> Requestwisefiles { get; } = new List<Requestwisefile>();
+
+    [InverseProperty("Request")]
+    public virtual ICollection<Smslog> Smslogs { get; } = new List<Smslog>();
 
     [ForeignKey("Userid")]
     [InverseProperty("RequestUsers")]

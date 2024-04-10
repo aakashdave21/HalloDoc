@@ -43,8 +43,14 @@ public partial class Role
     public virtual ICollection<Admin> Admins { get; } = new List<Admin>();
 
     [InverseProperty("Role")]
+    public virtual ICollection<Emaillog> Emaillogs { get; } = new List<Emaillog>();
+
+    [InverseProperty("Role")]
     public virtual ICollection<Physician> Physicians { get; } = new List<Physician>();
 
     [InverseProperty("Role")]
     public virtual ICollection<Rolemenu> Rolemenus { get; } = new List<Rolemenu>();
+
+    [InverseProperty("Role")]
+    public virtual ICollection<Smslog> Smslogs { get; } = new List<Smslog>();
 }

@@ -1,0 +1,114 @@
+@{
+    int[] pageSizeArrray = { 5, 10, 15 };
+}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <th>Patient Name</th>
+            <th>Requestor</th>
+            <th>Date Of Service</th>
+            <th>Close Case Date</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Address</th>
+            <th>Zip</th>
+            <th>Request Status</th>
+            <th>Physician</th>
+            <th>Physician Note</th>
+            <th>Cancelled By Provider Note</th>
+            <th>Admin Note</th>
+            <th>Patient Note</th>
+            <th>Delete Permanently</th>
+        </thead>
+        <tbody>
+            @if (((IEnumerable<RecordsView>)Model.RecordsRequestList).Any())
+            {
+                @foreach (var item in Model.RecordsRequestList)
+                {
+                    <tr>
+                        <td>@item.PatientName</td>
+                        <td>@item.Requestor</td>
+                        <td>@item.DateOfService</td>
+                        <td>Date</td>
+                        <td>@item.Email</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.Address</td>
+                        <td>@item.Zip</td>
+                        <td>@item.RequestStatus</td>
+                        <td>@item.PhysicianName</td>
+                        <td>@item.PhysicianNote</td>
+                        <td>@item.CancelledByProviderNote</td>
+                        <td>@item.AdminNote</td>
+                        <td>@item.PatientNote</td>
+                         <td class="text-center">
+                            <button class="btn theme-btn" onclick="openDeleteModal('@item.RequestId')">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="15" class="text-center">No records found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@* Pagination *@
+<div class="d-flex justify-content-between align-items-center mt-2">
+    <div>
+        <div class="d-flex align-items-center" style="white-space: nowrap;">
+            Page : <select class="form-select select-page ms-2 RecordsPageChange"
+                onchange="RecordsPageChange()" aria-label="Default select example">
+                @{
+                    for (int i = 1; i <= Model.TotalPage; i++)
+                    {
+                        if (Model.CurrentPage == i)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                }
+            </select> &nbsp; of @Model.TotalPage
+        </div>
+    </div>
+    <div>
+        <div class="d-sm-flex d-none">
+            Show Results : @Model.PageRangeStart - @Model.PageRangeEnd Out of
+            <span>&nbsp;@Model.TotalCount </span>
+        </div>
+    </div>
+    <div>
+        <div class="d-flex align-items-center" style="white-space: nowrap;">
+            Show Rows :
+            <select class="form-select select-page ms-2 ReqRecordsPageRecordChange" onchange="pageRecordChange()"
+                aria-label="Default select example">
+                @{
+                    foreach (int i in pageSizeArrray)
+                    {
+                        if (Model.CurrentPageSize == i)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="d-flex d-sm-none">
+            Show Results : @Model.PageRangeStart - @Model.PageRangeEnd Out of
+            <span>&nbsp;@Model.TotalPage</span>
+        </div>
+    </div>
+</div>
+
