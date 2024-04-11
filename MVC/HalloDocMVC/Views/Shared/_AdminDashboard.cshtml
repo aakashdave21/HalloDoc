@@ -42,7 +42,7 @@
         <header class="dashboard-header">
             <nav class="border-bottom shadow-sm navbar">
                 <div class="d-flex justify-content-between align-items-center border-bottom ps-4 pe-4">
-                    
+
                     <div>
                         <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
@@ -85,18 +85,18 @@
                         <li data-id="5">
                             <a asp-area="Admin" asp-controller="Partner" asp-action="Index" >Partners</a>
                         </li>
-                        <li data-id="6" id="AccessId">
+                        <li data-id="6">
                             <a asp-area="Admin" asp-controller="Access" asp-action="Index">Access</a>
                         </li>
-                        <li data-id="7"  class="InnerNav">
+                        <li data-id="7" class="InnerNav">
                            <a class="showMenu">Records <i class="fa-solid fa-caret-down"></i></a>
                             <div class="inner-nav">
                                 <ul class="inner-nav shadow" style="display: none;">
-                                    <li data-inner-itemid="4"><a asp-area="Admin" asp-controller="Records" asp-action="Index" class="dropdown-item">Search Records</a></li>
-                                    <li data-inner-itemid="8"><a asp-area="Admin" asp-controller="Records" asp-action="Index" class="dropdown-item">Email Logs</a></li>
-                                    <li><a asp-area="Admin" asp-controller="Records" asp-action="Index"  class="dropdown-item">SMS Logs</a></li>
-                                    <li><a asp-area="Admin" asp-controller="Records" asp-action="PatientHistory"  class="dropdown-item">Patient Records</a></li>
-                                    <li><a asp-area="Admin" asp-controller="Records" asp-action="Index"  class="dropdown-item">Blocked History</a></li>
+                                    <li data-inner-itemid="7"><a asp-area="Admin" asp-controller="Records" asp-action="Index" class="dropdown-item">Search Records</a></li>
+                                    <li data-inner-itemid="9"><a asp-area="Admin" asp-controller="Records" asp-action="EmailLogs" class="dropdown-item">Email Logs</a></li>
+                                    <li data-inner-itemid="10"><a asp-area="Admin" asp-controller="Records" asp-action="SMSLogs"  class="dropdown-item">SMS Logs</a></li>
+                                    <li data-inner-itemid="11"><a asp-area="Admin" asp-controller="Records" asp-action="PatientHistory"  class="dropdown-item">Patient Records</a></li>
+                                    <li data-inner-itemid="12"><a asp-area="Admin" asp-controller="Records" asp-action="BlockHistory"  class="dropdown-item">Blocked History</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -105,8 +105,9 @@
             </nav>
         </header>
        
-
+        <div style="margin-top:100px;">
          @RenderBody()
+        </div>
         
 
         <footer class="mt-auto d-flex justify-content-md-end justify-content-center p-4 dark-footer">

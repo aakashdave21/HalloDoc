@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 namespace HalloDocRepository.DataModels;
 
 [Table("blockrequests")]
-[Index("Requestid", Name = "blockrequests_requestid_key", IsUnique = true)]
 public partial class Blockrequest
 {
     [Key]
@@ -43,6 +42,6 @@ public partial class Blockrequest
     public DateTime? Updatedat { get; set; }
 
     [ForeignKey("Requestid")]
-    [InverseProperty("Blockrequest")]
+    [InverseProperty("Blockrequests")]
     public virtual Request? Request { get; set; }
 }

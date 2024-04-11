@@ -91,3 +91,12 @@
         $("#UpdateAccessForm").submit();
     }
 </script>
+
+<script>
+    $("#adminDashTab li").each(function(){
+        if($(this).data("id")==6){
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+        }
+    })
+</script>

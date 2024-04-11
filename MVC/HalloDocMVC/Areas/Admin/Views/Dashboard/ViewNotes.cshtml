@@ -171,3 +171,12 @@
 
     </div>
 </main>
+
+<script>
+    $("#adminDashTab li").each(function(){
+        if($(this).data("id")==1){
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+        }
+    })
+</script>

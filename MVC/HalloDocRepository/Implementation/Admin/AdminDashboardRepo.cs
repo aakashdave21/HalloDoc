@@ -323,6 +323,7 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
     }
 
     public void AddBlockRequest(Blockrequest newBlockReq){
+        
         _dbContext.Blockrequests.Add(newBlockReq);
         _dbContext.SaveChanges();
     }

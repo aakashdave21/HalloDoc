@@ -1,0 +1,100 @@
+@{
+    int[] pageSizeArrray = { 5, 10, 15 };
+}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <th>Patient Name</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Created Date</th>
+            <th>Notes</th>
+            <th>Is Active</th>
+            <th>Action</th>
+        </thead>
+        <tbody>
+            @if (((IEnumerable<EmailLogsView>)Model.BlockHistoryList).Any())
+            {
+                @foreach (var item in Model.BlockHistoryList)
+                {
+                    <tr>
+                        <td>@item.PatientName</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.Email</td>
+                        <td>@item.CreatedDate.ToString("MMM dd  , yyy")</td>
+                        <td>@item.Notes</td>
+                        <td><input type="checkbox" class="form-check-input" checked="@item.IsActive" disabled></td> 
+                        <td>
+                            @if(item.IsActive==false){
+                                <button class="btn theme-btn" onclick="openUnblockModal(@item.Id)">
+                                    Unblock
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7" class="text-center">No records found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@* Pagination *@
+<div class="d-flex justify-content-between align-items-center mt-2">
+    <div>
+        <div class="d-flex align-items-center" style="white-space: nowrap;">
+            Page : <select class="form-select select-page ms-2 RecordsPageChange"
+                onchange="RecordsPageChange()" aria-label="Default select example">
+                @{
+                    for (int i = 1; i <= Model.TotalPage; i++)
+                    {
+                        if (Model.CurrentPage == i)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                }
+            </select> &nbsp; of @Model.TotalPage
+        </div>
+    </div>
+    <div>
+        <div class="d-sm-flex d-none">
+            Show Results : @Model.PageRangeStart - @Model.PageRangeEnd Out of
+            <span>&nbsp;@Model.TotalCount </span>
+        </div>
+    </div>
+    <div>
+        <div class="d-flex align-items-center" style="white-space: nowrap;">
+            Show Rows :
+            <select class="form-select select-page ms-2 ReqRecordsPageRecordChange" onchange="pageRecordChange()"
+                aria-label="Default select example">
+                @{
+                    foreach (int i in pageSizeArrray)
+                    {
+                        if (Model.CurrentPageSize == i)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="d-flex d-sm-none">
+            Show Results : @Model.PageRangeStart - @Model.PageRangeEnd Out of
+            <span>&nbsp;@Model.TotalPage</span>
+        </div>
+    </div>
+</div>
+

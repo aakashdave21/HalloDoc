@@ -1,0 +1,154 @@
+@using HalloDocService.ViewModels;
+@model RecordsViewModel;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Patient History Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+}
+<style>
+    table thead th {
+        background: transparent !important;
+    }
+
+    table thead tr {
+        background: rgba(97, 97, 97, 0.301);
+    }
+
+    table tbody tr:hover {
+        background: rgba(156, 232, 255, 0.103);
+        cursor: default;
+    }
+</style>
+<main class="Partner-Section container-fluid p-md-5 mt-sm-5 mt-2 mb-3">
+    <div class="d-flex justify-content-between flex-wrap">
+        <h4 class="fw-bold">Email Logs(Gmail)</h4>
+    </div>
+    <div class="p-4 mt-3 mb-3 rounded shadow border">
+        <div id="partner-header">
+            <form>
+                <div class="row align-items-center g-2">
+                    <div class="col-lg-2 col-sm-6">
+                        <div class="form-floating">
+                            <select class="form-select" id="Roles" aria-label="Large select example" placeholder="Role">
+                                <option value="0" selected disabled>Select By Role</option>
+                                <option value="1">Admin</option>
+                                <option value="2">Physician</option>
+                                <option value="3">Patient</option>
+                            </select>
+                            <label for="Roles">Select By Role</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-6">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="ReceiverName" placeholder="Receiver name">
+                            <label for="ReceiverName">Receiver name</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-6">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="Email" placeholder="Email">
+                            <label for="Email">Email</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-6">
+                        <div class="form-floating ">
+                            <input type="date" class="form-control" id="CreatedDate" placeholder="CreatedDate">
+                            <label for="CreatedDate">Created Date</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-6">
+                        <div class="form-floating ">
+                            <input type="date" class="form-control" id="sentDate" placeholder="sentDate">
+                            <label for="sentDate">Sent Date</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-6">
+                        <div class="d-flex justify-content-end align-items-center flex-wrap gap-2">
+                            <button type="reset" class="btn theme-btn" onclick="clearFilter()">Clear</button>
+                            <button type="button" class="btn secondary-theme-btn" onclick="searchRecords()">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="records-email-render" class="mt-5">
+            <partial name="_EmailLogTable" />
+        </div>
+    </div>
+</main>
+
+
+<script>
+    let pageSize = 5;
+    let pageNum = 1;
+    let SearchBy = {
+        email : "",
+        recipient : "",
+        roleId : 0,
+        createdDate : "",
+        sentDate : ""
+    }
+
+    const searchRecords = () => {
+        getData();
+        CallAjax();
+    }
+
+    function RecordsPageChange() {
+        getData();
+        const pageChange = document.querySelector(".RecordsPageChange");
+        pageNum = pageChange.value;
+        CallAjax();
+    }
+
+    function pageRecordChange() {
+        pageNum = 1;
+        getData();
+        const pageRecordChange = document.querySelector(".ReqRecordsPageRecordChange").value;
+        pageSize = pageRecordChange
+        CallAjax();
+    }
+
+    function clearFilter() {
+        pageNum = 1;
+        pageSize = 5;
+        SearchBy = {
+            email : "",
+            recipient : "",
+            roleId : 0,
+            createdDate : "",
+            sentDate : ""
+        }
+        CallAjax();
+    }
+
+    function CallAjax() {
+        sendAjaxRequest('/admin/records/EmailLogs', 'GET', { pageSize, pageNum, ...SearchBy }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                $("#records-email-render").empty();
+                $("#records-email-render").html(response);
+            }).catch(function (error) {
+                ToastError("Internal Server Error");
+            })
+    }
+
+    function getData() {
+       SearchBy.email = $("#Email").val();
+       SearchBy.recipient = $("#ReceiverName").val();
+       SearchBy.roleId = $("#Roles").val();
+       SearchBy.createdDate = $("#CreatedDate").val();
+       SearchBy.sentDate = $("#sentDate").val();
+    }
+</script>
+
+<script>
+    $("#adminDashTab li").each(function(){
+        if($(this).data("id")==7){
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+            $(this).find(".inner-nav ul li a").removeClass("active");
+            $(this).find(".inner-nav ul li[data-inner-itemid='9'] a").addClass("active");
+            $(this).find(".showMenu").html(`Email Logs Records <i class="fa-solid fa-caret-down"></i>`);
+        }
+    })
+</script>

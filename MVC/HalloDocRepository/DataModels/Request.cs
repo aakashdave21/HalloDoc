@@ -133,7 +133,7 @@ public partial class Request
     public DateTime? AcceptExpiry { get; set; }
 
     [InverseProperty("Request")]
-    public virtual Blockrequest? Blockrequest { get; set; }
+    public virtual ICollection<Blockrequest> Blockrequests { get; } = new List<Blockrequest>();
 
     [ForeignKey("Createduserid")]
     [InverseProperty("RequestCreatedusers")]

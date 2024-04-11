@@ -1,0 +1,99 @@
+@{
+    int[] pageSizeArrray = { 5, 10, 15 };
+}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <th>Recepient</th>
+            <th>Action</th>
+            <th>Role Name</th>
+            <th>Phone Number</th>
+            <th>Created Date</th>
+            <th>Send Date</th>
+            <th>Sent</th>
+            <th>Sent Tries</th>
+            <th>Confirmation Number</th>
+        </thead>
+        <tbody>
+            @if (((IEnumerable<EmailLogsView>)Model.SMSLogsList).Any())
+            {
+                @foreach (var item in Model.SMSLogsList)
+                {
+                    <tr>
+                        <td>@item.Recipient</td>
+                        <td>@item.Action</td>
+                        <td>@item.RoleName</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.CreatedDate.ToString("MMM dd  , yyy HH:MM tt")</td>
+                        <td>@item.SentDate.ToString("MMM dd  , yyy HH:MM tt")</td>
+                        <td>@item.IsSent</td>
+                        <td>@item.SentTries</td>
+                        <td>@item.ConfirmationNumber</td>
+                        
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="15" class="text-center">No records found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@* Pagination *@
+<div class="d-flex justify-content-between align-items-center mt-2">
+    <div>
+        <div class="d-flex align-items-center" style="white-space: nowrap;">
+            Page : <select class="form-select select-page ms-2 RecordsPageChange"
+                onchange="RecordsPageChange()" aria-label="Default select example">
+                @{
+                    for (int i = 1; i <= Model.TotalPage; i++)
+                    {
+                        if (Model.CurrentPage == i)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                }
+            </select> &nbsp; of @Model.TotalPage
+        </div>
+    </div>
+    <div>
+        <div class="d-sm-flex d-none">
+            Show Results : @Model.PageRangeStart - @Model.PageRangeEnd Out of
+            <span>&nbsp;@Model.TotalCount </span>
+        </div>
+    </div>
+    <div>
+        <div class="d-flex align-items-center" style="white-space: nowrap;">
+            Show Rows :
+            <select class="form-select select-page ms-2 ReqRecordsPageRecordChange" onchange="pageRecordChange()"
+                aria-label="Default select example">
+                @{
+                    foreach (int i in pageSizeArrray)
+                    {
+                        if (Model.CurrentPageSize == i)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="d-flex d-sm-none">
+            Show Results : @Model.PageRangeStart - @Model.PageRangeEnd Out of
+            <span>&nbsp;@Model.TotalPage</span>
+        </div>
+    </div>
+</div>
+

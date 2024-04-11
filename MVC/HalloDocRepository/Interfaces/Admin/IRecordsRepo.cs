@@ -13,5 +13,11 @@ public interface IRecordsRepo
 
     void DeleteRecord(int ReqId);
 
+    (IEnumerable<Emaillog>, int) EmailLogs(EmailRepoView Parameters, int PageNum = 1, int PageSize = 5);
+
+    (IEnumerable<Smslog>, int) SMSLogs(EmailRepoView Parameters, int PageNum = 1, int PageSize = 5);
+    (IEnumerable<Blockrequest>, int) BlockHistory(EmailRepoView Parameters, int PageNum = 1, int PageSize = 5);
+
+    void UnblockRequest(int Id);
 }
 

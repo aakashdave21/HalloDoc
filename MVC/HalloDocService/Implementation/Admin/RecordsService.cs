@@ -49,22 +49,26 @@ public class RecordsService : IRecordsService
         return allRecords;
     }
 
-    public RecordsViewModel GetPatientRequest(int UserId,int RequestId){
-        IEnumerable<Request> requestList = _recordsRepo.GetPatientRequest(UserId,RequestId);
-        RecordsViewModel patientRequest = new(){
-            PatientRequestList = requestList.Select(req => new PatientRequestView(){
+    public RecordsViewModel GetPatientRequest(int UserId, int RequestId)
+    {
+        IEnumerable<Request> requestList = _recordsRepo.GetPatientRequest(UserId, RequestId);
+        RecordsViewModel patientRequest = new()
+        {
+            PatientRequestList = requestList.Select(req => new PatientRequestView()
+            {
                 Id = req.Id,
                 PatientName = req?.Requestclients?.FirstOrDefault()?.Firstname + " " + req?.Requestclients?.FirstOrDefault()?.Lastname,
-                CreatedDate =  req?.Createdat?.ToString("MMM dd, yyyy"),
+                CreatedDate = req?.Createdat?.ToString("MMM dd, yyyy"),
                 ConfirmationNumber = req?.Confirmationnumber ?? "-",
                 ProviderName = req?.Physician?.Firstname ?? "-",
                 Status = GetUserRequestType(req?.Status) ?? "-",
-                ConcludedDate = req?.Requeststatuslogs?.FirstOrDefault(r=>r.Requestid == req.Id && r.Status == 6)?.Createddate.ToString("MMM dd, yyyy") ?? "-"
+                ConcludedDate = req?.Requeststatuslogs?.FirstOrDefault(r => r.Requestid == req.Id && r.Status == 6)?.Createddate.ToString("MMM dd, yyyy") ?? "-"
             })
         };
         return patientRequest;
     }
-    public static string GetUserRequestType(int? status){
+    public static string GetUserRequestType(int? status)
+    {
         return status switch
         {
             1 => "Unassigned",
@@ -87,8 +91,10 @@ public class RecordsService : IRecordsService
     }
 
 
-    public RecordsViewModel GetAllRecords(RecordsView Parameters,int PageNum = 1,int PageSize = 5){
-        RecordsRepoView repoView = new(){
+    public RecordsViewModel GetAllRecords(RecordsView Parameters, int PageNum = 1, int PageSize = 5)
+    {
+        RecordsRepoView repoView = new()
+        {
             PatientName = Parameters.PatientName,
             PhysicianName = Parameters.PhysicianName,
             Email = Parameters.Email,
@@ -99,13 +105,15 @@ public class RecordsService : IRecordsService
             InputRequestType = Parameters.InputRequestType
         };
         var (RecordList, totalCount) = _recordsRepo.GetAllRecords(repoView, PageNum, PageSize);
-        
+
         int startIndex = (PageNum - 1) * PageSize + 1;
-        RecordsViewModel recordData = new(){
-            RecordsRequestList = RecordList.Select(rec => new RecordsView(){
+        RecordsViewModel recordData = new()
+        {
+            RecordsRequestList = RecordList.Select(rec => new RecordsView()
+            {
                 RequestId = rec.Id,
                 PatientName = $"{rec?.Requestclients?.FirstOrDefault()?.Firstname} {rec?.Requestclients?.FirstOrDefault()?.Lastname}" ?? "-",
-                Requestor = rec?.Firstname +" " +rec?.Lastname ?? "-",
+                Requestor = rec?.Firstname + " " + rec?.Lastname ?? "-",
                 DateOfService = rec?.Accepteddate != null ? rec.Accepteddate?.ToString("MMM dd ,yyyy") : "-",
                 Email = rec?.Requestclients?.FirstOrDefault()?.Email ?? "-",
                 PhoneNumber = rec?.Requestclients?.FirstOrDefault()?.Phonenumber ?? "-",
@@ -132,28 +140,122 @@ public class RecordsService : IRecordsService
         return recordData;
     }
 
-    public void DeleteRecord(int ReqId){
+    public void DeleteRecord(int ReqId)
+    {
         _recordsRepo.DeleteRecord(ReqId);
     }
 
-    // public RecordsViewModel EmailLogs(int PageNum = 1,int PageSize = 5){
-    //     var (RecordList, totalCount) = _recordsRepo.EmailLogs(PageNum, PageSize);
-        // int startIndex = (PageNum - 1) * PageSize + 1;
-        // RecordsViewModel recordData = new(){
-        //     EmailLogsList = RecordList.Select(rec => new EmailLogView(){
-        //         Id = rec.Id,
-        //         Email = rec.Email,
-        //         Subject = rec.Subject,s
-        //         Message = rec.Message,
-        //         CreatedDate = rec.Createddate.ToString("MMM dd, yyyy")
-        //     }),
-        //     TotalCount = totalCount,
-        //     CurrentPage = PageNum,
-        //     CurrentPageSize = PageSize,
-        //     PageRangeStart = totalCount == 0 ? 0 : startIndex,
-        //     PageRangeEnd = Math.Min(startIndex + PageSize - 1, totalCount),
-        //     TotalPage = (int)Math.Ceiling((double)totalCount / PageSize)
-        // };
-    // }
+    public RecordsViewModel EmailLogs(EmailLogsView Parameters, int PageNum = 1, int PageSize = 5)
+    {
+        EmailRepoView emailRepoView = new()
+        {
+            Recipient = Parameters.Recipient,
+            Email = Parameters.Email,
+            RoleId = Parameters.RoleId,
+            CreatedDate = Parameters.CreatedDate,
+            SentDate = Parameters.SentDate
+        };
+        var (EmailList, totalCount) = _recordsRepo.EmailLogs(emailRepoView, PageNum, PageSize);
+        int startIndex = (PageNum - 1) * PageSize + 1;
+        RecordsViewModel recordData = new()
+        {
+            EmailLogsList = EmailList.Select(log => new EmailLogsView()
+            {
+                Id = log.Id,
+                Action = log.Action == 1 ? "Request Montly Data" : "-",
+                Email = log.Emailid ?? "-",
+                Recipient = log?.Requestid != null ? log.Request?.Requestclients?.FirstOrDefault()?.Firstname ?? "-" : "-",
+                CreatedDate = log.Createdat,
+                SentDate = log.Sentdate,
+                RoleName = log?.Role?.Accounttype == 1 ? "Admin" : log?.Role?.Accounttype == 2 ? "Physician" : "Patient",
+                SentTries = log?.Senttries ?? 0,
+                IsSent = log?.Isemailsent,
+                ConfirmationNumber = log?.Confirmationnumber
+            }),
+            TotalCount = totalCount,
+            CurrentPage = PageNum,
+            CurrentPageSize = PageSize,
+            PageRangeStart = totalCount == 0 ? 0 : startIndex,
+            PageRangeEnd = Math.Min(startIndex + PageSize - 1, totalCount),
+            TotalPage = (int)Math.Ceiling((double)totalCount / PageSize)
+        };
 
+        return recordData;
+
+    }
+    public RecordsViewModel SMSLogs(EmailLogsView Parameters, int PageNum = 1, int PageSize = 5)
+    {
+        EmailRepoView smsRepoView = new()
+        {
+            Recipient = Parameters.Recipient,
+            PhoneNumber = Parameters.PhoneNumber,
+            RoleId = Parameters.RoleId,
+            CreatedDate = Parameters.CreatedDate,
+            SentDate = Parameters.SentDate
+        };
+        var (SMSList, totalCount) = _recordsRepo.SMSLogs(smsRepoView, PageNum, PageSize);
+        int startIndex = (PageNum - 1) * PageSize + 1;
+        RecordsViewModel recordData = new()
+        {
+            SMSLogsList = SMSList.Select(log => new EmailLogsView()
+            {
+                Id = log.Id,
+                Action = log.Action == 1 ? "Request Montly Data" : "-",
+                PhoneNumber = log.Mobilenumber ?? "-",
+                Recipient = log?.Requestid != null ? log.Request?.Requestclients?.FirstOrDefault()?.Firstname ?? "-" : "-",
+                CreatedDate = log.Createdat,
+                SentDate = log.Sentdate,
+                RoleName = log?.Role?.Accounttype == 1 ? "Admin" : log?.Role?.Accounttype == 2 ? "Physician" : "Patient",
+                SentTries = log?.Senttries ?? 0,
+                IsSent = log?.Issmssent,
+                ConfirmationNumber = log?.Confirmationnumber
+            }),
+            TotalCount = totalCount,
+            CurrentPage = PageNum,
+            CurrentPageSize = PageSize,
+            PageRangeStart = totalCount == 0 ? 0 : startIndex,
+            PageRangeEnd = Math.Min(startIndex + PageSize - 1, totalCount),
+            TotalPage = (int)Math.Ceiling((double)totalCount / PageSize)
+        };
+
+        return recordData;
+
+    }
+
+    public RecordsViewModel BlockHistory(EmailLogsView Parameters, int PageNum = 1, int PageSize = 5){
+        EmailRepoView blockHistoyRepo = new()
+        {
+            PatientName = Parameters.PatientName,
+            PhoneNumber = Parameters.PhoneNumber,
+            Email = Parameters.Email,
+            CreatedDate = Parameters.CreatedDate,
+        };
+        var (BlockHistoryList, totalCount) = _recordsRepo.BlockHistory(blockHistoyRepo, PageNum, PageSize);
+        int startIndex = (PageNum - 1) * PageSize + 1;
+        RecordsViewModel recordData = new()
+        {
+            BlockHistoryList = BlockHistoryList.Select(br => new EmailLogsView()
+            {
+                Id = br.Id,
+                PatientName = br.Request.Requestclients.FirstOrDefault()?.Firstname ?? "-",
+                Email = br.Email,
+                PhoneNumber = br.Phonenumber,
+                CreatedDate = br.Createdat,
+                IsActive = br.Isactive,
+                Notes = br.Reason
+            }),
+            TotalCount = totalCount,
+            CurrentPage = PageNum,
+            CurrentPageSize = PageSize,
+            PageRangeStart = totalCount == 0 ? 0 : startIndex,
+            PageRangeEnd = Math.Min(startIndex + PageSize - 1, totalCount),
+            TotalPage = (int)Math.Ceiling((double)totalCount / PageSize)
+        };
+
+        return recordData;
+    }
+
+    public void UnblockRequest(int Id){
+        _recordsRepo.UnblockRequest(Id);
+    }
 }

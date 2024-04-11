@@ -11,6 +11,8 @@ namespace HalloDocService.ViewModels
         public IEnumerable<PatientRequestView> PatientRequestList = new List<PatientRequestView>();
         public IEnumerable<RecordsView> RecordsRequestList = new List<RecordsView>();
         public IEnumerable<EmailLogsView> EmailLogsList = new List<EmailLogsView>();
+        public IEnumerable<EmailLogsView> SMSLogsList = new List<EmailLogsView>();
+        public IEnumerable<EmailLogsView> BlockHistoryList = new List<EmailLogsView>();
         public int TotalCount {get; set;}
         public int CurrentPage {get; set;}
         public int CurrentPageSize {get; set;}
@@ -75,11 +77,16 @@ namespace HalloDocService.ViewModels
         public string? Recipient { get; set; }
         public string? Action { get; set; }
         public string? RoleName { get; set; }
+        public int RoleId { get; set; }
         public string? Email { get; set; }
-        public string? CreatedDate { get; set; }
-        public string? SentDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? SentDate { get; set; }
         public bool? IsSent { get; set; } = false;
+        public bool? IsActive { get; set; } = false;
         public int SentTries { get; set; } = 0;
         public string? ConfirmationNumber { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? PatientName {get; set;}
+        public string? Notes {get; set;}
     }
 }

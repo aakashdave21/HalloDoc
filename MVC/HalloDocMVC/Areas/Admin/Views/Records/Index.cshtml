@@ -170,32 +170,32 @@
             })
     }
 
-    $("#downloadExcel").click(function(){
+    $("#downloadExcel").click(function () {
         getData();
         $.ajax({
             url: '/admin/records/download',
             type: 'GET',
-            traditional: true,      
+            traditional: true,
             data: { pageSize, pageNum, ...SearchBy },
             xhrFields: {
                 responseType: 'blob'
             },
             success: function (response) {
                 var url = window.URL.createObjectURL(response);
-                    var a = document.createElement('a');
-                    a.href = url;
-                    a.download = "Data.xlsx";
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                    console.log("Successfully Download files");
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = "Data.xlsx";
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                console.log("Successfully Download files");
             },
             error: function (xhr, status, error) {
                 if (xhr.status == 401) {
                     window.location.href = '/admin/login';
                 }
-               ToastError("Internal Server Error");
+                ToastError("Internal Server Error");
             }
         })
     })
@@ -239,4 +239,16 @@
         let modalInstance = new bootstrap.Modal(modal);
         modalInstance.show();
     }
+</script>
+
+<script>
+    $("#adminDashTab li").each(function(){
+        if($(this).data("id")==7){
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+            $(this).find(".inner-nav ul li a").removeClass("active");
+            $(this).find(".inner-nav ul li[data-inner-itemid='7'] a").addClass("active");
+            $(this).find(".showMenu").html(`Serach Records <i class="fa-solid fa-caret-down"></i>`);
+        }
+    })
 </script>

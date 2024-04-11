@@ -33,7 +33,15 @@
 [data-bs-theme=dark] .card{
     background-color: transparent;
 }
-
+header {
+    position: fixed;
+    z-index: 888;
+    width: 100%;
+    background-color: white;
+}
+[data-bs-theme="dark"] header{
+    background-color: black;
+}
 .newUserCard{
     color: #203f9a;
     border: 1px solid #203f9a;

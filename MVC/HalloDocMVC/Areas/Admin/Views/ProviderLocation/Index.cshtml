@@ -28,7 +28,7 @@
         popupAnchor: [1, -34],
         shadowSize: [41, 41]
     });
-    var markers = locationLists.map(function(location) {
+    var markers = locationLists.map(function (location) {
         var lat = location.Latitude;
         var lng = location.Longitude;
         var name = location.PhyicianName;
@@ -43,16 +43,22 @@
         zoom: 5,
         maxZoom: 25,
         minZoom: 1,
-        maxBounds: [  
+        maxBounds: [
             [-90, -180],
-            [90, 180]     
+            [90, 180]
         ]
     });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     console.log(locationLists);
-    markers.forEach(function(marker) {
+    markers.forEach(function (marker) {
         marker.addTo(map);
     });
+    $("#adminDashTab li").each(function () {
+        if ($(this).data("id") == 2) {
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+        }
+    })
 </script>

@@ -10,5 +10,10 @@ public interface IRecordsService{
     RecordsViewModel GetAllRecords(RecordsView Parameters,int PageNum = 1,int PageSize = 5);
     void DeleteRecord(int ReqId);
 
+    RecordsViewModel EmailLogs(EmailLogsView Parameters,int PageNum = 1,int PageSize = 5);
+    RecordsViewModel SMSLogs(EmailLogsView Parameters, int PageNum = 1, int PageSize = 5);
+    RecordsViewModel BlockHistory(EmailLogsView Parameters, int PageNum = 1, int PageSize = 5);
+
+    void UnblockRequest(int Id);
         
 }

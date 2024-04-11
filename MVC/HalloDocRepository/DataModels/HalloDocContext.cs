@@ -164,7 +164,7 @@ public partial class HalloDocContext : DbContext
             entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            entity.HasOne(d => d.Request).WithOne(p => p.Blockrequest)
+            entity.HasOne(d => d.Request).WithMany(p => p.Blockrequests)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("blockrequests_requestid_fkey");
         });

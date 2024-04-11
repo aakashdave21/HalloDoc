@@ -17,8 +17,8 @@
         cursor: default;
     }
 </style>
-<main class="Partner-Section container-fluid p-md-5 mt-sm-5 mb-3">
-    <div class="d-flex mt-4">
+<main class="Partner-Section container-fluid p-md-5 mt-sm-5 mt-2 mb-3">
+    <div class="d-flex">
         <h4 class="fw-bold">Patient History</h4>
     </div>
     <div class="p-4 mt-3 mb-3 rounded shadow border">
@@ -115,4 +115,16 @@
                 ToastError("Internal Server Error");
             })
     }
+</script>
+
+<script>
+    $("#adminDashTab li").each(function(){
+        if($(this).data("id")==7){
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+            $(this).find(".inner-nav ul li a").removeClass("active");
+            $(this).find(".inner-nav ul li[data-inner-itemid='11'] a").addClass("active");
+            $(this).find(".showMenu").html(`Patient Records <i class="fa-solid fa-caret-down"></i>`);
+        }
+    })
 </script>
