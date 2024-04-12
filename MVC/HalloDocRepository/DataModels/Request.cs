@@ -136,8 +136,8 @@ public partial class Request
     public virtual ICollection<Blockrequest> Blockrequests { get; } = new List<Blockrequest>();
 
     [ForeignKey("Createduserid")]
-    [InverseProperty("RequestCreatedusers")]
-    public virtual User? Createduser { get; set; }
+    [InverseProperty("Requests")]
+    public virtual Aspnetuser? Createduser { get; set; }
 
     [InverseProperty("Request")]
     public virtual ICollection<Emaillog> Emaillogs { get; } = new List<Emaillog>();
@@ -175,6 +175,6 @@ public partial class Request
     public virtual ICollection<Smslog> Smslogs { get; } = new List<Smslog>();
 
     [ForeignKey("Userid")]
-    [InverseProperty("RequestUsers")]
+    [InverseProperty("Requests")]
     public virtual User? User { get; set; }
 }

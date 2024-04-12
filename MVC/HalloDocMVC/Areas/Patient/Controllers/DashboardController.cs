@@ -136,7 +136,7 @@ public class DashboardController : Controller
                 DocumentId = d.Id,
                 FilePath = d.Filename,
                 FileName = Path.GetFileName(d.Filename),
-                UploaderName = d.Request.Createduser != null ? d.Request.Createduser.Firstname : d.Request.Firstname,
+                UploaderName = d.Request.Createduser != null ? d.Request.Createduser.Email : d.Request.Firstname,
                 UploadDate = d.Createddate.ToString("yyyy-MM-dd"),
                 PatientName = d.Request.User.Firstname + " " + d.Request.User.Lastname
             }).ToList();

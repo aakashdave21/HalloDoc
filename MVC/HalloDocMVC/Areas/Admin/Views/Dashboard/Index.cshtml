@@ -87,9 +87,9 @@
                     <button class="btn secondary-theme-btn" data-bs-toggle="modal" data-bs-target="#sendMailModal">
                         <i class="far fa-paper-plane "></i> <span class="d-none d-md-inline">Send Link</span>
                     </button>
-                    <button class="btn secondary-theme-btn">
+                    <a class="btn secondary-theme-btn" asp-area="admin" asp-controller="Dashboard" asp-action="CreateRequest">
                         <i class="far fa-sticky-note"></i> <span class="d-none d-md-inline">Create Request</span>
-                    </button>
+                    </a>
                     <button class="btn secondary-theme-btn" onclick="ExportData()">
                         <i class="fas fa-file-export"></i> <span class="d-none d-md-inline">Exports
                         </span> </button>

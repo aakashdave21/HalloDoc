@@ -2,6 +2,8 @@
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using AdminTable = HalloDocRepository.DataModels.Admin;
+
 
 namespace HalloDocRepository.Admin.Implementation;
 public class AdminDashboardRepo : IAdminDashboardRepo
@@ -446,6 +448,14 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
 
     public IEnumerable<Request> FetchAllRequest(){
         return _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Physician).Include(req=>req.User);
+    }
+
+    public AdminTable? GetAdminFromAsp(int AspId){
+        AdminTable? adminInfo = _dbContext.Admins.FirstOrDefault(req => req.Aspnetuserid == AspId);
+        if(adminInfo!=null){
+            return adminInfo;
+        }
+        return null;
     }
 
 }

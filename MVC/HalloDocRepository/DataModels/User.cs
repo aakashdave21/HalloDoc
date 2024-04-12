@@ -109,9 +109,6 @@ public partial class User
     [InverseProperty("Users")]
     public virtual Region? Region { get; set; }
 
-    [InverseProperty("Createduser")]
-    public virtual ICollection<Request> RequestCreatedusers { get; } = new List<Request>();
-
     [InverseProperty("User")]
-    public virtual ICollection<Request> RequestUsers { get; } = new List<Request>();
+    public virtual ICollection<Request> Requests { get; } = new List<Request>();
 }

@@ -31,13 +31,16 @@ public class DashboardController : Controller
     private readonly IUtilityService _utilityService;
     private readonly IWebHostEnvironment _hostingEnvironment;
 
-    public DashboardController(ILogger<DashboardController> logger, IAdminDashboardService adminDashboardService, IDashboardService dashboardService, IWebHostEnvironment hostingEnvironment, IUtilityService utilityService)
+    private readonly IPatientRequestService _patientRequestService;
+
+    public DashboardController(ILogger<DashboardController> logger, IAdminDashboardService adminDashboardService, IDashboardService dashboardService, IWebHostEnvironment hostingEnvironment, IUtilityService utilityService, IPatientRequestService patientRequestService)
     {
         _logger = logger;
         _adminDashboardService = adminDashboardService;
         _dashboardService = dashboardService;
         _hostingEnvironment = hostingEnvironment;
         _utilityService = utilityService;
+        _patientRequestService = patientRequestService;
     }
 
 
@@ -59,11 +62,13 @@ public class DashboardController : Controller
         viewModel.UnPaidState = countDictionary["unpaid"];
 
         string? searchBy = null;
-            if(Request.Query["searchBy"] != "null"){
-                searchBy = Request.Query["searchBy"];
-            }
+        if (Request.Query["searchBy"] != "null")
+        {
+            searchBy = Request.Query["searchBy"];
+        }
         int Regions = 0;
-        if(Request.Query["region"] != "0"){
+        if (Request.Query["region"] != "0")
+        {
             Regions = !string.IsNullOrEmpty(Request.Query["region"]) ? int.TryParse(Request.Query["region"], out int regionValue) ? regionValue : 0 : 0;
         }
         int pageNumber = Request.Query.TryGetValue("pageNumber", out var pageNumberValue) ? int.Parse(pageNumberValue) : 1;
@@ -80,40 +85,40 @@ public class DashboardController : Controller
         switch (status)
         {
             case "new":
-                myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
- 
+                myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
+
                 break;
             case "pending":
-                myresult = _adminDashboardService.GetPendingStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
-  
+                myresult = _adminDashboardService.GetPendingStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
+
                 break;
             case "active":
-                myresult = _adminDashboardService.GetActiveStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
-       
+                myresult = _adminDashboardService.GetActiveStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
+
                 break;
             case "conclude":
-                myresult = _adminDashboardService.GetConcludeStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
-               
+                myresult = _adminDashboardService.GetConcludeStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
+
                 break;
             case "close":
-                myresult = _adminDashboardService.GetCloseStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
-                
+                myresult = _adminDashboardService.GetCloseStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
+
                 break;
             case "unpaid":
-                myresult = _adminDashboardService.GetUnpaidStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                myresult = _adminDashboardService.GetUnpaidStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
 
                 break;
             default:
-                myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
-                
+                myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
+
                 break;
         }
 
         viewModel.TotalPage = myresult.totalCount;
-                viewModel.Requests = myresult.req;
-                viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
-                viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
-                viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
+        viewModel.Requests = myresult.req;
+        viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
+        viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
+        viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
 
         // Check if the request is made via AJAX
         if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
@@ -359,7 +364,7 @@ public class DashboardController : Controller
                 DocumentId = d.Id,
                 FilePath = d.Filename,
                 FileName = Path.GetFileName(d.Filename),
-                UploaderName = d.Request.Createduser != null ? d.Request.Createduser.Firstname : d.Request.Firstname,
+                UploaderName = d.Request.Createduser != null ? d.Request.Createduser.Email : d.Request.Firstname,
                 UploadDate = d.Createddate.ToString("yyyy-MM-dd"),
                 PatientName = d.Request.User != null ? (d.Request.User.Firstname + " " + d.Request.User.Lastname) :
                  (d.Request.Requestclients.FirstOrDefault()?.Firstname.ToUpper() + " " + d.Request.Requestclients.FirstOrDefault()?.Lastname.ToUpper())
@@ -513,19 +518,13 @@ public class DashboardController : Controller
         try
         {
             int? AdminId = null;
-
             string fileName = null;
-            // File Upload Logic
             if (file != null && file.Length > 0)
             {
                 var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                // Ensure the uploads folder exists, create it if not
                 if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
-                // Generate a unique file name for the uploaded file
                 var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(file.FileName);
-                // Combine the uploads folder path with the unique file name to get the full file path
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                // Adding or copying the uploaded file to Server
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
@@ -919,7 +918,7 @@ public class DashboardController : Controller
                     // Apply data body styling
                     var dataRange = worksheet.Range(worksheet.Cell(row, 1), worksheet.Cell(row, 5));
                     var dataCellStyle = dataRange.Style;
-                    dataCellStyle.Fill.BackgroundColor = XLColor.FromHtml("#DCE6F1") ;
+                    dataCellStyle.Fill.BackgroundColor = XLColor.FromHtml("#DCE6F1");
                     dataCellStyle.Font.FontColor = XLColor.FromHtml("#4F81BD");
                     row++;
                 }
@@ -954,7 +953,8 @@ public class DashboardController : Controller
             AdminDashboardViewModel viewModel = new();
             (List<RequestViewModel> req, int totalCount) myresult;
             string? searchBy = null;
-            if(Request.Query["searchBy"] != "null"){
+            if (Request.Query["searchBy"] != "null")
+            {
                 searchBy = Request.Query["searchBy"];
             }
             int pageNumber = Request.Query.TryGetValue("pageNumber", out var pageNumberValue) ? int.Parse(pageNumberValue) : 1;
@@ -965,7 +965,8 @@ public class DashboardController : Controller
                 int.TryParse(Request.Query["requesttype"], out reqType);
             }
             int Regions = 0;
-            if(Request.Query["region"] != "0"){
+            if (Request.Query["region"] != "0")
+            {
                 Regions = !string.IsNullOrEmpty(Request.Query["region"]) ? int.TryParse(Request.Query["region"], out int regionValue) ? regionValue : 0 : 0;
             }
 
@@ -973,25 +974,25 @@ public class DashboardController : Controller
             switch (status)
             {
                 case "new":
-                    myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
                     break;
                 case "pending":
-                    myresult = _adminDashboardService.GetPendingStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    myresult = _adminDashboardService.GetPendingStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
                     break;
                 case "active":
-                    myresult = _adminDashboardService.GetActiveStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    myresult = _adminDashboardService.GetActiveStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
                     break;
                 case "conclude":
-                    myresult = _adminDashboardService.GetConcludeStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    myresult = _adminDashboardService.GetConcludeStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
                     break;
                 case "close":
-                    myresult = _adminDashboardService.GetCloseStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    myresult = _adminDashboardService.GetCloseStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
                     break;
                 case "unpaid":
-                    myresult = _adminDashboardService.GetUnpaidStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    myresult = _adminDashboardService.GetUnpaidStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
                     break;
                 default:
-                    myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize,Regions);
+                    myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
                     break;
             }
 
@@ -1002,7 +1003,7 @@ public class DashboardController : Controller
             {
                 // Handle case where data is null
                 TempData["error"] = "No data found";
-                return BadRequest(new {message = "No data found"});
+                return BadRequest(new { message = "No data found" });
             }
 
             var workbook = new XLWorkbook();
@@ -1035,7 +1036,7 @@ public class DashboardController : Controller
             worksheet.Column(9).Width = 15;
             worksheet.Cell(1, 10).Value = "Region";
             worksheet.Column(10).Width = 15;
-        
+
 
             int row = 2;
             foreach (var item in myresult.req)
@@ -1057,8 +1058,8 @@ public class DashboardController : Controller
                     // Apply data body styling
                     var dataRange = worksheet.Range(worksheet.Cell(row, 1), worksheet.Cell(row, 10));
                     var dataCellStyle = dataRange.Style;
-                     dataCellStyle.Fill.BackgroundColor = XLColor.FromHtml("#DCE6F1") ;
-                        dataCellStyle.Font.FontColor = XLColor.FromHtml("#4F81BD");
+                    dataCellStyle.Fill.BackgroundColor = XLColor.FromHtml("#DCE6F1");
+                    dataCellStyle.Font.FontColor = XLColor.FromHtml("#4F81BD");
                     row++;
                 }
                 else
@@ -1084,6 +1085,46 @@ public class DashboardController : Controller
             return BadRequest(new { message = "Exported Successfully" });
         }
     }
+
+
+    public IActionResult CreateRequest()
+    {
+        try
+        {
+            PatientRequestViewModel newPatientRequest = new();
+            newPatientRequest.AllRegionList = _patientRequestService.GetAllRegions();
+            return View(newPatientRequest);
+        }
+        catch (System.Exception)
+        {
+            TempData["Error"] = "Internal Server Error";
+            return RedirectToAction("Index");
+        }
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateRequest(PatientRequestViewModel newPatientRequest)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                newPatientRequest.AllRegionList = _patientRequestService.GetAllRegions();
+                return View(newPatientRequest);
+            }
+            newPatientRequest.CreatedById = int.Parse(User.FindFirstValue("AspUserId"));
+            _adminDashboardService.CreateRequest(newPatientRequest);
+            TempData["Success"] = "Request Created Successfully";
+            return RedirectToAction("CreateRequest");
+        }
+        catch (System.Exception)
+        {
+            TempData["Error"] = "Internal Server Error";
+            return RedirectToAction("Index");
+        }
+    }
+
+
     public async Task<IActionResult> LogOut()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

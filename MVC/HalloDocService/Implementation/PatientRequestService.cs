@@ -3,6 +3,7 @@ using HalloDocService.Interfaces;
 using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
+using System;
 
 namespace HalloDocService.Implementation;
 public class PatientRequestService : IPatientRequestService
@@ -12,7 +13,7 @@ public class PatientRequestService : IPatientRequestService
     private readonly IProfileRepo _profileRepo;
 
     // Patient Request Implementation
-    public PatientRequestService(IPatientRequestRepo patientRequestRepo, IPatientLoginRepo patientLoginRepo,IProfileRepo profileRepo)
+    public PatientRequestService(IPatientRequestRepo patientRequestRepo, IPatientLoginRepo patientLoginRepo, IProfileRepo profileRepo)
     {
         _patientRequestRepo = patientRequestRepo;
         _patientLoginRepo = patientLoginRepo;
@@ -49,7 +50,8 @@ public class PatientRequestService : IPatientRequestService
             Lastname = viewRequest.Lastname,
             Phonenumber = viewRequest.Mobile,
             Email = viewRequest.Email,
-            Requesttypeid = 1
+            Requesttypeid = 1,
+            Confirmationnumber = CreateConfirmation(viewRequest.State, viewRequest.Firstname, viewRequest.Lastname)
         };
         _patientRequestRepo.AddRequestDataForExistedUser(newRequestForExistedUser);
 
@@ -119,7 +121,8 @@ public class PatientRequestService : IPatientRequestService
         // _context.Users.Add(newPatient);
         // await _context.SaveChangesAsync();
 
-        Aspnetuserrole newRole = new(){
+        Aspnetuserrole newRole = new()
+        {
             Userid = newUser.Id,
             Roleid = 3 //Patient
         };
@@ -135,7 +138,8 @@ public class PatientRequestService : IPatientRequestService
             Lastname = viewRequest.Lastname,
             Phonenumber = viewRequest.Mobile,
             Email = viewRequest.Email,
-            Requesttypeid = 1
+            Requesttypeid = 1,
+            Confirmationnumber = CreateConfirmation(viewRequest.State, viewRequest.Firstname, viewRequest.Lastname)
         };
         _patientRequestRepo.NewRequestAdd(newRequest);
 
@@ -189,7 +193,7 @@ public class PatientRequestService : IPatientRequestService
         {
             var userId = await ProcessNewUserFamilyRequestAsync(familyView);
             return userId;
-            
+
         }
     }
     private async Task<int> ProcessExistingUserFamilyRequestAsync(FamilyRequestViewModel familyRequest)
@@ -208,7 +212,8 @@ public class PatientRequestService : IPatientRequestService
             Phonenumber = familyRequest.FamilyPhonenumber,
             Email = familyRequest.FamilyEmail,
             Relationname = familyRequest.RelationWithPatient,
-            Requesttypeid = 2 // For Family/Friends
+            Requesttypeid = 2, // For Family/Friends,
+            Confirmationnumber = CreateConfirmation(familyRequest.State, familyRequest.Firstname, familyRequest.Lastname)
         };
         _patientRequestRepo.AddRequestDataForExistedUser(newRequestForExistedUser);
 
@@ -289,11 +294,14 @@ public class PatientRequestService : IPatientRequestService
             Phonenumber = familyRequest.FamilyPhonenumber,
             Email = familyRequest.FamilyEmail,
             Relationname = familyRequest.RelationWithPatient,
-            Requesttypeid = 2 // For Family/Friends
+            Requesttypeid = 2, // For Family/Friends,
+            Confirmationnumber = CreateConfirmation(familyRequest.State, familyRequest.Firstname, familyRequest.Lastname)
+
         };
         _patientRequestRepo.NewRequestAdd(newRequest);
 
-        Aspnetuserrole newRole = new(){
+        Aspnetuserrole newRole = new()
+        {
             Userid = newUser.Id,
             Roleid = 3 //Patient
         };
@@ -368,7 +376,8 @@ public class PatientRequestService : IPatientRequestService
             Email = businessRequests.BusinessEmail,
             Relationname = "Business",
             PropertyName = businessRequests.PropertyName,
-            Requesttypeid = 4 // For Business Partners
+            Requesttypeid = 4, // For Business Partners
+            Confirmationnumber = CreateConfirmation(businessRequests.State, businessRequests.Firstname, businessRequests.Lastname)
         };
         _patientRequestRepo.AddRequestDataForExistedUser(newRequestForExistedUser);
 
@@ -426,7 +435,8 @@ public class PatientRequestService : IPatientRequestService
         };
         _patientRequestRepo.NewUserAdd(newPatient);
 
-        Aspnetuserrole newRole = new(){
+        Aspnetuserrole newRole = new()
+        {
             Userid = newUser.Id,
             Roleid = 3 //Patient
         };
@@ -444,6 +454,7 @@ public class PatientRequestService : IPatientRequestService
             Email = businessRequests.BusinessEmail,
             Relationname = "Business",
             PropertyName = businessRequests.PropertyName,
+            Confirmationnumber = CreateConfirmation(businessRequests.State, businessRequests.Firstname, businessRequests.Lastname),
             Requesttypeid = 4 // For Business Partners
         };
         _patientRequestRepo.NewRequestAdd(newRequest);
@@ -502,6 +513,7 @@ public class PatientRequestService : IPatientRequestService
             Email = conciergeRequest.ConciergeEmail,
             Relationname = "Concierge",
             PropertyName = conciergeRequest.PropertyName,
+            Confirmationnumber = CreateConfirmation(conciergeRequest.ConciergeState, conciergeRequest.Firstname, conciergeRequest.Lastname),
             Requesttypeid = 3 // For Family/Friends
         };
         _patientRequestRepo.AddRequestDataForExistedUser(newRequestForExistedUser);
@@ -569,7 +581,8 @@ public class PatientRequestService : IPatientRequestService
         };
         _patientRequestRepo.NewUserAdd(newPatient);
 
-        Aspnetuserrole newRole = new(){
+        Aspnetuserrole newRole = new()
+        {
             Userid = newUser.Id,
             Roleid = 3 //Patient
         };
@@ -587,6 +600,7 @@ public class PatientRequestService : IPatientRequestService
             Email = conciergeRequest.ConciergeEmail,
             Relationname = "Concierge",
             PropertyName = conciergeRequest.PropertyName,
+            Confirmationnumber = CreateConfirmation(conciergeRequest.ConciergeState, conciergeRequest.Firstname, conciergeRequest.Lastname),
             Requesttypeid = 3 // For Family/Friends
         };
         _patientRequestRepo.NewRequestAdd(newRequest);
@@ -628,16 +642,31 @@ public class PatientRequestService : IPatientRequestService
 
 
 
-    public void StoreActivationToken(int AspUserId , string token, DateTime expiry){
-        _patientRequestRepo.StoreActivationToken(AspUserId , token, expiry);
+    public void StoreActivationToken(int AspUserId, string token, DateTime expiry)
+    {
+        _patientRequestRepo.StoreActivationToken(AspUserId, token, expiry);
     }
 
-    public IEnumerable<RegionList> GetAllRegions(){
-        var RegionsList = _profileRepo.GetAllRegions().Select(reg => new RegionList(){
-                Id = reg.Id,
-                Name = reg.Name
-            }).ToList();
-            return RegionsList;
+    public IEnumerable<RegionList> GetAllRegions()
+    {
+        var RegionsList = _profileRepo.GetAllRegions().Select(reg => new RegionList()
+        {
+            Id = reg.Id,
+            Name = reg.Name
+        }).ToList();
+        return RegionsList;
+    }
+
+    public string CreateConfirmation(int? State, string Firstname, string Lastname)
+    {
+        string? RegionName = _profileRepo?.GetAllRegions()?.FirstOrDefault(reg => reg.Id == State)?.Abbreviation;
+        int allRequest = _patientRequestRepo.GetTodaysRequest().Count() + 1;
+        if (allRequest > 9999)
+        {
+            throw new Exception();
+        }
+        string Confirmationnumber = string.Concat(RegionName, DateTime.Now.ToString("ddMMyy"), Lastname[..2], Firstname[..2], allRequest.ToString().PadLeft(4, '0'));
+        return Confirmationnumber;
     }
 }
 

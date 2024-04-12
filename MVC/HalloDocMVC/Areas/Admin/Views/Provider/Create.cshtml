@@ -4,7 +4,6 @@
 @{
     ViewData["Title"] = "Edit Provider Page";
     Layout = "~/Views/Shared/_AdminDashboard.cshtml";
-    @* <link rel="stylesheet" href="~/css/PatientRequest.css" /> *@
 }
 <style>
     .agreement-name{
@@ -25,35 +24,35 @@
         <h4 class="fw-bold">Create Physician Account</h4>
     </div>
      <div class="p-4 mt-3 mb-3 rounded shadow border">
-         <form asp-area="Admin" asp-controller="Provider" asp-action="UpdatePersonalInfo" id="phy-account-form" method="post" >
+         <form asp-area="Admin" asp-controller="Provider" asp-action="Create" id="phy-account-form" method="post" enctype="multipart/form-data">
             <div>
                 <h5>Account Information</h5>
                     <div class="row mt-3">
                         <div class="col-md-4 mb-3">
                             <div class="form-floating">
-                                <input asp-for="Username" type="text" class="form-control" id="username" placeholder="UserName" >
+                                <input asp-for="Username" type="text" class="form-control" id="username" placeholder="UserName" readonly>
                                 <label asp-for="Username" for="UserName">User Name</label>
                             </div>
-                            <span  class="text-danger"></span>
+                            <span asp-validation-for="Username" class="text-danger"></span>
                         </div>
                         <div class="col-md-4 mb-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="password" placeholder="password">
-                                <label for="password">Password</label>
+                                <input asp-for="Password" type="text" class="form-control" id="password" placeholder="password">
+                                <label asp-for="Password" for="password">Password</label>
                             </div>
-                            <span asp class="text-danger" id="password-Valid"></span>
+                            <span asp-validation-for="Password" class="text-danger" id="password-Valid"></span>
                         </div>
                         <div class="col-md-4 mb-3">
                             <div class="form-floating">
-                                <select asp-for="RoleId" class="form-select mb-3" aria-label="Large select example" placeholder="Role">
-                                    <option selected >Role</option>
+                                <select asp-for="RoleId" class="form-select" aria-label="Large select example" placeholder="Role">
+                                    <option value="" selected disabled>Role</option>
                                     @foreach(var item in Model.AllRoleList){
                                         <option value="@item.Id">@item.Name</option>
                                     }
                                 </select>
                                 <label asp-for="RoleId" for="Status">Role</label>
                             </div>
-                            <span class="text-danger"></span>
+                            <span asp-validation-for="RoleId" class="text-danger"></span>
                         </div>
                     </div>
             </div>
@@ -66,28 +65,28 @@
                             <input asp-for="Firstname" type="text" class="form-control" id="firstname" placeholder="firstname" >
                             <label asp-for="Firstname" for="firstname">First Name</label>
                         </div>
-                        <span id="FirstNameValid" class="text-danger"></span>
+                        <span asp-validation-for="Firstname" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
                             <input asp-for="Lastname" type="text" class="form-control" id="lastname" placeholder="lastname" >
                             <label asp-for="Lastname" for="lastname">Last Name</label>
                         </div>
-                        <span id="LastNameValid" class="text-danger"></span>
+                        <span asp-validation-for="Lastname" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
                             <input asp-for="Email" type="email" class="form-control" id="Email" placeholder="email" >
                             <label asp-for="Email" for="Email">Email</label>
                         </div>
-                        <span id="EmailValid" class="text-danger" id="email-valid"></span>
+                        <span asp-validation-for="Email" class="text-danger" id="email-valid"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
                             <input asp-for="Phone" id="Mobile" class="form-control" type="tel"  />
                             <input asp-for="Phone" type="hidden" id="phone_hidden" name="full_phone"  />
                         </div>
-                        <span class="text-danger" id="mobile-valid"></span>
+                        <span class="text-danger" asp-validation-for="Phone"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
@@ -95,7 +94,7 @@
                                 >
                             <label asp-for="MedicalLicense" for="MedicalLicense">Medical License#</label>
                         </div>
-                        <span id="MedicalLicenseValid" class="text-danger"></span>
+                        <span asp-validation-for="MedicalLicense" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
@@ -103,19 +102,22 @@
                                 >
                             <label asp-for="NPI" for="npi">NPI Number</label>
                         </div>
-                        <span id="npiValid" class="text-danger" ></span>
+                        <span asp-validation-for="NPI" class="text-danger" ></span>
                     </div>
                     <div class="col-12 mb-3">
                         <div class="d-flex flex-wrap gap-2">
                             @{
-                                for(int i=0; i < Model.AllCheckBoxRegionList.Count();i++){
+                                for (int i = 0; i < Model.AllCheckBoxRegionList.Count(); i++)
+                                {
                                     <div class="form-check">
                                         <input type="hidden" asp-for="@Model.AllCheckBoxRegionList[i].Id">
-                                        <input class="form-check-input" type="checkbox" asp-for="@Model.AllCheckBoxRegionList[i].IsSelected" id="check-@Model.AllCheckBoxRegionList[i].Id">
+                                        <input class="form-check-input" asp type="checkbox"
+                                            asp-for="@Model.AllCheckBoxRegionList[i].IsSelected"
+                                            id="check-@Model.AllCheckBoxRegionList[i].Id">
                                         <label class="form-check-label" for="check-@Model.AllCheckBoxRegionList[i].Id">
                                             @Model.AllCheckBoxRegionList[i].Name
                                         </label>
-                                </div>
+                                    </div>
                                 }
                             }
                         </div>
@@ -132,48 +134,48 @@
                             <input asp-for="Address1" type="text" class="form-control" id="Address1" placeholder="Address1" >
                             <label asp-for="Address1" for="Address1">Address1</label>
                         </div>
-                        <span id="Address1Valid" class="text-danger"></span>
+                        <span asp-validation-for="Address1" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
                             <input asp-for="Address2" type="text" class="form-control" id="Address2" placeholder="Address2" >
                             <label asp-for="Address2" for="Address2">Address2</label>
                         </div>
-                        <span id="Address2Valid" class="text-danger"></span>
+                        <span asp-validation-for="Address2" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
                             <input asp-for="City" type="text" class="form-control" id="city" placeholder="city" >
                             <label asp-for="City" for="city">City</label>
                         </div>
-                        <span id="CityValid" class="text-danger"></span>
+                        <span asp-validation-for="City" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
                             <select asp-for="State" class="form-select" aria-label="State" placeholder="State"
                                 >
-                                <option selected >State</option>
+                                <option selected value="" disabled>State</option>
                                 @foreach(var item in Model.AllRegionsList){
                                      <option value="@item.Id">@item.Name</option>
                                 }
                             </select>
                             <label asp-for="State" for="State">State</label>
                         </div>
-                        <span id="StateValid" class="text-danger"></span>
+                        <span asp-validation-for="State" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
                             <input asp-for="Zipcode" type="text" class="form-control" id="zipcode" placeholder="zipcode" >
                             <label asp-for="Zipcode" for="zipcode">Zip Code</label>
                         </div>
-                        <span id="ZipCodeValid" class="text-danger"></span>
+                        <span asp-validation-for="Zipcode" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
                             <input asp-for="AltPhone" id="Phone" class="form-control" type="tel"  />
                             <input asp-for="AltPhone" type="hidden" id="phone_hidden" name="full_phone"  />
                         </div>
-                        <span id="PhoneValid" class="text-danger" id="mobile-valid"></span>
+                        <span asp-validation-for="AltPhone" class="text-danger" id="mobile-valid"></span>
                     </div>
                 </div>
             </div>
@@ -185,20 +187,25 @@
                             <input asp-for="Businessname" type="text" class="form-control" id="businessName" placeholder="businessName" >
                             <label asp-for="Businessname" for="businessName">Business Name</label>
                         </div>
-                        <span id="businessName" class="text-danger"></span>
+                        <span asp-validation-for="Businessname" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
                             <input asp-for="BusinessWebsite" type="text" class="form-control" id="businessWebsite" placeholder="businessWebsite" >
                             <label asp-for="BusinessWebsite" for="businessWebsite">Business Website</label>
                         </div>
-                        <span id="businessWebsite" class="text-danger"></span>
+                        <span asp-validation-for="BusinessWebsite" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Select Photo" name="file" id="photoUpload" readonly onclick="openFileSelector('fileInput')" >
-                            <input type="file" asp-for="UserPhoto" id="fileInput" name="UserPhoto" accept="image/*" style="display:none" onchange="showPreview(this, 'imagePreview')">
-                            <button class="input-group-text upload-btn theme-btn" type="button" onclick="openFileSelector('fileInput')" >Upload</button>
+                            <input type="text" class="form-control" placeholder="Select Photo" name="file" id="photoUpload" readonly onclick="openFileSelector('fileInput')">
+                            <input type="file" asp-for="UserPhoto" id="fileInput" name="userPhoto" accept="image/*" style="display:none;" onchange="showPreview(this, 'imagePreview')">
+                            <button class="input-group-text upload-btn theme-btn" type="button" onclick="openFileSelector('fileInput')">Upload</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div id="imagePreview" style="max-width: 200px; max-height:200px;overflow:hidden;">
+                            
                         </div>
                     </div>
                     <div class="col-12">
@@ -220,50 +227,50 @@
                 </div>
                 <div class="d-flex flex-wrap gap-2 mt-3">
                     <div class="agreement-name">
-                        <input type="checkbox" class="form-check-input" asp-for="@Model.IsICA"  id="ica" disabled>
+                        <input type="checkbox" class="form-check-input" asp-for="@Model.IsICA" id="check-uploadIca" disabled>
                         <label>Independent Contractor Agreement</label>
                     </div>
                     <div>
                         <input type="file" id="uploadIca" asp-for="IsICAFile" style="display: none;">
-                        <button type="button"  class="btn secondary-theme-btn" id="doc-1">Upload</button>
+                        <button type="button"  class="btn secondary-theme-btn" id="doc-1" onclick="openFileInput('uploadIca')">Upload</button>
                     </div>
                 </div>
                 <div class="d-flex flex-wrap gap-2 mt-3">
                     <div class="agreement-name">
-                    <input type="checkbox" asp-for="@Model.IsBgCheck" class="form-check-input" id="bgCheck" disabled>
+                    <input type="checkbox" asp-for="@Model.IsBgCheck" class="form-check-input" id="check-uploadbackcheck" disabled>
                         <label>Background Check</label>
                     </div>
                     <div>
                         <input type="file" id="uploadbackcheck" asp-for="IsBgCheckFile" style="display: none;">
-                        <button type="button"  class="btn secondary-theme-btn" id="doc-2">Upload</button>
+                        <button type="button"  class="btn secondary-theme-btn" id="doc-2" onclick="openFileInput('uploadbackcheck')">Upload</button>
                     
                     </div>
                 </div>
                 <div class="d-flex flex-wrap gap-2 mt-3">
                     <div class="agreement-name">
-                    <input  type="checkbox" asp-for="@Model.IsHIPAA" class="form-check-input" id="hipaa" disabled>
+                    <input  type="checkbox" asp-for="@Model.IsHIPAA" class="form-check-input" id="check-uploadHIPAA" disabled>
                         <label>HIPAA Compliance</label>
                     </div>
                     <div>
                         <input type="file" id="uploadHIPAA" asp-for="IsHIPAAFile" style="display: none;">
-                        <button type="button"  class="btn secondary-theme-btn" id="doc-3">Upload</button>
+                        <button type="button"  class="btn secondary-theme-btn" id="doc-3" onclick="openFileInput('uploadHIPAA')">Upload</button>
                         
                     </div>
                 </div>
                 <div class="d-flex flex-wrap gap-2 mt-3">
                     <div class="agreement-name">
-                    <input type="checkbox" asp-for="@Model.IsNDAFile" class="form-check-input" id="nda" disabled>
+                    <input type="checkbox" asp-for="@Model.IsNDA" class="form-check-input" id="check-uploadNDA" disabled>
                         <label>Non-Disclosure Agreement</label>
                     </div>
                     <div>
                         <input type="file" id="uploadNDA" asp-for="IsNDAFile" style="display: none;">
-                        <button  type="button" class="btn secondary-theme-btn" id="doc-4">Upload</button>
+                        <button  type="button" class="btn secondary-theme-btn" id="doc-4" onclick="openFileInput('uploadNDA')">Upload</button>
                     </div>
                 </div>
             </div>
             <hr style="border-width: 2px;">
             <div class="d-flex justify-content-end">
-                <button class="btn btn-success">
+                <button type="button" onclick="submitMyForm()" class="btn btn-success">
                     Create Account
                 </button>
             </div>
@@ -272,6 +279,37 @@
 </main>
 
 <script>
+    
+    function openFileSelector(id) {
+        imageUrl = "";
+        document.getElementById(`${id}`).click();
+    }
+     function showPreview(input,previewId) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById(`${previewId}`).innerHTML = '<img src="' + e.target.result + '" alt="Uploaded Image" style="width:100%;">';
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+
+    var firstNameField = $('#firstname');
+    var lastNameField = $('#lastname');
+    var usernameField = $('#username');
+
+    firstNameField.on('input', updateUsername);
+    lastNameField.on('input', updateUsername);
+
+    function updateUsername() {
+        var firstName = firstNameField.val().trim().toLowerCase().charAt(0).toUpperCase() + firstNameField.val().trim().toLowerCase().slice(1);
+        var lastName = lastNameField.val().trim().toLowerCase().charAt(0).toUpperCase() + lastNameField.val().trim().toLowerCase().slice(1);
+        var username = (lastName + firstName).replace(/\s+/g, '');
+            usernameField.val(username);
+        $("#UsernameHidden").val(username);
+    }
+
     $("#adminDashTab li").each(function(){
         if($(this).data("id")==4){
             $("#adminDashTab li a").removeClass("active");
@@ -280,4 +318,26 @@
             $(this).find(".inner-nav ul li[data-inner-itemid='4'] a").addClass("active");
         }
     })
+
+    function submitMyForm() {
+        AddCountryCode();
+        $(`#phy-account-form`).submit();
+    }
+
+    function openFileInput(id) {
+        var fileInput = document.getElementById(id);
+        if (fileInput) {
+            fileInput.click();
+            fileInput.addEventListener('change', function () {
+                // Get the checkbox corresponding to the file input
+                var checkbox = document.getElementById(`check-${id}`);
+                if (checkbox) {
+                    // Check the checkbox
+                    checkbox.checked = true;
+                }
+            });
+        }
+    }
+
+
 </script>

@@ -4,6 +4,9 @@ using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
 using System.Globalization;
 using HalloDocRepository.Interfaces;
+using AdminTable = HalloDocRepository.DataModels.Admin;
+using HalloDocService.Interfaces;
+
 
 namespace HalloDocService.Admin.Implementation;
 public class AdminDashboardService : IAdminDashboardService
@@ -11,10 +14,16 @@ public class AdminDashboardService : IAdminDashboardService
 
     private readonly IAdminDashboardRepo _dashboardRepo;
     private readonly IDashboardRepo _patientDashboardRepo;
-    public AdminDashboardService(IAdminDashboardRepo dashboardRepo, IDashboardRepo patientDashboardRepo)
+    private readonly IPatientRequestRepo _patientRequestRepo;
+    private readonly IPatientRequestService _patientRequestService;
+
+    public AdminDashboardService(IAdminDashboardRepo dashboardRepo, IDashboardRepo patientDashboardRepo,IPatientRequestRepo patientRequestRepo,IPatientRequestService patientRequestService)
     {
         _dashboardRepo = dashboardRepo;
         _patientDashboardRepo = patientDashboardRepo;
+        _patientRequestRepo = patientRequestRepo;
+        _patientRequestService = patientRequestService;
+
     }
     // Patient Request Implementation
     public (List<RequestViewModel>, int totalCount) GetNewStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize,int region)
@@ -414,7 +423,7 @@ public class AdminDashboardService : IAdminDashboardService
             DocumentId = d.Id,
             FilePath = d.Filename,
             FileName = Path.GetFileName(d.Filename),
-            UploaderName = d.Request.Createduser != null ? d.Request.Createduser.Firstname : d.Request.Firstname,
+            UploaderName = d.Request.Createduser != null ? d.Request.Createduser.Email : d.Request.Firstname,
             UploadDate = d.Createddate.ToString("yyyy-MM-dd"),
             PatientName = d.Request.User != null ? (d.Request.User.Firstname + " " + d.Request.User.Lastname) :
                 (d.Request.Requestclients.FirstOrDefault()?.Firstname.ToUpper() + " " + d.Request.Requestclients.FirstOrDefault()?.Lastname.ToUpper())
@@ -572,5 +581,140 @@ public class AdminDashboardService : IAdminDashboardService
     public IEnumerable<Request> FetchAllRequest(){
         return _dashboardRepo.FetchAllRequest();
     }
+
+    public void CreateRequest(PatientRequestViewModel patientRequest){
+        var userEmail = _patientRequestRepo.FindUserByEmail(patientRequest.Email);
+        if (userEmail != null)
+        {
+            ProcessExistingUserRequestAsync(patientRequest);
+        }
+        else
+        {
+            ProcessNewUserRequestAsync(patientRequest);
+        }
+    }
+
+    private async Task ProcessExistingUserRequestAsync(PatientRequestViewModel viewRequest)
+    {
+        var existUserData = _patientRequestRepo.FindUserByEmailFromUser(viewRequest.Email);
+        var RegionDetails = _patientRequestRepo.GetSingleRegion((int)viewRequest.State);
+        AdminTable? CreatedUserDetails =  _dashboardRepo.GetAdminFromAsp(viewRequest.CreatedById);
+        var newRequestForExistedUser = new Request
+        {
+            Userid = existUserData.Id,
+            Roomnoofpatient = viewRequest.Roomnoofpatient,
+            Status = 1, // For Unassigned,
+            Firstname = CreatedUserDetails?.Firstname ?? "",
+            Lastname = CreatedUserDetails?.Lastname ?? "",
+            Phonenumber = CreatedUserDetails?.Mobile ?? "",
+            Email = CreatedUserDetails?.Email ?? "",
+            Requesttypeid = 4,
+            Createduserid = viewRequest.CreatedById
+        };
+        _patientRequestRepo.AddRequestDataForExistedUser(newRequestForExistedUser);
+
+        var patientInfo = new Requestclient
+        {
+            Requestid = newRequestForExistedUser.Id,
+            Firstname = viewRequest.Firstname,
+            Lastname = viewRequest.Lastname,
+            Phonenumber = viewRequest.Mobile,
+            Email = viewRequest.Email,
+            Street = viewRequest.Street,
+            City = viewRequest.City,
+            State = RegionDetails.Name,
+            Regionid = viewRequest.State,
+            Zipcode = viewRequest.Zipcode,
+            Strmonth = DateOnly.Parse(viewRequest.Birthdate).ToString("MMMM"),
+            Intyear = DateOnly.Parse(viewRequest.Birthdate).Year,
+            Intdate = DateOnly.Parse(viewRequest.Birthdate).Day
+        };
+        _patientRequestRepo.AddPatientInfoForExistedUser(patientInfo);
+
+        if(viewRequest.Symptoms!=null && !string.IsNullOrEmpty(viewRequest.Symptoms)){
+            _dashboardRepo.SaveAdditionalNotes(viewRequest.Symptoms ?? "",0,newRequestForExistedUser.Id);   
+        }
+    }
+
+    private async Task ProcessNewUserRequestAsync(PatientRequestViewModel viewRequest)
+    {
+        string email = viewRequest.Email;
+        string[] parts = email.Split('@');
+        string userName = parts[0];
+        var RegionDetails = _patientRequestRepo.GetSingleRegion((int)viewRequest.State);
+        AdminTable? CreatedUserDetails =  _dashboardRepo.GetAdminFromAsp(viewRequest.CreatedById);
+
+        var newUser = new Aspnetuser
+        {
+            Username = userName,
+            Email = viewRequest.Email,
+            Passwordhash = viewRequest.Passwordhash,
+            Phonenumber = viewRequest.Mobile,
+        };
+        _patientRequestRepo.NewAspUserAdd(newUser);
+
+        var newPatient = new User
+        {
+            Aspnetuserid = newUser.Id,
+            Firstname = viewRequest.Firstname,
+            Lastname = viewRequest.Lastname,
+            Email = viewRequest.Email,
+            Mobile = viewRequest.Mobile,
+            Street = viewRequest.Street,
+            City = viewRequest.City,
+            State = RegionDetails.Name,
+            Regionid = viewRequest.State,
+            Zipcode = viewRequest.Zipcode,
+            Birthdate = DateOnly.Parse(viewRequest.Birthdate),
+            Createddate = DateTime.Now
+        };
+        _patientRequestRepo.NewUserAdd(newPatient);
+
+        Aspnetuserrole newRole = new(){
+            Userid = newUser.Id,
+            Roleid = 3 //Patient
+        };
+        _patientRequestRepo.NewRoleAdded(newRole);
+
+        
+        var newRequest = new Request
+        {
+            Userid = newPatient.Id,
+            Roomnoofpatient = viewRequest.Roomnoofpatient,
+            Status = 1, // For Unassigned,
+            Firstname = CreatedUserDetails?.Firstname ?? "",
+            Lastname = CreatedUserDetails?.Lastname ?? "",
+            Phonenumber = CreatedUserDetails?.Mobile ?? "",
+            Email = CreatedUserDetails?.Email ?? "",
+            Requesttypeid = 4,
+            Createduserid = viewRequest.CreatedById,
+            Confirmationnumber = _patientRequestService.CreateConfirmation(viewRequest.State,viewRequest.Firstname,viewRequest.Lastname)
+        };
+        _patientRequestRepo.NewRequestAdd(newRequest);
+
+        var newPatientInfo = new Requestclient
+        {
+            Requestid = newRequest.Id,
+            Firstname = viewRequest.Firstname,
+            Lastname = viewRequest.Lastname,
+            Phonenumber = viewRequest.Mobile,
+            Email = viewRequest.Email,
+            Street = viewRequest.Street,
+            City = viewRequest.City,
+            State = RegionDetails.Name,
+            Regionid = viewRequest.State,
+            Zipcode = viewRequest.Zipcode,
+            Strmonth = DateOnly.Parse(viewRequest.Birthdate).ToString("MMMM"),
+            Intyear = DateOnly.Parse(viewRequest.Birthdate).Year,
+            Intdate = DateOnly.Parse(viewRequest.Birthdate).Day
+        };
+        _patientRequestRepo.NewPatientAdd(newPatientInfo);
+
+        if(viewRequest.Symptoms!=null && !string.IsNullOrEmpty(viewRequest.Symptoms)){
+            _dashboardRepo.SaveAdditionalNotes(viewRequest.Symptoms ?? "",0,newRequest.Id);   
+        }
+
+    }
+
 
 }

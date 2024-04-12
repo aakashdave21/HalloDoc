@@ -25,4 +25,8 @@ public interface IProviderRepo
 
     IEnumerable<Physicianlocation> GetAllProviderLocation();
 
+    void CreatePhysician(Physician physicianData);
+    void AddPhysicianRegion(List<Physicianregion> physicianregions);
+    void AddPhysicianFile(Physicianfile physicianfile);
+
 }

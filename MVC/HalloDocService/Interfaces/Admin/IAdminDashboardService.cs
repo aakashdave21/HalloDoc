@@ -60,4 +60,6 @@ public interface IAdminDashboardService
     void SubmitEncounter(EncounterFormViewModel encounterForm);
 
     IEnumerable<Request> FetchAllRequest();
+
+    void CreateRequest(PatientRequestViewModel patientRequest);
     }

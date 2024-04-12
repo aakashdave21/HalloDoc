@@ -1,5 +1,7 @@
 using HalloDocRepository.DataModels;
 using Microsoft.VisualBasic;
+using AdminTable = HalloDocRepository.DataModels.Admin;
+
 
 namespace HalloDocRepository.Admin.Interfaces;
 public interface IAdminDashboardRepo
@@ -52,4 +54,6 @@ public interface IAdminDashboardRepo
    void AddCallType(short callType,int reqId);
 
    IEnumerable<Request> FetchAllRequest();
+
+   AdminTable? GetAdminFromAsp(int AspId);
 }

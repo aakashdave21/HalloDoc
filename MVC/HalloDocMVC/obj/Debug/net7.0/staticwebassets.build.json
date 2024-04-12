@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "LF5YCsxTruLh2WzEAwc5gEBlOaGjAaPVHUt8QFFR2CQ=",
+  "Hash": "Ba8hCDQZuCTEhp/GL2HxxU2oc7ry6qZX4bFAZnp+MQg=",
   "Source": "HalloDocMVC",
   "BasePath": "_content/HalloDocMVC",
   "Mode": "Default",
@@ -3381,6 +3381,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\8e4a66ae-1b84-4f09-a7ba-b3e9fa49d1d9_logo.png"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\9b929bb7-b36d-4714-8d12-3917157ae7a5_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/9b929bb7-b36d-4714-8d12-3917157ae7a5_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\9b929bb7-b36d-4714-8d12-3917157ae7a5_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png"
     },
     {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\a07c4d6f-413d-44c5-b11f-765cce335434_.net-Whole-Plane-2024.pdf",

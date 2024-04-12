@@ -18,4 +18,6 @@ public interface IPatientRequestRepo
     void StoreActivationToken(int AspUserId , string token, DateTime expiry);
     Region GetSingleRegion(int regionId);
     void NewRoleAdded(Aspnetuserrole aspnetuserrole);
+
+    IEnumerable<Request> GetTodaysRequest();
 }

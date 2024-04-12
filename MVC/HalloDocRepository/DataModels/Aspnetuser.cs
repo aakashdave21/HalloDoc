@@ -115,6 +115,9 @@ public partial class Aspnetuser
     [InverseProperty("ModifiedbyNavigation")]
     public virtual ICollection<Requestnote> RequestnoteModifiedbyNavigations { get; } = new List<Requestnote>();
 
+    [InverseProperty("Createduser")]
+    public virtual ICollection<Request> Requests { get; } = new List<Request>();
+
     [InverseProperty("CreatedbyNavigation")]
     public virtual ICollection<Shiftdetail> ShiftdetailCreatedbyNavigations { get; } = new List<Shiftdetail>();
 

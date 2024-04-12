@@ -76,5 +76,9 @@ public class PatientRequestRepo : IPatientRequestRepo
         _dbContext.Aspnetuserroles.Add(aspnetuserrole);
         _dbContext.SaveChanges();
     }
+
+    public IEnumerable<Request> GetTodaysRequest(){
+        return _dbContext.Requests.Where(req=>req.Createdat.Value.Date == DateTime.Now.Date);
+    }
      
 }

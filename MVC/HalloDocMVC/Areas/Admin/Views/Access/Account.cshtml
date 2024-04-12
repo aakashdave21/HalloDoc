@@ -22,23 +22,26 @@
                 <div class="col-md-4 mb-3">
                     <div class="form-floating">
                         <input type="hidden" asp-for="Username" id="UsernameHidden" />
-                        <input asp-for="Username"  type="text" class="form-control" id="username" placeholder="UserName" disabled>
+                        <input asp-for="Username" type="text" class="form-control" id="username" placeholder="UserName"
+                            disabled>
                         <label asp-for="Username" for="UserName">User Name</label>
                     </div>
-                    <span asp-validation-for="Username"  class="text-danger"></span>
+                    <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="form-floating">
-                        <input asp-for="Password"  type="text" class="form-control" id="Password" placeholder="Password" >
+                        <input asp-for="Password" type="text" class="form-control" id="Password" placeholder="Password">
                         <label asp-for="Password" for="Password">Password</label>
                     </div>
-                    <span asp-validation-for="Password"  class="text-danger"></span>
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="form-floating">
-                        <select asp-for="RoleId" class="form-select" aria-label="Large select example" placeholder="Role">
+                        <select asp-for="RoleId" class="form-select" aria-label="Large select example"
+                            placeholder="Role">
                             <option selected disabled>Role</option>
-                            @foreach(var item in Model.AllRoleList){
+                            @foreach (var item in Model.AllRoleList)
+                            {
                                 <option value="@item.Id">@item.Name</option>
                             }
                         </select>
@@ -54,7 +57,7 @@
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
                             <input asp-for="FirstName" type="text" class="form-control" id="fname"
-                                placeholder="first name" >
+                                placeholder="first name">
                             <label asp-for="FirstName" for="floatingInput">First Name</label>
                         </div>
                         <span asp-validation-for="FirstName" class="text-danger"></span>
@@ -62,30 +65,29 @@
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
                             <input asp-for="LastName" type="text" class="form-control" id="lname"
-                                placeholder="last name" >
+                                placeholder="last name">
                             <label asp-for="LastName" for="floatingInput">Last Name</label>
                         </div>
                         <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
-                            <input asp-for="Email" type="email" class="form-control" id="Email" placeholder="email"
-                                >
+                            <input asp-for="Email" type="email" class="form-control" id="Email" placeholder="email">
                             <label asp-for="Email" for="Email">Email</label>
                         </div>
-                        <span asp-validation-for="Email" class="text-danger" ></span>
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
-                            <input asp-for="EmailConfirmation" type="email" class="form-control" id="EmailConfirmation" placeholder="EmailConfirmation"
-                                >
+                            <input asp-for="EmailConfirmation" type="email" class="form-control" id="EmailConfirmation"
+                                placeholder="EmailConfirmation">
                             <label asp-for="EmailConfirmation" for="Email">Confirm Email</label>
                         </div>
                         <span asp-validation-for="EmailConfirmation" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
-                           <input asp-for="PhoneNumber" id="Mobile" class="form-control" type="tel"/>
+                            <input asp-for="PhoneNumber" id="Mobile" class="form-control" type="tel" />
                             <input asp-for="PhoneNumber" type="hidden" id="phone_hidden" name="full_phone" />
                         </div>
                         <span asp-validation-for="PhoneNumber" class="text-danger" id="mobile-valid"></span>
@@ -93,14 +95,17 @@
                     <div class="col-md-6 mb-3">
                         <div class="d-flex flex-wrap gap-2">
                             @{
-                                for(int i=0; i < Model.AllCheckBoxRegionList.Count();i++){
+                                for (int i = 0; i < Model.AllCheckBoxRegionList.Count(); i++)
+                                {
                                     <div class="form-check">
                                         <input type="hidden" asp-for="@Model.AllCheckBoxRegionList[i].Id">
-                                        <input class="form-check-input" asp type="checkbox" asp-for="@Model.AllCheckBoxRegionList[i].IsSelected" id="check-@Model.AllCheckBoxRegionList[i].Id">
+                                        <input class="form-check-input" asp type="checkbox"
+                                            asp-for="@Model.AllCheckBoxRegionList[i].IsSelected"
+                                            id="check-@Model.AllCheckBoxRegionList[i].Id">
                                         <label class="form-check-label" for="check-@Model.AllCheckBoxRegionList[i].Id">
                                             @Model.AllCheckBoxRegionList[i].Name
                                         </label>
-                                </div>
+                                    </div>
                                 }
                             }
                         </div>
@@ -113,19 +118,21 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
-                            <input asp-for="Address1" type="text" class="form-control" id="Address1" placeholder="Address1">
+                            <input asp-for="Address1" type="text" class="form-control" id="Address1"
+                                placeholder="Address1">
                             <label asp-for="Address1" for="Address1">Address1</label>
                         </div>
                         <span asp-validation-for="Address1" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
-                            <input asp-for="Address2" type="text" class="form-control" id="Address2" placeholder="Address2">
+                            <input asp-for="Address2" type="text" class="form-control" id="Address2"
+                                placeholder="Address2">
                             <label asp-for="Address2" for="Address2">Address2</label>
                         </div>
                         <span asp-validation-for="Address2" class="text-danger"></span>
                     </div>
-                     <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-3">
                         <div class="form-floating ">
                             <input asp-for="City" type="text" class="form-control" id="city" placeholder="city">
                             <label asp-for="City" for="city">City</label>
@@ -134,11 +141,12 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
-                            <select asp-for="State" class="form-select" aria-label="Large select example" placeholder="State"
-                             >
+                            <select asp-for="State" class="form-select" aria-label="Large select example"
+                                placeholder="State">
                                 <option selected disabled>State</option>
-                                @foreach(var item in Model.AllRegionsList){
-                                     <option value="@item.Id">@item.Name</option>
+                                @foreach (var item in Model.AllRegionsList)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
                                 }
                             </select>
                             <label asp-for="State" for="Status">State</label>
@@ -152,7 +160,7 @@
                         </div>
                         <span asp-validation-for="Zip" class="text-danger"></span>
                     </div>
-                        <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-3">
                         <div class="form-floating">
                             <input asp-for="AlternatePhone" id="Phone" class="form-control" type="tel" />
                             <input asp-for="AlternatePhone" type="hidden" id="phone_hidden_1" name="full_phone" />
@@ -170,31 +178,29 @@
 </main>
 <script>
     var firstNameField = $('#fname');
-        var lastNameField = $('#lname');
-        var usernameField = $('#username');
+    var lastNameField = $('#lname');
+    var usernameField = $('#username');
 
-        firstNameField.on('input', updateUsername);
-        lastNameField.on('input', updateUsername);
+    firstNameField.on('input', updateUsername);
+    lastNameField.on('input', updateUsername);
 
-        function updateUsername() {
-            var firstName = firstNameField.val().trim().toLowerCase().charAt(0).toUpperCase() + firstNameField.val().trim().toLowerCase().slice(1);
-            var lastName = lastNameField.val().trim().toLowerCase().charAt(0).toUpperCase() + lastNameField.val().trim().toLowerCase().slice(1);
-            var username = (lastName + firstName).replace(/\s+/g, '');
-            @* username = username.charAt(0).toUpperCase() + username.slice(1); *@
+    function updateUsername() {
+        var firstName = firstNameField.val().trim().toLowerCase().charAt(0).toUpperCase() + firstNameField.val().trim().toLowerCase().slice(1);
+        var lastName = lastNameField.val().trim().toLowerCase().charAt(0).toUpperCase() + lastNameField.val().trim().toLowerCase().slice(1);
+        var username = (lastName + firstName).replace(/\s+/g, '');
             usernameField.val(username);
-            $("#UsernameHidden").val(username);
-        }
-    function submitMyForm(){
-
+        $("#UsernameHidden").val(username);
+    }
+    function submitMyForm() {
         AddCountryCode();
         $(`#CreateNewAdmin`).submit();
     }
-    
+
 </script>
 
 <script>
-    $("#adminDashTab li").each(function(){
-        if($(this).data("id")==6){
+    $("#adminDashTab li").each(function () {
+        if ($(this).data("id") == 6) {
             $("#adminDashTab li a").removeClass("active");
             $(this).addClass("active").find("a").addClass("active");
         }

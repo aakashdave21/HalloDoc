@@ -15,6 +15,8 @@ public interface IPatientRequestService
 
     IEnumerable<RegionList> GetAllRegions();
 
+    public string CreateConfirmation(int? State, string Firstname, string Lastname);
+
     
     
 }

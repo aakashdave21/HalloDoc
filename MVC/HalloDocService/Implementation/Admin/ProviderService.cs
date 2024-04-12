@@ -12,10 +12,15 @@ public class ProviderService : IProviderService
 
     private readonly IProfileRepo _profileRepo;
     private readonly IProviderRepo _providerRepo;
-    public ProviderService(IProfileRepo profileRepo, IProviderRepo providerRepo)
+    private readonly IPatientLoginRepo _patientLoginRepo;
+    private readonly IPatientRequestRepo _patientRequestRepo;
+    public ProviderService(IProfileRepo profileRepo, IProviderRepo providerRepo,IPatientLoginRepo patientLoginRepo,IPatientRequestRepo patientRequestRepo)
     {
         _profileRepo = profileRepo;
         _providerRepo = providerRepo;
+        _patientLoginRepo = patientLoginRepo;
+        _patientRequestRepo = patientRequestRepo;
+
     }
 
     public AdminProviderViewModel GetAllProviderData(string? regionId=null,string? order=null)
@@ -216,5 +221,72 @@ public class ProviderService : IProviderService
             })
         };
         return locationList;
+    }
+
+    public void CreatePhysician(AdminPhysicianCreateViewModel viewData){
+        Aspnetuser alreadyExists = _patientLoginRepo.ValidateUser(viewData.Email);
+        if(alreadyExists!=null){
+            throw new Exception("Email already exists");
+        }
+        Aspnetuser aspnetuser= new(){
+            Username = viewData.Username,
+            Passwordhash = viewData.Password,
+            Email = viewData.Email,
+            Phonenumber = viewData.Phone
+        };
+        _patientRequestRepo.NewAspUserAdd(aspnetuser);
+        Aspnetuserrole aspnetrole = new(){
+            Userid = aspnetuser.Id,
+            Roleid = 2
+        };
+        _patientRequestRepo.NewRoleAdded(aspnetrole);
+        Physician physicianData = new(){
+            Aspnetuserid = aspnetuser.Id,
+            Firstname = viewData.Firstname ?? "",
+            Lastname = viewData.Lastname,
+            Email = viewData.Email ?? "",
+            Mobile = viewData.Phone,
+            Medicallicense = viewData.MedicalLicense,
+            Npinumber = viewData.NPI,
+            Address1 = viewData.Address1,
+            Address2 = viewData.Address2,
+            City = viewData.City,
+            Regionid = viewData.State,
+            Zip = viewData.Zipcode,
+            Altphone = viewData.AltPhone,
+            Businessname = viewData?.Businessname ?? "",
+            Businesswebsite = viewData?.BusinessWebsite ?? "",
+            Adminnotes = viewData?.AdminNote ?? "",
+            Roleid = viewData?.RoleId,
+            OnCallStatus = 1,
+            Photo = viewData?.UploadPhoto ?? "",
+            Isbackgrounddoc = viewData?.IsBgCheckFileName != null,
+            Isnondisclosuredoc = viewData?.IsNDAFileName != null,
+            Isagreementdoc = viewData?.IsICAFileName != null,
+            Istrainingdoc = viewData?.IsHIPAAFileName != null,
+            Islicensedoc = viewData?.IsLicenseDocFileName != null
+        };
+        _providerRepo.CreatePhysician(physicianData);
+
+        List<Physicianregion> physicianregions = new();
+        foreach(var item in viewData.AllCheckBoxRegionList){
+            if(item.IsSelected == true){
+                physicianregions.Add(new Physicianregion(){
+                    Regionid = item.Id,
+                    Physicianid = physicianData.Id
+                });
+            }
+        }
+        _providerRepo.AddPhysicianRegion(physicianregions);
+
+        Physicianfile physicianfile = new(){
+            Physicianid = physicianData.Id,
+            Ica = viewData.IsICAFileName,
+            Nda = viewData.IsNDAFileName,
+            Backgroundcheck = viewData.IsBgCheckFileName,
+            Hipaa = viewData.IsHIPAAFileName,
+            License = viewData.IsLicenseDocFileName
+        };
+        _providerRepo.AddPhysicianFile(physicianfile);
     }
 }

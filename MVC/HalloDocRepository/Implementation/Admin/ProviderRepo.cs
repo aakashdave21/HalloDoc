@@ -209,6 +209,21 @@ public class ProviderRepo : IProviderRepo
         return _dbContext.Physicianlocations.Include(loc => loc.Physician);
     }
 
+    public void CreatePhysician(Physician physicianData){
+        _dbContext.Physicians.Add(physicianData);
+        _dbContext.SaveChanges();
+    }
+
+    public void AddPhysicianRegion(List<Physicianregion> physicianregions){
+        _dbContext.Physicianregions.AddRange(physicianregions);
+        _dbContext.SaveChanges();
+    }
+
+    public void AddPhysicianFile(Physicianfile physicianfile){
+        _dbContext.Physicianfiles.Add(physicianfile);
+        _dbContext.SaveChanges();
+    }
+
 
 
 }

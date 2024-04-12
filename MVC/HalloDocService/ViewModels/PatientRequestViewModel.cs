@@ -32,7 +32,6 @@ namespace HalloDocService.ViewModels
         public string? Zipcode { get; set; }
 
         // For Request Table
-        [Required(ErrorMessage = "Symptoms is required.")]
         public string? Symptoms { get; set; }
 
          [Required(ErrorMessage = "Birth Date is required.")]
@@ -50,6 +49,8 @@ namespace HalloDocService.ViewModels
         public string? FilePath { get; set; }
 
         public IEnumerable<RegionList> AllRegionList {get; set;} = new List<RegionList>();
+
+        public int CreatedById {get; set;}
 
     }
 

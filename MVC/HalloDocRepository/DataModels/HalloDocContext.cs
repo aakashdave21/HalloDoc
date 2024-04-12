@@ -333,7 +333,7 @@ public partial class HalloDocContext : DbContext
             entity.Property(e => e.IsBlocked).HasDefaultValueSql("false");
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            entity.HasOne(d => d.Createduser).WithMany(p => p.RequestCreatedusers).HasConstraintName("fk_request_user");
+            entity.HasOne(d => d.Createduser).WithMany(p => p.Requests).HasConstraintName("request_createduserid_fkey");
 
             entity.HasOne(d => d.Physician).WithMany(p => p.Requests).HasConstraintName("request_physicianid_fkey");
 
@@ -341,7 +341,7 @@ public partial class HalloDocContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("request_requesttypeid_fkey");
 
-            entity.HasOne(d => d.User).WithMany(p => p.RequestUsers).HasConstraintName("request_userid_fkey");
+            entity.HasOne(d => d.User).WithMany(p => p.Requests).HasConstraintName("request_userid_fkey");
         });
 
         modelBuilder.Entity<Requestclient>(entity =>
