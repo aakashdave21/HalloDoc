@@ -1,6 +1,8 @@
 
 using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
+using AdminTable = HalloDocRepository.DataModels.Admin;
+
 
 namespace HalloDocService.Interfaces;
 public interface IPatientLogin
@@ -11,6 +13,8 @@ public interface IPatientLogin
     Aspnetuser FindUserFromUsername(UserResetPasswordViewModel user);
 
     User UserDetailsFetch(string email); 
+    AdminTable AdminDetailsFetch(string email); 
+    Physician ProviderDetailsFetch(string email); 
 
     void StoreResetToken(int AspUserId, string token, DateTime expiry);
     Aspnetuser? GetResetTokenExpiry(int AspUserId, string token);

@@ -12,6 +12,10 @@ using HalloDocService.Admin.Interfaces;
 using HalloDocService.Admin.Implementation;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Security.Claims;
+using HalloDocService.Provider.Interfaces;
+using HalloDocService.Provider.Implementation;
+using HalloDocRepository.Provider.Interfaces;
+using HalloDocRepository.Provider.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +30,11 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
     options.AreaPageViewLocationFormats.Add("/Areas/{2}/Views/Shared/{0}.cshtml");
 });
 builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<MenuItemsActionFilter>();
+});
+
 
 builder.Services.AddScoped<IPatientLoginRepo, PatientLoginRepo>();
 builder.Services.AddScoped<IPatientLogin, PatientLogin>();
@@ -36,18 +45,20 @@ builder.Services.AddScoped<IDashboardRepo, DashboardRepo>();
 builder.Services.AddScoped<IAdminDashboardRepo, AdminDashboardRepo>();
 builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 builder.Services.AddScoped<IUtilityService, UtilityService>();
-builder.Services.AddScoped<IProfileService,ProfileService>();
-builder.Services.AddScoped<IProfileRepo,ProfileRepo>();
-builder.Services.AddScoped<IProviderService,ProviderService>();
-builder.Services.AddScoped<IProviderRepo,ProviderRepo>();
-builder.Services.AddScoped<IAccessService,AccessService>();
-builder.Services.AddScoped<IAccessRepo,AccessRepo>();
-builder.Services.AddScoped<IScheduleRepo,ScheduleRepo>();
-builder.Services.AddScoped<IScheduleService,ScheduleService>();
-builder.Services.AddScoped<IPartnerService,PartnerService>();
-builder.Services.AddScoped<IPartnerRepo,PartnerRepo>();
-builder.Services.AddScoped<IRecordsService,RecordsService>();
-builder.Services.AddScoped<IRecordsRepo,RecordsRepo>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IProfileRepo, ProfileRepo>();
+builder.Services.AddScoped<IProviderService, ProviderService>();
+builder.Services.AddScoped<IProviderRepo, ProviderRepo>();
+builder.Services.AddScoped<IAccessService, AccessService>();
+builder.Services.AddScoped<IAccessRepo, AccessRepo>();
+builder.Services.AddScoped<IScheduleRepo, ScheduleRepo>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<IPartnerService, PartnerService>();
+builder.Services.AddScoped<IPartnerRepo, PartnerRepo>();
+builder.Services.AddScoped<IRecordsService, RecordsService>();
+builder.Services.AddScoped<IRecordsRepo, RecordsRepo>();
+builder.Services.AddScoped<IProviderDashboardService, ProviderDashboardService>();
+builder.Services.AddScoped<IProviderDashboardRepo, ProviderDashboardRepo>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -58,7 +69,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         {
             OnRedirectToLogin = context =>
             {
-                if (context.Request.Path.StartsWithSegments("/Admin") &&
+                if (context.Request.Path.StartsWithSegments("/Provider") && !context.Request.Path.StartsWithSegments("/Provider/Login"))
+                {
+                    context.Response.Redirect("/Provider/Login/");
+                }
+                else if (context.Request.Path.StartsWithSegments("/Admin") &&
                     !context.Request.Path.StartsWithSegments("/Admin/Login"))
                 {
                     context.Response.Redirect("/Admin/Login/Index");
@@ -99,7 +114,8 @@ app.Use(async (context, next) =>
 {
 
     ClaimsPrincipal claimUser = context.User;
-    if (context.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && claimUser.Identity.IsAuthenticated==false && context.Request.Headers["Not-Auth-Required"] != "true"){
+    if (context.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && claimUser.Identity.IsAuthenticated == false && context.Request.Headers["Not-Auth-Required"] != "true")
+    {
         Console.WriteLine("In this Middlewear");
         context.Response.StatusCode = 401;
         return;
@@ -112,15 +128,19 @@ app.Use(async (context, next) =>
     }
 
     await next();
-    
-     if(context.Response.StatusCode == 403 || context.Response.StatusCode == 404){
+
+    if (context.Response.StatusCode == 403 || context.Response.StatusCode == 404)
+    {
         context.Response.Redirect("/Account/NotFound");
         return;
     }
 
-    
+
 });
 
+app.MapControllerRoute(
+       name: "Provider",
+        pattern: "{area=exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "Patient",

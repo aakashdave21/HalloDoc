@@ -18,7 +18,7 @@ public interface IAdminDashboardRepo
    Requestnote GetViewNotesDetails(int reqId);
    Requestclient GetPatientNoteDetails(int reqId);
    IQueryable<Requeststatuslog> GetAllCancelNotes(int reqId);
-   void SaveAdditionalNotes(string AdditionalNote,int noteId,int reqId);
+   void SaveAdditionalNotes(string AdditionalNote,int noteId,int reqId, int reqType=1);
    void ChangeStatusOfRequest(int reqId,short newStatus);
    void AddStatusLog(int reqId,short newStatus,short oldStatus,string reason,int? adminId,int? physicianId,int? transToPhyId);
    short GetStatusOfRequest(int reqId);
@@ -56,4 +56,5 @@ public interface IAdminDashboardRepo
    IEnumerable<Request> FetchAllRequest();
 
    AdminTable? GetAdminFromAsp(int AspId);
+   IEnumerable<Rolemenu>? GetUserRoles(int AspUserId);
 }

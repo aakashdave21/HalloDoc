@@ -1,0 +1,159 @@
+@model PatientRequestViewModel;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Profile Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+    <link rel="stylesheet" href="~/css/PatientRequest.css" />
+}
+<style>
+    label {
+        width: 100% !important;
+    }
+
+    select {
+        height: 100%;
+    }
+</style>
+<main class="container-sm mt-sm-5 mb-5">
+    <div class="d-flex justify-content-end mt-4">
+        <a href="/Provider/dashboard" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+    </div>
+    <div class="d-flex mt-2">
+        <h3>Create Request</h3>
+    </div>
+    <div class="patient-request-form border p-4 mt-3 mb-3 rounded shadow">
+
+        <form asp-area="Provider" asp-controller="Dashboard" asp-action="CreateRequest" method="post" id="CreateRequest">
+            <div class="mt-4" id="adminInfoSection">
+                <h5>Patient Information</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Firstname" type="text" class="form-control" id="firstname"
+                                placeholder="firstname">
+                            <label asp-for="Firstname" for="firstname">First Name</label>
+                        </div>
+                        <span asp-validation-for="Firstname" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Lastname" type="text" class="form-control" id="lastname"
+                                placeholder="lastname">
+                            <label asp-for="Lastname" for="lastname">Last Name</label>
+                        </div>
+                        <span asp-validation-for="Lastname" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Mobile" id="Mobile" class="form-control" type="tel" name="Mobile" />
+                            <input asp-for="Mobile" type="hidden" id="phone_hidden" name="full_phone" />
+                        </div>
+                        <span asp-validation-for="Mobile" class="text-danger" id="mobile-valid"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Email" type="email" class="form-control" id="Email" placeholder="email">
+                            <label asp-for="Email" for="Email">Email</label>
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger" id="email-valid"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Birthdate" type="date" class="form-control" id="dob"
+                                placeholder="Date Of Birth">
+                            <label asp-for="Birthdate" for="dob">Date Of Birth</label>
+                        </div>
+                        <span asp-validation-for="Birthdate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4" id="billingInfoSection">
+                <h5>Location</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Street" type="text" class="form-control" id="Address1"
+                                placeholder="Address1">
+                            <label asp-for="Street" for="Address1">Street</label>
+                        </div>
+                        <span asp-validation-for="Street" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="City" type="text" class="form-control" id="city" placeholder="city">
+                            <label asp-for="City" for="city">City</label>
+                        </div>
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <select asp-for="State" class="form-select" aria-label="Large select example"
+                                placeholder="State">
+                                <option selected disabled>State</option>
+                                @foreach (var item in Model.AllRegionList)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
+                            <label asp-for="State" for="Status">State</label>
+                        </div>
+                        <span asp-validation-for="State" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Zipcode" type="text" class="form-control" id="zipcode"
+                                placeholder="zipcode">
+                            <label asp-for="Zipcode" for="zipcode">Zip Code</label>
+                        </div>
+                        <span asp-validation-for="Zipcode" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Roomnoofpatient" type="text" class="form-control" id="room"
+                                placeholder="room">
+                            <label asp-for="Roomnoofpatient" for="room">Room # / Suit (Optional)</label>
+                        </div>
+                        <span asp-validation-for="Roomnoofpatient" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4" id="NotesSection">
+                <h5>Notes</h5>
+                <div>
+                    <div class="form-floating">
+                        <textarea asp-for="Symptoms" class="form-control" placeholder="Leave a comment here"
+                            id="Symptoms" style="height: 100px"></textarea>
+                        <label asp-for="Symptoms" for="Symptoms">Admin Notes (Optional)</label>
+                    </div>
+                    <span asp-validation-for="Symptoms" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mt-5 mb-3 d-flex justify-content-end">
+                <div class="section-btns">
+                    <button type="button" class="btn submit-btn me-2" onclick="submitMyForm()">
+                        Submit
+                    </button>
+                    <a asp-area="Provider" asp-controller="Dashboard" asp-action="Index">
+                        <button type="button" class="btn cancle-btn"> Cancle </button>
+                    </a>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</main>
+
+
+<script>
+    function submitMyForm() {
+        AddCountryCode();
+        $(`#CreateRequest`).submit();
+    }
+    $("#adminDashTab li").each(function () {
+        if ($(this).data("id") == 1) {
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+        }
+    })
+</script>

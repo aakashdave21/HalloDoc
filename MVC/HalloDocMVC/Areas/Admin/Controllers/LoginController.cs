@@ -38,19 +38,11 @@ public class LoginController : Controller
             {
                 return View(nameof(Index), userView);
             }
-            Console.WriteLine(userView.Email);
-            Console.WriteLine(userView.Passwordhash);
-
             var userEmail = _userLogin.ValidateUser(userView);
             var roles = userEmail.Aspnetuserroles.ToList();
-            bool IsPatient = false;
             bool IsAdmin = false;
             foreach (var item in roles)
             {
-                if (string.Equals(item.Role.Name, "patient", StringComparison.OrdinalIgnoreCase))
-                {
-                    IsPatient = true;
-                }
                 if (string.Equals(item.Role.Name, "admin", StringComparison.OrdinalIgnoreCase))
                 {
                     IsAdmin = true;
@@ -62,12 +54,10 @@ public class LoginController : Controller
                 string storedHashPassword = userEmail.Passwordhash;
                 
                 var isPasswordCorrectHashed = PasswordHasher.VerifyPassword(userView.Passwordhash , storedHashPassword);
-                // var isPasswordCorrect = _userLogin.VerifyPassword(userView.Passwordhash, storedHashPassword);
-
+                Console.WriteLine(isPasswordCorrectHashed + "<<<<<<<<<<<<<<");
                 if (isPasswordCorrectHashed && IsAdmin)
                 {
-                    var userDetails = _userLogin.UserDetailsFetch(userEmail.Email);
-
+                    var userDetails = _userLogin.AdminDetailsFetch(userEmail.Email);
                     // Authentication
                     List<Claim> claims = new(){
                         new Claim(ClaimTypes.Role,"Admin"),
@@ -76,24 +66,12 @@ public class LoginController : Controller
                         new Claim("AspUserId",userDetails.Aspnetuser.Id.ToString() ?? ""),
                         new Claim("UserId",userDetails.Id.ToString()),
                     };
-
-                    if (IsPatient)
-                    {
-                        claims.Add(new Claim(ClaimTypes.Role, "Patient"));
-                    }
-                    // if (IsAdmin)
-                    // {
-                    //     claims.Add(new Claim(ClaimTypes.Role, "Admin"));
-                    // }
-
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
                     CookieAuthenticationDefaults.AuthenticationScheme);
-
                     AuthenticationProperties properties = new AuthenticationProperties()
                     {
                         AllowRefresh = true
                     };
-
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity), properties);
 
@@ -106,6 +84,7 @@ public class LoginController : Controller
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             TempData["error"] = "Internal Server Error";
             return View();
         }

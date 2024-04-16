@@ -181,7 +181,7 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
 }
     public Dictionary<string,int> CountRequestByType()
     {
-        Dictionary<string,int> CountRequestRow = new Dictionary<string, int>();
+        Dictionary<string,int>? CountRequestRow = new();
         
         CountRequestRow = _dbContext.Requests
         .GroupBy(req => true) // Group all records into one group
@@ -228,13 +228,14 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         return cancelNotes;
 
     }
-    public void SaveAdditionalNotes(string AdditionalNote,int noteId,int reqId){
+    public void SaveAdditionalNotes(string AdditionalNote,int noteId,int reqId, int reqType = 1){
         if(noteId==0){
             // We have to add new Records for that
             Requestnote reqNote = new()
             {
               Requestid = reqId,
-              Adminnotes = AdditionalNote,
+              Adminnotes =  reqType==1 ? AdditionalNote  : "",
+              Physiciannotes = reqType == 2 ? AdditionalNote : ""
             //   Createdby = AdminId <---- Need To Added Admin Id 
             };
             _dbContext?.Requestnotes.Add(reqNote);
@@ -242,7 +243,11 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         }else{
             var notesData = _dbContext.Requestnotes.FirstOrDefault(req=>req.Id == noteId);
             if(notesData!=null){
-                notesData.Adminnotes = AdditionalNote;
+                if(reqType==1){
+                    notesData.Adminnotes = AdditionalNote;
+                }else if(reqType == 2){
+                    notesData.Physiciannotes = AdditionalNote;
+                }
                 _dbContext.SaveChanges();
             }else{
                 throw new Exception();
@@ -454,6 +459,14 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         AdminTable? adminInfo = _dbContext.Admins.FirstOrDefault(req => req.Aspnetuserid == AspId);
         if(adminInfo!=null){
             return adminInfo;
+        }
+        return null;
+    }
+
+    public IEnumerable<Rolemenu>? GetUserRoles(int AspUserId){
+        int? roleId = _dbContext?.Admins?.FirstOrDefault(user => user.Aspnetuserid == AspUserId)?.Roleid ?? 0;
+        if(roleId!=0){
+            return _dbContext?.Rolemenus.Include(rm => rm.Menu).Include(rm => rm.Role).Where(rm=>rm.Roleid==roleId);
         }
         return null;
     }

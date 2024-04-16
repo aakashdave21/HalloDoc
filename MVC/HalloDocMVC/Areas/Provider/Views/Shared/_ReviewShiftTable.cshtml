@@ -1,0 +1,189 @@
+@using System.Globalization
+
+@{
+    int[] pageSizeArrray = { 5, 10, 15 };
+}
+@functions
+{
+    string FormatTimeIn12Hour(int hour, int minute)
+    {
+        DateTime time = new DateTime(1, 1, 1, hour, minute, 0);
+        return time.ToString("h:mm tt");
+    }
+}
+<style>
+    .sortable {
+        cursor: pointer;
+        user-select: none;
+    }
+</style>
+<div class="table-responsive">
+
+    <table class="table rev-table" id="rev-table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" class="form-check-input" id="selectAll"></th>
+                <th style="white-space: nowrap;" class="sortable asc">Staff <i
+                        class="fa-solid fa-chevron-up sorting-icons"></i> </th>
+                <th style="white-space: nowrap;">Day</th>
+                <th style="white-space: nowrap;">Time </th>
+                <th style="white-space: nowrap;">Region</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.AllReviewList)
+            {
+                <tr>
+                    <td><input type="checkbox" id="Review-@item.Id" value="@item.Id" class="form-check-input selectRow"></td>
+                    <td style="white-space: nowrap;" class="fullname"> @item.FullName </td>
+                    <td style="white-space: nowrap;">@DateTime.ParseExact(@item.StartDate, "yyyy-MM-dd",
+                    CultureInfo.InvariantCulture).ToString("MMM dd, yyyy") </td>
+                    <td style="white-space: nowrap;">@FormatTimeIn12Hour(item.StartTimeHour ?? 00,
+                    item.StartTimeMinute ?? 00)</td>
+                    <td style="white-space: nowrap;">@FormatTimeIn12Hour(item.EndTimeHour ?? 00,
+                    item.EndTimeMinute ?? 00)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @* Pagination *@
+    <div class="d-flex justify-content-between align-items-center mt-2">
+        <div>
+            <div class="d-flex align-items-center" style="white-space: nowrap;">
+                Page : <select class="form-select select-page ms-2 ReviewPageChange" onchange="ReviewPageChange()"
+                    aria-label="Default select example">
+                    @{
+                        for (int i = 1; i <= Model.TotalPage; i++)
+                        {
+                            if (Model.CurrentPage == i)
+                            {
+                                <option value="@i" selected>@i</option>
+                            }
+                            else
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        }
+                    }
+                </select> &nbsp; of @Model.TotalPage
+            </div>
+        </div>
+        <div>
+            <div class="d-sm-flex d-none">
+                Show Results : @Model.PageRangeStart - @Model.PageRangeEnd Out of
+                <span>&nbsp;@Model.TotalReview </span>
+            </div>
+        </div>
+        <div>
+            <div class="d-flex align-items-center" style="white-space: nowrap;">
+                Show Rows :
+                <select class="form-select select-page ms-2 ReviewPageRecordChange" onchange="pageRecordChange()"
+                    aria-label="Default select example">
+                    @{
+                        foreach (int i in pageSizeArrray)
+                        {
+                            if (Model.CurrentPageSize == i)
+                            {
+                                <option value="@i" selected>@i</option>
+                            }
+                            else
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <div class="d-flex d-sm-none">
+                Show Results : @Model.PageRangeStart - @Model.PageRangeEnd Out of
+                <span>&nbsp;@Model.TotalPage</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(".sortable").click(function () {
+        var column = $(this).data('sort');
+        var order = $(this).hasClass('asc') ? 'desc' : 'asc';
+        $('.sortable').removeClass('asc desc');
+        $(this).addClass(order);
+        $(this).find('.sorting-icons').toggleClass('fa-chevron-up fa-chevron-down');
+        sortTable(order);
+    });
+
+    function sortTable(order) {
+        const tbody = document.querySelector(".rev-table tbody");
+        const tr = document.querySelectorAll(".rev-table tbody tr");
+        const trArray = Array.from(tr);
+
+        trArray.sort((a, b) => {
+            const fullNameA = a.querySelector('.fullname').textContent.toLowerCase();
+            const fullNameB = b.querySelector('.fullname').textContent.toLowerCase();
+
+            if (order === 'asc') {
+                if (fullNameA < fullNameB) return -1;
+                if (fullNameA > fullNameB) return 1;
+                return 0;
+            } else if (order === 'desc') {
+                if (fullNameA > fullNameB) return -1;
+                if (fullNameA < fullNameB) return 1;
+                return 0;
+            }
+        });
+        trArray.forEach(row => tbody.appendChild(row));
+    }
+
+        
+        var table = document.getElementById("rev-table");
+        var selectAllCheckbox = document.getElementById("selectAll");
+
+        // Individual row selection
+        table.addEventListener("click", function(event) {
+            if (event.target.classList.contains("selectRow")) {
+                var row = event.target.closest("tr");
+                row.classList.toggle("selected");
+                updateSelectAllCheckbox();
+                updateButtonsVisibility();
+            }
+        });
+
+        // Select all rows
+        selectAllCheckbox.addEventListener("click", function() {
+            var isChecked = selectAllCheckbox.checked;
+            var checkboxes = table.querySelectorAll(".selectRow");
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = isChecked;
+                checkbox.closest("tr").classList.toggle("selected", isChecked);
+            });
+            updateButtonsVisibility();
+        });
+
+        // Update the state of the "Select All" checkbox
+        function updateSelectAllCheckbox() {
+            var checkboxes = table.querySelectorAll(".selectRow");
+            var allChecked = true;
+            checkboxes.forEach(function(checkbox) {
+                if (!checkbox.checked) {
+                    allChecked = false;
+                }
+            });
+            selectAllCheckbox.checked = allChecked;
+        }
+        function updateButtonsVisibility() {
+            var anySelected = Array.from(table.querySelectorAll(".selectRow")).some(function(checkbox) {
+                return checkbox.checked;
+            });
+            if (anySelected) {
+                $("#Approve-btn").css("display","inline-block");
+                $("#Delete-btn").css("display","inline-block");
+            } else {
+                $("#Approve-btn").css("display","none");
+                $("#Delete-btn").css("display","none");
+            }
+        }
+
+        
+</script>
+

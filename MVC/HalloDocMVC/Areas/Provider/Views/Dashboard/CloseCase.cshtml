@@ -1,0 +1,252 @@
+@using HalloDocService.ViewModels;
+@model CloseCaseViewModel;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Close Case";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+    <link rel="stylesheet" href="~/css/PatientRequest.css" />
+}
+
+<main class="patient-request-section container-sm mt-sm-5">
+    <div class="d-flex justify-content-end mt-4">
+        <a href="/admin/dashboard" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+    </div>
+
+    <form asp-action="CloseCasePost" id="myForm" method="post" enctype="multipart/form-data">
+        <div class="d-flex">
+            <h2>Close Case</h2>
+        </div>
+        <div class="patient-request-form border p-4 mt-3 mb-3 rounded shadow">
+            <div class="d-flex justify-content-between border-bottom mb-4 pb-3">
+                <div>
+                    <p><small class="text-muted">Patient Name</small></p>
+                    <span class="fw-bold" style="color: #01bce9; font-size: 20px;">@Model.Firstname @Model.Lastname
+                    </span>
+                    <small class="text-muted">(mkd77t75757ygdhfsdj)</small>
+                </div>
+                @* <button class="btn theme-btn" type="button">
+                    Create Invoice Through QuickBook
+                </button> *@
+            </div>
+
+            <div class=" mb-4 pb-3 border-bottom">
+                <div class="mb-3">
+                    <h4 class="fw-bold">Documents</h3>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped" id="example" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="white-space: nowrap; width:55%;">File</th>
+                                <th style="white-space: nowrap;" class="sortable asc">Upload Date <i
+                                        class="fa-solid fa-chevron-up sorting-icons"></i> </th>
+                                <th style="white-space: nowrap;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.documentList)
+                            {
+                                <tr>
+                                    <td>
+                                        @{
+                                            var filename = string.Join("_", @item.FileName.Split("_").Skip(1));
+                                        }
+                                        @filename
+                                    </td>
+                                    <td class="created-date" style="white-space: nowrap;">@item.UploadDate</td>
+                                    <td>
+                                        <a class="btn theme-btn" asp-area="Admin" asp-controller="Dashboard"
+                                            asp-action="SingleDownload" asp-route-FileName="@item.FileName"
+                                            asp-route-reqId="@Model.ReqId">
+                                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                            @if (Model.documentList.Count() == 0)
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-center">No records found.</td>
+                                </tr>
+                            }
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div>
+                <h4>Patient Information</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <input type="hidden" name="patientId" asp-for="PatientId" />
+                        <input type="hidden" name="ReqId" asp-for="ReqId" />
+                        <div class="form-floating ">
+                            <input asp-for="Firstname" type="text" class="form-control" id="fname"
+                                placeholder="first name" disabled>
+                            <label asp-for="Firstname" for="floatingInput">First Name</label>
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Lastname" type="text" class="form-control" id="lname"
+                                placeholder="last name" disabled>
+                            <label asp-for="Lastname" for="floatingInput">Last Name</label>
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="DateOfBirth" type="date" class="form-control" id="dob"
+                                placeholder="Date Of Birth" disabled>
+                            <label asp-for="DateOfBirth" for="floatingInput">Date Of Birth</label>
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-5 col-10 mb-3">
+
+                        <div class="form-floating ">
+                            <input asp-for="Phone" type="tel" class="form-control" name="phone" id="phone"
+                                placeholder="phone" disabled>
+                            <label asp-for="Phone" for="phone">Phone Number</label>
+                        </div>
+                        <span class="text-danger" id="mobile-valid"></span>
+
+                    </div>
+                    <div class="col-md-1 col-2 mb-3">
+                        <a href="tel:+1800229933" class="btn theme-btn"
+                            style="height: 100%; width:100%; max-width: 70px; display:flex; justify-content: center; align-items: center;"><i
+                                class="fa-solid fa-phone"></i></a>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Email" type="email" class="form-control" id="Email" placeholder="email"
+                                disabled>
+                            <label asp-for="Email" for="Email">Email</label>
+                        </div>
+                        <span class="text-danger" id="email-valid"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <div id="main-btn">
+                    <button class="btn secondary-theme-btn" type="button" onclick="enableEditMode()">
+                        Edit
+                    </button>
+                    <button class="btn theme-btn">
+                        Close Case
+                    </button>
+                </div>
+                <div id="edit-mode-btn" style="display: none;">
+                    <button class="btn secondary-theme-btn" type="button" onclick="EditDetails()">
+                        Save
+                    </button>
+                    <button class="btn theme-btn" type="button" onclick="closeEditMode()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+</main>
+
+<script>
+    const enableEditMode = () => {
+        $("#Email").prop('disabled', false);
+        $("#phone").prop('disabled', false);
+        $("#main-btn").css('display', 'none');
+        $("#edit-mode-btn").css('display', 'block');
+    }
+    const closeEditMode = () => {
+        $("#Email").prop('disabled', true);
+        $("#phone").prop('disabled', true);
+        $("#main-btn").css('display', 'block');
+        $("#edit-mode-btn").css('display', 'none');
+    }
+    const EditDetails = () => {
+        let form = document.getElementById('myForm');
+        let formData = new FormData(form);
+
+        // Check if phone and email are empty
+        let phone = $("#phone").val();
+        let email = $("#Email").val();
+
+        if (phone === "" && email === "") {
+            $("#mobile-valid").html("Phone Number is required");
+            $("#email-valid").html("Email is required");
+            return;
+        } else if (phone === "") {
+            $("#mobile-valid").html("Phone Number is required");
+            $("#email-valid").empty();
+            return;
+        } else if (email === "") {
+            $("#email-valid").html("Email is required");
+            $("#mobile-valid").empty();
+            return;
+        }
+        // Check if email is valid using regular expression
+        let emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+        if (!emailRegex.test(email)) {
+            $("#email-valid").html("Invalid email format");
+            return;
+        }
+        // Clear previous error messages if any
+        $("#mobile-valid").empty();
+        $("#email-valid").empty();
+
+        sendAjaxRequest("/admin/dashboard/CloseCaseEdit", "POST", formData)
+            .then(function (response) {
+                location.reload();
+            })
+            .catch(function (error) {
+                location.reload();
+            });
+    }
+
+    $(".sortable").click(function () {
+        var column = $(this).data('sort');
+        var order = $(this).hasClass('asc') ? 'desc' : 'asc';
+        $('.sortable').removeClass('asc desc');
+        $(this).addClass(order);
+        $(this).find('.sorting-icons').toggleClass('fa-chevron-up fa-chevron-down');
+        sortTable(order);
+    });
+
+    function sortTable(order) {
+        const tbody = document.querySelector("tbody");
+        const tr = document.querySelectorAll("tbody tr");
+        const trArray = Array.from(tr);
+
+        trArray.sort((a, b) => {
+            const dateA = new Date(a.querySelector('.created-date').textContent);
+            const dateB = new Date(b.querySelector('.created-date').textContent);
+
+            if (order === 'asc') {
+                return dateA - dateB;
+            } else if (order === 'desc') {
+                return dateB - dateA;
+            }
+        });
+
+        // Re-append sorted table rows to the table body
+        trArray.forEach(row => tbody.appendChild(row));
+    }
+</script>
+
+<script>
+    $("#adminDashTab li").each(function(){
+        if($(this).data("id")==1){
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+        }
+    })
+</script>

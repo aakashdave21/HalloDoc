@@ -2,6 +2,8 @@ using HalloDocRepository.Interfaces;
 using HalloDocService.Interfaces;
 using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
+using AdminTable = HalloDocRepository.DataModels.Admin;
+
 
 namespace HalloDocService.Implementation;
 public class PatientLogin : IPatientLogin
@@ -34,6 +36,12 @@ public class PatientLogin : IPatientLogin
 
     public User UserDetailsFetch(string email){
         return _userRepository.UserDetailsFetch(email);
+    }
+    public AdminTable AdminDetailsFetch(string email){
+        return _userRepository.AdminDetailsFetch(email);
+    }
+    public Physician ProviderDetailsFetch(string email){
+        return _userRepository.ProviderDetailsFetch(email);
     }
 
     public void StoreResetToken(int AspUserId, string token, DateTime expiry){

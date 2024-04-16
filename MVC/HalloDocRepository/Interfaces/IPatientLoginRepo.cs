@@ -1,4 +1,6 @@
 using HalloDocRepository.DataModels;
+using AdminTable = HalloDocRepository.DataModels.Admin;
+
 
 namespace HalloDocRepository.Interfaces;
 public interface IPatientLoginRepo
@@ -7,6 +9,8 @@ public interface IPatientLoginRepo
     Aspnetuser userDetailsFromUserName(string username);
 
     User UserDetailsFetch(string email);
+    AdminTable AdminDetailsFetch(string email);
+    Physician ProviderDetailsFetch(string email);
     void StoreResetToken(int AspUserId, string token, DateTime expiry);
 
     Aspnetuser? GetResetTokenExpiry(int AspUserId, string token);

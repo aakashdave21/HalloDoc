@@ -45,4 +45,12 @@ namespace HalloDocService.ViewModels
        
     }
 
+    public class HeaderMenu
+    {
+        public int Id { get; set; }
+        public string? Title { get; set; }
+        public string? Name { get; set; }
+        public int? AccountType { get; set; }
+    }
+
 }

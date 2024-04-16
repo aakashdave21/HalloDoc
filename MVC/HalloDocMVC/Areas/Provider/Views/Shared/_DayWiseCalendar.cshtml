@@ -1,0 +1,176 @@
+<style>
+    .pink-bg {
+        background-color: #ffacf5 !important;
+        cursor: pointer;
+    }
+
+    .green-bg {
+        background-color: #aacba8 !important;
+        cursor: pointer;
+    }
+
+    .tab-row td[scope="col"] {
+        padding: 0 !important;
+    }
+
+    .tab-row td[scope="col"] div {
+        height: 35px;
+    }
+
+    tbody .tab-row img{
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+    }
+</style>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr class="main-head">
+                <th scope="col">Staff</th>
+                @foreach (var shiftTime in Enumerable.Range(0, 24))
+                {
+                    <th scope="col">@DateTime.Today.AddHours(shiftTime).ToString("h tt")</th>
+                }
+            </tr>
+            <tr class="coverage">
+                <td>Coverage</td>
+                @foreach (var item in Enumerable.Range(0, 24))
+                {
+                    <th scope="col"></th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var provider in Model.AllProvidersList)
+            {
+                <tr class="tab-row">
+                    <td scope="row" class="d-flex" style="white-space:nowrap;">
+                        @if (!string.IsNullOrEmpty(provider.PhotoPath))
+                        {
+                            <img src="~/@provider.PhotoPath" class="me-2" />
+                        }
+                        else
+                        {
+                            <img src="~/images/DefaultUser.png" alt="">
+                        }
+                        @provider.FullName
+                    </td>
+                    @{
+                        bool isProvider = false;
+                        foreach (var shift in Model.AllShiftList)
+                        {
+                            if (shift.ProviderId == provider.Id)
+                            {
+                                isProvider = true;
+                                break;
+                            }
+                        }
+                    }
+                    @foreach (int shiftTime in Enumerable.Range(0, 24))
+                    {
+                        var shiftMatched = false;
+                        short status = 1;
+                        string StartingTime = "";
+                        string EndingTime = "";
+                        string ProviderName = "";
+                        int ProviderId = 0;
+                        string RegionName = "";
+                        string shiftDate = "";
+                        int shiftId = 0;
+                        double margin_left = 0;
+                        double margin_right = 0;
+                        @foreach (var shift in Model.AllShiftList)
+                        {
+                            if (shift.ProviderId == provider.Id && shift.StartTimeHour <= shiftTime &&
+                            shift.EndTimeHour >= shiftTime)
+                            {
+                                shiftMatched = true;
+                                status = shift.Status;
+                                StartingTime = shift.StartTimeHour.ToString() + ":" + shift.StartTimeMinute.ToString();
+                                EndingTime = shift.EndTimeHour.ToString() + ":" + shift.EndTimeMinute.ToString();
+                                shiftId = shift.Id;
+                                shiftDate = shift.StartDate;
+                                ProviderName = shift.FullName;
+                                ProviderId = shift.ProviderId;
+                                RegionName = shift.RegionName;
+                                if (shift.StartTimeHour == shiftTime)
+                                {
+                                    margin_left = (int)(shift.StartTimeMinute * (100.00 / 60.00));
+                                }
+                                if (shift.EndTimeHour == shiftTime)
+                                {
+                                    margin_right = (((60 - shift.EndTimeMinute) * 100.00) / 60.00);
+                                }
+                                break;
+                            }
+                        }
+                        if (shiftMatched)
+                        {
+                            if (status == 1)
+                            {
+                                <td scope="col" id="@shiftId-@shiftTime">
+                                    <div class="tippyCol pink-bg" data-tippy-content="@StartingTime - @EndingTime"
+                                        onclick="openShiftView('@shiftId','@StartingTime','@EndingTime','@ProviderName','@shiftDate','@RegionName','@ProviderId')"
+                                        style="margin-left: @margin_left%; margin-right:@margin_right%;">
+                                    </div>
+                                </td>
+                            }
+                            else if (status == 2)
+                            {
+                                <td scope="col" id="@shiftId-@shiftTime">
+                                    <div class="tippyCol green-bg" data-tippy-content="@StartingTime - @EndingTime"
+                                        onclick="openShiftView('@shiftId','@StartingTime','@EndingTime','@ProviderName','@shiftDate','@RegionName','@ProviderId')"
+                                        style="margin-left: @margin_left%; margin-right:@margin_right%;">
+                                    </div>
+                                </td>
+                            }
+                        }
+                        else
+                        {
+                            <td scope="col"></td>
+                        }
+
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .tippy-box[data-theme~='custom-theme'] {
+        background-color: gray;
+        color: white;
+    }
+
+    .tippy-box[data-theme~='custom-theme'][data-placement^='top']>.tippy-arrow::before {
+        border-top-color: gray;
+    }
+
+    .tippy-box[data-theme~='custom-theme'][data-placement^='bottom']>.tippy-arrow::before {
+        border-bottom-color: gray;
+    }
+
+    .tippy-box[data-theme~='custom-theme'][data-placement^='left']>.tippy-arrow::before {
+        border-left-color: gray;
+    }
+
+    .tippy-box[data-theme~='custom-theme'][data-placement^='right']>.tippy-arrow::before {
+        border-right-color: gray;
+    }
+</style>
+
+<script src="https://unpkg.com/@@popperjs/core@2/dist/umd/popper.min.js" asp-append-version="true"></script>
+<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js" asp-append-version="true"></script>
+
+<script>
+    tippy('.tippyCol', {
+        content: 'data-tippy-content',
+        animation: 'fade',
+        theme: 'custom-theme',
+        duration: 1000,
+        placement: 'bottom'
+    });
+</script>

@@ -396,7 +396,7 @@ const transferCaseSubmit = () => {
 
 
 // Send Agreement
-const populateSendAgreement = (reqId, Email, Phone) => {
+const populateSendAgreement = (reqId, Email, Phone, Role=1) => {
     var modal = document.getElementById('sendAgreementModal');
     modal.innerHTML = `
     <div class="modal-dialog modal-dialog-centered">
@@ -426,7 +426,7 @@ const populateSendAgreement = (reqId, Email, Phone) => {
                 </div>
             </div>
             <div class="modal-footer">
-                    <button type="button" class="btn secondary-theme-btn" id="submitAgreement" onclick="submitSendAgreement()">Confirm</button>
+                    <button type="button" class="btn secondary-theme-btn" id="submitAgreement" onclick="submitSendAgreement(${Role})">Confirm</button>
                     <button type="button" class="btn theme-btn" id="cancleAgreement" data-bs-dismiss="modal">Cancle</button>
                 </div>
         </form>
@@ -438,7 +438,7 @@ const populateSendAgreement = (reqId, Email, Phone) => {
     modalInstance.show();
 }
 
-function submitSendAgreement() {
+function submitSendAgreement(Role) {
     try {
         let form = document.querySelector('#sendAgreementForm');
         let formData = new FormData(form);
@@ -454,18 +454,18 @@ function submitSendAgreement() {
         $("#invalid-phone").html("");
 
         $.ajax({
-            url: '/admin/dashboard/sendAgreement',
+            url: Role == 1 ? '/admin/dashboard/sendAgreement' : '/Provider/dashboard/sendAgreement',
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
             cache: false,
             success: function () {
-                location.href = '/admin/dashboard'
+                location.reload();
             },
             error: function (xhr, status, error) {
                 if (xhr.status == 401) {
-                    window.location.href = '/admin/login';
+                    Role == 1 ? window.location.href = '/admin/login' : window.location.href = '/Provider/login';
                 }
             }
         })
@@ -591,5 +591,50 @@ const saveEncounterChanges = (buttonValue,requestId) => {
             ToastError("Internal Server Error");
             console.error(error);
         })
+    }
+}
+
+const populateAcceptModal = (reqId) => {
+    var modal = document.getElementById('AcceptPopUp');
+    modal.innerHTML = `
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #01bce9;">
+            <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Accept Request</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+            <div class="modal-body">
+                <small class="text-muted">Are you sure want to Accept this Request?</small>
+            </div>
+            <div class="modal-footer">
+                    <button type="button" class="btn secondary-theme-btn" id="submitAgreement" onclick="submitAcceptRequest(${reqId})">Confirm</button>
+                    <button type="button" class="btn theme-btn" id="cancleAgreement" data-bs-dismiss="modal">Cancle</button>
+                </div>    
+    </div>
+</div>`;
+
+    var modalInstance = new bootstrap.Modal(modal);
+    modalInstance.show();
+}
+
+
+const submitAcceptRequest = (reqId) => {
+    try {
+        let form = document.querySelector('#acceptRequestForm');
+        $.ajax({
+            url: '/provider/dashboard/AcceptRequest',
+            type: 'GET',
+            data: {reqId},
+            success: function () {
+                location.href = '/provider/dashboard'
+            },
+            error: function (xhr, status, error) {
+                if (xhr.status == 401) {
+                    window.location.href = '/provider/login';
+                }
+            }
+        })
+    } catch (error) {
+        console.error("Error Submitting:", error)
     }
 }

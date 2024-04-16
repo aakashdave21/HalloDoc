@@ -1,6 +1,11 @@
 
+@using Microsoft.AspNetCore.Http;
+@using System.Security.Claims
 @{
     var username = Context.User.Identity.Name;
+    var roleClaim = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+    var Role = roleClaim?.Value;
+    var menuItems = Context.Items["MenuItems"] as List<HeaderMenu>;
 }
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
@@ -54,7 +59,20 @@
                     
                     <div class="d-flex align-items-center">
                         <p class="me-2 d-none d-md-inline d-lg-inline d-xlg-inline">Welcome <strong id="UserName">@username.ToUpper()</strong> </p>
-                        <a asp-area="Admin" asp-controller="Dashboard" asp-action="LogOut" class="btn theme-btn me-2"> <span class="d-none d-md-inline d-lg-inline"> Log Out </span> <i class="fas fa-sign-out-alt d-sm-inline d-md-none"></i> </a>
+@if (Role == "Admin")
+    {
+        <a asp-area="Admin" asp-controller="Dashboard" asp-action="LogOut" class="btn theme-btn me-2">
+            <span class="d-none d-md-inline d-lg-inline">Log Out</span>
+            <i class="fas fa-sign-out-alt d-sm-inline d-md-none"></i>
+        </a>
+    }
+    else if (Role == "Provider")
+    {
+        <a asp-area="Provider" asp-controller="Dashboard" asp-action="LogOut" class="btn theme-btn me-2">
+            <span class="d-none d-md-inline d-lg-inline">Log Out</span>
+            <i class="fas fa-sign-out-alt d-sm-inline d-md-none"></i>
+        </a>
+    }
                         <button class="btn" id="theme-btn">
                             <i class="fa-regular fa-moon"></i>
                             <i class="fa-regular fa-sun" style="display: none;"></i>
@@ -62,7 +80,7 @@
                     </div>
                 </div>
                 <div class="collapse navbar-collapse nav-tabs d-md-block position-absolute shadow" id="navbarSupportedContent" style="width: 100%;">
-                    <ul class="d-flex flex-md-row flex-column nav-tabs-ul" id="adminDashTab">
+                    @* <ul class="d-flex flex-md-row flex-column nav-tabs-ul" id="adminDashTab">
                         <li data-id="1">
                             <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                         </li>
@@ -100,6 +118,20 @@
                                 </ul>
                             </div>
                         </li>
+                    </ul> *@
+                    <ul class="d-flex flex-md-row flex-column nav-tabs-ul" id="adminDashTab">
+                        @if (menuItems != null)
+                        {
+                            foreach (var menuItem in menuItems)
+                            {
+                                @if(@menuItem.Name == "EmailLogs" || @menuItem.Name == "PatientHistory" || @menuItem.Name == "BlockHistory" || @menuItem.Name == "SMSLogs"){
+                                    <li id="@menuItem.Name"><a asp-area="Admin" asp-controller="Records" asp-action="@menuItem.Name">@menuItem.Title</a></li>
+                                }else{
+                                    <li><a asp-area="Admin" asp-controller="@menuItem.Name" asp-action="Index">@menuItem.Title</a></li>
+                                }
+                                
+                            }
+                        }
                     </ul>
                 </div>
             </nav>

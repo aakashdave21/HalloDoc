@@ -6,7 +6,7 @@ using Microsoft.VisualBasic;
 namespace HalloDocService.Admin.Interfaces;
 public interface IAdminDashboardService
 {
-    // Task<Action> GetDefaultRequestData();
+    IEnumerable<HeaderMenu>? GetRoleOfUser(int AspUserId);
     (List<RequestViewModel>,int totalCount) GetNewStatusRequest(string? searchBy,int reqTypeId,int pageNumber,int pageSize, int region);
     (List<RequestViewModel>,int totalCount) GetPendingStatusRequest(string? searchBy,int reqTypeId,int pageNumber,int pageSize, int region);
     (List<RequestViewModel>,int totalCount) GetActiveStatusRequest(string? searchBy,int reqTypeId,int pageNumber,int pageSize, int region);
@@ -15,8 +15,8 @@ public interface IAdminDashboardService
     (List<RequestViewModel>,int totalCount) GetUnpaidStatusRequest(string? searchBy,int reqTypeId,int pageNumber,int pageSize, int region);
     Dictionary<string,int> CountRequestByType();
     ViewCaseViewModel GetViewCaseDetails(int id);
-    ViewNotesViewModel GetViewNotesDetails(int reqId);
-    void SaveAdditionalNotes(string AdditionalNote,int noteId,int reqId);
+    ViewNotesViewModel GetViewNotesDetails(int reqId, int reqType = 1);
+    void SaveAdditionalNotes(string AdditionalNote,int noteId,int reqId, int reqType);
     void CancleRequestCase(int reqId,string reason,string additionalNotes);
 
     Task<IEnumerable<Region>> GetRegions();

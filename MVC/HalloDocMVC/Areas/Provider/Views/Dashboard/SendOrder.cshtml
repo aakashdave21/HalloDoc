@@ -1,0 +1,142 @@
+@using HalloDocService.ViewModels;
+@model SendOrderViewModel;
+@{
+    ViewData["Title"] = "Send Order Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+}
+<style>
+    .send-order-section .form-select {
+        padding: 15px 15px 15px 10px;
+    }
+</style>
+
+<main class="send-order-section container-sm mt-md-5">
+    <div class="d-flex justify-content-end mt-4">
+        <a href="/admin/dashboard" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+    </div>
+
+    <form asp-action="SendOrder" id="myForm" method="post" enctype="multipart/form-data">
+        <div class="d-flex">
+            <h2>Send Order</h2>
+        </div>
+        <div class="border p-4 mt-3 mb-3 rounded shadow">
+            <div class="row">
+                <input type="hidden" asp-for="ReqId" value="@ViewBag.RequestId" />
+                <div class="col-md-6 col-12 mb-3">
+                    <select asp-for="ProfessionId" class="form-select mt-2" name="ProfessionId" id="professionDropdown" aria-label="Default select example" >
+                        <option value=0 selected disabled>Select Professions</option>
+                        @foreach(var item in Model.ProfessionLists){
+                            <option value="@item.ProfessionId" >@item.ProfessionName</option>
+                        }
+                    </select>
+                    <span asp-validation-for="ProfessionId" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 col-12 mb-3">
+                    <select asp-for="BusinessId" class="form-select mt-2" name="BusinessId" id="businessDropdown" aria-label="Default select example" >
+                        <option value="" selected disabled>Select Business</option>
+                    </select>
+                    <span asp-validation-for="BusinessId" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="BusinessContact" type="text" class="form-control" id="businessContact"
+                                placeholder="Business Contact" readonly>
+                            <label asp-for="BusinessContact" for="businessContact">Business Contact</label>
+                        </div>
+                        <span asp-validation-for="BusinessContact" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="BusinessEmail" type="email" class="form-control" id="businessEmail"
+                                placeholder="Email" readonly>
+                            <label asp-for="BusinessEmail" for="businessEmail">Email</label>
+                        </div>
+                        <span asp-validation-for="BusinessEmail"  class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="FaxNumber" type="text" class="form-control" id="faxNum"
+                                placeholder="Fax Number" readonly>
+                            <label asp-for="FaxNumber" for="faxNum">Fax Number</label>
+                        </div>
+                        <span  asp-validation-for="FaxNumber" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <div class="form-floating">
+                        <textarea asp-for="Prescription" class="form-control" placeholder="Prescription or Order Details" id="prescription"
+                            style="height: 100px"></textarea>
+                        <label asp-for="Prescription" for="prescription">Enter Prescription or Order Details</label>
+                    </div>
+                    <span asp-validation-for="Prescription"   class="text-danger"></span>
+                </div>
+                <div class="col-md-6 col-12 mb-3">
+                        <select class="form-select mt-2" name="noOfRefill" id="noOfRefill" aria-label="Default select example" placeholder="No of Refill" >
+                            <option value="0" selected>No of Refill</option>
+                            <option value="1" >1</option>
+                            <option value="2" >2</option>
+                            <option value="3" >3</option>
+                            <option value="3" >4</option>
+                            <option value="3" >5</option>
+                        </select>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn secondary-theme-btn" type="submit">Submit</button>
+                <a class="btn theme-btn" type="button" asp-area="admin" asp-controller="dashboard" asp-action="Index">Cancel</a>
+            </div>
+        </div>
+    </form>
+
+</main>
+
+<script>
+    $("#professionDropdown").on('click',function(){
+        $("#businessContact").val("")
+        $("#businessEmail").val("")
+        $("#faxNum").val("")
+        $.ajax({
+            type : "GET",
+            url : "/admin/dashboard/GetBusinessByProfession",
+            data : { professionId : $("#professionDropdown").val() },
+            success : function(response){
+                $('#businessDropdown').empty();
+                $('#businessDropdown').append('<option value="" disabled selected>Select Business</option>');
+                $.each(response, function(index, item) {
+                    $('#businessDropdown').append('<option value="' + item.businessId + '">' + item.businessName + '</option>');
+                });
+            },
+           error: function (xhr,status,error) {
+                if(xhr.status==401){
+                    window.location.href = '/admin/login';                
+                }
+            }
+        });
+    })
+    $("#businessDropdown").change(function(){
+        $.ajax({
+            type : "GET",
+            url : "/admin/dashboard/GetBusinessDetails",
+            data : { businessId : $("#businessDropdown").val() },
+            success : function(response){
+                $("#businessContact").val(response.businessContact)
+                $("#businessEmail").val(response.businessEmail)
+                $("#faxNum").val(response.faxNumber)
+            },
+            error: function (xhr,status,error) {
+                if(xhr.status==401){
+                    window.location.href = '/admin/login';                
+                }
+            }
+        });
+    })
+</script>
+
+<script>
+    $("#adminDashTab li").each(function(){
+        if($(this).data("id")==1){
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+        }
+    })
+</script>

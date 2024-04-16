@@ -29,6 +29,9 @@ public partial class Menu
     [Column("updatedat", TypeName = "timestamp without time zone")]
     public DateTime? Updatedat { get; set; }
 
+    [StringLength(50)]
+    public string? Title { get; set; }
+
     [InverseProperty("Menu")]
     public virtual ICollection<Rolemenu> Rolemenus { get; } = new List<Rolemenu>();
 }

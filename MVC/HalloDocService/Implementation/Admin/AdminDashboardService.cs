@@ -25,6 +25,15 @@ public class AdminDashboardService : IAdminDashboardService
         _patientRequestService = patientRequestService;
 
     }
+
+     public IEnumerable<HeaderMenu>? GetRoleOfUser(int AspUserId){
+        return _dashboardRepo?.GetUserRoles(AspUserId)?.Select(x => new HeaderMenu(){
+            Title = x.Menu.Title,
+            Name = x.Menu.Name,
+            Id = x.Id,
+            AccountType = x.Menu.Accounttype
+        }).ToList();
+    }
     // Patient Request Implementation
     public (List<RequestViewModel>, int totalCount) GetNewStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize,int region)
     {
@@ -218,7 +227,7 @@ public class AdminDashboardService : IAdminDashboardService
         return viewCase;
     }
 
-    public ViewNotesViewModel GetViewNotesDetails(int reqId)
+    public ViewNotesViewModel GetViewNotesDetails(int reqId, int reqType = 1)
     {
         var reqData = _dashboardRepo.GetViewNotesDetails(reqId);
         var patientNote = _dashboardRepo.GetPatientNoteDetails(reqId);
@@ -252,7 +261,7 @@ public class AdminDashboardService : IAdminDashboardService
                 ReqId = reqId,
                 AdminNote = reqData?.Adminnotes ?? "",
                 PhysicianNote = reqData?.Physiciannotes ?? "",
-                AdditionalNote = reqData?.Adminnotes ?? "",
+                AdditionalNote = reqType == 1 ? reqData?.Adminnotes ?? "" : reqData?.Physiciannotes ?? "",
                 PatientNote = patientNote?.Notes ?? "",
                 PatientCancelNote = PatientCancelNoteFromQuery ?? "",
                 AdminCancelNote = AdminCancelNoteFromQuery ?? "",
@@ -263,9 +272,9 @@ public class AdminDashboardService : IAdminDashboardService
 
         return viewNotes;
     }
-    public void SaveAdditionalNotes(string AdditionalNote, int noteId, int reqId)
+    public void SaveAdditionalNotes(string AdditionalNote, int noteId, int reqId, int reqType)
     {
-        _dashboardRepo.SaveAdditionalNotes(AdditionalNote, noteId, reqId);
+        _dashboardRepo.SaveAdditionalNotes(AdditionalNote, noteId, reqId, reqType);
     }
 
     public void CancleRequestCase(int reqId, string reason, string additionalNotes)

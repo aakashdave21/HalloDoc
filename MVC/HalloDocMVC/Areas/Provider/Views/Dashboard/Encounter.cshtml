@@ -1,0 +1,306 @@
+@using HalloDocService.ViewModels;
+@model EncounterFormViewModel;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Encounter Form";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+    <link rel="stylesheet" href="~/css/PatientRequest.css" />
+}
+<style>
+    label {
+        width: 100% !important;
+    }
+</style>
+
+<main class="patient-request-section container-sm mt-sm-5">
+    <div class="d-flex justify-content-end mt-4">
+        <a href="/admin/dashboard" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+    </div>
+
+    <form asp-action="EncounterPost" id="myForm" method="post" enctype="multipart/form-data">
+        <div class="d-flex">
+            <h3>Encounter Form</h3>
+        </div>
+        <div class="patient-request-form border p-4 mt-3 mb-3 rounded shadow">
+            <div>
+                <div>
+                    <h2 class="fw-bold text-center mb-4" style="color: #01bce9;">Medical Report Confidential</h2>
+                </div>
+                <input type="hidden" asp-for="Id" name="Id" />
+                <input type="hidden" asp-for="ReqId" name="ReqId" />
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="FirstName" type="text" class="form-control" id="fname"
+                                placeholder="first name" readonly>
+                            <label asp-for="FirstName" for="floatingInput">First Name</label>
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="LastName" type="text" class="form-control" id="lname"
+                                placeholder="last name" readonly>
+                            <label asp-for="LastName" for="floatingInput">Last Name</label>
+                        </div>
+
+                    </div>
+                    <div class="col-12 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Location" type="text" class="form-control" id="location"
+                                placeholder="location" readonly>
+                            <label asp-for="Location" for="location">Location</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="DateOfBirth" type="date" class="form-control" id="dob"
+                                placeholder="Date Of Birth" readonly>
+                            <label asp-for="DateOfBirth" for="floatingInput">Date Of Birth</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Date" type="date" class="form-control" id="date" placeholder="Date"
+                                readonly>
+                            <label asp-for="Date" for="date">Date</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Mobile" id="Mobile" class="form-control" type="tel" name="Mobile"
+                                readonly />
+                            <input asp-for="Mobile" type="hidden" id="phone_hidden" name="full_phone" />
+                        </div>
+                        <span class="text-danger" id="mobile-valid"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Email" type="email" class="form-control" id="Email" placeholder="email"
+                                readonly>
+                            <label asp-for="Email" for="Email">Email</label>
+                        </div>
+                        <span class="text-danger" id="email-valid"></span>
+                    </div>
+
+                    @* Above all Fields are Read only and can not be changed / Below all Fields are can be changed*@
+
+
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="HistoryOfPresentIllness" class="form-control"
+                                placeholder="History of present illness or injury" id="HistoryIllness"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="HistoryOfPresentIllness" for="HistoryIllness"
+                                style="white-space: normal;">History of present illness or injury</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="MedicalHistory" class="form-control" placeholder="Medical History"
+                                id="MedicalHistory" style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="MedicalHistory" for="MedicalHistory" style="white-space: normal;">Medical
+                                History</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="Medications" class="form-control" placeholder="Medication"
+                                id="Medication" style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="Medications" for="Medication"
+                                style="white-space: normal;">Medication</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="Allergies" class="form-control" placeholder="Allergies" id="Allergies"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="Allergies" for="Allergies" style="white-space: normal;">Allergies</label>
+                        </div>
+
+                    </div>
+                    @* Two Row Remaining *@
+                    <div class="col-md-4 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Temperature" type="text" class="form-control" id="Temp" placeholder="Temp">
+                            <label asp-for="Temperature" for="Temp">Temp</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="HeartRate" type="text" class="form-control" id="HR" placeholder="HR">
+                            <label asp-for="HeartRate" for="HR">HR</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="RespiratoryRate" type="text" class="form-control" id="RR" placeholder="RR">
+                            <label asp-for="RespiratoryRate" for="RR">RR</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="BloodPressureSBP" type="text" class="form-control" id="SBP"
+                                placeholder="Blood Pressure(SBP)">
+                            <label asp-for="BloodPressureSBP" for="SBP">Blood Pressure(SBP)</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="BloodPressureDBP" type="text" class="form-control" id="DBP"
+                                placeholder="Blood Pressure(DBP)">
+                            <label asp-for="BloodPressureDBP" for="DBP">Blood Pressure(DBP)</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="O2" type="text" class="form-control" id="O2" placeholder="O2">
+                            <label asp-for="O2" for="O2">O2</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-floating ">
+                            <input asp-for="Pain" type="text" class="form-control" id="Pain" placeholder="Pain">
+                            <label asp-for="Pain" for="Pain">Pain</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="HEENT" class="form-control" placeholder="Heent" id="Heent"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="HEENT" for="Heent" style="white-space: normal;">Heent</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="CV" class="form-control" placeholder="CV" id="CV"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="CV" for="CV" style="white-space: normal;">CV</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="Chest" class="form-control" placeholder="Chest" id="Chest"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="Chest" for="Chest" style="white-space: normal;">Chest</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="ABD" class="form-control" placeholder="ABD" id="ABD"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="ABD" for="ABD" style="white-space: normal;">ABD</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="Extr" class="form-control" placeholder="Extr" id="Extr"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="Extr" for="Extr" style="white-space: normal;">Extr</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="Skin" class="form-control" placeholder="Skin" id="Skin"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="Skin" for="Skin" style="white-space: normal;">Skin</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="Neuro" class="form-control" placeholder="Neuro" id="Neuro"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="Neuro" for="Neuro" style="white-space: normal;">Neuro</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="Other" class="form-control" placeholder="Other" id="Other"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="Other" for="Other" style="white-space: normal;">Other</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="Diagnosis" class="form-control" placeholder="Diagnosis" id="Diagnosis"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="Diagnosis" for="Diagnosis" style="white-space: normal;">Diagnosis</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="TreatmentPlan" class="form-control" placeholder="Treatment plan"
+                                id="TreatmentPlan" style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="TreatmentPlan" for="TreatmentPlan" style="white-space: normal;">Treatment
+                                plan</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="MedicationDispensed" class="form-control"
+                                placeholder="Medication dispensed" id="MedicationDispensed"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="MedicationDispensed" for="MedicationDispensed"
+                                style="white-space: normal;">Medication dispensed</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="Procedures" class="form-control" placeholder="Procedures" id="Procedures"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="Procedures" for="Procedures" style="white-space: normal;">Procedures</label>
+                        </div>
+
+                    </div>
+                    <div class="col-12 mb-3">
+                        <div class="form-floating mt-2">
+                            <textarea asp-for="FollowUp" class="form-control" placeholder="Follow-up" id="Follow-up"
+                                style="height: 80px; resize:none;"></textarea>
+                            <label asp-for="FollowUp" for="Follow-up" style="white-space: normal;">Follow-up</label>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="mt-5 mb-3 d-flex justify-content-end gap-2">
+                <button class="btn secondary-theme-btn">Save Changes</button>
+                <a class="btn theme-btn" asp-area="admin" asp-controller="dashboard" asp-action="Index">Cancel</a>
+            </div>
+
+        </div>
+    </form>
+</main>
+
+<script>
+    $("#adminDashTab li").each(function(){
+        if($(this).data("id")==1){
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+        }
+    })
+</script>

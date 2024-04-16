@@ -2,6 +2,8 @@
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using AdminTable = HalloDocRepository.DataModels.Admin;
+
 
 namespace HalloDocRepository.Implementation;
 public class PatientLoginRepo : IPatientLoginRepo
@@ -25,6 +27,12 @@ public class PatientLoginRepo : IPatientLoginRepo
 
     public User UserDetailsFetch(string email){
         return _dbContext.Users.Include(user=>user.Aspnetuser).FirstOrDefault(q => q.Email == email);
+    }
+    public AdminTable AdminDetailsFetch(string email){
+        return _dbContext.Admins.Include(user=>user.Aspnetuser).FirstOrDefault(q => q.Email == email);
+    }
+    public Physician ProviderDetailsFetch(string email){
+        return _dbContext.Physicians.Include(user=>user.Aspnetuser).FirstOrDefault(q => q.Email == email);
     }
 
     public void StoreResetToken(int AspUserId, string token, DateTime expiry){

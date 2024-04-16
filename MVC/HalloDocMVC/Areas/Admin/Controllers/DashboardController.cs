@@ -21,8 +21,8 @@ using ClosedXML.Excel;
 
 namespace HalloDocMVC.Controllers.Admin;
 
-[Area("Admin")]
-[Authorize(Roles = "Admin")]
+[Area("Admin,Provider")]
+[Authorize(Roles = "Admin,Provider")]
 public class DashboardController : Controller
 {
     private readonly ILogger<DashboardController> _logger;
@@ -190,7 +190,7 @@ public class DashboardController : Controller
     {
         try
         {
-            _adminDashboardService.SaveAdditionalNotes(viewnotes?.AdditionalNote, viewnotes.NoteId, viewnotes.ReqId);
+            _adminDashboardService.SaveAdditionalNotes(viewnotes?.AdditionalNote, viewnotes.NoteId, viewnotes.ReqId, 2);
             TempData["success"] = "Updated Successfully";
             return Redirect("/admin/dashboard/ViewNotes/" + viewnotes.ReqId);
         }
@@ -1086,7 +1086,6 @@ public class DashboardController : Controller
         }
     }
 
-
     public IActionResult CreateRequest()
     {
         try
@@ -1101,6 +1100,7 @@ public class DashboardController : Controller
             return RedirectToAction("Index");
         }
     }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateRequest(PatientRequestViewModel newPatientRequest)
