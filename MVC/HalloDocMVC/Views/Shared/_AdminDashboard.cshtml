@@ -1,4 +1,3 @@
-
 @using Microsoft.AspNetCore.Http;
 @using System.Security.Claims
 @{
@@ -27,13 +26,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
-        .navbar{
+        .navbar {
             display: inline;
         }
-        .navbar-collapse{
+
+        .navbar-collapse {
             background-color: white;
         }
-        [data-bs-theme=dark] .navbar-collapse{
+
+        [data-bs-theme=dark] .navbar-collapse {
             background-color: black;
         }
     </style>
@@ -41,7 +42,7 @@
 
 
 <body>
-    <partial name="_Notification" style="z-index: 100;"/>
+    <partial name="_Notification" style="z-index: 100;" />
 
     <div class="family-request-page d-flex flex-column" style="min-height: 100vh;">
         <header class="dashboard-header">
@@ -49,98 +50,132 @@
                 <div class="d-flex justify-content-between align-items-center border-bottom ps-4 pe-4">
 
                     <div>
-                        <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <a asp-controller="Dashboard" asp-action="Index">
                             <img src="~/images/logo.png" alt="logo hallo doc" style="width: 150px;">
                         </a>
                     </div>
-                    
+
                     <div class="d-flex align-items-center">
-                        <p class="me-2 d-none d-md-inline d-lg-inline d-xlg-inline">Welcome <strong id="UserName">@username.ToUpper()</strong> </p>
-@if (Role == "Admin")
-    {
-        <a asp-area="Admin" asp-controller="Dashboard" asp-action="LogOut" class="btn theme-btn me-2">
-            <span class="d-none d-md-inline d-lg-inline">Log Out</span>
-            <i class="fas fa-sign-out-alt d-sm-inline d-md-none"></i>
-        </a>
-    }
-    else if (Role == "Provider")
-    {
-        <a asp-area="Provider" asp-controller="Dashboard" asp-action="LogOut" class="btn theme-btn me-2">
-            <span class="d-none d-md-inline d-lg-inline">Log Out</span>
-            <i class="fas fa-sign-out-alt d-sm-inline d-md-none"></i>
-        </a>
-    }
+                        <p class="me-2 d-none d-md-inline d-lg-inline d-xlg-inline">Welcome <strong
+                                id="UserName">@username.ToUpper()</strong> </p>
+                        @if (Role == "Admin")
+                        {
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="LogOut" class="btn theme-btn me-2">
+                                <span class="d-none d-md-inline d-lg-inline">Log Out</span>
+                                <i class="fas fa-sign-out-alt d-sm-inline d-md-none"></i>
+                            </a>
+                        }
+                        else if (Role == "Provider")
+                        {
+                            <a asp-area="Provider" asp-controller="Dashboard" asp-action="LogOut"
+                                class="btn theme-btn me-2">
+                                <span class="d-none d-md-inline d-lg-inline">Log Out</span>
+                                <i class="fas fa-sign-out-alt d-sm-inline d-md-none"></i>
+                            </a>
+                        }
                         <button class="btn" id="theme-btn">
                             <i class="fa-regular fa-moon"></i>
                             <i class="fa-regular fa-sun" style="display: none;"></i>
                         </button>
                     </div>
                 </div>
-                <div class="collapse navbar-collapse nav-tabs d-md-block position-absolute shadow" id="navbarSupportedContent" style="width: 100%;">
+                <div class="collapse navbar-collapse nav-tabs d-md-block position-absolute shadow"
+                    id="navbarSupportedContent" style="width: 100%;">
+                    @if (Role == "Admin")
+                    {
+                        <ul class="d-flex flex-md-row flex-column nav-tabs-ul" id="adminDashTab">
+                            <li data-id="1">
+                                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                            </li>
+                            <li data-id="2">
+                                <a asp-area="Admin" asp-controller="ProviderLocation" asp-action="Index">Provider
+                                    Location</a>
+                            </li>
+                            <li data-id="3">
+                                <a asp-area="Admin" asp-controller="Profile" asp-action="Index">My Profile</a>
+                            </li>
+                            <li data-id="4" class="InnerNav">
+                                <a href="#" class="showMenu">Provider <i class="fa-solid fa-caret-down"></i></a>
+                                <div class="inner-nav">
+                                    <ul class="inner-nav shadow" style="display: none;">
+                                        <li data-inner-itemid="4"><a asp-area="Admin" asp-controller="Provider"
+                                                asp-action="Index" class="dropdown-item">Provider</a></li>
+                                        <li data-inner-itemid="8"><a asp-area="Admin" asp-controller="Scheduling"
+                                                asp-action="Index" class="dropdown-item">Scheduling</a></li>
+                                        <li><a asp-area="Admin" asp-controller="Invoicing" asp-action="Index"
+                                                class="dropdown-item">Invoicing</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li data-id="5">
+                                <a asp-area="Admin" asp-controller="Partner" asp-action="Index">Partners</a>
+                            </li>
+                            <li data-id="6">
+                                <a asp-area="Admin" asp-controller="Access" asp-action="Index">Access</a>
+                            </li>
+                            <li data-id="7" class="InnerNav">
+                                <a class="showMenu">Records <i class="fa-solid fa-caret-down"></i></a>
+                                <div class="inner-nav">
+                                    <ul class="inner-nav shadow" style="display: none;">
+                                        <li data-inner-itemid="7"><a asp-area="Admin" asp-controller="Records"
+                                                asp-action="Index" class="dropdown-item">Search Records</a></li>
+                                        <li data-inner-itemid="9"><a asp-area="Admin" asp-controller="Records"
+                                                asp-action="EmailLogs" class="dropdown-item">Email Logs</a></li>
+                                        <li data-inner-itemid="10"><a asp-area="Admin" asp-controller="Records"
+                                                asp-action="SMSLogs" class="dropdown-item">SMS Logs</a></li>
+                                        <li data-inner-itemid="11"><a asp-area="Admin" asp-controller="Records"
+                                                asp-action="PatientHistory" class="dropdown-item">Patient Records</a></li>
+                                        <li data-inner-itemid="12"><a asp-area="Admin" asp-controller="Records"
+                                                asp-action="BlockHistory" class="dropdown-item">Blocked History</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    }
                     @* <ul class="d-flex flex-md-row flex-column nav-tabs-ul" id="adminDashTab">
-                        <li data-id="1">
-                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                        </li>
-                        <li data-id="2">
-                            <a asp-area="Admin" asp-controller="ProviderLocation" asp-action="Index" >Provider Location</a>
-                        </li>
-                        <li data-id="3">
-                            <a asp-area="Admin" asp-controller="Profile" asp-action="Index" >My Profile</a>
-                        </li>
-                        <li data-id="4" class="InnerNav">
-                            <a href="#" class="showMenu">Provider <i class="fa-solid fa-caret-down"></i></a>
-                            <div class="inner-nav">
-                                <ul class="inner-nav shadow" style="display: none;">
-                                    <li data-inner-itemid="4"><a asp-area="Admin" asp-controller="Provider" asp-action="Index" class="dropdown-item">Provider</a></li>
-                                    <li data-inner-itemid="8"><a asp-area="Admin" asp-controller="Scheduling" asp-action="Index" class="dropdown-item">Scheduling</a></li>
-                                    <li><a asp-area="Admin" asp-controller="Invoicing" asp-action="Index"  class="dropdown-item">Invoicing</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li data-id="5">
-                            <a asp-area="Admin" asp-controller="Partner" asp-action="Index" >Partners</a>
-                        </li>
-                        <li data-id="6">
-                            <a asp-area="Admin" asp-controller="Access" asp-action="Index">Access</a>
-                        </li>
-                        <li data-id="7" class="InnerNav">
-                           <a class="showMenu">Records <i class="fa-solid fa-caret-down"></i></a>
-                            <div class="inner-nav">
-                                <ul class="inner-nav shadow" style="display: none;">
-                                    <li data-inner-itemid="7"><a asp-area="Admin" asp-controller="Records" asp-action="Index" class="dropdown-item">Search Records</a></li>
-                                    <li data-inner-itemid="9"><a asp-area="Admin" asp-controller="Records" asp-action="EmailLogs" class="dropdown-item">Email Logs</a></li>
-                                    <li data-inner-itemid="10"><a asp-area="Admin" asp-controller="Records" asp-action="SMSLogs"  class="dropdown-item">SMS Logs</a></li>
-                                    <li data-inner-itemid="11"><a asp-area="Admin" asp-controller="Records" asp-action="PatientHistory"  class="dropdown-item">Patient Records</a></li>
-                                    <li data-inner-itemid="12"><a asp-area="Admin" asp-controller="Records" asp-action="BlockHistory"  class="dropdown-item">Blocked History</a></li>
-                                </ul>
-                            </div>
-                        </li>
+                    @if (menuItems != null)
+                    {
+                    foreach (var menuItem in menuItems)
+                    {
+                    @if(@menuItem.Name == "EmailLogs" || @menuItem.Name == "PatientHistory" || @menuItem.Name ==
+                    "BlockHistory" || @menuItem.Name == "SMSLogs"){
+                    <li id="@menuItem.Name"><a asp-area="Admin" asp-controller="Records"
+                    asp-action="@menuItem.Name">@menuItem.Title</a></li>
+                    }else{
+                    <li><a asp-area="Admin" asp-controller="@menuItem.Name" asp-action="Index">@menuItem.Title</a></li>
+                    }
+
+                    }
+                    }
                     </ul> *@
-                    <ul class="d-flex flex-md-row flex-column nav-tabs-ul" id="adminDashTab">
-                        @if (menuItems != null)
-                        {
-                            foreach (var menuItem in menuItems)
-                            {
-                                @if(@menuItem.Name == "EmailLogs" || @menuItem.Name == "PatientHistory" || @menuItem.Name == "BlockHistory" || @menuItem.Name == "SMSLogs"){
-                                    <li id="@menuItem.Name"><a asp-area="Admin" asp-controller="Records" asp-action="@menuItem.Name">@menuItem.Title</a></li>
-                                }else{
-                                    <li><a asp-area="Admin" asp-controller="@menuItem.Name" asp-action="Index">@menuItem.Title</a></li>
-                                }
-                                
-                            }
-                        }
-                    </ul>
+                    @if (Role == "Provider")
+                    {
+                        <ul class="d-flex flex-md-row flex-column nav-tabs-ul" id="adminDashTab">
+
+                            <li data-id="1">
+                                <a asp-area="Provider" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                            </li>
+                            <li data-id="3">
+                                <a asp-area="Provider" asp-controller="Profile" asp-action="Index">My Profile</a>
+                            </li>
+                            <li data-id="3">
+                                <a asp-area="Provider" asp-controller="Scheduling" asp-action="Index">My Scheduling</a>
+                            </li>
+                        </ul>
+                    }
                 </div>
             </nav>
         </header>
-       
+
         <div style="margin-top:100px;">
-         @RenderBody()
+            @RenderBody()
         </div>
-        
+
 
         <footer class="mt-auto d-flex justify-content-md-end justify-content-center p-4 dark-footer">
             <div>
@@ -161,17 +196,17 @@
     <script src="https://kit.fontawesome.com/3bcc8c09be.js" crossorigin="anonymous"></script>
     <script>
         @* let AccessId = 1;
-        $("#adminDashTab li").each(function(){
+            $("#adminDashTab li").each(function(){
             if($(this).data("id")==AccessId){
-                $("#adminDashTab li a").removeClass("active");
-                $(this).addClass("active").find("a").addClass("active");
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
             }
-        })
-        $("#adminDashTab li").click(function(){
+            })
+            $("#adminDashTab li").click(function(){
             AccessId = $(this).data("id");
             console.log(AccessId);
-        }) *@
-    @* $("#AccessId").addClass("active").find("a").addClass("active"); *@
+            }) *@
+        @* $("#AccessId").addClass("active").find("a").addClass("active"); *@
 
     </script>
 </body>

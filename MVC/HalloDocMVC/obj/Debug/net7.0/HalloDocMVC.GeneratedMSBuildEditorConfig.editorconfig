@@ -272,8 +272,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUGF0aWVudFxfVmlld1N0YXJ0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Dashboard/CloseCase.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcRGFzaGJvYXJkXENsb3NlQ2FzZS5jc2h0bWw=
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Dashboard/ConcludeCare.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcRGFzaGJvYXJkXENvbmNsdWRlQ2FyZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Dashboard/CreateRequest.cshtml]
@@ -308,28 +308,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcTG9naW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Shared/_DayWiseCalendar.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcU2hhcmVkXF9EYXlXaXNlQ2FsZW5kYXIuY3NodG1s
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Profile/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcUHJvZmlsZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Shared/_MenuList.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcU2hhcmVkXF9NZW51TGlzdC5jc2h0bWw=
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Scheduling/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcU2NoZWR1bGluZ1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Shared/_PartnerTable.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcU2hhcmVkXF9QYXJ0bmVyVGFibGUuY3NodG1s
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Shared/_EncounterModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcU2hhcmVkXF9FbmNvdW50ZXJNb2RhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Shared/_MonthWiseCalendar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcU2hhcmVkXF9Nb250aFdpc2VDYWxlbmRhci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Shared/_ProviderDashboardTable.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcU2hhcmVkXF9Qcm92aWRlckRhc2hib2FyZFRhYmxlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Shared/_ProviderListPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcU2hhcmVkXF9Qcm92aWRlckxpc3RQYXJ0aWFsLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Shared/_ReviewShiftTable.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcU2hhcmVkXF9SZXZpZXdTaGlmdFRhYmxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/_ViewImports.cshtml]

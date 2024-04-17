@@ -21,11 +21,11 @@ public class ProviderDashboardRepo : IProviderDashboardRepo
         int? PhysicianId = _dbContext?.Physicians?.FirstOrDefault(req => req.Aspnetuserid == AspId)?.Id;
         IQueryable<Request> query = status switch
         {
-            "new" => _dbContext.Requests.Include(req => req.Requestclients).Where(req => req.Physicianid == PhysicianId && req.Status == 1 && req.Isdeleted != true && req.IsBlocked != true),
-            "pending" => _dbContext.Requests.Include(req => req.Requestclients).Where(req => req.Physicianid == PhysicianId && req.Status == 2 && req.Isdeleted != true && req.IsBlocked != true),
-            "active" => _dbContext.Requests.Include(req => req.Requestclients).Where(req => req.Physicianid == PhysicianId && (req.Status == 4 || req.Status == 5) && req.Isdeleted != true && req.IsBlocked != true),
-            "conclude" => _dbContext.Requests.Include(req => req.Requestclients).Where(req => req.Physicianid == PhysicianId && req.Status == 6 && req.Isdeleted != true && req.IsBlocked != true),
-            _ => _dbContext.Requests.Include(req => req.Requestclients).Where(req => req.Physicianid == PhysicianId && req.Status == 1 && req.Isdeleted != true && req.IsBlocked != true),
+            "new" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == 1 && req.Isdeleted != true && req.IsBlocked != true),
+            "pending" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == 2 && req.Isdeleted != true && req.IsBlocked != true),
+            "active" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && (req.Status == 4 || req.Status == 5) && req.Isdeleted != true && req.IsBlocked != true),
+            "conclude" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == 6 && req.Isdeleted != true && req.IsBlocked != true),
+            _ => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == 1 && req.Isdeleted != true && req.IsBlocked != true),
         };
         if (reqTypeId > 0)
         {
@@ -78,4 +78,26 @@ public class ProviderDashboardRepo : IProviderDashboardRepo
         throw new Exception("Request Not Found!");
 
     }
+
+    public bool CheckEncounterFinalized(int ReqId){
+        Encounterform? encouterFormData = _dbContext.Encounterforms.FirstOrDefault(enc => enc.RequestId == ReqId);
+        if(encouterFormData!=null){
+            return encouterFormData.Isfinalized == true; 
+        }   
+        return false;
+    }
+
+    public void FinalizeForm(int EncId, int ReqId){
+        Encounterform? encForm = _dbContext.Encounterforms.FirstOrDefault(enc => enc.Id == EncId && enc.RequestId == ReqId);
+        if(encForm!=null){
+            encForm.Isfinalized = true;
+            encForm.Finalizeddate = DateTime.Now;
+            encForm.Updatedat = DateTime.Now;
+
+            _dbContext.SaveChanges();
+            return;
+        }
+        throw new Exception(); 
+    }
+
 }

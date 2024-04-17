@@ -17,7 +17,7 @@ public class ProviderRepo : IProviderRepo
 
     public IEnumerable<Physician> GetAllPhysician(bool order = true, string? regionId = null)
     {
-        IQueryable<Physician> query = _dbContext.Physicians.Include(phy => phy.Role).Where(phy => phy.Isdeleted != true);
+        IQueryable<Physician> query = _dbContext.Physicians.Include(phy => phy.Role).Include(phy => phy.Aspnetuser).Where(phy => phy.Isdeleted != true);
         if (!string.IsNullOrEmpty(regionId))
         {
             query = query.Where(physician => physician.Regionid == int.Parse(regionId));

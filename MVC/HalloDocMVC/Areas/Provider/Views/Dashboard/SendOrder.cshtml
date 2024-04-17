@@ -12,10 +12,10 @@
 
 <main class="send-order-section container-sm mt-md-5">
     <div class="d-flex justify-content-end mt-4">
-        <a href="/admin/dashboard" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+        <a href="/Provider/dashboard" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
     </div>
 
-    <form asp-action="SendOrder" id="myForm" method="post" enctype="multipart/form-data">
+    <form asp-area="Provider" asp-controller="Dashboard" asp-action="SendOrder" id="myForm" method="post" enctype="multipart/form-data">
         <div class="d-flex">
             <h2>Send Order</h2>
         </div>
@@ -83,7 +83,7 @@
 
             <div class="d-flex justify-content-end gap-2">
                 <button class="btn secondary-theme-btn" type="submit">Submit</button>
-                <a class="btn theme-btn" type="button" asp-area="admin" asp-controller="dashboard" asp-action="Index">Cancel</a>
+                <a class="btn theme-btn" type="button" asp-area="Provider" asp-controller="dashboard" asp-action="Index">Cancel</a>
             </div>
         </div>
     </form>
@@ -97,7 +97,7 @@
         $("#faxNum").val("")
         $.ajax({
             type : "GET",
-            url : "/admin/dashboard/GetBusinessByProfession",
+            url : "/provider/dashboard/GetBusinessByProfession",
             data : { professionId : $("#professionDropdown").val() },
             success : function(response){
                 $('#businessDropdown').empty();
@@ -108,7 +108,7 @@
             },
            error: function (xhr,status,error) {
                 if(xhr.status==401){
-                    window.location.href = '/admin/login';                
+                    window.location.href = '/Provider/login';                
                 }
             }
         });
@@ -116,7 +116,7 @@
     $("#businessDropdown").change(function(){
         $.ajax({
             type : "GET",
-            url : "/admin/dashboard/GetBusinessDetails",
+            url : "/provider/dashboard/GetBusinessDetails",
             data : { businessId : $("#businessDropdown").val() },
             success : function(response){
                 $("#businessContact").val(response.businessContact)
@@ -125,7 +125,7 @@
             },
             error: function (xhr,status,error) {
                 if(xhr.status==401){
-                    window.location.href = '/admin/login';                
+                    window.location.href = '/provider/login';                
                 }
             }
         });

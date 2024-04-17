@@ -21,8 +21,8 @@ using ClosedXML.Excel;
 
 namespace HalloDocMVC.Controllers.Admin;
 
-[Area("Admin,Provider")]
-[Authorize(Roles = "Admin,Provider")]
+[Area("Admin")]
+[Authorize(Roles = "Admin")]
 public class DashboardController : Controller
 {
     private readonly ILogger<DashboardController> _logger;

@@ -526,7 +526,8 @@ public class AdminDashboardService : IAdminDashboardService
                 TreatmentPlan = encounterData.Encounterform.Treatmentplan,
                 MedicationDispensed = encounterData.Encounterform.Medicationdispensed,
                 Procedures = encounterData.Encounterform.Procedures,
-                FollowUp = encounterData.Encounterform.Followup
+                FollowUp = encounterData.Encounterform.Followup,
+                IsFinalized = encounterData.Encounterform.Isfinalized
             };
         }
         return encounterFormViewModel;
@@ -540,6 +541,7 @@ public class AdminDashboardService : IAdminDashboardService
 
     public void HouseCallEncounter(int reqId, string status)
     {
+            Console.WriteLine("In Complete" +status + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         if (status == "onroute")
         {
             _dashboardRepo.ChangeStatusOfRequest(reqId, 5);

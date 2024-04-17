@@ -139,6 +139,10 @@ app.Use(async (context, next) =>
 });
 
 app.MapControllerRoute(
+       name: "Admin",
+        pattern: "{area=exists}/{controller=Dashboard}/{action=Index}/{id?}");
+        
+app.MapControllerRoute(
        name: "Provider",
         pattern: "{area=exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
@@ -146,9 +150,6 @@ app.MapControllerRoute(
     name: "Patient",
     pattern: "{area=exists}/{controller=Home}/{action=Index}/{id?}");
 
-app.MapControllerRoute(
-       name: "Admin",
-        pattern: "{area=exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

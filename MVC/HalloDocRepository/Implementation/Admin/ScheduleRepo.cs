@@ -13,7 +13,7 @@ public class ScheduleRepo : IScheduleRepo
         _dbContext = dbContext;
     }
 
-    public IEnumerable<Shiftdetail> ShiftsLists(string startDate, string endDate, string? status = null)
+    public IEnumerable<Shiftdetail> ShiftsLists(string startDate, string endDate, string? status = null, int? PhyId = null)
     {
         if (!DateOnly.TryParse(startDate, out DateOnly parsedStartDate) ||
        !DateOnly.TryParse(endDate, out DateOnly parsedEndDate))
@@ -21,12 +21,14 @@ public class ScheduleRepo : IScheduleRepo
             throw new ArgumentException("Invalid date format", nameof(startDate));
         }
 
-        IEnumerable<Shiftdetail> shiftdetailsInfo = _dbContext.Shiftdetails
-            .Include(sd => sd.Shift).ThenInclude(s => s.Physician)
-            .Include(sd => sd.Region)
-            .Where(sf => sf.Shiftdate.Date >= parsedStartDate.ToDateTime(new TimeOnly()).Date &&
-                            sf.Shiftdate.Date <= parsedEndDate.ToDateTime(new TimeOnly()).Date && sf.Isdeleted == false)
-            .ToList();
+       
+            IEnumerable<Shiftdetail> shiftdetailsInfo = _dbContext.Shiftdetails
+                .Include(sd => sd.Shift).ThenInclude(s => s.Physician)
+                .Include(sd => sd.Region)
+                .Where(sf => (PhyId==null || sf.Shift.Physicianid == PhyId) && sf.Shiftdate.Date >= parsedStartDate.ToDateTime(new TimeOnly()).Date &&
+                                sf.Shiftdate.Date <= parsedEndDate.ToDateTime(new TimeOnly()).Date && sf.Isdeleted == false)
+                .ToList();
+
 
         if (!string.IsNullOrEmpty(status))
         {
@@ -141,6 +143,10 @@ public class ScheduleRepo : IScheduleRepo
                 throw new Exception($"The shift detail with id: {shiftDetailId} does not exist.");
             }
         }
+    }
+
+    public IEnumerable<Region?>? GetRegionByPhysician(int? PhyId){
+        return _dbContext?.Physicianregions?.Where(phyReg => phyReg.Physicianid == PhyId)?.Select(phyReg => phyReg.Region)?.ToList();
     }
 }
 

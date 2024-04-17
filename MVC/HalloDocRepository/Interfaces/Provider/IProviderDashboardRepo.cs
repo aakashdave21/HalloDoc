@@ -7,4 +7,7 @@ public interface IProviderDashboardRepo
    Dictionary<string, int> CountRequestByType(int AspId); 
 
    void AcceptRequest(int ReqId);
+    bool CheckEncounterFinalized(int ReqId);
+
+    void FinalizeForm(int EncId, int ReqId);
 }

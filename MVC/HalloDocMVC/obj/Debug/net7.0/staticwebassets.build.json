@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "t/ZhsA0/O026oTjzBUiAQ2hCnxBeczoK8UYbFhnDx6M=",
+  "Hash": "AOvsWhRWdo6CXZdsC6D8NBwfLlup96u+0QDQS+tbItQ=",
   "Source": "HalloDocMVC",
   "BasePath": "_content/HalloDocMVC",
   "Mode": "Default",
@@ -3230,6 +3230,23 @@
       "OriginalItemSpec": "wwwroot\\uploads\\0934f0a3-0bc6-4307-9931-abea8650b471_pexels-apunto-group-agencia-de-publicidad-7752846.jpg"
     },
     {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\14a77279-8c73-4a94-aaeb-b473eb432265_data.xlsx",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/14a77279-8c73-4a94-aaeb-b473eb432265_data.xlsx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\14a77279-8c73-4a94-aaeb-b473eb432265_data.xlsx"
+    },
+    {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\1cad0b4d-c862-4828-aa7d-ae76f4d8de14_SRS-23-24-Trainees-2Feb24.pdf",
       "SourceId": "HalloDocMVC",
       "SourceType": "Discovered",
@@ -3298,6 +3315,23 @@
       "OriginalItemSpec": "wwwroot\\uploads\\391055e1-ec5d-4fe9-bb48-6a01a5f810c7_Untitled.png"
     },
     {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\43f7fdc9-6991-4d4a-b57a-b43e4ec7d1ad_MenuTable.csv",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/43f7fdc9-6991-4d4a-b57a-b43e4ec7d1ad_MenuTable.csv",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\43f7fdc9-6991-4d4a-b57a-b43e4ec7d1ad_MenuTable.csv"
+    },
+    {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\495c3b21-b9ee-497d-ac03-fd69ab041eb2_Updated-Training-Plan-20March24.pdf",
       "SourceId": "HalloDocMVC",
       "SourceType": "Discovered",
@@ -3349,6 +3383,23 @@
       "OriginalItemSpec": "wwwroot\\uploads\\5102b7ba-f4c3-4676-8371-8e5f0a6897a1_pexels-apunto-group-agencia-de-publicidad-7752846.jpg"
     },
     {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\55b7bbf6-da43-4dc6-a760-0f714eabe8c3_RoleMenuTable.csv",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/55b7bbf6-da43-4dc6-a760-0f714eabe8c3_RoleMenuTable.csv",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\55b7bbf6-da43-4dc6-a760-0f714eabe8c3_RoleMenuTable.csv"
+    },
+    {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\5cdf2af4-8e72-4037-ac5b-ecc785639d3d_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png",
       "SourceId": "HalloDocMVC",
       "SourceType": "Discovered",
@@ -3398,6 +3449,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\6c70a5f8-f9d1-43b9-85df-1c40fc0ec11b_471bd25f-318b-4f38-bd50-725d40b0985a_screencapture-github-aakashdave21-assignment-2024-01-16-16_12_31.png"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\763da425-0578-475d-a659-aa309e9359f5_data.xlsx",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/763da425-0578-475d-a659-aa309e9359f5_data.xlsx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\763da425-0578-475d-a659-aa309e9359f5_data.xlsx"
     },
     {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\8e4a66ae-1b84-4f09-a7ba-b3e9fa49d1d9_logo.png",
@@ -3483,6 +3551,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\b106f730-a441-43d8-8602-608ec81bcd53_SRS-23-24-Trainees-21Feb24.pdf"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\caa9b71a-cdd0-4606-bae5-9283d023c9a1_HalloDoc - Excel.xlsx",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/caa9b71a-cdd0-4606-bae5-9283d023c9a1_HalloDoc - Excel.xlsx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\caa9b71a-cdd0-4606-bae5-9283d023c9a1_HalloDoc - Excel.xlsx"
     },
     {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\cc60e440-1a33-4fd4-ace9-ab80ea9b0a97_Untitled.pdf",

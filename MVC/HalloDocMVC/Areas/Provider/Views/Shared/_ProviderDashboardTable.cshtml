@@ -114,7 +114,7 @@
                                                             <li><a class="dropdown-item" href="/provider/dashboard/ViewCase/@item.Id">View Case</a></li>
                                                             <li><a class="dropdown-item" asp-area="Provider" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id">View Uploads</a></li>
                                                             <li><a class="dropdown-item" href="/provider/dashboard/ViewNotes/@item.Id">View Notes</a></li>
-                                                            <li><a class="dropdown-item" onclick="populateTransferCase('@item.Id','@item.PhysicianId')">Transfer</a></li>
+                                                            <li><a class="dropdown-item" onclick="populatePhysicianTransferCase('@item.Id')">Transfer</a></li>
                                                           </ul> 
 
                                                           break;
@@ -127,23 +127,36 @@
                                                                 <li><a class="dropdown-item" href="/Provider/dashboard/ViewNotes/@item.Id">View Notes</a></li>
                                                                 <li><a class="dropdown-item" asp-area="Provider" asp-controller="Dashboard" asp-action="SendOrder" asp-route-RequestId="@item.Id">Orders</a></li>
                                                                 <li>
-                                                                   <a class="dropdown-item" onclick="populateEncounter('@item.Id')">Encounter</a>
+                                                                   <a class="dropdown-item" onclick="populateEncounter('@item.Id', 2)">Encounter</a>
                                                                 </li>
                                                             </ul> 
                                                           break;
                                             case "conclude" : <ul class="dropdown-menu">
-                                                                <li><a class="dropdown-item" href="/provider/dashboard/ViewCase/@item.Id">Conclude Care</a></li>
+                                                                <li>
+                                                                     @using(Html.BeginForm("ConcludeCare", "Dashboard", new { area = "Provider" }, FormMethod.Post)){
+                                                                        <input type="hidden" name="RequestId" value="@item.Id"/>
+                                                                        <a class="dropdown-item"><button type="submit" style="all:unset;">Conclude Care</button></a> 
+                                                                    }
+                                                                </li>
                                                                 <li><a class="dropdown-item" href="/provider/dashboard/ViewCase/@item.Id">View Case</a></li>
                                                                 <li>
                                                                     <a class="dropdown-item" asp-area="provider" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id"> View Uploads </a>
                                                                 </li>
-                                                                <li><a class="dropdown-item" href="/provider/dashboard/ViewNotes/@item.Id">View Notes</a></li>                                                                <li>
+                                                                <li><a class="dropdown-item" href="/provider/dashboard/ViewNotes/@item.Id">View Notes</a></li> 
+                                                                @if(item.IsFinalized){
+                                                                    <li>
+                                                                   <a class="dropdown-item" onclick="populateDownloadEncounter('@item.Id')">Encounter</a>
+                                                                </li>
+                                                                }else{
+
+                                                                <li>
                                                                     @using(Html.BeginForm("Encounter","Dashboard",new { area = "provider" }, FormMethod.Post)){
                                                                         <input type="hidden" name="RequestId" value="@item.Id"/>
                                                                         <a class="dropdown-item"><button type="submit" style="all:unset;">Encounter</button></a> 
                                                                     }
                                                                     
                                                                 </li>
+                                                                }
                                                             </ul> 
                                                           break;
                                         
@@ -792,6 +805,8 @@
 </div>
 
 
+
+
 @* send agreeement Modal *@
 <div class="modal fade shadow-lg " id="sendAgreementModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -803,6 +818,3 @@
     aria-hidden="true">
    
 </div>
-
-
-   

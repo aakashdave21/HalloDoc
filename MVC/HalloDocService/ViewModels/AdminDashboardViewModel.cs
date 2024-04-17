@@ -42,6 +42,8 @@ namespace HalloDocService.ViewModels
         public int? PhysicianId {get; set;}
         public string ServiceDate {get; set;}
         public string Region {get; set;}
+
+        public bool? IsFinalized {get; set;} = false;
        
     }
 

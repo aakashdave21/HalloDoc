@@ -270,6 +270,10 @@ table tr td{
     background-color: purple;
     color: white;
 }
+.btn-purple:hover{
+    border:1px solid purple;
+    color: purple;
+}
 
     .warning-icon {
         font-size: 60px;

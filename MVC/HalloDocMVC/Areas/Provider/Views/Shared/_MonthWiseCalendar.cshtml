@@ -1,0 +1,316 @@
+@{
+    int NoOfDays = ViewBag.NoOfDays;
+    int lastDayOfMonth = ViewBag.lastDayOfMonth;
+}
+
+<style>
+    .month-coverage .day {
+        padding-left: 5px !important;
+        background-color: #ffacf5 !important;
+    }
+
+    [data-bs-theme=dark] .month-coverage .day {
+        background-color: transparent !important;
+        border: 2px solid gray !important;
+    }
+
+    .month-table table th,
+    .month-table table td {
+        white-space: nowrap;
+        min-width: 150px;
+    }
+
+    .month-table .active-provider td {
+        background-color: #9f9f9f !important;
+        color: white;
+        min-width: 220px;
+    }
+
+    .month-table .month-table-body td ul li {
+        list-style: none;
+        height: 50px;
+    }
+
+    .month-table .month-table-body td[scope="col"] {
+        padding: 0;
+    }
+
+    .month-table .pink-bg,
+    [data-bs-theme=dark] .month-table .pink-bg:hover {
+        background-color: #ffacf5;
+        cursor: pointer;
+        color: black;
+    }
+
+    .month-table .green-bg,
+    [data-bs-theme=dark] .month-table .green-bg:hover {
+        background-color: #aacba8;
+        cursor: pointer;
+        color: black;
+    }
+
+    .month-table .pink-bg:hover {
+        color: white !important;
+    }
+
+    .month-table .green-bg:hover {
+        color: white !important;
+    }
+
+    [data-bs-theme=dark] .month-table .pink-bg {
+        border: 2px solid #ffacf5 !important;
+        background-color: transparent;
+        color: #ffacf5;
+    }
+
+    [data-bs-theme=dark] .month-table .green-bg {
+        border: 2px solid #aacba8 !important;
+        background-color: transparent;
+        color: #aacba8;
+    }
+
+    .ViewAllShift {
+        display: flex;
+        margin: auto;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        text-decoration: none;
+        color: #01bce9;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    [data-bs-theme=dark] .ViewAllShift {
+        background-color: transparent;
+    }
+
+    .ViewAllShift:hover {
+        background-color: #01bce9;
+        color: white;
+    }
+    .modal-body .card{
+        cursor: default;
+    }
+    .modal-content{
+        max-height: 70vh;
+    }
+    .modal-body{
+        overflow: scroll;
+    }
+    .modal-body ul li:hover{
+        background-color: aliceblue;
+    }
+</style>
+<div class="table-responsive d-flex month-table">
+    <table class="table table-bordered">
+        <thead>
+            <tr class="main-head">
+                <th scope="col">Sun</th>
+                <th scope="col">Mon</th>
+                <th scope="col">Tue</th>
+                <th scope="col">Wed</th>
+                <th scope="col">Thu</th>
+                <th scope="col">Fri</th>
+                <th scope="col">Sat</th>
+            </tr>
+        </thead>
+        @* <tbody id="month-table-body">
+        </tbody> *@
+        @* <tbody>
+        @for (int i = 0; i < 6; i++)
+        {
+        <tr class="month-coverage">
+        @for (int j = 0; j < 7; j++)
+        {
+        var day = (i * 7 + j + 1 - NoOfDays);
+        if (day >= 1 && day <= lastDayOfMonth)
+        {
+        <td scope="col" class="day">@day</td>
+        }
+        else
+        {
+        <td scope="col"></td>
+        }
+        }
+        </tr>
+
+        for (int k = 0; k < 5; k++)
+        {
+        <tr>
+
+        @for (int l = 0; l < 7; l++)
+        {
+
+        var day = (i * 7 + l + 1 - NoOfDays);
+        if (day >= 1 && day <= lastDayOfMonth)
+        {
+        string EmptyString = "";
+        @foreach (var shift in Model.AllShiftList){
+        DateTime date = DateTime.ParseExact(shift.StartDate,"yyyy-MM-dd",
+        System.Globalization.CultureInfo.InvariantCulture);
+        string dayString = date.ToString("dd");
+        int dayOfWeekNumeric = int.Parse(dayString);
+        if(dayOfWeekNumeric==day){
+        EmptyString += shift.ShiftDetailId.ToString();
+        }
+        }
+        <td>@day @EmptyString</td>
+        }
+        else
+        {
+        <td scope="col"></td>
+        }
+        }
+        </tr>
+        }
+        }
+        </tbody> *@
+        <tbody class="month-table-body">
+            @for (int i = 0; i < 6; i++)
+            {
+                <tr class="month-coverage">
+                    @for (int j = 0; j < 7; j++)
+                    {
+                        var day = (i * 7 + j + 1 - NoOfDays);
+                        if (day >= 1 && day <= lastDayOfMonth)
+                        {
+                            <td scope="col" class="day">@day</td>
+                        }
+                        else
+                        {
+                            <td scope="col"></td>
+                        }
+                    }
+                </tr>
+                <tr>
+                    @for (int l = 0; l < 7; l++)
+                    {
+                        var day = (i * 7 + l + 1 - NoOfDays);
+                        if (day >= 1 && day <= lastDayOfMonth)
+                        {
+                            List<ShiftDetailsInfo> shiftDetail = new List<ShiftDetailsInfo>();
+                            foreach (var shift in Model.AllShiftList)
+                            {
+                                DateTime date = DateTime.ParseExact(shift.StartDate, "yyyy-MM-dd",
+                                System.Globalization.CultureInfo.InvariantCulture);
+                                if (date.Day == day)
+                                {
+                                    shiftDetail.Add(shift);
+                                }
+                            }
+                            <td scope="col">
+                                <ul>
+                                    @for (int k = 0; k < Math.Min(4, shiftDetail.Count); k++)
+                                    {
+                                        var StartingTime = shiftDetail[k].StartTimeHour.ToString() + ":" +
+                                        shiftDetail[k].StartTimeMinute.ToString();
+                                        var EndingTime = shiftDetail[k].EndTimeHour.ToString() + ":" +
+                                        shiftDetail[k].EndTimeMinute.ToString();
+                                        @if (shiftDetail[k].Status == 1)
+                                        {
+                                            <li class="border-bottom pink-bg ps-1"
+                                                onclick="openShiftView('@shiftDetail[k].Id','@StartingTime','@EndingTime','@shiftDetail[k].FullName','@shiftDetail[k].StartDate','@shiftDetail[k].RegionName','@shiftDetail[k].ProviderId')">
+                                                <small>@shiftDetail[k].StartTimeHour:@shiftDetail[k].StartTimeMinute -
+                                                    @shiftDetail[k].EndTimeHour:@shiftDetail[k].EndTimeMinute</small> <br>
+                                                <small>@shiftDetail[k].FullName</small>
+                                            </li>
+                                        }
+                                        else if (shiftDetail[k].Status == 2)
+                                        {
+                                            <li class="border green-bg ps-1"
+                                                onclick="openShiftView('@shiftDetail[k].Id','@StartingTime','@EndingTime','@shiftDetail[k].FullName','@shiftDetail[k].StartDate','@shiftDetail[k].RegionName','@shiftDetail[k].ProviderId')">
+                                                <small>@shiftDetail[k].StartTimeHour:@shiftDetail[k].StartTimeMinute -
+                                                    @shiftDetail[k].EndTimeHour:@shiftDetail[k].EndTimeMinute</small> <br>
+                                                <small>@shiftDetail[k].FullName</small>
+                                            </li>
+                                        }
+                                    }
+                                    @for (int k = shiftDetail.Count; k < 4; k++)
+                                    {
+                                        <li class="border-bottom"></li>
+                                    }
+                                    @if (shiftDetail.Count > 4)
+                                    {
+                                        string shiftDetailJson = Newtonsoft.Json.JsonConvert.SerializeObject(shiftDetail);
+
+                                        <li class="border-bottom viewList">
+                                            <a onclick="openAllRequestModal('@shiftDetailJson')" class="ViewAllShift">View All</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </td>
+                        }
+                        else
+                        {
+                            <td scope="col">
+                                <ul>
+
+                                    @for (int k = 0; k < 4; k++)
+                                    {
+                                        <li class="border-bottom"></li>
+                                    }
+                                </ul>
+                            </td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@* Model For Create Shifts *@
+<div class="modal fade shadow-lg " id="ViewAllMonthlyShift" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+
+</div>
+<script>
+
+    function openAllRequestModal(shiftDetailJson) {
+        var shiftDetail = JSON.parse(shiftDetailJson);
+        var modal = document.getElementById('ViewAllMonthlyShift');
+        modal.innerHTML = `<div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">View All Shift ${formatDate(shiftDetail[0].StartDate)}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <ul class="list-group list-group-flush">
+                        ${shiftDetail.map(shift => `
+                            <li class="list-group-item" onclick="openShiftView('${shift.Id}','${shift.StartTimeHour}:${shift.StartTimeMinute}','${shift.EndTimeHour}:${shift.EndTimeMinute}','${shift.FullName}','${shift.StartDate}','${shift.RegionName}','${shift.ProviderId}')">
+                                <div><strong>Region Name:</strong> ${shift.RegionName}</div>
+                                <div><strong>Full Name:</strong> ${shift.FullName}</div>
+                                <div><strong>Start Time:</strong> ${formatTime(shift.StartTimeHour, shift.StartTimeMinute)}</div>
+                                <div><strong>End Time:</strong> ${formatTime(shift.EndTimeHour, shift.EndTimeMinute)}</div>
+                                <div><strong>Status:</strong> <span class="${shift.Status === 1 ? 'text-success fw-bold' : 'text-danger fw-bold'}">${shift.Status === 1 ? 'Active' : 'Inactive'}</span> </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                    <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Close</button>
+            </div>
+                </form>
+        </div>
+    </div>`;
+
+        var modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
+
+        console.log(shiftDetail);
+        // Now you can use the shiftDetail object in your JavaScript code
+    }
+
+    function formatTime(hour, minute) {
+        var date = new Date();
+        date.setHours(hour, minute);
+        return date.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    }
+    function formatDate(dateString) {
+    var date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+</script>

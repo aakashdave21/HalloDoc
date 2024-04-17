@@ -271,15 +271,16 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         }
     }
 
-    public void AddStatusLog(int reqId,short newStatus,short oldStatus,string reason,int? adminId,int? physicianId,int? transToPhyId=null){
+    public void AddStatusLog(int reqId,short newStatus,short oldStatus,string reason,int? adminId=null,int? physicianId=null,int? transToPhyId=null, bool TransToAdmin = false){
         Requeststatuslog NewStatusLog = new(){
             Requestid = reqId,
             Status = newStatus,
             Oldstatus = oldStatus,
             Notes = reason,
-            Transtophysicianid = transToPhyId
-            // Adminid = adminId,
-            // Physicianid = physicianId
+            Transtophysicianid = transToPhyId,
+            Adminid = adminId,
+            Physicianid = physicianId,
+            Transtoadmin = TransToAdmin
         };
         _dbContext.Requeststatuslogs.Add(NewStatusLog);
         _dbContext.SaveChanges();
@@ -302,7 +303,7 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
 
     }
 
-    public void AddPhysicianToRequest(int reqId,int transPhyId){
+    public void AddPhysicianToRequest(int reqId,int? transPhyId = null){
         Request reqData = _dbContext.Requests.FirstOrDefault(req => req.Id == reqId);
         if(reqData != null){
             reqData.Physicianid = transPhyId;

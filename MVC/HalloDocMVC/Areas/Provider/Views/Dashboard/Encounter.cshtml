@@ -14,7 +14,7 @@
 
 <main class="patient-request-section container-sm mt-sm-5">
     <div class="d-flex justify-content-end mt-4">
-        <a href="/admin/dashboard" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+        <a href="/Provider/dashboard" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
     </div>
 
     <form asp-action="EncounterPost" id="myForm" method="post" enctype="multipart/form-data">
@@ -288,8 +288,9 @@
                 </div>
             </div>
             <div class="mt-5 mb-3 d-flex justify-content-end gap-2">
-                <button class="btn secondary-theme-btn">Save Changes</button>
-                <a class="btn theme-btn" asp-area="admin" asp-controller="dashboard" asp-action="Index">Cancel</a>
+                <button type="submit" class="btn secondary-theme-btn">Save Changes</button>
+                <button type="button" class="btn btn-purple" id="finalizedButton">Finalized</button>
+                <a class="btn theme-btn" asp-area="Provider" asp-controller="dashboard" asp-action="Index">Cancel</a>
             </div>
 
         </div>
@@ -297,8 +298,17 @@
 </main>
 
 <script>
-    $("#adminDashTab li").each(function(){
-        if($(this).data("id")==1){
+    $("#finalizedButton").click(function () {
+        sendAjaxRequest('/Provider/Dashboard/Finalized', 'POST', { Id: @Model.Id , ReqId : @Model.ReqId }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                location.href = "/Provider/Dashboard"
+            }).catch(function (error) {
+                ToastError("Internal Server Error");
+            })
+    });
+
+    $("#adminDashTab li").each(function () {
+        if ($(this).data("id") == 1) {
             $("#adminDashTab li a").removeClass("active");
             $(this).addClass("active").find("a").addClass("active");
         }

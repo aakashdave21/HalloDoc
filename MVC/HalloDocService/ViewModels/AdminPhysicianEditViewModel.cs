@@ -41,6 +41,9 @@ namespace HalloDocService.ViewModels
         public string? IsLicenseDocFile { get; set; }
         public IEnumerable<RoleList> AllRoleList = new List<RoleList>();
         public IEnumerable<RegionList> AllRegionList = new List<RegionList>();
+
+         public IEnumerable<RegionList> RegionSelect {get; set;} = new List<RegionList>();
+        public IEnumerable<RegionList> RegionUnSelect {get; set;} = new List<RegionList>();
         public IFormFile? UserPhoto { get; set; }
         public IFormFile? UserSign { get; set; }
 

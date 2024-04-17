@@ -19,11 +19,11 @@ public class ScheduleService : IScheduleService
         _profileRepo = profileRepo;
     }
 
-    public SchedulingViewModel ShiftsLists(string startDate, string endDate, string? status = null)
+    public SchedulingViewModel ShiftsLists(string startDate, string endDate, string? status = null,int? PhyId=null)
     {
         SchedulingViewModel scheduleView = new()
         {
-            AllShiftList = _scheduleRepo.ShiftsLists(startDate, endDate, status).Select(sd => new ShiftDetailsInfo()
+            AllShiftList = _scheduleRepo.ShiftsLists(startDate, endDate, status, PhyId).Select(sd => new ShiftDetailsInfo()
             {
                 Id = sd.Id,
                 ProviderId = sd.Shift.Physicianid,
@@ -37,17 +37,6 @@ public class ScheduleService : IScheduleService
                 RegionName = sd?.Region?.Name,
                 Status = sd?.Status,
             }).ToList(),
-            AllProvidersList = _providerRepo.GetAllPhysician(true, null).Select(phy => new ProviderList()
-            {
-                Id = phy.Id,
-                FullName = phy?.Firstname + " " + phy?.Lastname,
-                PhotoPath = phy?.Photo != null ? "uploads/" + Path.GetFileName(phy.Photo) : null
-            }).ToList(),
-            AllRegions = _profileRepo.GetAllRegions().Select(reg => new RegionList()
-            {
-                Id = reg.Id,
-                Name = reg.Name
-            }).ToList(),
             RepeatDaysList = Enumerable.Range(1, 7).Select(i => new RepeatDays
             {
                 Id = i,
@@ -55,6 +44,26 @@ public class ScheduleService : IScheduleService
                 IsSelected = false
             }).ToList()
         };
+        if(PhyId!=null){
+            scheduleView.AllProvidersList = new();
+            scheduleView.AllRegions = _scheduleRepo.GetRegionByPhysician(PhyId).Select(reg => new RegionList()
+            {
+                Id = reg.Id,
+                Name = reg.Name
+            }).ToList();
+        }else{
+            scheduleView.AllProvidersList = _providerRepo.GetAllPhysician(true, null).Select(phy => new ProviderList()
+            {
+                Id = phy.Id,
+                FullName = phy?.Firstname + " " + phy?.Lastname,
+                PhotoPath = phy?.Photo != null ? "uploads/" + Path.GetFileName(phy.Photo) : null
+            }).ToList();
+            scheduleView.AllRegions = _profileRepo.GetAllRegions().Select(reg => new RegionList()
+            {
+                Id = reg.Id,
+                Name = reg.Name
+            }).ToList();
+        }
         foreach (var repeatDay in scheduleView.RepeatDaysList)
         {
             repeatDay.DayName = "Every " + repeatDay.DayName;
@@ -62,7 +71,7 @@ public class ScheduleService : IScheduleService
         return scheduleView;
     }
 
-    public void AddShift(SchedulingViewModel schedulingView, int AspUserId)
+    public void AddShift(SchedulingViewModel schedulingView, int AspUserId, short AccountType = 1)
     {
         Shift newShift = new()
         {
@@ -83,7 +92,7 @@ public class ScheduleService : IScheduleService
                 Regionid = schedulingView.RegionId,
                 Starttime = TimeOnly.ParseExact(schedulingView?.StartTime, "HH:mm", null),
                 Endtime = TimeOnly.ParseExact(schedulingView?.EndTime, "HH:mm", null),
-                Status = 2,
+                Status = (short)((AccountType == 1) ? 2 : 1),
                 Createdby = AspUserId
             };
             _scheduleRepo.CreateShiftDetails(newShiftDetails);
@@ -110,7 +119,7 @@ public class ScheduleService : IScheduleService
                             Regionid = schedulingView.RegionId,
                             Starttime = TimeOnly.ParseExact(schedulingView?.StartTime, "HH:mm", null),
                             Endtime = TimeOnly.ParseExact(schedulingView?.EndTime, "HH:mm", null),
-                            Status = 1,
+                            Status = (short)((AccountType == 1) ? 2 : 1),
                             Createdby = AspUserId
                         };
 

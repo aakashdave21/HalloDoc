@@ -1,0 +1,29 @@
+@if (Model.IsFinalized)
+{
+    <!-- Modal for download form -->
+    <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="downloadModalLabel">Download Form</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Partial view for the download form will be loaded here -->
+                    <div id="downloadFormContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript to trigger modal display -->
+    <script>
+        $(document).ready(function() {
+            // Show download modal when the page is loaded
+            $('#downloadModal').modal('show');
+
+            // Load the partial view for the download form into the modal
+            $('#downloadFormContainer').load('@Url.Action("Encounter", "DownloadForm", new { RequestId = Model.RequestId })');
+        });
+    </script>
+}

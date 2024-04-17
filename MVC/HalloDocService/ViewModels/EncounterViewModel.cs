@@ -37,5 +37,7 @@ namespace HalloDocService.ViewModels
         public string MedicationDispensed { get; set; }
         public string Procedures { get; set; }
         public string FollowUp { get; set; }
+
+        public bool? IsFinalized {get; set;} = false;
     }
 }

@@ -4,7 +4,7 @@ using HalloDocRepository.DataModels;
 namespace HalloDocRepository.Admin.Interfaces;
 public interface IScheduleRepo
 { 
-    IEnumerable<Shiftdetail> ShiftsLists(string startDate,string endDate,string? status = null);
+    IEnumerable<Shiftdetail> ShiftsLists(string startDate,string endDate,string? status = null,int? PhyId = null);
     void CreateShift(Shift shiftData);
     void CreateShiftDetails(Shiftdetail shiftData);
     void CreateShiftDetailsList(List<Shiftdetail> shiftDetailsList);
@@ -17,4 +17,6 @@ public interface IScheduleRepo
     ReviewShiftPage ReviewShift(int RegionId=0,int PageSize=5,int PageNum=1);
     
     void UpdateShift(List<int> shiftDetailIds,int AspUserId,string IsDelete);
+
+    IEnumerable<Region?>? GetRegionByPhysician(int? PhyId);
 }

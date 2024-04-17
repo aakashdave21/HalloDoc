@@ -394,9 +394,53 @@ const transferCaseSubmit = () => {
     }
 }
 
+// Provider Transfer Case
+const populatePhysicianTransferCase = async (reqId) => {
+    var modal = document.getElementById('assignCaseModal');
+    modal.innerHTML = `
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Transfer Request To Admin</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                    <small class="text-muted">This Request will be transferred to Admin.</small>
+                    <div class="form-floating mt-2">
+                        <textarea class="form-control" id="ProviderDescription" placeholder="Description"  style="height: 150px; resize:none;"></textarea>
+                        <label for="ProviderDescription" style="white-space: normal;">Description</label>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn secondary-theme-btn" onclick="transferReqToAdmin(${reqId})">Confirm</button>
+                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>`;
+    var modalInstance = new bootstrap.Modal(modal);
+    modalInstance.show();
+}
+
+const transferReqToAdmin = (reqId) => {
+    const description = $("#ProviderDescription").val();
+    alert(description);
+    $.ajax({
+        url: '/Provider/dashboard/transfercase',
+        type: 'POST',
+        data: {reqId,description},
+        success: function () {
+            location.reload();
+        },
+        error: function (xhr, status, error) {
+            if (xhr.status == 401) {
+                window.location.href = "/Provider/login"
+            }
+        }
+    })
+}
 
 // Send Agreement
-const populateSendAgreement = (reqId, Email, Phone, Role=1) => {
+const populateSendAgreement = (reqId, Email, Phone, Role = 1) => {
     var modal = document.getElementById('sendAgreementModal');
     modal.innerHTML = `
     <div class="modal-dialog modal-dialog-centered">
@@ -480,15 +524,17 @@ function submitSendAgreement(Role) {
     }
 }
 
-const populateEncounter = (reqId) => {
+const populateEncounter = (reqId,Role=1) => {
 
     try {
         var modal = document.getElementById('encounterModal');
-
-        sendAjaxRequest('/admin/dashboard/GetRequestStatusEncounter','GET',{requestId : reqId},"application/x-www-form-urlencoded; charset=UTF-8",true)
-        .then(function(response){
-            if(response.requestStatus===5){
-                modal.innerHTML = `
+        let URL = Role == 2 ? '/Provider/dashboard/GetRequestStatusEncounter' : '/admin/dashboard/GetRequestStatusEncounter';
+        sendAjaxRequest(URL, 'GET', {
+                requestId: reqId
+            }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                if (response.requestStatus === 5) {
+                    modal.innerHTML = `
                 <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: #01bce9;">
@@ -497,16 +543,16 @@ const populateEncounter = (reqId) => {
                     </div>
                     <div class="modal-body" id="encounter-body">
                     <small class="text-muted">A physician is currently on-site. If the consultation has been completed, please click on the "Complete" button below.</small>
-                    <button class="btn theme-btn mt-2" onclick="saveEncounterChanges('complete','${reqId}')">Complete House-Call</button>
+                    <button class="btn theme-btn mt-2" onclick="saveEncounterChanges('complete','${reqId}','${Role}')">Complete House-Call</button>
                     </div>
                 </div>
-            </div>`;  
-            }
-           
-        })
+            </div>`;
+                }
+
+            })
         var buttonClicked = '';
 
-        
+
         modal.innerHTML = `
             <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -525,7 +571,7 @@ const populateEncounter = (reqId) => {
             </div>
         </div>`;
 
-            
+
 
         var modalInstance = new bootstrap.Modal(modal);
         modalInstance.show();
@@ -536,14 +582,14 @@ const populateEncounter = (reqId) => {
             buttonClicked = $(this).attr('id');
         })
 
-        $("#saveEncounterChanges").click(function(){
-            if(buttonClicked===""){
+        $("#saveEncounterChanges").click(function () {
+            if (buttonClicked === "") {
                 ToastError("Please Choose Call Type");
                 return;
             }
-                saveEncounterChanges(buttonClicked,reqId);
-                modalInstance.hide();
-            
+            saveEncounterChanges(buttonClicked, reqId, Role);
+            modalInstance.hide();
+
         });
 
     } catch (error) {
@@ -553,44 +599,51 @@ const populateEncounter = (reqId) => {
 
 }
 
-const saveEncounterChanges = (buttonValue,requestId) => {
-    console.log(buttonValue,requestId);
-    
-    if(buttonValue==="consult"){
-       $.ajax({
-        type: "POST",
-        url: '/admin/dashboard/ConsultEncounter',
-        data: {requestId:requestId},
-        success: function(response) {
-            window.location.href = `/admin/dashboard/Encounter?requestId=${requestId}`
-        },
-        error: function(xhr, status, error) {
-            if (xhr.status == 401){
-                window.location.href = '/admin/login';
-            } else {
-                ToastError("Internal Server Error");
-                console.log(xhr.responseText || error);
+const saveEncounterChanges = (buttonValue, requestId, Role=1) => {
+
+    if (buttonValue === "consult") {
+        $.ajax({
+            type: "POST",
+            url: `/${Role==2 ? 'Provider' : 'admin'}/dashboard/ConsultEncounter`,
+            data: {
+                requestId: requestId
+            },
+            success: function (response) {
+                window.location.href = `/${Role==2 ? 'Provider' : 'admin'}/dashboard/Encounter?requestId=${requestId}`
+            },
+            error: function (xhr, status, error) {
+                if (xhr.status == 401) {
+                    window.location.href = `/${Role==2 ? 'Provider' : 'admin'}/login`;
+                } else {
+                    ToastError("Internal Server Error");
+                    console.log(xhr.responseText || error);
+                }
             }
-        }
         });
     }
-    if(buttonValue==="houseCall"){
-        sendAjaxRequest('/admin/dashboard/houseCallEncounter','POST',{requestId:requestId, status:"onroute"},"application/x-www-form-urlencoded; charset=UTF-8",true)
-        .then(function (response) {
-            populateEncounter(requestId);
-            console.log(response);
-        }).catch(function(error){
-            console.error(error);
-        })
+    if (buttonValue === "houseCall") {
+        sendAjaxRequest(`/${Role==2 ? 'Provider' : 'admin'}/dashboard/houseCallEncounter`, 'POST', {
+                requestId: requestId,
+                status: "onroute"
+            }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                populateEncounter(requestId,Role);
+                console.log(response);
+            }).catch(function (error) {
+                console.error(error);
+            })
     }
-    if(buttonValue==="complete"){
-        sendAjaxRequest('/admin/dashboard/houseCallEncounter','POST',{requestId:requestId, status:"complete"},"application/x-www-form-urlencoded; charset=UTF-8",true)
-        .then(function (response) {
-            window.location.href = `/admin/dashboard/Encounter?requestId=${requestId}`
-        }).catch(function(error){
-            ToastError("Internal Server Error");
-            console.error(error);
-        })
+    if (buttonValue === "complete") {
+        sendAjaxRequest(`/${Role==2 ? 'Provider' : 'Admin'}/dashboard/houseCallEncounter`, 'POST', {
+                requestId: requestId,
+                status: "complete"
+            }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                location.href = `/${Role==2 ? 'Provider' : 'admin'}/dashboard/Encounter?requestId=${requestId}`
+            }).catch(function (error) {
+                ToastError("Internal Server Error");
+                console.error(error);
+            })
     }
 }
 
@@ -624,7 +677,9 @@ const submitAcceptRequest = (reqId) => {
         $.ajax({
             url: '/provider/dashboard/AcceptRequest',
             type: 'GET',
-            data: {reqId},
+            data: {
+                reqId
+            },
             success: function () {
                 location.href = '/provider/dashboard'
             },
@@ -637,4 +692,24 @@ const submitAcceptRequest = (reqId) => {
     } catch (error) {
         console.error("Error Submitting:", error)
     }
+}
+
+function populateDownloadEncounter(){
+    var modal = document.getElementById('encounterModal');
+    modal.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #01bce9;">
+                        <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Encounter</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="encounter-body">
+                    <p class="text-muted">Encounter Form is finalized Successfull, You can download it from here.</p>
+                    <button class="btn theme-btn mt-2">Download</button>
+                    </div>
+                </div>
+            </div>`;
+
+            var modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
 }

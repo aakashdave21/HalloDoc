@@ -1,0 +1,145 @@
+@using HalloDocService.ViewModels;
+@model CloseCaseViewModel;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Conclude Case";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+    <link rel="stylesheet" href="~/css/PatientRequest.css" />
+}
+
+<main class="patient-request-section container-sm mt-sm-5">
+    <div class="d-flex justify-content-end">
+        <a href="/Provider/dashboard" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+    </div>
+
+
+    <div class="d-flex">
+        <h2>Conclude Care</h2>
+    </div>
+    <div class="patient-request-form border p-4 mt-3 mb-3 rounded shadow">
+        <div class="d-flex justify-content-between border-bottom mb-4 pb-3">
+            <div>
+                <p><small class="text-muted">Patient Name</small></p>
+                <span class="fw-bold" style="color: #01bce9; font-size: 20px;">@Model.Firstname @Model.Lastname
+                </span>
+                <small class="text-muted">(mkd77t75757ygdhfsdj)</small>
+            </div>
+        </div>
+
+        <div class=" mb-4 pb-3 border-bottom">
+            <div class="mb-3">
+                <h4 class="fw-bold">Encounter Form</h3>
+                    <form asp-area="Provider" asp-controller="Dashboard" asp-action="UploadFile"
+                        asp-route-type="conclude" method="post" enctype="multipart/form-data">
+                        <div class="input-group mt-5 mb-5">
+                            <input type="hidden" name="requestId" value="@ViewBag.requestId">
+                            <input type="hidden" name="userId" value="@ViewBag.userId">
+                            <input type="file" class="form-control" name="file" id="inputGroupFile02">
+                            <button class="input-group-text theme-btn" type="submit">Upload</button>
+                        </div>
+                    </form>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped" id="example" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="white-space: nowrap; width:55%;">File</th>
+                            <th style="white-space: nowrap;" class="sortable asc">Upload Date <i
+                                    class="fa-solid fa-chevron-up sorting-icons"></i> </th>
+                            <th style="white-space: nowrap;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.documentList)
+                        {
+                            <tr>
+                                <td>
+                                    @{
+                                        var filename = string.Join("_", @item.FileName.Split("_").Skip(1));
+                                    }
+                                    @filename
+                                </td>
+                                <td class="created-date" style="white-space: nowrap;">@item.UploadDate</td>
+                                <td>
+                                    <a class="btn theme-btn" asp-area="Provider" asp-controller="Dashboard"
+                                        asp-action="SingleDownload" asp-route-FileName="@item.FileName"
+                                        asp-route-reqId="@Model.ReqId">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.documentList.Count() == 0)
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center">No records found.</td>
+                            </tr>
+                        }
+
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <form asp-area="Provider" asp-controller="Dashboard" asp-action="ConcludeCarePost">
+            <div>
+                <div class="form-floating">
+                    <input type="hidden" name="requestId" value="@ViewBag.requestId">
+                    <textarea class="form-control" name="ProviderNote" placeholder="Leave a comment here" id="ProviderNote"
+                        style="height: 100px"></textarea>
+                    <label for="ProviderNote">Provider Notes </label>
+                </div>
+                <span class="text-danger"></span>
+            </div>
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn theme-btn">
+                    Conclude Care
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+</main>
+
+<script>
+    $(".sortable").click(function () {
+        var column = $(this).data('sort');
+        var order = $(this).hasClass('asc') ? 'desc' : 'asc';
+        $('.sortable').removeClass('asc desc');
+        $(this).addClass(order);
+        $(this).find('.sorting-icons').toggleClass('fa-chevron-up fa-chevron-down');
+        sortTable(order);
+    });
+
+    function sortTable(order) {
+        const tbody = document.querySelector("tbody");
+        const tr = document.querySelectorAll("tbody tr");
+        const trArray = Array.from(tr);
+
+        trArray.sort((a, b) => {
+            const dateA = new Date(a.querySelector('.created-date').textContent);
+            const dateB = new Date(b.querySelector('.created-date').textContent);
+
+            if (order === 'asc') {
+                return dateA - dateB;
+            } else if (order === 'desc') {
+                return dateB - dateA;
+            }
+        });
+
+        // Re-append sorted table rows to the table body
+        trArray.forEach(row => tbody.appendChild(row));
+    }
+</script>
+
+<script>
+    $("#adminDashTab li").each(function () {
+        if ($(this).data("id") == 1) {
+            $("#adminDashTab li a").removeClass("active");
+            $(this).addClass("active").find("a").addClass("active");
+        }
+    })
+</script>
