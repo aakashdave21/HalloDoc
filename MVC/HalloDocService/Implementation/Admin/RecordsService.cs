@@ -164,7 +164,7 @@ public class RecordsService : IRecordsService
                 Id = log.Id,
                 Action = log.Action == 1 ? "Request Montly Data" : "-",
                 Email = log.Emailid ?? "-",
-                Recipient = log?.Requestid != null ? log.Request?.Requestclients?.FirstOrDefault()?.Firstname ?? "-" : "-",
+                Recipient = log?.Requestid != null ? log.Request?.Requestclients?.FirstOrDefault()?.Firstname ?? "-" : log?.Emailid,
                 CreatedDate = log.Createdat,
                 SentDate = log.Sentdate,
                 RoleName = log?.Role?.Accounttype == 1 ? "Admin" : log?.Role?.Accounttype == 2 ? "Physician" : "Patient",

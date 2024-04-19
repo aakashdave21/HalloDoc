@@ -100,4 +100,12 @@ public class ProviderDashboardRepo : IProviderDashboardRepo
         throw new Exception(); 
     }
 
+    public Aspnetuser? SendProfileRequest(int? PhyId){
+        Physician? physician = _dbContext.Physicians.FirstOrDefault(phy => phy.Id == PhyId);
+        if(physician!=null && physician?.Createdby!=null){
+            return _dbContext.Aspnetusers.Include(user=>user.AdminAspnetusers).FirstOrDefault(user => user.Id == physician.Createdby);
+        }
+        return null;
+    }
+
 }

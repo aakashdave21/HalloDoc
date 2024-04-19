@@ -10,6 +10,7 @@ public interface IProfileRepo
     IEnumerable<Role> GetAllRoles(int AccountType);
 
     IEnumerable<Adminregion> GetServicedRegions(int AdminId);
+    IEnumerable<Physicianregion> GetPhysicianServicedRegion(int PhyId);
 
     void UpdateAdminInfo(AdminTable adminInfo,Aspnetuser aspUserDetails,int AdminId,int AspUserId);
 

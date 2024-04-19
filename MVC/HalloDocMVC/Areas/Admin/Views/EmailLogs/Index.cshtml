@@ -21,7 +21,7 @@
 </style>
 <main class="Partner-Section container-fluid p-md-5 mt-sm-5 mt-2 mb-3">
     <div class="d-flex justify-content-between flex-wrap">
-        <h4 class="fw-bold">SMS Logs(Twilio)</h4>
+        <h4 class="fw-bold">Email Logs(Gmail)</h4>
     </div>
     <div class="p-4 mt-3 mb-3 rounded shadow border">
         <div id="partner-header">
@@ -46,8 +46,8 @@
                     </div>
                     <div class="col-lg-2 col-sm-6">
                         <div class="form-floating ">
-                            <input type="text" class="form-control" id="Phone" placeholder="Phone">
-                            <label for="Phone">Phone</label>
+                            <input type="text" class="form-control" id="Email" placeholder="Email">
+                            <label for="Email">Email</label>
                         </div>
                     </div>
                     <div class="col-lg-2 col-sm-6">
@@ -71,8 +71,8 @@
                 </div>
             </form>
         </div>
-        <div id="records-sms-render" class="mt-5">
-            <partial name="_SMSLogTable" />
+        <div id="records-email-render" class="mt-5">
+            <partial name="_EmailLogTable" />
         </div>
     </div>
 </main>
@@ -82,7 +82,7 @@
     let pageSize = 5;
     let pageNum = 1;
     let SearchBy = {
-        phoneNumber : "",
+        email : "",
         recipient : "",
         roleId : 0,
         createdDate : "",
@@ -113,7 +113,7 @@
         pageNum = 1;
         pageSize = 5;
         SearchBy = {
-            phoneNumber : "",
+            email : "",
             recipient : "",
             roleId : 0,
             createdDate : "",
@@ -123,32 +123,20 @@
     }
 
     function CallAjax() {
-        sendAjaxRequest('/admin/records/SMSLogs', 'GET', { pageSize, pageNum, ...SearchBy }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+        sendAjaxRequest('/admin/EmailLogs/Index', 'GET', { pageSize, pageNum, ...SearchBy }, "application/x-www-form-urlencoded; charset=UTF-8", true)
             .then(function (response) {
-                $("#records-sms-render").empty();
-                $("#records-sms-render").html(response);
+                $("#records-email-render").empty();
+                $("#records-email-render").html(response);
             }).catch(function (error) {
                 ToastError("Internal Server Error");
             })
     }
 
     function getData() {
-       SearchBy.phoneNumber = $("#Phone").val();
+       SearchBy.email = $("#Email").val();
        SearchBy.recipient = $("#ReceiverName").val();
        SearchBy.roleId = $("#Roles").val();
        SearchBy.createdDate = $("#CreatedDate").val();
        SearchBy.sentDate = $("#sentDate").val();
     }
-</script>
-
-<script>
-    $("#adminDashTab li").each(function(){
-        if($(this).data("id")==7){
-            $("#adminDashTab li a").removeClass("active");
-            $(this).addClass("active").find("a").addClass("active");
-            $(this).find(".inner-nav ul li a").removeClass("active");
-            $(this).find(".inner-nav ul li[data-inner-itemid='10'] a").addClass("active");
-            $(this).find(".showMenu").html(`SMS Logs Records <i class="fa-solid fa-caret-down"></i>`);
-        }
-    })
 </script>

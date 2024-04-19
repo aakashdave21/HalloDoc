@@ -5,6 +5,7 @@
     var roleClaim = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
     var Role = roleClaim?.Value;
     var menuItems = Context.Items["MenuItems"] as List<HeaderMenu>;
+    string controllerName = Context.Request.RouteValues["controller"].ToString();
 }
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
@@ -55,9 +56,15 @@
                             aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <a asp-controller="Dashboard" asp-action="Index">
-                            <img src="~/images/logo.png" alt="logo hallo doc" style="width: 150px;">
-                        </a>
+                        @if (Role == "Admin"){
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                <img src="~/images/logo.png" alt="logo hallo doc" style="width: 150px;">
+                            </a>
+                        }else if (Role == "Provider"){
+                             <a asp-area="Provider" asp-controller="Dashboard" asp-action="Index">
+                                <img src="~/images/logo.png" alt="logo hallo doc" style="width: 150px;">
+                            </a>
+                        }
                     </div>
 
                     <div class="d-flex align-items-center">
@@ -86,7 +93,7 @@
                 </div>
                 <div class="collapse navbar-collapse nav-tabs d-md-block position-absolute shadow"
                     id="navbarSupportedContent" style="width: 100%;">
-                    @if (Role == "Admin")
+                    @* @if (Role == "Admin")
                     {
                         <ul class="d-flex flex-md-row flex-column nav-tabs-ul" id="adminDashTab">
                             <li data-id="1">
@@ -124,35 +131,30 @@
                                     <ul class="inner-nav shadow" style="display: none;">
                                         <li data-inner-itemid="7"><a asp-area="Admin" asp-controller="Records"
                                                 asp-action="Index" class="dropdown-item">Search Records</a></li>
-                                        <li data-inner-itemid="9"><a asp-area="Admin" asp-controller="Records"
-                                                asp-action="EmailLogs" class="dropdown-item">Email Logs</a></li>
-                                        <li data-inner-itemid="10"><a asp-area="Admin" asp-controller="Records"
-                                                asp-action="SMSLogs" class="dropdown-item">SMS Logs</a></li>
-                                        <li data-inner-itemid="11"><a asp-area="Admin" asp-controller="Records"
-                                                asp-action="PatientHistory" class="dropdown-item">Patient Records</a></li>
-                                        <li data-inner-itemid="12"><a asp-area="Admin" asp-controller="Records"
-                                                asp-action="BlockHistory" class="dropdown-item">Blocked History</a></li>
+                                        <li data-inner-itemid="9"><a asp-area="Admin" asp-controller="EmailLogs"
+                                                asp-action="Index" class="dropdown-item">Email Logs</a></li>
+                                        <li data-inner-itemid="10"><a asp-area="Admin" asp-controller="SMSLogs"
+                                                asp-action="Index" class="dropdown-item">SMS Logs</a></li>
+                                        <li data-inner-itemid="11"><a asp-area="Admin" asp-controller="PatientHistory"
+                                                asp-action="Index" class="dropdown-item">Patient Records</a></li>
+                                        <li data-inner-itemid="12"><a asp-area="Admin" asp-controller="BlockHistory"
+                                                asp-action="Index" class="dropdown-item">Blocked History</a></li>
                                     </ul>
                                 </div>
                             </li>
                         </ul>
+                    } *@
+                    @if (Role == "Admin"){     
+                        <ul class="d-flex flex-md-row flex-column nav-tabs-ul" id="adminDashTab">
+                        @if (menuItems != null)
+                        {
+                            foreach (var menuItem in menuItems)
+                            {
+                                <li data-id="@menuItem.Name"><a asp-area="Admin" asp-controller="@menuItem.Name" asp-action="Index">@menuItem.Title</a></li>
+                            }
+                        }
+                        </ul>
                     }
-                    @* <ul class="d-flex flex-md-row flex-column nav-tabs-ul" id="adminDashTab">
-                    @if (menuItems != null)
-                    {
-                    foreach (var menuItem in menuItems)
-                    {
-                    @if(@menuItem.Name == "EmailLogs" || @menuItem.Name == "PatientHistory" || @menuItem.Name ==
-                    "BlockHistory" || @menuItem.Name == "SMSLogs"){
-                    <li id="@menuItem.Name"><a asp-area="Admin" asp-controller="Records"
-                    asp-action="@menuItem.Name">@menuItem.Title</a></li>
-                    }else{
-                    <li><a asp-area="Admin" asp-controller="@menuItem.Name" asp-action="Index">@menuItem.Title</a></li>
-                    }
-
-                    }
-                    }
-                    </ul> *@
                     @if (Role == "Provider")
                     {
                         <ul class="d-flex flex-md-row flex-column nav-tabs-ul" id="adminDashTab">
@@ -195,19 +197,12 @@
     <script type="text/javascript" src="~/js/adminDashboard.js" asp-append-version="true"></script>
     <script src="https://kit.fontawesome.com/3bcc8c09be.js" crossorigin="anonymous"></script>
     <script>
-        @* let AccessId = 1;
-            $("#adminDashTab li").each(function(){
-            if($(this).data("id")==AccessId){
-            $("#adminDashTab li a").removeClass("active");
-            $(this).addClass("active").find("a").addClass("active");
+        $("#adminDashTab li").each(function(){
+            if($(this).data("id")=="@controllerName"){
+                $("#adminDashTab li a").removeClass("active");
+                $(this).addClass("active").find("a").addClass("active");
             }
-            })
-            $("#adminDashTab li").click(function(){
-            AccessId = $(this).data("id");
-            console.log(AccessId);
-            }) *@
-        @* $("#AccessId").addClass("active").find("a").addClass("active"); *@
-
+        })
     </script>
 </body>
 

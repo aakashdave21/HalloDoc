@@ -20,6 +20,7 @@ public class AdminDashboardRepo : IAdminDashboardRepo
     {   
         IQueryable<Request> query = _dbContext.Requests
             .Include(req => req.Requestclients)
+            .Include(req=>req.Encounterform)
             .Where(req => req.Status == 1);
 
 
@@ -47,6 +48,7 @@ public (IEnumerable<Request> requests, int totalCount) GetPendingStatusRequest(s
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
         .Include(req => req.Physician)
+        .Include(req=>req.Encounterform)
         .Where(req => req.Status == 2);
 
     if(reqTypeId>0){
@@ -74,6 +76,7 @@ public (IEnumerable<Request> requests, int totalCount) GetActiveStatusRequest(st
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
         .Include(req => req.Physician)
+        .Include(req=>req.Encounterform)
         .Where(req => (req.Status == 4 || req.Status == 5) && req.Accepteddate != null);
 
     if(reqTypeId>0){
@@ -102,6 +105,7 @@ public (IEnumerable<Request> requests, int totalCount) GetConcludeStatusRequest(
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
         .Include(req => req.Physician)
+        .Include(req=>req.Encounterform)
         .Where(req => req.Status == 6);
 
     if(reqTypeId>0){
@@ -130,6 +134,7 @@ public (IEnumerable<Request> requests, int totalCount) GetCloseStatusRequest(str
         .Include(req => req.Requestclients)
         .ThenInclude(rc => rc.Region)
         .Include(req => req.Physician)
+        .Include(req=>req.Encounterform)
         .Where(req => (req.Status == 8 || req.Status == 7 || req.Status == 3));
 
      if(reqTypeId>0){
@@ -157,6 +162,7 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
     IQueryable<Request> query = _dbContext.Requests
         .Include(req => req.Requestclients)
         .Include(req => req.Physician)
+        .Include(req=>req.Encounterform)
         .Where(req => req.Status == 9);
 
     if(reqTypeId>0){
@@ -286,8 +292,8 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         _dbContext.SaveChanges();
     }
 
-    public async Task<IEnumerable<Region>> GetRegions(){
-        return await _dbContext.Regions.ToListAsync();
+    public List<Region> GetRegions(){
+        return _dbContext.Regions.Include(reg=>reg.Admins).ToList();
     }
     public async Task<IEnumerable<Casetag>> GetCaseTag(){
         return await _dbContext.Casetags.ToListAsync();

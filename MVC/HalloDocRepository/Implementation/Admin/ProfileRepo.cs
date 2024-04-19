@@ -28,6 +28,9 @@ public class ProfileRepo : IProfileRepo
     public IEnumerable<Adminregion> GetServicedRegions(int AdminId){
         return _dbContext.Adminregions.Include(reg => reg.Region).Where(reg => reg.Adminid == AdminId);
     }
+    public IEnumerable<Physicianregion> GetPhysicianServicedRegion(int PhyId){
+        return _dbContext.Physicianregions.Include(reg => reg.Region).Where(reg => reg.Physicianid == PhyId);
+    }
 
     public void UpdateAdminInfo(AdminTable adminInfo,Aspnetuser aspUserDetails,int AdminId,int AspUserId){
         if(AdminId!=null && AspUserId!=null){

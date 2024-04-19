@@ -101,7 +101,7 @@ public class ScheduleService : IScheduleService
         {
             List<Shiftdetail> shiftDetailsList = new();
 
-            for (int i = 0; i < schedulingView.RepeatTime; i++)
+            for (int i = 0; i < schedulingView?.RepeatTime; i++)
             {
                 DateOnly shiftDate = DateOnly.ParseExact(schedulingView?.ShiftDate, "yyyy-MM-dd", null);
                 int StatrtDay = shiftDate.Day;
@@ -116,9 +116,9 @@ public class ScheduleService : IScheduleService
                         {
                             Shiftid = newShift.Id,
                             Shiftdate = new DateTime(shiftDates.Year, shiftDates.Month, shiftDates.Day, 0, 0, 0),
-                            Regionid = schedulingView.RegionId,
-                            Starttime = TimeOnly.ParseExact(schedulingView?.StartTime, "HH:mm", null),
-                            Endtime = TimeOnly.ParseExact(schedulingView?.EndTime, "HH:mm", null),
+                            Regionid = schedulingView?.RegionId,
+                            Starttime = TimeOnly.ParseExact(schedulingView?.StartTime ?? "", "HH:mm", null),
+                            Endtime = TimeOnly.ParseExact(schedulingView?.EndTime ?? "", "HH:mm", null),
                             Status = (short)((AccountType == 1) ? 2 : 1),
                             Createdby = AspUserId
                         };
@@ -155,7 +155,7 @@ public class ScheduleService : IScheduleService
         }
         else
         {
-            _scheduleRepo.UpdateShift(shiftId, DateTime.Parse(shiftDate), startTime, endTime, aspUserId);
+            _scheduleRepo.UpdateShift(shiftId, shiftDate!=null ? DateTime.Parse(shiftDate) : DateTime.MinValue, startTime, endTime, aspUserId);
         }
     }
 

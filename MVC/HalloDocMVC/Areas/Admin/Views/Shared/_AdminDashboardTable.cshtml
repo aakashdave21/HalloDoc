@@ -211,13 +211,19 @@
                                                                 </li>
                                                                 <li><a class="dropdown-item" href="/admin/dashboard/ViewNotes/@item.Id">View Notes</a></li>
                                                                 <li><a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="SendOrder" asp-route-RequestId="@item.Id">Orders</a></li>
-                                                                <li>
-                                                                    @using(Html.BeginForm("Encounter","Dashboard",new { area = "admin" }, FormMethod.Post)){
-                                                                        <input type="hidden" name="RequestId" value="@item.Id"/>
-                                                                        <a class="dropdown-item"><button type="submit" style="all:unset;">Encounter</button></a> 
-                                                                    }
-                                                                    
-                                                                </li>
+                                                                 @if(item.IsFinalized){
+                                                                    <li>
+                                                                        <a class="dropdown-item" onclick="populateDownloadEncounter('@item.Id')">Encounter</a>
+                                                                    </li>
+                                                                }else{
+                                                                    <li>
+                                                                        @using(Html.BeginForm("Encounter","Dashboard",new { area = "Admin" }, FormMethod.Post)){
+                                                                            <input type="hidden" name="RequestId" value="@item.Id"/>
+                                                                            <a class="dropdown-item"><button type="submit" style="all:unset;">Encounter</button></a> 
+                                                                        }
+                                                                        
+                                                                    </li>
+                                                                }
                                                             </ul> 
                                                           break;
                                             case "close" : <ul class="dropdown-menu">
@@ -854,38 +860,7 @@
 @* transfer Case Modal *@
 <div class="modal fade shadow-lg " id="transferModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    @* <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #01bce9;">
-                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Transfer Request</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <small class="text-muted">To transfer this request, search and select physician.</small>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Search By Region</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-                <select class="form-select mt-2" aria-label="Default select example">
-                    <option selected>Select Physician</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-                <div class="form-floating mt-2">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="Symptoms"
-                        style="height: 100px"></textarea>
-                    <label for="Symptoms" style="white-space: normal;">Description</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn secondary-theme-btn">Confirm</button>
-                <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancle</button>
-            </div>
-        </div>
-    </div> *@
+    
 </div>
 
 

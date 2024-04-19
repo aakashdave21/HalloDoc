@@ -16,12 +16,12 @@ public class PatientLoginRepo : IPatientLoginRepo
         _dbContext = dbContext;
     }
 
-    public Aspnetuser ValidateUser(string email)
+    public Aspnetuser? ValidateUser(string email)
     {
         return _dbContext.Aspnetusers.Include(users => users.Aspnetuserroles).ThenInclude(roles => roles.Role).FirstOrDefault(user => user.Email == email);
     }
 
-    public Aspnetuser userDetailsFromUserName(string username){
+    public Aspnetuser? userDetailsFromUserName(string username){
         return _dbContext.Aspnetusers.FirstOrDefault(q=> q.Username == username);
     }
 

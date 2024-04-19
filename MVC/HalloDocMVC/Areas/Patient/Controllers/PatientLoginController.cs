@@ -129,7 +129,7 @@ public class PatientLoginController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
 
-    public async Task<IActionResult> ForgotPasswordPost([Bind("Username")] UserResetPasswordViewModel user)
+    public IActionResult ForgotPasswordPost([Bind("Username")] UserResetPasswordViewModel user)
     {
 
         if (!ModelState.IsValid)
@@ -149,7 +149,8 @@ public class PatientLoginController : Controller
                 Console.WriteLine(callbackUrl);
 
                 string rcvrMail = "aakashdave21@gmail.com";
-                await _utilityService.EmailSend(callbackUrl,rcvrMail);
+                string message = $"Please click the following link to reset your password: <a href='{callbackUrl}'>{callbackUrl}</a>";
+                _utilityService.EmailSend(rcvrMail,message,"Reset Password");
                 
 
                 TempData["success"] = "Reset Link Sent to User Via Email " + userDetails.Email;
@@ -178,7 +179,7 @@ public class PatientLoginController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ResetPasswordPost(ResetPasswordViewModel users)
+    public IActionResult ResetPasswordPost(ResetPasswordViewModel users)
     {   
         if (!ModelState.IsValid)
         {
@@ -190,9 +191,10 @@ public class PatientLoginController : Controller
             var token = _patientLoginService.GetResetTokenExpiry(users.UserId, users.UserToken);
             if (token.ResetToken == users.UserToken && token != null && token.ResetExpiration > DateTime.UtcNow)
             {
+                users.Password = PasswordHasher.HashPassword(users.Password);
                 _patientLoginService.UpdatePassword(token.Id , users.Password);
                 TempData["success"] = "Password Reset Successfully !";
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index),"Home");
             }
             else if (token.ResetExpiration < DateTime.UtcNow)
             {

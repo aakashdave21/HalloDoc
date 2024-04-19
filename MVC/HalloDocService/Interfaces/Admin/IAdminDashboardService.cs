@@ -16,14 +16,14 @@ public interface IAdminDashboardService
     Dictionary<string,int> CountRequestByType();
     ViewCaseViewModel GetViewCaseDetails(int id);
     ViewNotesViewModel GetViewNotesDetails(int reqId, int reqType = 1);
-    void SaveAdditionalNotes(string AdditionalNote,int noteId,int reqId, int reqType);
+    void SaveAdditionalNotes(string? AdditionalNote,int noteId,int reqId, int reqType);
     void CancleRequestCase(int reqId,string reason,string additionalNotes);
 
-    Task<IEnumerable<Region>> GetRegions();
+    List<Region> GetRegions();
     Task<IEnumerable<Casetag>> GetCaseTag();
     Task<IEnumerable<Physician>> GetPhysicianByRegion(int regionId);
 
-    Task AssignRequestCase(int reqId,int phyId,int? adminId,string desc);
+    void AssignRequestCase(int reqId,int phyId,int? adminId,string desc);
     Task BlockRequestCase(int reqId,int? adminId,string reason);
 
     Request GetSingleRequest(int reqId);
@@ -61,5 +61,5 @@ public interface IAdminDashboardService
 
     IEnumerable<Request> FetchAllRequest();
 
-    void CreateRequest(PatientRequestViewModel patientRequest);
+    void CreateRequest(PatientRequestViewModel patientRequest,int AccountType = 1);
     }

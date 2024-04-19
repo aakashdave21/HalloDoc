@@ -15,11 +15,11 @@ public class PatientRequestRepo : IPatientRequestRepo
         _dbContext = dbContext;
     }
 
-    public Aspnetuser FindUserByEmail(string email){
+    public Aspnetuser? FindUserByEmail(string email){
         return _dbContext.Aspnetusers.FirstOrDefault(m => m.Email == email);
     }
 
-    public User FindUserByEmailFromUser(string email){
+    public User? FindUserByEmailFromUser(string email){
         return _dbContext.Users.FirstOrDefault(m => m.Email == email);
     }
 
@@ -61,14 +61,15 @@ public class PatientRequestRepo : IPatientRequestRepo
         _dbContext.SaveChanges();
     }
     public void StoreActivationToken(int AspUserId , string token, DateTime expiry){
-        Aspnetuser existedUser = _dbContext.Aspnetusers.FirstOrDefault(user => user.Id == AspUserId);
+        Aspnetuser? existedUser = _dbContext.Aspnetusers.FirstOrDefault(user => user.Id == AspUserId);
         if(existedUser!=null){
             existedUser.AcivationToken = token;
             existedUser.ActivationExpiry = expiry;
             _dbContext.SaveChanges();
         }
+        throw new Exception();
     }
-    public Region GetSingleRegion(int regionId){
+    public Region? GetSingleRegion(int regionId){
         return _dbContext.Regions.FirstOrDefault(m => m.Id == regionId);
     }
 
@@ -78,7 +79,7 @@ public class PatientRequestRepo : IPatientRequestRepo
     }
 
     public IEnumerable<Request> GetTodaysRequest(){
-        return _dbContext.Requests.Where(req=>req.Createdat.Value.Date == DateTime.Now.Date);
+        return _dbContext.Requests.Where(req=>req.Createdat!=null && req.Createdat.Value.Date == DateTime.Now.Date);
     }
      
 }

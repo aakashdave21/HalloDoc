@@ -52,6 +52,16 @@ public class AccessService : IAccessService
             });
             return menulists;
     }
+    public IEnumerable<HeaderMenu> GetAllMenuList(){
+            IEnumerable<HeaderMenu> menulists = _accessRepo.GetMenuList(0).Select(menu => new HeaderMenu(){
+                Id = menu.Id,
+                Name = menu.Name,
+                Title = menu.Title,
+                SortOrder = menu.Sortorder,
+                AccountType = menu.Accounttype
+            });
+            return menulists;
+    }
     public void CreateNewRole(string roleName,int AccountType,List<int> MenuArray,int AspUserId){
         _accessRepo.CreateNewRole(roleName,AccountType,MenuArray,AspUserId);
     }

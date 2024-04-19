@@ -736,19 +736,3 @@
     }
     
 </script>
-
-<script>
-    $("#adminDashTab li").each(function(){
-        if($(this).data("id")==4){
-            $("#adminDashTab li a").removeClass("active");
-            $(this).addClass("active").find("a").addClass("active");
-            $(this).find(".inner-nav ul li a").removeClass("active");
-            $(this).find(".inner-nav ul li[data-inner-itemid='8'] a").addClass("active");
-            $(this).find(".showMenu").html(`Scheduling <i class="fa-solid fa-caret-down"></i>`);
-        }
-    })
-
-    if (window.history.replaceState) {
-        window.history.replaceState(null, null, window.location.href);
-    }
-</script>

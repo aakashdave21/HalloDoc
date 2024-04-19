@@ -65,7 +65,7 @@ public class RequestController : Controller
                 string hashedPassword = PasswordHasher.HashPassword(viewRequest.Passwordhash);
                 viewRequest.Passwordhash = hashedPassword;
 
-                await _patientRequestService.ProcessPatientRequestAsync(viewRequest);
+                _patientRequestService.ProcessPatientRequestAsync(viewRequest);
                 TempData["success"] = "Request Submitted Successfully";
                 return RedirectToAction("Index", "PatientLogin");
 
@@ -80,7 +80,7 @@ public class RequestController : Controller
 
 
     [HttpPost]
-    public async Task<IActionResult> VerifyEmail(string email)
+    public IActionResult VerifyEmail(string email)
     {
         try
         {
@@ -134,7 +134,7 @@ public class RequestController : Controller
                     }
                     familyRequest.FilePath = filePath;
                 }
-                int userId = await _patientRequestService.ProcessFamilyRequestAsync(familyRequest);
+                int userId = _patientRequestService.ProcessFamilyRequestAsync(familyRequest);
 
                 if(userId!=0){
                     TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
@@ -167,7 +167,7 @@ public class RequestController : Controller
                 return View(nameof(Concierge), conciergeRequest); // Return the view with validation errors
             }
             try{
-                int userId = await _patientRequestService.ProcessConciergeRequestAsync(conciergeRequest);
+                int userId = _patientRequestService.ProcessConciergeRequestAsync(conciergeRequest);
                 
                 if(userId!=0){
                     TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
@@ -205,8 +205,7 @@ public class RequestController : Controller
             }
 
             try{
-
-                int userId = await _patientRequestService.ProcessBusinessRequestAsync(businessRequests);
+                int userId = _patientRequestService.ProcessBusinessRequestAsync(businessRequests);
                  if(userId!=0){
                     TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
                     SendCreationLink(userId);
@@ -224,7 +223,7 @@ public class RequestController : Controller
             }
     }
 
-    private async Task SendCreationLink(int userId){
+    private void SendCreationLink(int userId){
         try
         {
             // Activation Email Sent To Patient
@@ -233,7 +232,8 @@ public class RequestController : Controller
                 DateTime expirationTime = DateTime.UtcNow.AddHours(1);
                 _patientRequestService.StoreActivationToken(userId,token,expirationTime);
                 string rcvrMail = "aakashdave21@gmail.com";
-                await _utilityService.EmailSend(createAccountLink,rcvrMail);
+                string message = $"Please click the following link to reset your password: <a href='{createAccountLink}'>{createAccountLink}</a>";
+                _utilityService.EmailSend(rcvrMail,message,"Account Creation Link",null,3,null,null);
         }
         catch (Exception e)
         {

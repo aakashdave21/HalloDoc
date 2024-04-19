@@ -423,7 +423,6 @@ const populatePhysicianTransferCase = async (reqId) => {
 
 const transferReqToAdmin = (reqId) => {
     const description = $("#ProviderDescription").val();
-    alert(description);
     $.ajax({
         url: '/Provider/dashboard/transfercase',
         type: 'POST',
@@ -694,22 +693,25 @@ const submitAcceptRequest = (reqId) => {
     }
 }
 
-function populateDownloadEncounter(){
+function populateDownloadEncounter(Id){
     var modal = document.getElementById('encounterModal');
     modal.innerHTML = `
-                <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header" style="background-color: #01bce9;">
-                        <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Encounter</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" id="encounter-body">
-                    <p class="text-muted">Encounter Form is finalized Successfull, You can download it from here.</p>
-                    <button class="btn theme-btn mt-2">Download</button>
-                    </div>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #01bce9;">
+                    <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Encounter</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </div>`;
+                <div class="modal-body" id="encounter-body">
+                    <p class="text-muted">Encounter Form is finalized Successfully. You can download it from here.</p>
+                    <form id="downloadForm" action="/Provider/Dashboard/DownloadEncounter" method="post">
+                        <input type="hidden" name="Id" value="${Id}">
+                        <button type="submit" class="btn theme-btn mt-2">Download</button>
+                    </form>
+                </div>
+            </div>
+        </div>`;
 
-            var modalInstance = new bootstrap.Modal(modal);
+        var modalInstance = new bootstrap.Modal(modal);
         modalInstance.show();
 }

@@ -24,7 +24,7 @@ public interface IAdminDashboardRepo
    short GetStatusOfRequest(int reqId);
    int? GetNoteIdFromRequestId(int reqId);
 
-   Task<IEnumerable<Region>> GetRegions();
+   List<Region> GetRegions();
    Task<IEnumerable<Casetag>> GetCaseTag();
    Task<IEnumerable<Physician>> GetPhysicianByRegion(int regionId);
    void AddPhysicianToRequest(int reqId,int? transPhyId);

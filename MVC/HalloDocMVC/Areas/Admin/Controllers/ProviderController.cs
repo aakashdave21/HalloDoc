@@ -29,7 +29,7 @@ public class ProviderController : Controller
         _hostingEnvironment = hostingEnvironment;
         _accessService = accessService;
     }
-    public async Task<IActionResult> Index(string regionId, string order)
+    public IActionResult Index(string regionId, string order)
     {
         try
         {
@@ -76,12 +76,12 @@ public class ProviderController : Controller
     }
 
     [HttpPost]
-    public IActionResult ContactProvider(string Id, string Communication, string Message)
+    public IActionResult ContactProvider(int Id, string Communication, string Message)
     {
         try
         {
-            var PhysicianData = _providerService.GetSingleProviderData(int.Parse(Id));
-            _utilityService.EmailSend(null, "aakashdave21@gmail.com", Message, "Message From Admin");
+            var PhysicianData = _providerService.GetSingleProviderData(Id);
+            _utilityService.EmailSend("aakashdave21@gmail.com", Message, "Message From Admin", null , 2 , null , Id , null);
             TempData["success"] = "Message Sent To Physician";
             return RedirectToAction("Index");
         }

@@ -20,22 +20,22 @@ public class PatientRequestService : IPatientRequestService
         _profileRepo = profileRepo;
     }
 
-    public async Task ProcessPatientRequestAsync(PatientRequestViewModel patientView)
+    public void ProcessPatientRequestAsync(PatientRequestViewModel patientView)
     {
 
         var userEmail = _patientRequestRepo.FindUserByEmail(patientView.Email);
 
         if (userEmail != null)
         {
-            await ProcessExistingUserRequestAsync(patientView);
+             ProcessExistingUserRequestAsync(patientView);
         }
         else
         {
-            await ProcessNewUserRequestAsync(patientView);
+            ProcessNewUserRequestAsync(patientView);
         }
 
     }
-    private async Task ProcessExistingUserRequestAsync(PatientRequestViewModel viewRequest)
+    private void ProcessExistingUserRequestAsync(PatientRequestViewModel viewRequest)
     {
         var existUserData = _patientRequestRepo.FindUserByEmailFromUser(viewRequest.Email);
         var RegionDetails = _patientRequestRepo.GetSingleRegion((int)viewRequest.State);
@@ -86,7 +86,7 @@ public class PatientRequestService : IPatientRequestService
         }
     }
 
-    private async Task ProcessNewUserRequestAsync(PatientRequestViewModel viewRequest)
+    private void ProcessNewUserRequestAsync(PatientRequestViewModel viewRequest)
     {
         string email = viewRequest.Email;
         string[] parts = email.Split('@');
@@ -181,22 +181,22 @@ public class PatientRequestService : IPatientRequestService
     }
 
     // Family Request Implementation
-    public async Task<int> ProcessFamilyRequestAsync(FamilyRequestViewModel familyView)
+    public int ProcessFamilyRequestAsync(FamilyRequestViewModel familyView)
     {
         var userEmail = _patientRequestRepo.FindUserByEmail(familyView.Email);
         if (userEmail != null)
         {
-            var userId = await ProcessExistingUserFamilyRequestAsync(familyView);
+            var userId = ProcessExistingUserFamilyRequestAsync(familyView);
             return userId;
         }
         else
         {
-            var userId = await ProcessNewUserFamilyRequestAsync(familyView);
+            var userId = ProcessNewUserFamilyRequestAsync(familyView);
             return userId;
 
         }
     }
-    private async Task<int> ProcessExistingUserFamilyRequestAsync(FamilyRequestViewModel familyRequest)
+    private int ProcessExistingUserFamilyRequestAsync(FamilyRequestViewModel familyRequest)
     {
         var existUserData = _patientRequestRepo.FindUserByEmailFromUser(familyRequest.Email);
         var RegionDetails = _patientRequestRepo.GetSingleRegion((int)familyRequest.State);
@@ -249,7 +249,7 @@ public class PatientRequestService : IPatientRequestService
 
         return 0;
     }
-    private async Task<int> ProcessNewUserFamilyRequestAsync(FamilyRequestViewModel familyRequest)
+    private int ProcessNewUserFamilyRequestAsync(FamilyRequestViewModel familyRequest)
     {
         // If user is not exists then new User Creation
         // Create Request Without UserId -> When Account is Created then Assign USERID to Request Table
@@ -343,22 +343,22 @@ public class PatientRequestService : IPatientRequestService
 
 
     // Business Request Implementaion
-    public async Task<int> ProcessBusinessRequestAsync(BusinessRequestViewModel businessView)
+    public int ProcessBusinessRequestAsync(BusinessRequestViewModel businessView)
     {
         var userEmail = _patientRequestRepo.FindUserByEmail(businessView.Email);
         if (userEmail != null)
         {
-            int userId = await ProcessExistingUserBusinessRequestAsync(businessView);
+            int userId =  ProcessExistingUserBusinessRequestAsync(businessView);
             return userId;
         }
         else
         {
-            int userId = await ProcessNewUserBusinessRequestAsync(businessView);
+            int userId =  ProcessNewUserBusinessRequestAsync(businessView);
             return userId;
         }
     }
 
-    private async Task<int> ProcessExistingUserBusinessRequestAsync(BusinessRequestViewModel businessRequests)
+    private int ProcessExistingUserBusinessRequestAsync(BusinessRequestViewModel businessRequests)
     {
         var existUserData = _patientRequestRepo.FindUserByEmailFromUser(businessRequests.Email);
         var RegionDetails = _patientRequestRepo.GetSingleRegion((int)businessRequests.State);
@@ -401,7 +401,7 @@ public class PatientRequestService : IPatientRequestService
         _patientRequestRepo.AddPatientInfoForExistedUser(patientInfo);
         return 0;
     }
-    private async Task<int> ProcessNewUserBusinessRequestAsync(BusinessRequestViewModel businessRequests)
+    private int ProcessNewUserBusinessRequestAsync(BusinessRequestViewModel businessRequests)
     {
         // If user is not exists then new User Creation
         // Create Request Without UserId -> When Account is Created then Assign USERID to Request Table
@@ -481,22 +481,22 @@ public class PatientRequestService : IPatientRequestService
     }
 
     // Concierge Request Implementatin
-    public async Task<int> ProcessConciergeRequestAsync(ConciergeRequestViewModel conciergeView)
+    public int ProcessConciergeRequestAsync(ConciergeRequestViewModel conciergeView)
     {
         var userEmail = _patientRequestRepo.FindUserByEmail(conciergeView.Email);
         if (userEmail != null)
         {
-            int userId = await ProcessExistingUserConciergeRequestAsync(conciergeView);
+            int userId =  ProcessExistingUserConciergeRequestAsync(conciergeView);
             return userId;
         }
         else
         {
-            int userId = await ProcessNewUserConciergeRequestAsync(conciergeView);
+            int userId =  ProcessNewUserConciergeRequestAsync(conciergeView);
             return userId;
         }
     }
 
-    private async Task<int> ProcessExistingUserConciergeRequestAsync(ConciergeRequestViewModel conciergeRequest)
+    private int ProcessExistingUserConciergeRequestAsync(ConciergeRequestViewModel conciergeRequest)
     {
         var existUserData = _patientRequestRepo.FindUserByEmailFromUser(conciergeRequest.Email);
         var RegionDetails = _patientRequestRepo.GetSingleRegion((int)conciergeRequest.ConciergeState);
@@ -551,7 +551,7 @@ public class PatientRequestService : IPatientRequestService
         _patientRequestRepo.RequestConciergeMappingAdd(new_request_concierge);
         return 0;
     }
-    private async Task<int> ProcessNewUserConciergeRequestAsync(ConciergeRequestViewModel conciergeRequest)
+    private int ProcessNewUserConciergeRequestAsync(ConciergeRequestViewModel conciergeRequest)
     {
         // If user is not exists then new User Creation
         // Create Request Without UserId -> When Account is Created then Assign USERID to Request Table

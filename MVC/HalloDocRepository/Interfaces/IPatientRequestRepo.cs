@@ -3,8 +3,8 @@ using HalloDocRepository.DataModels;
 namespace HalloDocRepository.Interfaces;
 public interface IPatientRequestRepo
 {
-    Aspnetuser FindUserByEmail(string email);
-    User FindUserByEmailFromUser(string email);
+    Aspnetuser? FindUserByEmail(string email);
+    User? FindUserByEmailFromUser(string email);
 
     void AddRequestDataForExistedUser(Request requestData);
     void AddPatientInfoForExistedUser(Requestclient requestData);
@@ -16,7 +16,7 @@ public interface IPatientRequestRepo
     void RequestConciergeMappingAdd(Requestconcierge requestData);
     void AddDocumentDetails(Requestwisefile requestData);
     void StoreActivationToken(int AspUserId , string token, DateTime expiry);
-    Region GetSingleRegion(int regionId);
+    Region? GetSingleRegion(int regionId);
     void NewRoleAdded(Aspnetuserrole aspnetuserrole);
 
     IEnumerable<Request> GetTodaysRequest();

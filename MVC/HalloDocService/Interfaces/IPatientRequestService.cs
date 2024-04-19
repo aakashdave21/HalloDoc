@@ -6,10 +6,10 @@ namespace HalloDocService.Interfaces;
 public interface IPatientRequestService
 {
     Aspnetuser GetUserByEmail(string email);
-    Task ProcessPatientRequestAsync(PatientRequestViewModel patientView);
-    Task<int> ProcessFamilyRequestAsync(FamilyRequestViewModel familyView);
-    Task<int> ProcessConciergeRequestAsync(ConciergeRequestViewModel conciergeView);
-    Task<int> ProcessBusinessRequestAsync(BusinessRequestViewModel businessView);
+    void ProcessPatientRequestAsync(PatientRequestViewModel patientView);
+    int ProcessFamilyRequestAsync(FamilyRequestViewModel familyView);
+    int ProcessConciergeRequestAsync(ConciergeRequestViewModel conciergeView);
+    int ProcessBusinessRequestAsync(BusinessRequestViewModel businessView);
     
     void StoreActivationToken(int AspUserId , string token, DateTime expiry);
 

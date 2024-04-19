@@ -8,6 +8,7 @@ public interface IAccessService{
     AdminAccessViewModel GetAllAccessList();
 
     IEnumerable<MenuList> GetMenuList(int accountType);
+    IEnumerable<HeaderMenu> GetAllMenuList();
 
     void DeleteAccess(int RoleId);
 

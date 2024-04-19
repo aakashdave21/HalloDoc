@@ -7,6 +7,7 @@ C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Hall
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\HalloDocMVC.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\HalloDocMVC.pdb
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\BCrypt.Net-Next.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\BouncyCastle.Crypto.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\BouncyCastle.Cryptography.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\ClosedXML.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\DocumentFormat.OpenXml.dll
@@ -17,6 +18,7 @@ C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Goog
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Google.Apis.Gmail.v1.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Humanizer.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\Irony.dll
+C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\itextsharp.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\MailKit.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\MessagePack.dll
 C:\Users\pce115\Documents\Project\HalloDoc\MVC\HalloDocMVC\bin\Debug\net7.0\MessagePack.Annotations.dll

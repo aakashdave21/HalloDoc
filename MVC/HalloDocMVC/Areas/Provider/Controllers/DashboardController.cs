@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using HalloDocService.Interfaces;
 using System.IO.Compression;
-using System.Net.Mail;
-using System.Net;
 using HalloDocService.Provider.Interfaces;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 
 namespace HalloDocMVC.Controllers.Provider;
 
@@ -41,7 +41,7 @@ public class DashboardController : Controller
     }
 
 
-    public async Task<IActionResult> Index(string status)
+    public IActionResult Index(string status)
     {
         int AspUserId = int.Parse(User.FindFirstValue("AspUserId"));
         string? searchBy = null;
@@ -169,12 +169,11 @@ public class DashboardController : Controller
         }
     }
 
-    public async Task<IActionResult> GetRegions()
+    public IActionResult GetRegions()
     {
         try
         {
-            var regions = await _adminDashboardService.GetRegions();
-            return Ok(regions);
+            return Ok(_adminDashboardService.GetRegions());
         }
         catch (Exception ex)
         {
@@ -202,8 +201,8 @@ public class DashboardController : Controller
         }
     }
 
-   
-    public async Task<IActionResult> ViewUploads(int RequestId)
+
+    public IActionResult ViewUploads(int RequestId)
     {
         try
         {
@@ -235,7 +234,7 @@ public class DashboardController : Controller
             return View("Index");
         }
     }
-    public async Task<IActionResult> SingleDownload(string fileName, int reqId)
+    public IActionResult SingleDownload(string fileName, int reqId)
     {
         try
         {
@@ -257,7 +256,7 @@ public class DashboardController : Controller
         }
     }
 
-    public async Task<IActionResult> SelectedDownload(string[] fileNames, int reqId)
+    public IActionResult SelectedDownload(string[] fileNames, int reqId)
     {
 
         if (fileNames.Length == 0 || fileNames == null)
@@ -300,11 +299,10 @@ public class DashboardController : Controller
         }
     }
 
-    public async Task<IActionResult> SingleDelete(string fileName, int reqId, string docId)
+    public IActionResult SingleDelete(string fileName, int reqId, string docId)
     {
         try
         {
-
             _adminDashboardService.DeleteDocument(int.Parse(docId));
 
             TempData["success"] = "File deleted successfully";
@@ -317,7 +315,7 @@ public class DashboardController : Controller
         }
     }
 
-    public async Task<IActionResult> SelectedDelete(string[] fileNames, int reqId, string[] fileIds)
+    public IActionResult SelectedDelete(string[] fileNames, int reqId, string[] fileIds)
     {
 
         if (fileNames.Length == 0 || fileNames == null)
@@ -370,23 +368,25 @@ public class DashboardController : Controller
             // We have to add Admin Id here
             _dashboardService.UploadFileFromDocument(fileName, requestId, AdminId);
             TempData["success"] = "Uploaded Successfully";
-            if(Type == "conclude"){
-                return RedirectToAction("ConcludeCare", new { RequestId = requestId });    
+            if (Type == "conclude")
+            {
+                return RedirectToAction("ConcludeCare", new { RequestId = requestId });
             }
             return RedirectToAction("ViewUploads", new { RequestId = requestId });
         }
         catch (Exception e)
         {
             TempData["error"] = "Internal Server Error";
-            if(Type == "conclude"){
-                return RedirectToAction("ConcludeCare", new { RequestId = requestId });    
+            if (Type == "conclude")
+            {
+                return RedirectToAction("ConcludeCare", new { RequestId = requestId });
             }
             return RedirectToAction("ViewUploads", new { RequestId = requestId });
         }
     }
 
 
-    public async Task<IActionResult> SendEmailToPatient(string[] fileNames, int reqId, string[] fileIds)
+    public IActionResult SendEmailToPatient(string[] fileNames, int reqId, string[] fileIds)
     {
         if (fileNames.Length == 0 || fileNames == null)
         {
@@ -395,47 +395,12 @@ public class DashboardController : Controller
         }
         try
         {
-
-            string senderEmail = "tatva.dotnet.aakashdave@outlook.com";
-            string senderPassword = "Aakash21##";
-
-            SmtpClient client = new SmtpClient("smtp.office365.com")
+            string[] filePaths = new string[fileNames.Length];
+            for (int i = 0; i < fileNames.Length; i++)
             {
-                Port = 587,
-                Credentials = new NetworkCredential(senderEmail, senderPassword),
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false
-            };
-
-            MailMessage mailMessage = new MailMessage
-            {
-                From = new MailAddress(senderEmail, "HalloDoc"),
-                Subject = "Set up your Account",
-                IsBodyHtml = true,
-                Body = $"Dear patient, please find attached the files you requested"
-            };
-
-            foreach (var fileName in fileNames)
-            {
-                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", fileName);
-                if (System.IO.File.Exists(filePath))
-                {
-                    // Add the file as an attachment to the email
-                    mailMessage.Attachments.Add(new Attachment(filePath));
-                }
-                else
-                {
-                    // Handle the case where the file does not exist
-                    Console.WriteLine($"File '{fileName}' does not exist at path: {filePath}");
-                }
+                filePaths[i] = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", fileNames[i]);
             }
-
-            mailMessage.To.Add("aakashdave21@gmail.com");
-
-            client.Send(mailMessage);
-
-
+            _utilityService.EmailSend("recipient@example.com", "Dear patient, please find attached the files you requested", "Set up your Account", filePaths , 3 , reqId , null, null);
             TempData["success"] = "Files Are Send !";
             return Json(new { success = true, message = "File Send Success" });
         }
@@ -464,7 +429,23 @@ public class DashboardController : Controller
             return RedirectToAction("SendOrder", new { RequestId });
         }
     }
-
+    [HttpPost]
+    public IActionResult TransferCase(int ReqId, string Description)
+    {
+        try
+        {
+            int PhysicianId = int.Parse(User.FindFirstValue("UserId"));
+            _providerService.SetTransferCase(ReqId, PhysicianId, Description);
+            TempData["success"] = "Request Transfered Successfully!";
+            return Json(new { success = true, message = "Form data received successfully" });
+        }
+        catch (Exception e)
+        {
+            _logger.LogInformation(e.Message);
+            TempData["error"] = "Internal Server Error";
+            return Redirect("/Provider/Dashboard/Index");
+        }
+    }
     [HttpPost]
     public IActionResult SendOrder(SendOrderViewModel sendOrders)
     {
@@ -579,7 +560,7 @@ public class DashboardController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateRequest(PatientRequestViewModel newPatientRequest)
+    public IActionResult CreateRequest(PatientRequestViewModel newPatientRequest)
     {
         try
         {
@@ -589,7 +570,7 @@ public class DashboardController : Controller
                 return View(newPatientRequest);
             }
             newPatientRequest.CreatedById = int.Parse(User.FindFirstValue("AspUserId"));
-            _adminDashboardService.CreateRequest(newPatientRequest);
+            _adminDashboardService.CreateRequest(newPatientRequest,2);
             TempData["Success"] = "Request Created Successfully";
             return RedirectToAction("CreateRequest");
         }
@@ -601,7 +582,7 @@ public class DashboardController : Controller
     }
 
 
-    
+
 
     public IActionResult GetRequestStatusEncounter(string requestId)
     {
@@ -679,7 +660,8 @@ public class DashboardController : Controller
         {
             string CreateServiceLink = Url.Action("Patient", "Request", new { area = "Patient" }, Request.Scheme);
             string rcvrMail = "aakashdave21@gmail.com";
-            _utilityService.EmailSend(CreateServiceLink, rcvrMail);
+            string message = "Create Your Request here : <a href=\"" + CreateServiceLink + "\">Create Request</a>";
+            _utilityService.EmailSend(rcvrMail,message,"Create Requests");
             TempData["success"] = "Account Creation Link Send !";
             return RedirectToAction("Index");
         }
@@ -709,14 +691,15 @@ public class DashboardController : Controller
         try
         {
             bool isRequestFinalized = _providerService.CheckEncounterFinalized(RequestId);
-            if(isRequestFinalized==false){
+            if (isRequestFinalized == false)
+            {
                 TempData["error"] = "Please Finalize Medical Form Before Conclude Care!";
-                return RedirectToAction("ConcludeCare", new {RequestId});
+                return RedirectToAction("ConcludeCare", new { RequestId });
             }
             int? PhyId = int.Parse(User.FindFirstValue("UserId"));
-            _providerService.ConcludeCare(RequestId,ProviderNote,PhyId);
+            _providerService.ConcludeCare(RequestId, ProviderNote, PhyId);
             TempData["success"] = "Request Concluded";
-            return RedirectToAction("ConcludeCare", new {RequestId});
+            return RedirectToAction("ConcludeCare", new { RequestId });
         }
         catch (System.Exception)
         {
@@ -726,12 +709,13 @@ public class DashboardController : Controller
     }
 
     [HttpPost]
-    public IActionResult Finalized(int Id,int ReqId){
+    public IActionResult Finalized(int Id, int ReqId)
+    {
         try
         {
-            _providerService.FinalizeForm(Id,ReqId);
+            _providerService.FinalizeForm(Id, ReqId);
             TempData["success"] = "Form Finalized Successfully";
-             return RedirectToAction("Index"); 
+            return RedirectToAction("Index");
         }
         catch (System.Exception)
         {
@@ -739,6 +723,172 @@ public class DashboardController : Controller
             return RedirectToAction("Index");
         }
     }
+
+    [HttpPost]
+    public IActionResult DownloadEncounter(int Id)
+    {
+        try
+        {
+            EncounterFormViewModel model = _adminDashboardService.GetEncounterDetails(Id);
+
+            var pdf = new Document();
+            using (var memoryStream = new MemoryStream())
+            {
+                var writer = PdfWriter.GetInstance(pdf, memoryStream);
+                pdf.Open();
+
+
+                var titleColor = new BaseColor(1, 188, 233);
+                var titleFont = FontFactory.GetFont("Arial", 25, Font.BOLD, titleColor);
+                var title = new Paragraph("Medical Confidential Report", titleFont)
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 20f
+                };
+                pdf.Add(title);
+
+
+                // Set the font
+                var font = FontFactory.GetFont("Arial", 12, BaseColor.BLACK);
+
+                // Create a table
+                var table = new PdfPTable(2); // 2 columns
+                table.WidthPercentage = 100; // Full width
+                table.SetWidths(new float[] { 1f, 2f }); // Relative column widths
+
+                // Add header cells
+                table.AddCell(new PdfPCell(new Phrase("Field", font)) { BackgroundColor = BaseColor.LIGHT_GRAY });
+                table.AddCell(new PdfPCell(new Phrase("Value", font)) { BackgroundColor = BaseColor.LIGHT_GRAY });
+
+                // Add data cells
+                table.AddCell(new PdfPCell(new Phrase("First Name", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.FirstName, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Last Name", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.LastName, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("DOB", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.DateOfBirth.ToString(), font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Mobile", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Mobile, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Email", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Email, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Location", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Location, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("History Of Illness", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.HistoryOfPresentIllness, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Medical History", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.MedicalHistory, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Medication", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Medications, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Allergies", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Allergies, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Temp", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Temperature.ToString(), font)));
+
+                table.AddCell(new PdfPCell(new Phrase("HR", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.HeartRate.ToString(), font)));
+
+                table.AddCell(new PdfPCell(new Phrase("RR", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.RespiratoryRate.ToString(), font)));
+
+                table.AddCell(new PdfPCell(new Phrase("BPs", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.BloodPressureSBP.ToString(), font)));
+
+                table.AddCell(new PdfPCell(new Phrase("BPd", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.BloodPressureDBP.ToString(), font)));
+
+                table.AddCell(new PdfPCell(new Phrase("O2", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.O2.ToString(), font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Pain", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Pain.ToString(), font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Heent", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.HEENT, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("CV", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.CV, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Chest", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Chest, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("ABD", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.ABD, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Extr", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Extr, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Skin", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Skin, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Neuro", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Neuro, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Other", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Other, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Diagnosis", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Diagnosis, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Treatment Plan", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.TreatmentPlan, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Medications Dispended", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.MedicationDispensed, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Procedure", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.Procedures, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("FollowUp", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.FollowUp, font)));
+
+                table.AddCell(new PdfPCell(new Phrase("Is Finalized", font)));
+                table.AddCell(new PdfPCell(new Phrase(model.IsFinalized.ToString(), font)));
+
+                // Add the table to the document
+                pdf.Add(table);
+
+                pdf.Close();
+                writer.Close();
+
+                var bytes = memoryStream.ToArray();
+                var result = new FileContentResult(bytes, "application/pdf");
+                result.FileDownloadName = "Encounter_" + model.Id + ".pdf";
+                return result;
+            }
+        }
+        catch (System.Exception)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("Index");
+        }
+    }
+
+    public IActionResult SendProfileRequest()
+    {
+        try
+        {
+            TempData["success"] = "Request Sent Successfully!";
+            return RedirectToAction("Index");
+
+        }
+        catch (System.Exception e)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("Index");
+        }
+    }
+
+
     public async Task<IActionResult> LogOut()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

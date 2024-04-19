@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using HalloDocRepository.DataModels;
 
 namespace HalloDocService.ViewModels
@@ -27,21 +25,21 @@ namespace HalloDocService.ViewModels
     public class RequestViewModel
     {
         public int Id { get; set; }
-        public string Firstname { get; set; }
-        public string Lastname { get; set; }
-        public string Email { get; set; }
-        public string Phonenumber { get; set; }
-        public string BirthDate { get; set; }
+        public string? Firstname { get; set; }
+        public string? Lastname { get; set; }
+        public string? Email { get; set; }
+        public string? Phonenumber { get; set; }
+        public string? BirthDate { get; set; }
 
-        public string Requestor { get; set; }
-        public string RequestedDate {get; set;}
-        public string Address {get; set;}
-        public string Notes {get; set;}
+        public string? Requestor { get; set; }
+        public string? RequestedDate {get; set;}
+        public string? Address {get; set;}
+        public string? Notes {get; set;}
         public int RequestType {get; set;}
-        public string PhysicianName {get; set;}
+        public string? PhysicianName {get; set;}
         public int? PhysicianId {get; set;}
-        public string ServiceDate {get; set;}
-        public string Region {get; set;}
+        public string? ServiceDate {get; set;}
+        public string? Region {get; set;}
 
         public bool? IsFinalized {get; set;} = false;
        
@@ -53,6 +51,7 @@ namespace HalloDocService.ViewModels
         public string? Title { get; set; }
         public string? Name { get; set; }
         public int? AccountType { get; set; }
+        public int? SortOrder {get; set;}
     }
 
 }

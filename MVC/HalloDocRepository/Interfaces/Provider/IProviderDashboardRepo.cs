@@ -10,4 +10,6 @@ public interface IProviderDashboardRepo
     bool CheckEncounterFinalized(int ReqId);
 
     void FinalizeForm(int EncId, int ReqId);
+
+    Aspnetuser? SendProfileRequest(int? PhyId);
 }

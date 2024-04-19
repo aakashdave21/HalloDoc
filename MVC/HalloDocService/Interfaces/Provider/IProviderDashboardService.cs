@@ -17,4 +17,6 @@ public interface IProviderDashboardService
 
     void FinalizeForm(int EncId, int ReqId);
 
+    Aspnetuser? SendProfileRequest(int? PhyId);
+
 }

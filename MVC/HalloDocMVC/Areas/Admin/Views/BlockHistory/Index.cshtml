@@ -111,7 +111,7 @@
     }
 
     function CallAjax() {
-        sendAjaxRequest('/admin/records/BlockHistory', 'GET', { pageSize, pageNum, ...SearchBy }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+        sendAjaxRequest('/admin/BlockHistory/Index', 'GET', { pageSize, pageNum, ...SearchBy }, "application/x-www-form-urlencoded; charset=UTF-8", true)
             .then(function (response) {
                 $("#blockHistory-render").empty();
                 $("#blockHistory-render").html(response);
@@ -136,7 +136,7 @@
                 <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Confirm Unblock</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="/admin/Records/Unblock" method="post" id="contactForm">
+            <form action="/admin/BlockHistory/Unblock" method="post" id="contactForm">
             <div class="modal-body">
                 <input type="hidden" name="id" value="${reqId}">
                 <p class="text-muted fw-bold"> Are you sure you want to Unblock this Request? </p>
@@ -152,15 +152,4 @@
         let modalInstance = new bootstrap.Modal(modal);
         modalInstance.show();
     }
-</script>
-<script>
-    $("#adminDashTab li").each(function(){
-        if($(this).data("id")==7){
-            $("#adminDashTab li a").removeClass("active");
-            $(this).addClass("active").find("a").addClass("active");
-            $(this).find(".inner-nav ul li a").removeClass("active");
-            $(this).find(".inner-nav ul li[data-inner-itemid='12'] a").addClass("active");
-            $(this).find(".showMenu").html(`Blocked History <i class="fa-solid fa-caret-down"></i>`);
-        }
-    })
 </script>

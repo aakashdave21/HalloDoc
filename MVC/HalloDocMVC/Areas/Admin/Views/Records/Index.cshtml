@@ -240,15 +240,3 @@
         modalInstance.show();
     }
 </script>
-
-<script>
-    $("#adminDashTab li").each(function(){
-        if($(this).data("id")==7){
-            $("#adminDashTab li a").removeClass("active");
-            $(this).addClass("active").find("a").addClass("active");
-            $(this).find(".inner-nav ul li a").removeClass("active");
-            $(this).find(".inner-nav ul li[data-inner-itemid='7'] a").addClass("active");
-            $(this).find(".showMenu").html(`Serach Records <i class="fa-solid fa-caret-down"></i>`);
-        }
-    })
-</script>

@@ -5,8 +5,8 @@ using AdminTable = HalloDocRepository.DataModels.Admin;
 namespace HalloDocRepository.Interfaces;
 public interface IPatientLoginRepo
 {
-    Aspnetuser ValidateUser(string email);
-    Aspnetuser userDetailsFromUserName(string username);
+    Aspnetuser? ValidateUser(string email);
+    Aspnetuser? userDetailsFromUserName(string username);
 
     User UserDetailsFetch(string email);
     AdminTable AdminDetailsFetch(string email);

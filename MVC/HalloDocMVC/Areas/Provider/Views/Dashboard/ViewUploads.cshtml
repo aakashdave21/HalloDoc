@@ -175,14 +175,14 @@
                     responseType: 'blob' // Set response type to 'blob' for binary data
                 },
                 success: function(response) {
-                    @* var url = window.URL.createObjectURL(response);
+                    var url = window.URL.createObjectURL(response);
                     var a = document.createElement('a');
                     a.href = url;
                     a.download = "HalloDoc_Documents.zip";
                     document.body.appendChild(a);
                     a.click();
                     window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a); *@
+                    document.body.removeChild(a);
                 },
                 error: function (xhr,status,error) {
                       if(xhr.status==401){
@@ -269,12 +269,3 @@
             })    
     });
     </script>
-
-    <script>
-    $("#adminDashTab li").each(function(){
-        if($(this).data("id")==1){
-            $("#adminDashTab li a").removeClass("active");
-            $(this).addClass("active").find("a").addClass("active");
-        }
-    })
-</script>

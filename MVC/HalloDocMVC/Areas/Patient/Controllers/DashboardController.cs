@@ -35,7 +35,7 @@ public class DashboardController : Controller
 
     }
 
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
         var userClaims = User.Claims;
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -67,7 +67,7 @@ public class DashboardController : Controller
         return RedirectToAction("Index", "PatientLogin");
     }
 
-    public async Task<IActionResult> UserProfile()
+    public IActionResult UserProfile()
     {
         try
         {
@@ -100,7 +100,7 @@ public class DashboardController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(UserProfileViewModel userData)
+    public IActionResult Edit(UserProfileViewModel userData)
     {
         if (!ModelState.IsValid)
         {
@@ -123,7 +123,7 @@ public class DashboardController : Controller
 
     }
 
-    public async Task<IActionResult> Documents(int RequestId)
+    public IActionResult Documents(int RequestId)
     {
         try
         {
@@ -191,7 +191,7 @@ public class DashboardController : Controller
     }
 
     
-    public async Task<IActionResult> SingleDownload(string fileName,int reqId)
+    public IActionResult SingleDownload(string fileName,int reqId)
     {
         try
         {
@@ -213,7 +213,7 @@ public class DashboardController : Controller
         }
     }
 
-    public async Task<IActionResult> SelectedDownload(string[] fileNames,int reqId)
+    public IActionResult SelectedDownload(string[] fileNames,int reqId)
     {   
 
         if(fileNames.Length==0 || fileNames == null){
@@ -312,7 +312,7 @@ public class DashboardController : Controller
                 viewRequest.FilePath = filePath;
             }
 
-                await _patientRequestService.ProcessPatientRequestAsync(viewRequest);
+                _patientRequestService.ProcessPatientRequestAsync(viewRequest);
                 TempData["success"] = "Request Submitted Successfully";
                 return RedirectToAction("Index");
 
@@ -325,7 +325,7 @@ public class DashboardController : Controller
         }
     }
 
-    public async Task<IActionResult> AnotherUserRequest(){
+    public IActionResult AnotherUserRequest(){
 
         var userIdClaim = User.FindFirstValue("UserId");
         var userData = _dashboardService.GetUserData(int.Parse(userIdClaim));
@@ -370,7 +370,7 @@ public class DashboardController : Controller
                     // Update the view model with the file path
                     familyRequest.FilePath = filePath;
                 }
-                int userId = await _patientRequestService.ProcessFamilyRequestAsync(familyRequest);
+                int userId = _patientRequestService.ProcessFamilyRequestAsync(familyRequest);
 
                 if(userId!=0){
                     TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
@@ -378,7 +378,7 @@ public class DashboardController : Controller
                 }else{
                     TempData["success"] = "Request Submitted Successfully";
                 }
-                await _patientRequestService.ProcessFamilyRequestAsync(familyRequest);
+                _patientRequestService.ProcessFamilyRequestAsync(familyRequest);
                 TempData["success"] = "Request Submitted Successfully, Account Activation Link sent to the customer email";
                 return RedirectToAction("Index", "PatientLogin");
             }
@@ -390,7 +390,7 @@ public class DashboardController : Controller
             }
     }
 
-    private async Task SendCreationLink(int userId){
+    private void SendCreationLink(int userId){
         try
         {
             // Activation Email Sent To Patient
@@ -399,7 +399,8 @@ public class DashboardController : Controller
                 DateTime expirationTime = DateTime.UtcNow.AddHours(1);
                 _patientRequestService.StoreActivationToken(userId,token,expirationTime);
                 string rcvrMail = "aakashdave21@gmail.com";
-                await _utilityService.EmailSend(createAccountLink,rcvrMail);
+                string message = $"Please click the following link to reset your password: <a href='{createAccountLink}'>{createAccountLink}</a>";
+                _utilityService.EmailSend(rcvrMail,message,"Account Creation Link");
         }
         catch (Exception e)
         {

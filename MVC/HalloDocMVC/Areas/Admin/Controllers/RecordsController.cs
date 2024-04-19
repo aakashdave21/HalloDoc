@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using HalloDocService.Admin.Interfaces;
 using HalloDocService.ViewModels;
-using System.Security.Claims;
-using ClosedXML.Excel;
 namespace HalloDocMVC.Controllers.Admin;
+using ClosedXML.Excel;
+
 
 [Area("Admin")]
 [Authorize(Roles = "Admin")]
@@ -32,32 +32,8 @@ public class RecordsController : Controller
             return RedirectToAction("Index","Dashboard");
         }
     }
-    public IActionResult PatientHistory(PatientHistoryView Parameters,int PageNum = 1,int PageSize = 5){
-        try
-        {   
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest"){
-                return PartialView("_PatientHistoryTable", _recordsService.GetPatientHistory(Parameters,PageNum,PageSize));
-            }
-            return View(_recordsService.GetPatientHistory(Parameters,PageNum,PageSize));
-        }
-        catch (Exception)
-        {
-            TempData["error"] = "Internal Server Error";
-            return RedirectToAction("Index");
-        }
-    }
-    public IActionResult ExplorePatient(int UserId,int RequestId){
-        try
-        {   
-           return View(_recordsService.GetPatientRequest(UserId,RequestId));
-        }
-        catch (Exception)
-        {
-            TempData["error"] = "Internal Server Error";
-            return RedirectToAction("Index");
-        }
-    }
-    public IActionResult Delete(int Id){
+
+     public IActionResult Delete(int Id){
         try
         {
             _recordsService.DeleteRecord(Id);
@@ -71,6 +47,7 @@ public class RecordsController : Controller
         }
     }
 
+    
     public IActionResult Download(RecordsView Parameters, int PageNum = 1, int PageSize = 5){
         try
         {
@@ -161,66 +138,6 @@ public class RecordsController : Controller
         catch (System.Exception e)
         {
             return BadRequest(new {message = e});
-        }
-    }
-
-
-    public IActionResult EmailLogs(EmailLogsView Parameters, int PageNum = 1, int PageSize = 5){
-        try
-        {
-            
-            if(Request.Headers["X-Requested-With"]=="XMLHttpRequest"){
-                return PartialView("_EmailLogTable",_recordsService.EmailLogs(Parameters, PageNum, PageSize));
-            }
-            return View(_recordsService.EmailLogs(Parameters, PageNum, PageSize));
-        }
-        catch (System.Exception e)
-        {
-            TempData["Error"] = "Internal Server Error";
-            return RedirectToAction("Index");
-        }
-    }
-    public IActionResult SMSLogs(EmailLogsView Parameters, int PageNum = 1, int PageSize = 5){
-        try
-        {
-            
-            if(Request.Headers["X-Requested-With"]=="XMLHttpRequest"){
-                return PartialView("_SMSLogTable",_recordsService.SMSLogs(Parameters, PageNum, PageSize));
-            }
-            return View(_recordsService.SMSLogs(Parameters, PageNum, PageSize));
-        }
-        catch (System.Exception e)
-        {
-            TempData["Error"] = "Internal Server Error";
-            return RedirectToAction("Index");
-        }
-    }
-    public IActionResult BlockHistory(EmailLogsView Parameters, int PageNum = 1, int PageSize = 5){
-        try
-        {
-            if(Request.Headers["X-Requested-With"]=="XMLHttpRequest"){
-                return PartialView("_blockHistoryTable",_recordsService.BlockHistory(Parameters, PageNum, PageSize));
-            }
-            return View(_recordsService.BlockHistory(Parameters, PageNum, PageSize));
-        }
-        catch (System.Exception e)
-        {
-            TempData["Error"] = "Internal Server Error";
-            return RedirectToAction("Index");
-        }
-    }
-
-    public IActionResult Unblock(int Id){
-        try
-        {
-            _recordsService.UnblockRequest(Id);
-            TempData["Success"] = "Request Unblocked Successfully!";
-            return RedirectToAction("BlockHistory");
-        }
-        catch (System.Exception)
-        {
-            TempData["Error"] = "Internal Server Error";
-            return RedirectToAction("BlockHistory");
         }
     }
 }

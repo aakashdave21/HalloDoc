@@ -15,7 +15,7 @@ namespace HalloDocService.ViewModels
         public string? PatientCancelNote { get; set; } = null!;
         public string? PhysicianCancelNote { get; set; } = null!;
         public List<string>? TransferNote { get; set; } = new List<string>();
-        public string AdditionalNote {get; set;}
+        public string? AdditionalNote {get; set;}
     }
 
 }

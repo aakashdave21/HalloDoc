@@ -35,7 +35,7 @@ public class ProviderDashboardService : IProviderDashboardService
             Requestor = r.Firstname + ", " + r.Lastname,
             RequestedDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
             Address = r.PropertyName != null ? "Room No/Property : " + r.PropertyName : r.Requestclients.FirstOrDefault()?.Street + ", " + r.Requestclients.FirstOrDefault()?.City + ", " + r.Requestclients.FirstOrDefault()?.State + ", " + r.Requestclients.FirstOrDefault()?.Zipcode,
-            Notes = r.Symptoms != null ? r.Symptoms : r.Requestclients.FirstOrDefault()?.Notes,
+            Notes = r.Symptoms ?? (r.Requestclients.FirstOrDefault()?.Notes),
             RequestType = r.Requesttypeid,
             IsFinalized = r?.Encounterform?.Isfinalized ?? false
         });
@@ -67,5 +67,8 @@ public class ProviderDashboardService : IProviderDashboardService
 
     public void FinalizeForm(int EncId, int ReqId){
         _providerDashboardRepo.FinalizeForm(EncId,ReqId);
+    }
+    public Aspnetuser? SendProfileRequest(int? PhyId){
+        return _providerDashboardRepo.SendProfileRequest(PhyId);
     }
 }

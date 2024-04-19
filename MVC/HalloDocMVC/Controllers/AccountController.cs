@@ -5,7 +5,8 @@ public class AccountController : Controller
     public IActionResult AccessDenied(){
         return View();
     }
-    public IActionResult NotFound(){
+    public new IActionResult NotFound()
+    {
         return View();
     }
 }

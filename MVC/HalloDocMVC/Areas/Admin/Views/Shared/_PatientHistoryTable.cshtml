@@ -23,7 +23,7 @@
                         <td>@item.PhoneNumber</td>
                         <td>@item.Address</td>
                         <td>
-                            @using(Html.BeginForm("ExplorePatient","Records",new {Area = "Admin"}, FormMethod.Post)){
+                            @using(Html.BeginForm("ExplorePatient","PatientHistory",new {Area = "Admin"}, FormMethod.Post)){
                                 <input type="hidden" name="userId" value="@item.UserId"/>
                                 <input type="hidden" name="requestId" value="@item.RequestId"/>
                                 <button type="submit" class="btn theme-btn">Explore</button>

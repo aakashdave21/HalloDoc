@@ -1,17 +1,9 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using HalloDocMVC.Models;
 using HalloDocService.ViewModels;
 using HalloDocService.Admin.Interfaces;
-using HalloDocRepository.DataModels;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using HalloDocService.Interfaces;
-using System.IO.Compression;
-using System.Net.Mail;
-using System.Net;
 using HalloDocService.Provider.Interfaces;
 using HalloDocMVC.Services;
 
@@ -23,10 +15,14 @@ public class ProfileController : Controller
 {
 
     private readonly IProviderService _providerService;
+    private readonly IProviderDashboardService _providerDashboardService;
+    private readonly IUtilityService _utilityService;
     
-    public ProfileController(IProviderService providerService)
+    public ProfileController(IProviderService providerService,IProviderDashboardService providerDashboardService,IUtilityService utilityService)
     {
         _providerService = providerService;
+        _providerDashboardService = providerDashboardService;
+        _utilityService = utilityService;
     }
     public IActionResult Index(){
          try
@@ -69,6 +65,27 @@ public class ProfileController : Controller
         catch (System.Exception e)
         {
             return BadRequest(new { message = e });
+        }
+    }
+
+    [HttpPost]
+    public IActionResult SendRequest(string RequestNote){
+        try
+        {
+            int? PhyId = int.Parse(User.FindFirstValue("UserId"));
+            var AdminMail = _providerDashboardService.SendProfileRequest(PhyId);
+            if(!string.IsNullOrEmpty(AdminMail.Email)){
+                _utilityService.EmailSend("aakashdave21@gmail.com" , RequestNote , "Request For Changing Information", null , 1 , null , null , AdminMail.AdminAspnetusers.FirstOrDefault()?.Id);
+                TempData["success"] = "Request Sent To Admin!";
+            }else{
+                TempData["error"] = "There Are No Admin Assign To You!";
+            }
+            return RedirectToAction("Index");
+        }
+        catch (System.Exception e)
+        {
+            TempData["error"] = "Internal Server Error !";
+            return RedirectToAction("Index");
         }
     }
 }

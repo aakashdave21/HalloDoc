@@ -44,7 +44,7 @@ public class DashboardController : Controller
     }
 
 
-    public async Task<IActionResult> Index(string status)
+    public IActionResult Index(string status)
     {
         (List<RequestViewModel> req, int totalCount) myresult;
         ViewBag.statusType = string.IsNullOrEmpty(status) ? "new" : status;
@@ -52,7 +52,7 @@ public class DashboardController : Controller
         var viewModel = new AdminDashboardViewModel();
         var countDictionary = _adminDashboardService.CountRequestByType();
 
-        viewModel.RegionList = await _adminDashboardService.GetRegions();
+        viewModel.RegionList = _adminDashboardService.GetRegions();
 
         viewModel.NewState = countDictionary["new"];
         viewModel.PendingState = countDictionary["pending"];
@@ -216,13 +216,13 @@ public class DashboardController : Controller
         }
     }
     [HttpPost]
-    public async Task<IActionResult> CancleCase(IFormCollection formData)
+    public IActionResult CancleCase(IFormCollection formData)
     {
         try
         {
-            var reqId = formData["reqId"];
-            var reason = formData["reason"];
-            var additionalNotes = formData["additionalNotes"];
+            string? reqId = formData["reqId"];
+            string? reason = formData["reason"];
+            string? additionalNotes = formData["additionalNotes"];
             _adminDashboardService.CancleRequestCase(int.Parse(reqId), reason, additionalNotes);
             TempData["success"] = "Request Cancelled Successfully!";
             return Json(new { success = true, message = "Form data received successfully" });
@@ -235,12 +235,11 @@ public class DashboardController : Controller
         }
     }
 
-    public async Task<IActionResult> GetRegions()
+    public IActionResult GetRegions()
     {
         try
         {
-            var regions = await _adminDashboardService.GetRegions();
-            return Ok(regions);
+            return Ok(_adminDashboardService.GetRegions());
         }
         catch (Exception ex)
         {
@@ -268,7 +267,7 @@ public class DashboardController : Controller
         }
     }
     [HttpPost]
-    public async Task<IActionResult> AssignCase(IFormCollection formData)
+    public IActionResult AssignCase(IFormCollection formData)
     {
         try
         {
@@ -277,7 +276,7 @@ public class DashboardController : Controller
             string? ReqId = formData["reqId"];
             int? AdminId = null;
 
-            await _adminDashboardService.AssignRequestCase(int.Parse(ReqId), int.Parse(PhysicianId), AdminId, Description);
+            _adminDashboardService.AssignRequestCase(int.Parse(ReqId), int.Parse(PhysicianId), AdminId, Description);
 
             TempData["success"] = "Request Assigned Successfully!";
             return Json(new { success = true, message = "Form data received successfully" });
@@ -311,7 +310,7 @@ public class DashboardController : Controller
         }
     }
     [HttpPost]
-    public async Task<IActionResult> ClearCase(int RequestId)
+    public IActionResult ClearCase(int RequestId)
     {
         try
         {
@@ -328,7 +327,7 @@ public class DashboardController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> TransferCase(IFormCollection formData)
+    public IActionResult TransferCase(IFormCollection formData)
     {
         try
         {
@@ -347,7 +346,7 @@ public class DashboardController : Controller
             return Redirect("/Admin/Dashboard/Index");
         }
     }
-    public async Task<IActionResult> ViewUploads(int RequestId)
+    public IActionResult ViewUploads(int RequestId)
     {
         try
         {
@@ -379,7 +378,7 @@ public class DashboardController : Controller
             return View("Index");
         }
     }
-    public async Task<IActionResult> SingleDownload(string fileName, int reqId)
+    public IActionResult SingleDownload(string fileName, int reqId)
     {
         try
         {
@@ -401,7 +400,7 @@ public class DashboardController : Controller
         }
     }
 
-    public async Task<IActionResult> SelectedDownload(string[] fileNames, int reqId)
+    public IActionResult SelectedDownload(string[] fileNames, int reqId)
     {
 
         if (fileNames.Length == 0 || fileNames == null)
@@ -444,7 +443,7 @@ public class DashboardController : Controller
         }
     }
 
-    public async Task<IActionResult> SingleDelete(string fileName, int reqId, string docId)
+    public IActionResult SingleDelete(string fileName, int reqId, string docId)
     {
         try
         {
@@ -470,7 +469,7 @@ public class DashboardController : Controller
         }
     }
 
-    public async Task<IActionResult> SelectedDelete(string[] fileNames, int reqId, string[] fileIds)
+    public IActionResult SelectedDelete(string[] fileNames, int reqId, string[] fileIds)
     {
 
         if (fileNames.Length == 0 || fileNames == null)
@@ -546,7 +545,7 @@ public class DashboardController : Controller
     }
 
 
-    public async Task<IActionResult> SendEmailToPatient(string[] fileNames, int reqId, string[] fileIds)
+    public IActionResult SendEmailToPatient(string[] fileNames, int reqId, string[] fileIds)
     {
         if (fileNames.Length == 0 || fileNames == null)
         {
@@ -555,47 +554,13 @@ public class DashboardController : Controller
         }
         try
         {
-
-            string senderEmail = "tatva.dotnet.aakashdave@outlook.com";
-            string senderPassword = "Aakash21##";
-
-            SmtpClient client = new SmtpClient("smtp.office365.com")
+            string[] filePaths = new string[fileNames.Length];
+            for (int i = 0; i < fileNames.Length; i++)
             {
-                Port = 587,
-                Credentials = new NetworkCredential(senderEmail, senderPassword),
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false
-            };
-
-            MailMessage mailMessage = new MailMessage
-            {
-                From = new MailAddress(senderEmail, "HalloDoc"),
-                Subject = "Set up your Account",
-                IsBodyHtml = true,
-                Body = $"Dear patient, please find attached the files you requested"
-            };
-
-            foreach (var fileName in fileNames)
-            {
-                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", fileName);
-                if (System.IO.File.Exists(filePath))
-                {
-                    // Add the file as an attachment to the email
-                    mailMessage.Attachments.Add(new Attachment(filePath));
-                }
-                else
-                {
-                    // Handle the case where the file does not exist
-                    Console.WriteLine($"File '{fileName}' does not exist at path: {filePath}");
-                }
+                filePaths[i] = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", fileNames[i]);
             }
 
-            mailMessage.To.Add("aakashdave21@gmail.com");
-
-            client.Send(mailMessage);
-
-
+            _utilityService.EmailSend("aakashdave21@gmail.com", "Dear patient, please find attached the files you requested", "HalloDoc Attachments", filePaths , 3 , reqId , null , null);
             TempData["success"] = "Files Are Send !";
             return Json(new { success = true, message = "File Send Success" });
         }
@@ -849,11 +814,10 @@ public class DashboardController : Controller
     {
         try
         {
-            Console.WriteLine(formData["email"] + "<<<<<<<<<<<<<<<<<<<<<<<<");
             string CreateServiceLink = Url.Action("Patient", "Request", new { area = "Patient" }, Request.Scheme);
             string rcvrMail = "aakashdave21@gmail.com";
-            Console.WriteLine(CreateServiceLink + "<<<<<<<<<<<<<<<<<<<<<<<<");
-            _utilityService.EmailSend(CreateServiceLink, rcvrMail);
+            string message = $"Please click the following link to create new Request: <a href='{SendCreationLink}'>{SendCreationLink}</a>";
+            _utilityService.EmailSend("aakashdave21@gmail.com", message, "Create Your Request.", null , 3 , null , null , null);
             TempData["success"] = "Account Creation Link Send !";
             return RedirectToAction("Index");
         }
@@ -1103,7 +1067,7 @@ public class DashboardController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateRequest(PatientRequestViewModel newPatientRequest)
+    public IActionResult CreateRequest(PatientRequestViewModel newPatientRequest)
     {
         try
         {

@@ -26,6 +26,7 @@ public class ProviderService : IProviderService
     public AdminProviderViewModel GetAllProviderData(string? regionId=null,string? order=null)
     {
         bool isAscending = order == null || order != "desc";
+        
         AdminProviderViewModel providerViewModel = new()
         {
             AllRegionList = _profileRepo.GetAllRegions().Select(reg => new RegionList()
@@ -75,6 +76,19 @@ public class ProviderService : IProviderService
     }
 
     public AdminPhysicianEditViewModel GetPhyisicianData(int Id){
+        var Regions = _profileRepo.GetPhysicianServicedRegion(Id).Select(reg=> new RegionList(){
+                Id = reg.Regionid ?? 0,
+                Name = reg?.Region?.Name
+            }).ToList();
+        var RegionsList = _profileRepo.GetAllRegions().Select(reg => new RegionList(){
+                Id = reg.Id,
+                Name = reg.Name
+            }).ToList();
+
+            var allRegionIds = RegionsList.Select(reg => reg.Id);
+            var selectedRegionIds = Regions.Select(reg => reg.Id);
+            var unselectedRegionIds = allRegionIds.Except(selectedRegionIds);
+
         Physician physicianData = _providerRepo.GetAllPhysician().FirstOrDefault(phy => phy.Id == Id);
         Physicianfile? fileData = _providerRepo.PhysicianFileData(Id);
         AdminPhysicianEditViewModel phyEditView = new(){
@@ -117,7 +131,15 @@ public class ProviderService : IProviderService
             IsBgCheckFile = fileData!=null  ? "uploads/" + Path.GetFileName(fileData.Backgroundcheck) : "",
             IsHIPAAFile = fileData!=null  ? "uploads/" + Path.GetFileName(fileData.Hipaa) : "",
             IsNDAFile = fileData!=null  ? "uploads/" + Path.GetFileName(fileData.Nda) : "",
-            IsLicenseDocFile = fileData!=null  ? "uploads/" + Path.GetFileName(fileData.License) : ""
+            IsLicenseDocFile = fileData!=null  ? "uploads/" + Path.GetFileName(fileData.License) : "",
+            RegionSelect = Regions,
+            RegionUnSelect = RegionsList
+            .Where(reg => unselectedRegionIds.Contains(reg.Id))
+            .Select(reg => new RegionList()
+            {
+                Id = reg.Id,
+                Name = reg.Name
+            })
         };
         return phyEditView;
     }
