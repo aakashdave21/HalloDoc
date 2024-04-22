@@ -1,9 +1,6 @@
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using AdminTable = HalloDocRepository.DataModels.Admin;
-using System.Data.Common;
-using System.Globalization;
 
 namespace HalloDocRepository.Admin.Implementation;
 public class RecordsRepo : IRecordsRepo

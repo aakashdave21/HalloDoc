@@ -3,7 +3,6 @@ using HalloDocService.Interfaces;
 using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
-using System;
 
 namespace HalloDocService.Implementation;
 public class PatientRequestService : IPatientRequestService

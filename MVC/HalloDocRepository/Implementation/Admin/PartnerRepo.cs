@@ -1,8 +1,6 @@
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using AdminTable = HalloDocRepository.DataModels.Admin;
-using System.Data.Common;
 
 namespace HalloDocRepository.Admin.Implementation;
 public class PartnerRepo : IPartnerRepo

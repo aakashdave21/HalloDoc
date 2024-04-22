@@ -2,10 +2,6 @@ using HalloDocService.Admin.Interfaces;
 using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
-using System.Globalization;
-using HalloDocRepository.Interfaces;
-using AdminTable = HalloDocRepository.DataModels.Admin;
-using System.Reflection;
 
 namespace HalloDocService.Admin.Implementation;
 public class PartnerService : IPartnerService

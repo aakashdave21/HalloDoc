@@ -2,8 +2,6 @@ using HalloDocService.Admin.Interfaces;
 using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
-using System.Globalization;
-using HalloDocRepository.Interfaces;
 using AdminTable = HalloDocRepository.DataModels.Admin;
 
 namespace HalloDocService.Admin.Implementation;

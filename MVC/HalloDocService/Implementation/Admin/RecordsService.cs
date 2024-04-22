@@ -2,7 +2,6 @@ using HalloDocService.Admin.Interfaces;
 using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
-using static HalloDocRepository.Admin.Implementation.RecordsRepo;
 using HalloDocRepository.Admin.Implementation;
 
 namespace HalloDocService.Admin.Implementation;

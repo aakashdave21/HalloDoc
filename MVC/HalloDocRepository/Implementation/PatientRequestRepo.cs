@@ -1,8 +1,6 @@
 
-using System.Configuration.Assemblies;
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace HalloDocRepository.Implementation;
 public class PatientRequestRepo : IPatientRequestRepo

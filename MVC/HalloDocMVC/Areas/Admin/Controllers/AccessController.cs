@@ -1,13 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using HalloDocService.ViewModels;
-using HalloDocService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using HalloDocService.Admin.Interfaces;
 using HalloDocMVC.Services;
-using HalloDocRepository.DataModels;
 namespace HalloDocMVC.Controllers.Admin;
 
 [Area("Admin")]

@@ -1,9 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using HalloDocMVC.Models;
-// using HalloDocMVC.Data;
-// using HalloDocMVC.ViewModels;
-using Microsoft.EntityFrameworkCore;
 using HalloDocService.Interfaces;
 using HalloDocService.ViewModels;
 using System.Security.Claims;

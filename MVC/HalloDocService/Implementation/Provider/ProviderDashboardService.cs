@@ -1,4 +1,3 @@
-using HalloDocRepository.Interfaces;
 using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
 using HalloDocService.Provider.Interfaces;

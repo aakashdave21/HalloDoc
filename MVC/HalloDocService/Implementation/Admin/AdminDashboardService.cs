@@ -6,7 +6,6 @@ using System.Globalization;
 using HalloDocRepository.Interfaces;
 using AdminTable = HalloDocRepository.DataModels.Admin;
 using HalloDocService.Interfaces;
-using HalloDocRepository.Admin.Implementation;
 
 
 namespace HalloDocService.Admin.Implementation;

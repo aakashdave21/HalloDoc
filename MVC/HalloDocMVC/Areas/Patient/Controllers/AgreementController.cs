@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using HalloDocMVC.Models;
-using HalloDocService.Interfaces;
 using HalloDocService.Admin.Interfaces;
 
 namespace HalloDocMVC.Controllers;

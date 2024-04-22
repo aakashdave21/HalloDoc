@@ -1,7 +1,5 @@
 using HalloDocRepository.DataModels;
-using HalloDocRepository.Admin.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using AdminTable = HalloDocRepository.DataModels.Admin;
 using HalloDocRepository.Provider.Interfaces;
 
 
