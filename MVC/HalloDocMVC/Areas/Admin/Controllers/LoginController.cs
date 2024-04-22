@@ -51,7 +51,7 @@ public class LoginController : Controller
 
             if (userEmail != null)
             {
-                string storedHashPassword = userEmail.Passwordhash;
+                string storedHashPassword = userEmail?.Passwordhash;
                 
                 var isPasswordCorrectHashed = PasswordHasher.VerifyPassword(userView.Passwordhash , storedHashPassword);
                 Console.WriteLine(isPasswordCorrectHashed + "<<<<<<<<<<<<<<");

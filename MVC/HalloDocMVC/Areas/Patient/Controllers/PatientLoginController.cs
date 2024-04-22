@@ -78,7 +78,7 @@ public class PatientLoginController : Controller
                     new Claim(ClaimTypes.NameIdentifier, user.Email),
                     new Claim(ClaimTypes.Name, userEmail.Username),
                     new Claim("UserId", userDetails.Id.ToString()),
-                    new Claim("AspUserId",userDetails.Aspnetuser.Id.ToString() ?? ""),
+                    new Claim("AspUserId",userDetails?.Aspnetuser?.Id.ToString() ?? ""),
                 };
                 
                 if(IsAdmin){
@@ -186,18 +186,18 @@ public class PatientLoginController : Controller
         {
             
             var token = _patientLoginService.GetResetTokenExpiry(users.UserId, users.UserToken);
-            if (token.ResetToken == users.UserToken && token != null && token.ResetExpiration > DateTime.UtcNow)
+            if (token?.ResetToken == users.UserToken && token != null && token.ResetExpiration > DateTime.UtcNow)
             {
-                users.Password = PasswordHasher.HashPassword(users.Password);
+                users.Password = PasswordHasher.HashPassword(users?.Password);
                 _patientLoginService.UpdatePassword(token.Id , users.Password);
                 TempData["success"] = "Password Reset Successfully !";
                 return RedirectToAction(nameof(Index),"Home");
             }
-            else if (token.ResetExpiration < DateTime.UtcNow)
+            else if (token?.ResetExpiration < DateTime.UtcNow)
             {
                 TempData["error"] = "Oops! Token Expires, Please Go To Login Page";
                 return RedirectToAction(nameof(Index));
-            }else if(token.ResetToken != users.UserToken){
+            }else if(token?.ResetToken != users.UserToken){
                 TempData["error"] = "Oops! Token Expires or Incorrect, Please Go To Login Page";
                 return RedirectToAction(nameof(Index));
             }

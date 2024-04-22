@@ -22,7 +22,7 @@ public class BlockHistoryController : Controller
             }
             return View(_recordsService.BlockHistory(Parameters, PageNum, PageSize));
         }
-        catch (System.Exception e)
+        catch (System.Exception)
         {
             TempData["Error"] = "Internal Server Error";
             return RedirectToAction("Index","Dashboard");

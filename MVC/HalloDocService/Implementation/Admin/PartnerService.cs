@@ -32,11 +32,11 @@ public class PartnerService : IPartnerService
             {
                 Id = vendor.Id,
                 BusinessName = vendor.Vendorname,
-                ProfessionName = vendor.ProfessionNavigation.Professionname,
-                Email = vendor.Email,
-                FaxNumber = vendor.Faxnumber,
-                PhoneNumber = vendor.Phonenumber,
-                BusinessContact = vendor.Businesscontact
+                ProfessionName = vendor?.ProfessionNavigation?.Professionname,
+                Email = vendor?.Email,
+                FaxNumber = vendor?.Faxnumber,
+                PhoneNumber = vendor?.Phonenumber,
+                BusinessContact = vendor?.Businesscontact
             })
         };
         return vendorDetails;

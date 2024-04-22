@@ -701,7 +701,7 @@ public class AdminDashboardService : IAdminDashboardService
             Mobile = viewRequest.Mobile,
             Street = viewRequest.Street,
             City = viewRequest.City,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = viewRequest.State,
             Zipcode = viewRequest.Zipcode,
             Birthdate = DateOnly.Parse(viewRequest.Birthdate),

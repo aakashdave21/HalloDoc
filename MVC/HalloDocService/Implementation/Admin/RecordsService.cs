@@ -16,10 +16,10 @@ public class RecordsService : IRecordsService
     {
         Requestclient reqData = new()
         {
-            Firstname = Parameters.Firstname,
-            Lastname = Parameters.Lastname,
-            Email = Parameters.Email,
-            Phonenumber = Parameters.PhoneNumber
+            Firstname = Parameters?.Firstname ?? "",
+            Lastname = Parameters?.Lastname,
+            Email = Parameters?.Email,
+            Phonenumber = Parameters?.PhoneNumber
         };
         var (PatientList, totalCount) = _recordsRepo.GetPatientHistory(reqData, PageNum, PageSize);
         int startIndex = (PageNum - 1) * PageSize + 1;
@@ -164,8 +164,8 @@ public class RecordsService : IRecordsService
                 Action = log.Action == 1 ? "Request Montly Data" : "-",
                 Email = log.Emailid ?? "-",
                 Recipient = log?.Requestid != null ? log.Request?.Requestclients?.FirstOrDefault()?.Firstname ?? "-" : log?.Emailid,
-                CreatedDate = log.Createdat,
-                SentDate = log.Sentdate,
+                CreatedDate = log?.Createdat,
+                SentDate = log?.Sentdate,
                 RoleName = log?.Role?.Accounttype == 1 ? "Admin" : log?.Role?.Accounttype == 2 ? "Physician" : "Patient",
                 SentTries = log?.Senttries ?? 0,
                 IsSent = log?.Isemailsent,
@@ -202,8 +202,8 @@ public class RecordsService : IRecordsService
                 Action = log.Action == 1 ? "Request Montly Data" : "-",
                 PhoneNumber = log.Mobilenumber ?? "-",
                 Recipient = log?.Requestid != null ? log.Request?.Requestclients?.FirstOrDefault()?.Firstname ?? "-" : "-",
-                CreatedDate = log.Createdat,
-                SentDate = log.Sentdate,
+                CreatedDate = log?.Createdat,
+                SentDate = log?.Sentdate,
                 RoleName = log?.Role?.Accounttype == 1 ? "Admin" : log?.Role?.Accounttype == 2 ? "Physician" : "Patient",
                 SentTries = log?.Senttries ?? 0,
                 IsSent = log?.Issmssent,
@@ -236,12 +236,12 @@ public class RecordsService : IRecordsService
             BlockHistoryList = BlockHistoryList.Select(br => new EmailLogsView()
             {
                 Id = br.Id,
-                PatientName = br.Request.Requestclients.FirstOrDefault()?.Firstname ?? "-",
-                Email = br.Email,
-                PhoneNumber = br.Phonenumber,
-                CreatedDate = br.Createdat,
-                IsActive = br.Isactive,
-                Notes = br.Reason
+                PatientName = br?.Request?.Requestclients.FirstOrDefault()?.Firstname ?? "-",
+                Email = br?.Email,
+                PhoneNumber = br?.Phonenumber,
+                CreatedDate = br?.Createdat,
+                IsActive = br?.Isactive,
+                Notes = br?.Reason
             }),
             TotalCount = totalCount,
             CurrentPage = PageNum,

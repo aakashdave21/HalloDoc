@@ -194,7 +194,7 @@ public class DashboardController : Controller
             }
             return Ok(physicians);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return Redirect("/Admin/Dashboard/Index");
@@ -374,7 +374,7 @@ public class DashboardController : Controller
             }
             return RedirectToAction("ViewUploads", new { RequestId = requestId });
         }
-        catch (Exception e)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             if (Type == "conclude")
@@ -615,7 +615,7 @@ public class DashboardController : Controller
             return RedirectToAction("Encounter", new { RequestId = encounterForm.ReqId });
 
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Encounter", new { RequestId = encounterForm.ReqId });
@@ -665,7 +665,7 @@ public class DashboardController : Controller
             TempData["success"] = "Account Creation Link Send !";
             return RedirectToAction("Index");
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Index");

@@ -82,7 +82,7 @@ public class ProfileController : Controller
             }
             return RedirectToAction("Index");
         }
-        catch (System.Exception e)
+        catch (System.Exception)
         {
             TempData["error"] = "Internal Server Error !";
             return RedirectToAction("Index");

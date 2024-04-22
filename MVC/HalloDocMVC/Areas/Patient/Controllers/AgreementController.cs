@@ -34,12 +34,12 @@ public class AgreementController : Controller
                 _adminDashboardService.AgreementAccept(tokenDetails.Id);
                 TempData["success"] = "Agreement Accepted!";
                 return RedirectToAction(nameof(Index),"Home");
-            }else if(tokenDetails.AcceptExpiry < DateTime.UtcNow){
+            }else if(tokenDetails?.AcceptExpiry < DateTime.UtcNow){
 
                 // Update Request to Cancel
                 TempData["error"] = "Oops! Time has been Ended! Please Create New Request";
                 return RedirectToAction(nameof(Index));
-            }else if(tokenDetails.AcceptToken != RequestToken){
+            }else if(tokenDetails?.AcceptToken != RequestToken){
                 TempData["error"] = "Oops! Incorrect Details! Please Visit Link Again";
             }
             throw new Exception();
@@ -58,12 +58,12 @@ public class AgreementController : Controller
                 _adminDashboardService.AgreementReject(tokenDetails.Id,reason);
                 TempData["success"] = "Agreement Cancelled!";
                 return RedirectToAction(nameof(Index),"Home");
-            }else if(tokenDetails.AcceptExpiry < DateTime.UtcNow){
+            }else if(tokenDetails?.AcceptExpiry < DateTime.UtcNow){
 
                 // Update Request to Cancel
                 TempData["error"] = "Oops! Time has been Ended! Please Create New Request";
                 return RedirectToAction(nameof(Index));
-            }else if(tokenDetails.AcceptToken != RequestToken){
+            }else if(tokenDetails?.AcceptToken != RequestToken){
                 TempData["error"] = "Oops! Incorrect Details! Please Visit Link Again";
             }
             throw new Exception();

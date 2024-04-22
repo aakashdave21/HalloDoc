@@ -52,7 +52,7 @@ public class DashboardController : Controller
 
             return View(viewModel);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return View();
@@ -318,7 +318,7 @@ public class DashboardController : Controller
                 return RedirectToAction("Index");
 
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             ModelState.AddModelError("", "An error occurred while saving the data.");
             TempData["error"] = "An error occurred while saving the data."; 
@@ -403,7 +403,7 @@ public class DashboardController : Controller
                 string message = $"Please click the following link to reset your password: <a href='{createAccountLink}'>{createAccountLink}</a>";
                 _utilityService.EmailSend(rcvrMail,message,"Account Creation Link");
         }
-        catch (Exception e)
+        catch (Exception)
         {
             TempData["error"] = "Error While Sending Mail";
             throw;

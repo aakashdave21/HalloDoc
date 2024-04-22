@@ -68,8 +68,8 @@ public class AccessController : Controller
         try
         {   
             int AspUserId = int.Parse(User.FindFirstValue("AspUserId"));
-            string roleName = formData["rolename"];
-            int AccountType = int.Parse(formData["accountType"]);
+            string? roleName = formData?["rolename"];
+            int AccountType = int.Parse(formData?["accountType"]);
             List<int> MenuArray = formData["menus"].Select(int.Parse).ToList();
             _accessService.CreateNewRole(roleName,AccountType,MenuArray,AspUserId);
             TempData["success"] = "Role Created Successfully";

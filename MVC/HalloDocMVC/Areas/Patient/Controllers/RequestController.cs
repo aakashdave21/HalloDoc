@@ -70,7 +70,7 @@ public class RequestController : Controller
                 return RedirectToAction("Index", "PatientLogin");
 
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             ModelState.AddModelError("", "An error occurred while saving the data.");
             TempData["error"] = "An error occurred while saving the data."; 
@@ -97,7 +97,7 @@ public class RequestController : Controller
             }
             return Json(new { isValid = isValid });
         }
-        catch (Exception e)
+        catch (Exception)
         {
             TempData["error"] = "An error occurred while Verifying the Email.";
             return View(nameof(Patient));
@@ -235,7 +235,7 @@ public class RequestController : Controller
                 string message = $"Please click the following link to reset your password: <a href='{createAccountLink}'>{createAccountLink}</a>";
                 _utilityService.EmailSend(rcvrMail,message,"Account Creation Link",null,3,null,null);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             TempData["error"] = "Error While Sending Mail";
             throw;

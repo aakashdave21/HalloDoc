@@ -26,7 +26,7 @@ public class SignUpController : Controller
             }
             return Redirect("/patient/signup?userId="+userId+"&token="+token);
         }
-        catch (Exception e)
+        catch (Exception )
         {
             TempData["error"] = "Internal Server Error";
             return Redirect("/patient/signup?userId="+userId+"&token="+token);
@@ -43,22 +43,22 @@ public class SignUpController : Controller
         try
         {
             var tokenDetails = _patientLogin.GetResetTokenExpiry(int.Parse(UserId),UserToken);
-            if(tokenDetails.AcivationToken == UserToken && tokenDetails != null && tokenDetails.ActivationExpiry > DateTime.UtcNow ){
+            if(tokenDetails?.AcivationToken == UserToken && tokenDetails != null && tokenDetails.ActivationExpiry > DateTime.UtcNow ){
                 string hashedPassword = Services.PasswordHasher.HashPassword(userModel.Passwordhash);
                 _patientLogin.UpdatePassword(tokenDetails.Id,hashedPassword);
                 TempData["success"] = "Account Created Successfully!";
                 return RedirectToAction("Index","PatientLogin");
-            }else if(tokenDetails.ActivationExpiry < DateTime.UtcNow){
+            }else if(tokenDetails?.ActivationExpiry < DateTime.UtcNow){
                  TempData["error"] = "Oops! Token Expires, Please Go To Login Page";
                  return Redirect("/patient/signup?userId="+UserId+"&token="+UserToken);
-            }else if(tokenDetails.AcivationToken != UserToken){
+            }else if(tokenDetails?.AcivationToken != UserToken){
                 TempData["error"] = "Oops! Token Expires or Incorrect, Please Go To Login Page";
                return Redirect("/patient/signup?userId="+UserId+"&token="+UserToken);
             }
             TempData["error"] = "Internal Server Error";
             return Redirect("/patient/signup?userId="+UserId+"&token="+UserToken);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return Redirect("/patient/signup?userId="+UserId+"&token="+UserToken);

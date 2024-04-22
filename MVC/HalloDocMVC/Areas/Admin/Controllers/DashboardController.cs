@@ -251,7 +251,7 @@ public class DashboardController : Controller
             }
             return Ok(physicians);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return Redirect("/Admin/Dashboard/Index");
@@ -345,7 +345,7 @@ public class DashboardController : Controller
             var DocumentRecords = _dashboardService.GetAllRequestedDocuments(RequestId);
             var patientData = _adminDashboardService.GetSingleRequest(RequestId);
             ViewBag.PatientName = patientData.User != null ? (patientData.User.Firstname + " " + patientData.User.Lastname) :
-                 (patientData.Requestclients.FirstOrDefault()?.Firstname.ToUpper() + " " + patientData.Requestclients.FirstOrDefault()?.Lastname.ToUpper());
+                 (patientData.Requestclients.FirstOrDefault()?.Firstname.ToUpper() + " " + patientData.Requestclients.FirstOrDefault()?.Lastname?.ToUpper());
             ViewBag.userId = User.FindFirstValue("UserId");
             ViewBag.requestId = RequestId;
 
@@ -357,7 +357,7 @@ public class DashboardController : Controller
                 UploaderName = d.Request.Createduser != null ? d.Request.Createduser.Email : d.Request.Firstname,
                 UploadDate = d.Createddate.ToString("yyyy-MM-dd"),
                 PatientName = d.Request.User != null ? (d.Request.User.Firstname + " " + d.Request.User.Lastname) :
-                 (d.Request.Requestclients.FirstOrDefault()?.Firstname.ToUpper() + " " + d.Request.Requestclients.FirstOrDefault()?.Lastname.ToUpper())
+                 (d.Request.Requestclients.FirstOrDefault()?.Firstname.ToUpper() + " " + d.Request.Requestclients.FirstOrDefault()?.Lastname?.ToUpper())
             }).ToList();
 
             return View(viewModel);
@@ -528,7 +528,7 @@ public class DashboardController : Controller
 
             return RedirectToAction("ViewUploads", new { RequestId = requestId });
         }
-        catch (Exception e)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("ViewUploads", new { RequestId = requestId });
@@ -685,7 +685,7 @@ public class DashboardController : Controller
             CloseCaseViewModel CloseCaseView = _adminDashboardService.CloseCase(int.Parse(RequestId));
             return View(CloseCaseView);
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Index");
@@ -702,7 +702,7 @@ public class DashboardController : Controller
             TempData["success"] = "Case Closed Successfully";
             return RedirectToAction("Index");
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Index");
@@ -761,7 +761,7 @@ public class DashboardController : Controller
             return RedirectToAction("Encounter", new { RequestId = encounterForm.ReqId });
 
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Encounter", new { RequestId = encounterForm.ReqId });
@@ -811,7 +811,7 @@ public class DashboardController : Controller
             TempData["success"] = "Account Creation Link Send !";
             return RedirectToAction("Index");
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Index");
@@ -866,8 +866,8 @@ public class DashboardController : Controller
                     worksheet.Cell(row, 1).Value = item.Requestclients.FirstOrDefault()?.Firstname + " " + item.Requestclients.FirstOrDefault()?.Lastname;
                     worksheet.Cell(row, 2).Value = item.User.Email;
                     worksheet.Cell(row, 3).Value = item.User.Birthdate.ToString();
-                    worksheet.Cell(row, 4).Value = item.User.Mobile.ToString();
-                    worksheet.Cell(row, 5).Value = item.Requestclients.FirstOrDefault()?.Street + ", " + item.Requestclients.FirstOrDefault()?.City + ", " + item.Requestclients.FirstOrDefault()?.State + ", " + item.Requestclients.FirstOrDefault()?.Zipcode;
+                    worksheet.Cell(row, 4).Value = item?.User?.Mobile?.ToString();
+                    worksheet.Cell(row, 5).Value = item?.Requestclients.FirstOrDefault()?.Street + ", " + item?.Requestclients.FirstOrDefault()?.City + ", " + item.Requestclients.FirstOrDefault()?.State + ", " + item.Requestclients.FirstOrDefault()?.Zipcode;
 
                     // Apply data body styling
                     var dataRange = worksheet.Range(worksheet.Cell(row, 1), worksheet.Cell(row, 5));

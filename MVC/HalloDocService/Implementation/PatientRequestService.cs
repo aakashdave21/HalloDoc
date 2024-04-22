@@ -41,7 +41,7 @@ public class PatientRequestService : IPatientRequestService
 
         var newRequestForExistedUser = new Request
         {
-            Userid = existUserData.Id,
+            Userid = existUserData?.Id,
             Symptoms = viewRequest.Symptoms,
             Roomnoofpatient = viewRequest.Roomnoofpatient,
             Status = 1, // For Unassigned,
@@ -64,7 +64,7 @@ public class PatientRequestService : IPatientRequestService
             Street = viewRequest.Street,
             Notes = viewRequest.Symptoms,
             City = viewRequest.City,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = viewRequest.State,
             Zipcode = viewRequest.Zipcode,
             Strmonth = DateOnly.Parse(viewRequest.Birthdate).ToString("MMMM"),
@@ -73,7 +73,7 @@ public class PatientRequestService : IPatientRequestService
         };
         _patientRequestRepo.AddPatientInfoForExistedUser(patientInfo);
 
-        if (viewRequest.FilePath != null || viewRequest.FilePath.Length > 0)
+        if (viewRequest.FilePath != null || viewRequest?.FilePath?.Length > 0)
         {
             var documentDetails = new Requestwisefile
             {
@@ -110,7 +110,7 @@ public class PatientRequestService : IPatientRequestService
             Mobile = viewRequest.Mobile,
             Street = viewRequest.Street,
             City = viewRequest.City,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = viewRequest.State,
             Zipcode = viewRequest.Zipcode,
             Birthdate = DateOnly.Parse(viewRequest.Birthdate),
@@ -152,7 +152,7 @@ public class PatientRequestService : IPatientRequestService
             Street = viewRequest.Street,
             Notes = viewRequest.Symptoms,
             City = viewRequest.City,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = viewRequest.State,
             Zipcode = viewRequest.Zipcode,
             Strmonth = DateOnly.Parse(viewRequest.Birthdate).ToString("MMMM"),
@@ -161,7 +161,7 @@ public class PatientRequestService : IPatientRequestService
         };
         _patientRequestRepo.NewPatientAdd(newPatientInfo);
 
-        if (viewRequest.FilePath != null || viewRequest.FilePath.Length > 0)
+        if (viewRequest.FilePath != null || viewRequest?.FilePath?.Length > 0)
         {
             var documentDetails = new Requestwisefile
             {
@@ -202,7 +202,7 @@ public class PatientRequestService : IPatientRequestService
 
         var newRequestForExistedUser = new Request
         {
-            Userid = existUserData.Id,
+            Userid = existUserData?.Id,
             Symptoms = familyRequest.Symptoms,
             Roomnoofpatient = familyRequest.Roomnoofpatient,
             Status = 1, // For Unassigned,
@@ -226,7 +226,7 @@ public class PatientRequestService : IPatientRequestService
             Street = familyRequest.Street,
             Notes = familyRequest.Symptoms,
             City = familyRequest.City,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = familyRequest.State,
             Zipcode = familyRequest.Zipcode,
             Strmonth = DateOnly.Parse(familyRequest.Birthdate).ToString("MMMM"),
@@ -235,7 +235,7 @@ public class PatientRequestService : IPatientRequestService
         };
         _patientRequestRepo.AddPatientInfoForExistedUser(patientInfo);
 
-        if (familyRequest.FilePath != null || familyRequest.FilePath.Length > 0)
+        if (familyRequest.FilePath != null || familyRequest?.FilePath?.Length > 0)
         {
             var documentDetails = new Requestwisefile
             {
@@ -275,7 +275,7 @@ public class PatientRequestService : IPatientRequestService
             Mobile = familyRequest.Mobile,
             Street = familyRequest.Street,
             City = familyRequest.City,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = familyRequest.State,
             Zipcode = familyRequest.Zipcode,
             Birthdate = DateOnly.Parse(familyRequest.Birthdate),
@@ -315,7 +315,7 @@ public class PatientRequestService : IPatientRequestService
             Email = familyRequest.Email,
             Street = familyRequest.Street,
             City = familyRequest.City,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = familyRequest.State,
             Notes = familyRequest.Symptoms,
             Zipcode = familyRequest.Zipcode,
@@ -325,7 +325,7 @@ public class PatientRequestService : IPatientRequestService
         };
         _patientRequestRepo.NewPatientAdd(newPatientInfo);
 
-        if (familyRequest.FilePath != null || familyRequest.FilePath.Length > 0)
+        if (familyRequest.FilePath != null || familyRequest?.FilePath?.Length > 0)
         {
             var documentDetails = new Requestwisefile
             {
@@ -365,7 +365,7 @@ public class PatientRequestService : IPatientRequestService
 
         var newRequestForExistedUser = new Request
         {
-            Userid = existUserData.Id,
+            Userid = existUserData?.Id,
             Symptoms = businessRequests.Symptoms,
             Roomnoofpatient = businessRequests.Roomnoofpatient,
             Status = 1, // For Unassigned,
@@ -390,7 +390,7 @@ public class PatientRequestService : IPatientRequestService
             Street = businessRequests.Street,
             Notes = businessRequests.Symptoms,
             City = businessRequests.City,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = businessRequests.State,
             Zipcode = businessRequests.Zipcode,
             Strmonth = DateOnly.Parse(businessRequests.Birthdate).ToString("MMMM"),
@@ -426,7 +426,7 @@ public class PatientRequestService : IPatientRequestService
             Mobile = businessRequests.Mobile,
             Street = businessRequests.Street,
             City = businessRequests.City,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = businessRequests.State,
             Zipcode = businessRequests.Zipcode,
             Birthdate = DateOnly.Parse(businessRequests.Birthdate),
@@ -468,7 +468,7 @@ public class PatientRequestService : IPatientRequestService
             Street = businessRequests.Street,
             City = businessRequests.City,
             Notes = businessRequests.Symptoms,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = businessRequests.State,
             Zipcode = businessRequests.Zipcode,
             Strmonth = DateOnly.Parse(businessRequests.Birthdate).ToString("MMMM"),
@@ -502,7 +502,7 @@ public class PatientRequestService : IPatientRequestService
 
         var newRequestForExistedUser = new Request
         {
-            Userid = existUserData.Id,
+            Userid = existUserData?.Id,
             Symptoms = conciergeRequest.Symptoms,
             Roomnoofpatient = conciergeRequest.Roomnoofpatient,
             Status = 1, // For Unassigned,
@@ -536,7 +536,7 @@ public class PatientRequestService : IPatientRequestService
             Conciergename = conciergeRequest.Firstname,
             Street = conciergeRequest.ConciergeStreet,
             City = conciergeRequest.ConciergeCity,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = conciergeRequest.ConciergeState,
             Zipcode = conciergeRequest.ConciergeZipcode
         };
@@ -623,7 +623,7 @@ public class PatientRequestService : IPatientRequestService
             Conciergename = conciergeRequest.Firstname,
             Street = conciergeRequest.ConciergeStreet,
             City = conciergeRequest.ConciergeCity,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = conciergeRequest.ConciergeState,
             Zipcode = conciergeRequest.ConciergeZipcode
         };

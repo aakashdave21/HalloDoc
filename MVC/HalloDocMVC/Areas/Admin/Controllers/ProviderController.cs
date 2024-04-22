@@ -328,7 +328,7 @@ public class ProviderController : Controller
             if(!ModelState.IsValid){
                 return View(_providerService.GetRoleAndState());
             }
-            phyCreate.UploadPhoto = SaveFile(phyCreate.UserPhoto, "uploads");
+            phyCreate.UploadPhoto = SaveFile(phyCreate?.UserPhoto, "uploads");
             phyCreate.IsBgCheckFileName = phyCreate?.IsBgCheckFile != null ? SaveFile(phyCreate.IsBgCheckFile, "uploads") : null;
             phyCreate.IsHIPAAFileName = phyCreate?.IsHIPAAFile != null ? SaveFile(phyCreate.IsHIPAAFile, "uploads"): null;
             phyCreate.IsICAFileName = phyCreate?.IsICAFile != null ? SaveFile(phyCreate?.IsICAFile, "uploads"): null;
