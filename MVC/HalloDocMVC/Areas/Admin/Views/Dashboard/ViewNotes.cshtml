@@ -159,15 +159,20 @@
                 <input type="hidden" asp-for="@Model.ReqId" >
                 <div class="form-floating">
                     <textarea asp-for="AdditionalNote" class="form-control" placeholder="Enter Additional Note"
-                        id="additionalNote" style="height: 100px"></textarea>
+                        id="additionalNote" style="height: 100px; resize:none;"></textarea>
                     <label asp-for="AdditionalNote" for="additionalNote">Additional Note</label>
                 </div>
-                <span class="text-danger"></span>
+                <span asp-validation-for="AdditionalNote" class="text-danger"></span>
             </div>
             <div class="d-flex justify-content-end mt-4">
                 <button type="submit" class="btn secondary-theme-btn">Save Changes</button>
             </div>
         </form>
-
+        @section Scripts {
+            @{
+                <partial name="_ValidationScriptsPartial" />
+            }
+        }
+</div>
     </div>
 </main>

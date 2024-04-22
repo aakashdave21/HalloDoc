@@ -1,7 +1,7 @@
 @{
     int[] pageSizeArrray = { 5, 10, 15 };
 }
-<div class="table-responsive">
+<div class="table-responsive d-md-block d-none">
     <table class="table">
         <thead>
             <th>First Name</th>
@@ -41,6 +41,47 @@
         </tbody>
     </table>
 </div>
+
+<div class="d-md-none">
+    @if (((IEnumerable<PatientHistoryView>)Model.PatientHistoryList).Any())
+    {
+        @foreach (var item in Model.PatientHistoryList)
+        {
+            <div class="accordion" id="accordian-@item.Id">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#panelsStayOpen-collapse-@item.Id" aria-expanded="false">
+                            <div class="d-flex flex-column w-100">
+                                <p>@item.Firstname, @item.Lastname</p>
+                                <p>Phone : @item.PhoneNumber</p>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapse-@item.Id" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <div class="d-flex flex-column w-100">
+                                <p>Email : @item.Email</p>
+                                <p>Address : @item.Address</p>
+                                <p>PhoneNumber : @item.PhoneNumber</p>
+                                 @using(Html.BeginForm("ExplorePatient","PatientHistory",new {Area = "Admin"}, FormMethod.Post)){
+                                <input type="hidden" name="userId" value="@item.UserId"/>
+                                <input type="hidden" name="requestId" value="@item.RequestId"/>
+                                <button type="submit" class="btn theme-btn">Explore</button>
+                            }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-center border-bottom border-top p-2">No Records Found</p>
+    }
+</div>
+
 @* Pagination *@
 <div class="d-flex justify-content-between align-items-center mt-2">
     <div>

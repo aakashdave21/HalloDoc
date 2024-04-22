@@ -21,7 +21,7 @@
             <div class="table-responsive">
                 <table class="table" id="Access-table">
                     <thead>
-                        <tr>
+                        <tr class="d-md-table-row d-none">
                             <th style="white-space:nowrap; width:40%;">Name</th>
                             <th style="white-space:nowrap; width:50%;">Account Type</th>
                             <th style="white-space:nowrap; ">Action</th>
@@ -30,7 +30,7 @@
                     <tbody>
                         @foreach (var item in Model.AccessRoleList)
                         {
-                            <tr>
+                            <tr class="d-md-table-row d-flex flex-column border-top border-bottom">
                                 <td>@item.RoleName</td>
                                 <td>@item.AccountType</td>
                                 <td>

@@ -57,16 +57,17 @@ namespace HalloDocMVC.Extensions
                     {
                         OnRedirectToLogin = context =>
                         {
-                            if (context.Request.Path.StartsWithSegments("/Provider") && !context.Request.Path.StartsWithSegments("/Provider/Login"))
+                            var httpContext = context.HttpContext;
+                            if (!httpContext.User.Identity.IsAuthenticated && context.Request.Path.StartsWithSegments("/Provider") && !context.Request.Path.StartsWithSegments("/Provider/Login"))
                             {
                                 context.Response.Redirect("/Provider/Login/");
                             }
-                            else if (context.Request.Path.StartsWithSegments("/Admin") &&
+                            else if (!httpContext.User.Identity.IsAuthenticated && context.Request.Path.StartsWithSegments("/Admin") &&
                                 !context.Request.Path.StartsWithSegments("/Admin/Login"))
                             {
                                 context.Response.Redirect("/Admin/Login/Index");
                             }
-                            else if (context.Request.Path.StartsWithSegments("/Patient") &&
+                            else if (!httpContext.User.Identity.IsAuthenticated && context.Request.Path.StartsWithSegments("/Patient") &&
                                      !context.Request.Path.StartsWithSegments("/Patient/PatientLogin"))
                             {
                                 context.Response.Redirect("/Patient/PatientLogin/Index");
@@ -90,7 +91,6 @@ namespace HalloDocMVC.Extensions
                 ClaimsPrincipal claimUser = context.User;
                 if (context.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && claimUser.Identity.IsAuthenticated == false && context.Request.Headers["Not-Auth-Required"] != "true")
                 {
-                    Console.WriteLine("In this Middlewear");
                     context.Response.StatusCode = 401;
                     return;
                 }

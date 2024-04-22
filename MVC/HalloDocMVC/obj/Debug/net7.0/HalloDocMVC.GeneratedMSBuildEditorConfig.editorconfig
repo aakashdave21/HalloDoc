@@ -180,6 +180,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9SZXZpZXdTaGlmdFRhYmxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Admin/Views/Shared/_SendLinkModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9TZW5kTGlua01vZGFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Admin/Views/Shared/_SMSLogTable.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9TTVNMb2dUYWJsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

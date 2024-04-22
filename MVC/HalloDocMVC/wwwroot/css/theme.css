@@ -1,92 +1,111 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-*{
+
+* {
     font-family: 'Poppins', sans-serif;
     /* cursor: url('/Patient-Dashboard/images/cursor-removebg-preview.png'),auto; */
 }
-:root{
-    --main-color : #01bce9;
-    --white-color : #ffffff;
+
+:root {
+    --main-color: #01bce9;
+    --white-color: #ffffff;
 }
-p,ul{
+
+p,
+ul {
     margin: 0;
     padding: 0;
 }
-body{
+
+body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-th{
+th {
     cursor: default;
 }
 
 /* Dark Theme Color */
-[data-bs-theme=dark]{
+[data-bs-theme=dark] {
     /* --bs-body-bg: #333333; */
     --bs-body-bg: #000000;
     /* --bs-body-bg: #0E2954; */
     /* --bs-body-bg: #001f3f; */
 }
-[data-bs-theme=dark] .shadow{
+
+[data-bs-theme=dark] .shadow {
     box-shadow: 5px 5px 10px rgba(255, 255, 255, 0.2) !important;
 }
 
 ::-webkit-scrollbar {
     width: 8px;
     height: 2px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
+}
+
+/* Track */
+::-webkit-scrollbar-track {
     background: #f1f1f1;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
     background: #01bce9;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
     background: #555;
-  }
+}
 
 /* Theme Button CSS */
-#theme-btn,.theme-btn,.secondary-theme-btn:hover{
+#theme-btn,
+.theme-btn,
+.secondary-theme-btn:hover {
     border: 0.5px solid var(--main-color);
     color: var(--main-color);
     z-index: 1;
 }
-#theme-btn:hover,.theme-btn:hover,.secondary-theme-btn{
+
+#theme-btn:hover,
+.theme-btn:hover,
+.secondary-theme-btn {
     background-color: var(--main-color);
     color: var(--white-color);
 }
 
-.form-control:focus, .form-select:focus {
+.form-control:focus,
+.form-select:focus {
     border-color: var(--main-color);
     box-shadow: none;
 }
 
+.input-validation-error {
+    border-color: red;
+    box-shadow: none;
+}
+
 .form-floating>.form-control:focus~label {
-   color: var(--main-color);
+    color: var(--main-color);
 }
 
 /* Back Button CSS */
- .back-link{
+.back-link {
     color: var(--main-color);
     border: 1px solid var(--main-color);
 }
- .back-link:hover{
+
+.back-link:hover {
     background-color: var(--main-color);
     color: var(--white-color);
 }
 
 /* CSS For Dark Footer */
-.dark-footer{
+.dark-footer {
     background-color: #161716;
 }
-.dark-footer a:hover{
+
+.dark-footer a:hover {
     text-decoration: underline !important;
 }
 
@@ -94,18 +113,32 @@ th{
 .iti__country-list {
     z-index: 20 !important;
 }
-.iti--allow-dropdown input, .iti--allow-dropdown input[type=text], .iti--allow-dropdown input[type=tel], .iti--separate-dial-code input, .iti--separate-dial-code input[type=text], .iti--separate-dial-code input[type=tel] {
+
+.iti--allow-dropdown input,
+.iti--allow-dropdown input[type=text],
+.iti--allow-dropdown input[type=tel],
+.iti--separate-dial-code input,
+.iti--separate-dial-code input[type=text],
+.iti--separate-dial-code input[type=tel] {
     padding-bottom: 16px;
     padding-top: 16px;
 }
+
 .iti {
     width: 100%;
 }
 
-[data-bs-theme=dark] .iti__country-list{
+[data-bs-theme=dark] .iti__country-list {
     background-color: #000000;
 }
-.sortable{
-    cursor : pointer;
+
+.sortable {
+    cursor: pointer;
     user-select: none;
+}
+
+@media only screen and (max-width: 768px) {
+    table tr td {
+        border: none;
+    }
 }

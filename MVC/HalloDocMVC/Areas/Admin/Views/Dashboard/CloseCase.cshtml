@@ -35,20 +35,20 @@
 
                 </div>
 
-                <div class="table-responsive">
+                <div>
                     <table class="table table-striped" id="example" class="display" style="width:100%">
                         <thead>
                             <tr>
-                                <th style="white-space: nowrap; width:55%;">File</th>
-                                <th style="white-space: nowrap;" class="sortable asc">Upload Date <i
-                                        class="fa-solid fa-chevron-up sorting-icons"></i> </th>
-                                <th style="white-space: nowrap;">Action</th>
+                                <th style="white-space: nowrap; width:55%;" class="d-none d-md-table-cell">File</th>
+                                <th style="white-space: nowrap;" class="sortable asc d-none d-md-table-cell">Upload Date <i
+                                        class="fa-solid fa-chevron-up sorting-icons "></i> </th>
+                                <th style="white-space: nowrap;" class="d-none d-md-table-cell">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.documentList)
                             {
-                                <tr>
+                                <tr class="d-flex flex-column d-md-table-row">
                                     <td>
                                         @{
                                             var filename = string.Join("_", @item.FileName.Split("_").Skip(1));
@@ -71,9 +71,6 @@
                                     <td colspan="3" class="text-center">No records found.</td>
                                 </tr>
                             }
-
-
-
                         </tbody>
                     </table>
                 </div>

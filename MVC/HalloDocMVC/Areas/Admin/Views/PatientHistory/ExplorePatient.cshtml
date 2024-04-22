@@ -25,7 +25,7 @@
     <div class="d-flex mt-4">
         <h4 class="fw-bold">Patient Records</h4>
     </div>
-    <div class="table-responsive">
+    <div class="table-responsive d-md-block d-none">
         <table class="table">
             <thead>
                 <th>Client Name</th>
@@ -76,6 +76,51 @@
             </tbody>
         </table>
     </div>
+    <div class="d-md-none">
+    @if (((IEnumerable<PatientRequestView>)Model.PatientRequestList).Any())
+    {
+        @foreach (var item in Model.PatientRequestList)
+        {
+            <div class="accordion" id="accordian-@item.Id">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#panelsStayOpen-collapse-@item.Id" aria-expanded="false">
+                            <div class="d-flex flex-column w-100">
+                                <p>@item.PatientName</p>
+                                <p>@item.ConfirmationNumber</p>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapse-@item.Id" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <div class="d-flex flex-column w-100">
+                                <p>Created Date : @item.CreatedDate</p>
+                                <p>Provider : @item.ProviderName</p>
+                                <p>Concluded Date : @item.ConcludedDate</p>
+                                <p>Status : @item.Status</p>
+                                <div class="dropdown">
+                                    <button class="btn theme-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/admin/dashboard/ViewCase/@item.Id">View Case</a></li>
+                                        <li><a class="dropdown-item" href="#">Chat</a></li>
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="ViewUploads" asp-route-RequestId="@item.Id">Documents</a></li>
+                                    </ul>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-center border-bottom border-top p-2">No Records Found</p>
+    }
+</div>
 </main>
 
 

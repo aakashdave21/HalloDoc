@@ -10,17 +10,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using HalloDocService.Interfaces;
 using System.IO.Compression;
-using Newtonsoft.Json;
-using System.Net.Mail;
-using System.Net;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Runtime.InteropServices.JavaScript;
-using System.Globalization;
 using ClosedXML.Excel;
 
 namespace HalloDocMVC.Controllers.Admin;
-
 [Area("Admin")]
 [Authorize(Roles = "Admin")]
 public class DashboardController : Controller
@@ -30,7 +22,6 @@ public class DashboardController : Controller
     private readonly IDashboardService _dashboardService;
     private readonly IUtilityService _utilityService;
     private readonly IWebHostEnvironment _hostingEnvironment;
-
     private readonly IPatientRequestService _patientRequestService;
 
     public DashboardController(ILogger<DashboardController> logger, IAdminDashboardService adminDashboardService, IDashboardService dashboardService, IWebHostEnvironment hostingEnvironment, IUtilityService utilityService, IPatientRequestService patientRequestService)
@@ -190,7 +181,7 @@ public class DashboardController : Controller
     {
         try
         {
-            _adminDashboardService.SaveAdditionalNotes(viewnotes?.AdditionalNote, viewnotes.NoteId, viewnotes.ReqId, 2);
+            _adminDashboardService.SaveAdditionalNotes(viewnotes?.AdditionalNote, viewnotes.NoteId, viewnotes.ReqId, 1);
             TempData["success"] = "Updated Successfully";
             return Redirect("/admin/dashboard/ViewNotes/" + viewnotes.ReqId);
         }
@@ -709,7 +700,6 @@ public class DashboardController : Controller
         {
             _adminDashboardService.CloseCaseSubmit(closeCaseView.ReqId);
             TempData["success"] = "Case Closed Successfully";
-
             return RedirectToAction("Index");
         }
         catch (System.Exception ex)
@@ -1092,6 +1082,9 @@ public class DashboardController : Controller
     public async Task<IActionResult> LogOut()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+        Response.Headers["Pragma"] = "no-cache";
+        Response.Headers["Expires"] = "0";
         return RedirectToAction("Index", "Login");
     }
 

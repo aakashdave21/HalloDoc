@@ -54,7 +54,7 @@
                         </div>
                         <div class="col-md-4 col-8">
                                 <div class="form-floating mb-3">
-                                    <input asp-for="Mobile" id="Mobile" class="form-control" type="tel" name="Mobile" />
+                                    <input asp-for="Mobile" id="Mobile" class="form-control" type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="Mobile" />
                                     <input type="hidden" id="phone_hidden" name="full_phone" />
                                   </div>
                                   <span asp-validation-for="Mobile" class="text-danger"></span>

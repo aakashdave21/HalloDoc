@@ -1,4 +1,4 @@
-<table class="table" id="provider-table">
+<table class="table d-md-block d-none" id="provider-table">
     <thead>
         <tr>
             <th style="width: 10%;">Stop Notification</th>
@@ -16,7 +16,6 @@
                     </th>
                 }
             }
-
             <th style="white-space:nowrap;">Role</th>
             <th style="width: 15%;">On Call Status</th>
             <th style="white-space:nowrap;">Status</th>
@@ -30,14 +29,15 @@
                 @if (item.IsNotificationStopped == true)
                 {
                     <td>
-                        <input type="checkbox" id="checkbox-@item.Id" value="@item.Id" class="form-check-input selectRow stoppedNotification" style="cursor: pointer;"
-                            checked>
+                        <input type="checkbox" id="checkbox-@item.Id" value="@item.Id"
+                            class="form-check-input selectRow stoppedNotification" style="cursor: pointer;" checked>
                     </td>
                 }
                 else
                 {
                     <td>
-                        <input type="checkbox" id="checkbox-@item.Id" value="@item.Id" class="form-check-input selectRow runningNotification" style="cursor: pointer;">
+                        <input type="checkbox" id="checkbox-@item.Id" value="@item.Id"
+                            class="form-check-input selectRow runningNotification" style="cursor: pointer;">
                     </td>
                 }
                 <td>@item.PhysicianName</td>
@@ -49,23 +49,69 @@
                         <button class="btn theme-btn" onclick="openContactModal('@item.Id')"> Contact
                         </button>
                         @using (Html.BeginForm("Edit", "Provider", new { area = "Admin" },
-                        FormMethod.Post))
-                            {
-                                <input type="hidden" name="id" value="@item.Id" />
-                                <button type="submit" class="btn theme-btn"> Edit
-                                </button>
-                            }
-                        @* @using (Html.BeginForm("SaveNotification", "Provider", new { area = "Admin" },
-                        FormMethod.Post))
-                            {
-                                <input type="hidden" value="@item.Id" />
-                                <button class="btn secondary-theme-btn" style="display: none;" id="save-btn-@item.Id"> Save
-                                </button>
-                            } *@
+                       FormMethod.Post))
+                        {
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button type="submit" class="btn theme-btn"> Edit
+                            </button>
+                        }
                     </div>
-
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<div class="d-md-none">
+    @foreach (var item in Model.AllPhysicianList)
+    {
+        <div class="accordion" id="accordian-@item.Id">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapse-@item.Id" aria-expanded="false">
+                        <div class="d-flex justify-content-between w-100">
+                            <div>
+                                @if (item.IsNotificationStopped == true)
+                                {
+                                    <p>
+                                        <input type="checkbox" id="checkbox-@item.Id" value="@item.Id"
+                                            class="form-check-input selectRow stoppedNotification" style="cursor: pointer;" checked>
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p>
+                                        <input type="checkbox" id="checkbox-@item.Id" value="@item.Id"
+                                            class="form-check-input selectRow runningNotification" style="cursor: pointer;">
+                                    </p>
+                                }
+                                <p>@item.PhysicianName</p>
+                                <p>@item.OnCallStatus</p>
+
+                            </div>
+                        
+                        </div>
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapse-@item.Id" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <p>@item.Role</p>
+                        <p>@item.Status</p>
+                        
+                    <div class="d-flex gap-2">
+                        <button class="btn theme-btn" onclick="openContactModal('@item.Id')"> Contact
+                        </button>
+                        @using (Html.BeginForm("Edit", "Provider", new { area = "Admin" },
+                       FormMethod.Post))
+                        {
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button type="submit" class="btn theme-btn"> Edit
+                            </button>
+                        }
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

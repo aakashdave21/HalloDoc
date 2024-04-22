@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
-                            <input asp-for="Mobile" id="Mobile" class="form-control" type="tel" name="Mobile" />
+                            <input asp-for="Mobile" id="Mobile" class="form-control" type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="Mobile" />
                             <input asp-for="Mobile" type="hidden" id="phone_hidden" name="full_phone" />
                         </div>
                         <span asp-validation-for="Mobile" class="text-danger" id="mobile-valid"></span>
@@ -144,16 +144,14 @@
     </div>
 </main>
 
-
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
 <script>
     function submitMyForm() {
         AddCountryCode();
         $(`#CreateRequest`).submit();
     }
-    $("#adminDashTab li").each(function () {
-        if ($(this).data("id") == 1) {
-            $("#adminDashTab li a").removeClass("active");
-            $(this).addClass("active").find("a").addClass("active");
-        }
-    })
 </script>
