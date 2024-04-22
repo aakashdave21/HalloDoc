@@ -22,7 +22,7 @@
                     New Request</button>
             </div>
 
-            <div class="table-responsive">
+            <div class="table-responsive d-md-block d-none">
                 <table id="myTable" class="table table-striped" style="width:100%">
                     <thead>
                         <tr>
@@ -38,13 +38,6 @@
                                     <td class="created-date" style="white-space: nowrap;">@(((DateTime)item.Createdat).ToString("MMM dd, yyyy"))</td>
                                     <td>@Model.GetUserRequestType(item.Status)</td>
                                     <td>
-                                        @* @{
-                                            if(@item.NoOfRequests > 0){
-                                                <a style="white-space: nowrap;" type="button" class="btn theme-btn" asp-area="Patient" asp-controller="Dashboard" asp-action="Documents" asp-route-RequestId="@item.Id" >
-                                                (<span>@item.NoOfRequests</span>) Document
-                                                </a>
-                                            }
-                                        } *@
                                         
                                     </td>
                                 </tr>
@@ -70,6 +63,47 @@
                     </tbody>
                 </table>
             </div>
+
+            <div class="d-md-none mt-4">
+     @if ((Model.UserRequests).Any())
+    {
+        @foreach (var item in Model.UserRequests)
+        {
+            <div class="accordion" id="accordian-@item.Id">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#panelsStayOpen-collapse-@item.Id" aria-expanded="false">
+                            <div class="d-flex flex-column w-100">
+                                <p>Created Date : @(((DateTime)item.Createdat).ToString("MMM dd, yyyy"))</p>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapse-@item.Id" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <div class="d-flex flex-column w-100">
+                                <p>Current Status : @Model.GetUserRequestType(item.Status)</p>
+                                @{
+                                        if(@item.NoOfRequests > 0){
+                                            using(Html.BeginForm("Documents", "Dashboard", new { area = "Patient" }, FormMethod.Post)){
+                                                <input type="hidden" name="RequestId" value="@item.Id"/>
+                                                <button type="submit" class="btn theme-btn" style="white-space: nowrap;"> (<span>@item.NoOfRequests</span>) Document </button>
+                                            }
+                                        }
+                                    }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-center border-bottom border-top p-2">No Records Found</p>
+    }
+</div>
+
         </div>
 </main>
 

@@ -30,7 +30,8 @@
                     <div class="row mt-3">
                         <div class="col-md-4 mb-3">
                             <div class="form-floating">
-                                <input asp-for="Username" type="text" class="form-control" id="username" placeholder="UserName" readonly>
+                                <input asp-for="Username" type="text" class="form-control" id="username" placeholder="UserName" disabled>
+                                <input asp-for="Username" type="hidden">
                                 <label asp-for="Username" for="UserName">User Name</label>
                             </div>
                             <span asp-validation-for="Username" class="text-danger"></span>
@@ -83,7 +84,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
-                            <input asp-for="Phone" id="Mobile" class="form-control" type="tel"  />
+                            <input asp-for="Phone" id="Mobile" class="form-control" type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')"  />
                             <input asp-for="Phone" type="hidden" id="phone_hidden" name="full_phone"  />
                         </div>
                         <span class="text-danger" asp-validation-for="Phone"></span>
@@ -172,7 +173,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
-                            <input asp-for="AltPhone" id="Phone" class="form-control" type="tel"  />
+                            <input asp-for="AltPhone" id="Phone" class="form-control" type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')"  />
                             <input asp-for="AltPhone" type="hidden" id="phone_hidden" name="full_phone"  />
                         </div>
                         <span asp-validation-for="AltPhone" class="text-danger" id="mobile-valid"></span>
@@ -277,7 +278,11 @@
          </form>
      </div>
 </main>
-
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
 <script>
     
     function openFileSelector(id) {

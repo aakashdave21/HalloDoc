@@ -272,9 +272,9 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         if(RequestData!=null){
             RequestData.Status = newStatus;
             _dbContext.SaveChanges();
-        }else{
-                throw new Exception();
+            return;
         }
+        throw new Exception();
     }
 
     public void AddStatusLog(int reqId,short newStatus,short oldStatus,string reason,int? adminId=null,int? physicianId=null,int? transToPhyId=null, bool TransToAdmin = false){

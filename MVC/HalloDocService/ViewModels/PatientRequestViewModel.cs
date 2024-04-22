@@ -6,11 +6,12 @@ namespace HalloDocService.ViewModels
     public class PatientRequestViewModel
     {
         [Required(ErrorMessage = "First Name is required.")]
+        [RegularExpression(@"^[a-zA-Z]*$", ErrorMessage = "First Name can only contain alphabetic characters.")]
         public string Firstname { get; set; } = null!;
 
         [Required(ErrorMessage = "Last Name is required.")]
+        [RegularExpression(@"^[a-zA-Z]*$", ErrorMessage = "Last Name can only contain alphabetic characters.")]
         public string? Lastname { get; set; }
-
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Email is Invalid")]
         public string Email { get; set; } = null!;

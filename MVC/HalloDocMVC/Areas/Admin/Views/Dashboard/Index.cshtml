@@ -87,13 +87,15 @@
                     <button class="btn secondary-theme-btn" data-bs-toggle="modal" data-bs-target="#sendMailModal">
                         <i class="far fa-paper-plane "></i> <span class="d-none d-md-inline">Send Link</span>
                     </button>
-                    <a class="btn secondary-theme-btn" asp-area="admin" asp-controller="Dashboard" asp-action="CreateRequest">
+                    <a class="btn secondary-theme-btn" asp-area="admin" asp-controller="Dashboard"
+                        asp-action="CreateRequest">
                         <i class="far fa-sticky-note"></i> <span class="d-none d-md-inline">Create Request</span>
                     </a>
                     <button class="btn secondary-theme-btn" onclick="ExportData()">
                         <i class="fas fa-file-export"></i> <span class="d-none d-md-inline">Exports
                         </span> </button>
-                    <a class="btn secondary-theme-btn" asp-area="Admin" asp-controller="Dashboard" asp-action="ExportAll">
+                    <a class="btn secondary-theme-btn" asp-area="Admin" asp-controller="Dashboard"
+                        asp-action="ExportAll">
                         <i class="fa-regular fa-share-from-square"></i> <span class="d-none d-md-inline">Exports
                             All</span>
                     </a>
@@ -116,7 +118,8 @@
                             <span class="fa fa-search form-control-feedback"></span>
                             <select class="form-control form-select" id="regionDropdown" onchange="searchByRegion()">
                                 <option value="0" selected>All Regions</option>
-                                @foreach(var item in Model.RegionList){
+                                @foreach (var item in Model.RegionList)
+                                {
                                     <option value="@item.Id">@item.Name</option>
                                 }
                             </select>
@@ -125,28 +128,26 @@
                     <div
                         class="col-md-6 table-info-btn border-sm-top d-flex justify-content-between align-items-center">
                         <button class="btn" onclick="getAllRecords()">All</button>
-                        <a id="patient-only"  onclick="getOnlyPatient()"><span class="dot green-dot"></span>
+                        <a id="patient-only" onclick="getOnlyPatient()"><span class="dot green-dot"></span>
                             Patient</a>
-                        <a id="family-only"  onclick="getOnlyFamily()"><span class="dot orange-dot"></span>
+                        <a id="family-only" onclick="getOnlyFamily()"><span class="dot orange-dot"></span>
                             Family/Friend</a>
-                        <a id="concierge-only"  onclick="getOnlyConcierge()"><span class="dot blue-dot"></span>
+                        <a id="concierge-only" onclick="getOnlyConcierge()"><span class="dot blue-dot"></span>
                             Concierge</a>
-                        <a id="business-only"  onclick="getOnlyBusiness()"><span class="dot pink-dot"></span>
+                        <a id="business-only" onclick="getOnlyBusiness()"><span class="dot pink-dot"></span>
                             Business</a>
                         @* <a><span class="dot purple-dot"></span> VIP</a> *@
                     </div>
 
                     <div id="render-content">
-                        @* <partial name="_AdminDashboardTable.cshtml" model="@Model"/> *@
                         @Html.Partial("_AdminDashboardTable", Model)
-                        @* @{ await Html.RenderPartialAsync("_AdminDashboardTable"); } *@
                     </div>
 
                 </div>
             </div>
         </section>
     </div>
-    
+
 </main>
 
 @* Request Support Modal *@
@@ -174,60 +175,20 @@
         </div>
     </div>
 </div>
-<div class="modal fade shadow-lg" id="sendMailModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #01bce9;">
-                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Send Mail To Patient For Submitting
-                    Request </h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form asp-area="Admin" asp-controller="Dashboard" asp-action="SendCreationLink" method="post" id="activationLinkForm">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="fname" name="FirstName" placeholder="first name">
-                            <label for="floatingInput">First Name</label>
-                        </div>
-                        <span class="text-danger" id="fName-validation"></span>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="lname" name="LastName" placeholder="last name">
-                            <label for="floatingInput">Last Name</label>
-                        </div>
-                        <span class="text-danger" id="lName-validation"></span>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-floating">
-                            <input type="email" class="form-control" id="Email" name="Email" placeholder="email">
-                            <label for="Email">Email</label>
-                        </div>
-                        <span class="text-danger" id="email-validation"></span>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-floating">
-                            <input id="Mobile" class="form-control" type="tel" name="Mobile" />
-                            <input  type="hidden" id="phone_hidden" name="full_phone" />
-                        </div>
-                        <span class="text-danger" id="mobile-validation"></span>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn secondary-theme-btn" onclick="sendAccountCreationLink()">Confirm</button>
-                    <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>    
-</div>
+
+@await Html.PartialAsync("_SendLinkModal", Model.SendMailModal);
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+
 
 
 
 <script>
-    
-    let params = { status: "new" }, tabData, searchKeyword=null, reqTypes=null, pageNum = 1,pageRecord = 5, regionId = 0;
+
+    let params = { status: "new" }, tabData, searchKeyword = null, reqTypes = null, pageNum = 1, pageRecord = 5, regionId = 0;
 
     $(".card").click(function () {
         $(".dot").closest("a").removeClass("fw-bold")
@@ -308,15 +269,15 @@
         reqTypes = reqTypeId;
         pageNum = 1;
         pageRecord = 5;
-        if(searchKeyword || regionId!=0){
+        if (searchKeyword || regionId != 0) {
             makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypeId}&pageNumber=${pageNum}&pageSize=${pageRecord}&region=${regionId}`, params);
-        }else{
-            makeAjaxRequest(`/admin/dashboard/Index?requesttype=${reqTypeId}&pageNumber=${pageNum}&pageSize=${pageRecord}`,params);
+        } else {
+            makeAjaxRequest(`/admin/dashboard/Index?requesttype=${reqTypeId}&pageNumber=${pageNum}&pageSize=${pageRecord}`, params);
         }
     }
 
-    const getAllRecords = ()=>{
-         $("#searchKeyword").val('');
+    const getAllRecords = () => {
+        $("#searchKeyword").val('');
         $("#regionDropdown").val(0);
         reqTypes = 0;
         pageNum = 1;
@@ -331,21 +292,21 @@
             url: url,
             type: 'GET',
             data: requestData,
-            success: function (response,status,xhr) {
+            success: function (response, status, xhr) {
                 $('#render-content').empty();
                 $('#render-content').html(response);
-                @* tabData = response; *@
+    @* tabData = response; *@
             },
-            error: function (xhr,status,error) {
-                if(xhr.status==401){
-                    window.location.href = '/admin/login';                
+            error: function (xhr, status, error) {
+                if (xhr.status == 401) {
+                    window.location.href = '/admin/login';
                 }
             }
         });
         $.ajax({
             url: '/admin/dashboard/CountCards',
             type: 'GET',
-            success: function (response,status,xhr) {
+            success: function (response, status, xhr) {
                 $("#newUserCard h3").html(response.new);
                 $("#pendingUserCard h3").html(response.pending);
                 $("#activeUserCard h3").html(response.active);
@@ -353,9 +314,9 @@
                 $("#closeUserCard h3").html(response.close);
                 $("#unpaidUserCard h3").html(response.unpaid);
             },
-            error: function (xhr,status,error) {
-                if(xhr.status==401){
-                    window.location.href = '/admin/login';                
+            error: function (xhr, status, error) {
+                if (xhr.status == 401) {
+                    window.location.href = '/admin/login';
                 }
             }
         });
@@ -368,7 +329,7 @@
         makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}&region=${regionId}`, params);
     }
 
-    function pageRecordChange(){
+    function pageRecordChange() {
         pageNum = 1;
         searchKeyword = document.getElementById("searchKeyword").value.toLowerCase();
         const pageRecordChange = document.querySelector(".pageRecordChange");
@@ -376,7 +337,7 @@
         makeAjaxRequest(`/admin/dashboard/Index?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}&region=${regionId}`, params);
     }
 
-    function searchByRegion(){
+    function searchByRegion() {
         const regionDropdown = document.getElementById("regionDropdown").value;
         regionId = regionDropdown;
         pageNum = 1;
@@ -385,65 +346,30 @@
 
     }
 
-    function ExportData(){
+    function ExportData() {
         var url = `/admin/dashboard/ExportData?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}&region=${regionId}`;
-    
+
         fetch(url, {
             method: 'GET',
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.blob();
-        })
-        .then(blob => {
-            var url = window.URL.createObjectURL(blob);
-            var link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'data.xlsx');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link); // Clean up the DOM element
-            window.URL.revokeObjectURL(url);
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-    }
-
-    function sendAccountCreationLink(){
-            $("#fName-validation").text("");
-            $("#lName-validation").text("");
-            $("#email-validation").text("");
-            $("#mobile-validation").text("");
-            var firstName = $("#fname").val().trim();
-            if (firstName === "") {
-                $("#fName-validation").text("First name is required");
-                return;
-            }
-            var lastName = $("#lname").val().trim();
-            if (lastName === "") {
-                $("#lName-validation").text("Last name is required");
-                return;
-            }
-            var email = $("#Email").val().trim();
-            if (email === "") {
-                $("#email-validation").text("Email is required");
-                return;
-            }
-            var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-            if (!emailRegex.test(email)) {
-                $("#email-validation").text("Invalid email format");
-                return;
-            }
-            var mobile = $("#Mobile").val().trim();
-            if (mobile === "") {
-                $("#mobile-validation").text("Mobile number is required");
-                return;
-            }
-
-            $("#activationLinkForm").submit();
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                var url = window.URL.createObjectURL(blob);
+                var link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'data.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link); // Clean up the DOM element
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
     }
 </script>
-

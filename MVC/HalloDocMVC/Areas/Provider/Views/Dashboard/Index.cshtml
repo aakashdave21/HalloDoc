@@ -145,7 +145,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-floating">
-                            <input id="Mobile" class="form-control" type="tel" name="Mobile" />
+                            <input id="Mobile" class="form-control" type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="Mobile" />
                             <input  type="hidden" id="phone_hidden" name="full_phone" />
                         </div>
                         <span class="text-danger" id="mobile-validation"></span>

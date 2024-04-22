@@ -91,21 +91,21 @@
                             <input asp-for="FirstName" type="text" class="form-control" id="firstname" placeholder="firstname" disabled>
                             <label asp-for="FirstName" for="firstname">First Name</label>
                         </div>
-                        <span id="FirstNameValid" class="text-danger"></span>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
                             <input asp-for="LastName" type="text" class="form-control" id="lastname" placeholder="lastname" disabled>
                             <label asp-for="LastName" for="lastname">Last Name</label>
                         </div>
-                        <span id="LastNameValid" class="text-danger"></span>
+                        <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
                             <input asp-for="Email" type="email" class="form-control" id="Email" placeholder="email" disabled>
                             <label asp-for="Email" for="Email">Email</label>
                         </div>
-                        <span id="EmailValid" class="text-danger" id="email-valid"></span>
+                        <span asp-validation-for="Email" class="text-danger" id="email-valid"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
@@ -113,14 +113,14 @@
                                 disabled>
                             <label asp-for="ConfirmEmail" for="ConfirmEmail">Confirm Email</label>
                         </div>
-                        <span id="ConfirmEmailValid" class="text-danger" id="email-valid"></span>
+                        <span asp-validation-for="ConfirmEmail" class="text-danger" id="email-valid"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
-                            <input asp-for="Mobile" id="Mobile" class="form-control" type="tel" name="Mobile" disabled />
+                            <input asp-for="Mobile" id="Mobile" class="form-control" type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="Mobile" disabled />
                             <input asp-for="Mobile" type="hidden" id="phone_hidden" name="full_phone" disabled />
                         </div>
-                        <span class="text-danger" id="mobile-valid"></span>
+                        <span class="text-danger" asp-validation-for="Mobile"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="d-flex flex-wrap gap-2" id="RegionSelect">
@@ -175,21 +175,21 @@
                             <input asp-for="Address1" type="text" class="form-control" id="Address1" placeholder="Address1" disabled>
                             <label asp-for="Address1" for="Address1">Address1</label>
                         </div>
-                        <span id="Address1Valid" class="text-danger"></span>
+                        <span asp-validation-for="Address1" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
                             <input asp-for="Address2" type="text" class="form-control" id="Address2" placeholder="Address2" disabled>
                             <label asp-for="Address2" for="Address2">Address2</label>
                         </div>
-                        <span id="Address2Valid" class="text-danger"></span>
+                        <span asp-validation-for="Address2" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
                             <input asp-for="City" type="text" class="form-control" id="city" placeholder="city" disabled>
                             <label asp-for="City" for="city">City</label>
                         </div>
-                        <span id="CityValid" class="text-danger"></span>
+                        <span asp-validation-for="City" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating ">
@@ -202,21 +202,21 @@
                             </select>
                             <label asp-for="State" for="Status">State</label>
                         </div>
-                        <span id="StateValid" class="text-danger"></span>
+                        <span asp-validation-for="State" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
                             <input asp-for="ZipCode" type="text" class="form-control" id="zipcode" placeholder="zipcode" disabled>
                             <label asp-for="ZipCode" for="zipcode">Zip Code</label>
                         </div>
-                        <span id="ZipCodeValid" class="text-danger"></span>
+                        <span asp-validation-for="ZipCode" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
-                            <input asp-for="Phone" id="Phone" class="form-control" type="tel" name="Phone" disabled />
+                            <input asp-for="Phone" id="Phone" class="form-control" type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="Phone" disabled />
                             <input asp-for="Phone" type="hidden" id="phone_hidden" name="full_phone" disabled />
                         </div>
-                        <span id="PhoneValid" class="text-danger" id="mobile-valid"></span>
+                        <span asp-validation-for="Phone" class="text-danger" id="mobile-valid"></span>
                     </div>
 
                     <div class="col-12">
@@ -241,7 +241,11 @@
             
         </div>
 </main>
-
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
 <script>
     const adminInfoEdit = () => {
         $("#saveAdminBtns").css('display', 'flex');
@@ -268,34 +272,6 @@
 
     }
     const submitEditInfo = () => {
-
-        if ($("#firstname").val().trim() === "") {
-            $("#FirstNameValid").text("First Name is required!");
-            return;
-        }
-        if ($("#lastname").val().trim() === "") {
-            $("#LastNameValid").text("Last Name is required!");
-            return;
-        }
-        const email = $("#Email").val().trim();
-        if (email === "") {
-            $("#EmailValid").text("Email is required!");
-            return;
-        } else if (!isValidEmail(email)) {
-            $("#EmailValid").text("Invalid Email Address!");
-            return;
-        }
-        const confirmEmail = $("#ConfirmEmail").val().trim();
-        if (confirmEmail !== email) {
-            $("#ConfirmEmailValid").text("Emails do not match!");
-            return;
-        }
-        const MobileVal = $("#Mobile").val().trim();
-        if (MobileVal === "") {
-            $("#mobile-valid").text("Mobile Number is required!");
-            return;
-        }
-
         let unCheckedRegions = [];
         let checkedRegions = [];
 
@@ -311,7 +287,6 @@
                 value: regionId
             }).appendTo('form');
         });
-
         @* NEw Region Selects *@
         $("#RegionSelect .UnSelectedRegion input").each(function(){
             if ($(this).prop('checked')){
@@ -331,30 +306,6 @@
     }
 
     const submitBillingForm = () => {
-        if ($("#Address1").val().trim() === "") {
-            $("#Address1Valid").text("Address1 is required!");
-            return;
-        }
-        if ($("#Address2").val().trim() === "") {
-            $("#Address2Valid").text("Address2 is required!");
-            return;
-        }
-        if ($("#city").val().trim() === "") {
-            $("#CityValid").text("city is required!");
-            return;
-        }
-        @* if ($("#state").val().trim() === "") {
-            $("#StateValid").text("state is required!");
-            return;
-        } *@
-        if ($("#zipcode").val().trim() === "") {
-            $("#ZipCodeValid").text("zipcode is required!");
-            return;
-        }
-        if ($("#Phone").val().trim() === "") {
-            $("#PhoneValid").text("Phone is required!");
-            return;
-        }
         AddCountryCode();
         $("#AdminBillingForm").submit();
     }

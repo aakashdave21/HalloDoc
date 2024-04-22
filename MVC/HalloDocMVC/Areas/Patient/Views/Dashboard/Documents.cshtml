@@ -3,7 +3,11 @@
     ViewData["Title"] = "Documents";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
-
+<style>
+    table tr td {
+        border: none;
+    }
+</style>
 
 <main class="documents-section container-sm mt-5">
         <div class="d-flex justify-content-end mt-4">
@@ -40,16 +44,16 @@
                                 <thead>
                                     <tr>
                                         <th><input type="checkbox" class="form-check-input" id="selectAll"></th>
-                                        <th style="white-space: nowrap;">File</th>
-                                        <th style="white-space: nowrap;">Uploader</th>
-                                        <th style="white-space: nowrap;" class="sortable asc">Upload Date <i class="fa-solid fa-chevron-up sorting-icons"></i> </th>
-                                        <th style="white-space: nowrap;">Action</th>
+                                        <th style="white-space: nowrap;" class="d-md-table-cell d-none">File</th>
+                                        <th style="white-space: nowrap;" class="d-md-table-cell d-none">Uploader</th>
+                                        <th style="white-space: nowrap;" class="sortable asc d-md-table-cell d-none">Upload Date <i class="fa-solid fa-chevron-up sorting-icons"></i> </th>
+                                        <th style="white-space: nowrap;" class="d-md-table-cell d-none">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @{
                                         foreach(var item in Model){
-                                            <tr>
+                                            <tr class="d-md-table-row d-flex flex-column">
                                                 <td><input type="checkbox" id="@item.DocumentId" value="@item.FileName" class="form-check-input selectRow"></td>
                                                 <td>
                                                     @{var filename = string.Join("_",  @item.FileName.Split("_").Skip(1));}

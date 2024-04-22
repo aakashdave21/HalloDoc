@@ -31,7 +31,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="form-floating">
-                                <input asp-for="ConciergePhonenumber" id="Mobile" class="form-control" type="tel" />
+                                <input asp-for="ConciergePhonenumber" id="Mobile" class="form-control" type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                                 <input type="hidden" id="phone_hidden" name="full_phone" />
                             </div>
                             <span asp-validation-for="ConciergePhonenumber" class="text-danger" id="mobile-valid"></span>
@@ -138,12 +138,12 @@
                         </div>
                          <div class="col-md-6 mb-3">
                             <div class="form-floating">
-                                 <input asp-for="Mobile" id="Phone" class="form-control" type="tel" name="Phone" />
+                                 <input asp-for="Mobile" id="Phone" class="form-control" type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                                 <input asp-for="Mobile" type="hidden" id="phone_hidden" name="full_phone" />
-                                @* <input asp-for="Mobile" id="Phone" class="form-control" type="tel" />
+                                @* <input asp-for="Mobile" id="Phone" class="form-control" type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                                 <input type="hidden" id="phone_hidden" name="full_phone" /> *@
                             </div>
-                            <span asp-validation-for="Mobile" class="text-danger" id="mobile-valid"></span>
+                            <span asp-validation-for="Mobile" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
@@ -178,3 +178,8 @@
 
         <partial name="_AlertModel"/>
     </main>
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

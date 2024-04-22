@@ -1,0 +1,57 @@
+@model SendMailViewModel;
+<div class="modal fade shadow-lg" id="sendMailModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01bce9;">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Send Mail To Patient For Submitting
+                    Request </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-area="Admin" asp-controller="Dashboard" asp-action="SendCreationLink" method="post"
+                id="activationLinkForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input asp-for="FirstName" class="form-control" placeholder="first name">
+                            <label asp-for="FirstName">First Name</label>
+                        </div>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input asp-for="LastName" class="form-control" placeholder="last name">
+                            <label asp-for="LastName">Last Name</label>
+                        </div>
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Email" class="form-control" placeholder="email">
+                            <label asp-for="Email">Email</label>
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Mobile" id="Mobile" class="form-control" type="tel"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="Mobile" />
+                            <input asp-for="Mobile" type="hidden" id="phone_hidden" name="full_phone" />
+                        </div>
+                        <span class="text-danger" asp-validation-for="Mobile"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn secondary-theme-btn">Confirm</button>
+                    <button type="button" class="btn theme-btn" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

@@ -400,7 +400,7 @@ public class DashboardController : Controller
             {
                 filePaths[i] = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", fileNames[i]);
             }
-            _utilityService.EmailSend("recipient@example.com", "Dear patient, please find attached the files you requested", "Set up your Account", filePaths , 3 , reqId , null, null);
+            _utilityService.EmailSend("recipient@example.com", "Dear patient, please find attached the files you requested", "Set up your Account", filePaths, 3, reqId, null, null);
             TempData["success"] = "Files Are Send !";
             return Json(new { success = true, message = "File Send Success" });
         }
@@ -570,7 +570,7 @@ public class DashboardController : Controller
                 return View(newPatientRequest);
             }
             newPatientRequest.CreatedById = int.Parse(User.FindFirstValue("AspUserId"));
-            _adminDashboardService.CreateRequest(newPatientRequest,2);
+            _adminDashboardService.CreateRequest(newPatientRequest, 2);
             TempData["Success"] = "Request Created Successfully";
             return RedirectToAction("CreateRequest");
         }
@@ -661,7 +661,7 @@ public class DashboardController : Controller
             string CreateServiceLink = Url.Action("Patient", "Request", new { area = "Patient" }, Request.Scheme);
             string rcvrMail = "aakashdave21@gmail.com";
             string message = "Create Your Request here : <a href=\"" + CreateServiceLink + "\">Create Request</a>";
-            _utilityService.EmailSend(rcvrMail,message,"Create Requests");
+            _utilityService.EmailSend(rcvrMail, message, "Create Requests");
             TempData["success"] = "Account Creation Link Send !";
             return RedirectToAction("Index");
         }
@@ -891,7 +891,11 @@ public class DashboardController : Controller
 
     public async Task<IActionResult> LogOut()
     {
+
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+        Response.Headers["Pragma"] = "no-cache";
+        Response.Headers["Expires"] = "0";
         return RedirectToAction("Index", "Login");
     }
 

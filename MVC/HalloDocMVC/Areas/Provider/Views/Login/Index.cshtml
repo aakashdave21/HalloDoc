@@ -35,7 +35,7 @@
     align-items: center;">
                             <div style="width: 80%;">
 
-                                <div class="input-with-icon align-items-center d-flex mb-3 mt-4" >
+                                <div class="input-with-icon align-items-center d-flex mt-4" >
                                     <div class="form-floating  flex-grow-1">
                                         <input asp-for="Email" type="text" class="form-control" id="floatingInput"
                                             placeholder="name@example.com">
@@ -47,7 +47,7 @@
                             </div>
                             <div  style="width: 80%;">
 
-                                <div class="input-with-icon align-items-center d-flex mb-3 mt-4">
+                                <div class="input-with-icon align-items-center d-flex mt-4">
                                     <div class="form-floating flex-grow-1">
                                         <input asp-for="Passwordhash" type="password" class="form-control"
                                             id="Passwordhash" placeholder="Password">
@@ -80,3 +80,8 @@
         </div>
     </section>
 </main>
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

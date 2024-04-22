@@ -8,7 +8,7 @@ namespace HalloDocService.ViewModels
     public class PartnerViewModel
     {
         public IEnumerable<ProfessionList> AllProfessionsList { get; set; } = new List<ProfessionList>();
-        public IEnumerable<VendorDetail> VendorsDetails {get; set;} = new List<VendorDetail>();
+        public IEnumerable<VendorDetail> VendorsDetails { get; set; } = new List<VendorDetail>();
     }
 
     public class VendorDetail
@@ -42,8 +42,10 @@ namespace HalloDocService.ViewModels
         [Required(ErrorMessage = "State is required")]
         public int? State { get; set; }
 
-        [Required(ErrorMessage = "Zip Code is required")]
-        [MinLength(5, ErrorMessage = "Zip Code must be at least 5 characters")]
+        [Required(ErrorMessage = "ZIP Code is required")]
+        [MaxLength(10, ErrorMessage = "ZIP Code must not exceed 10 characters")]
+        [MinLength(5, ErrorMessage = "ZIP Code must be at least 5 characters long")]
+        [RegularExpression(@"^\d+$", ErrorMessage = "ZIP Code must contain only numeric characters.")]
         public string? ZipCode { get; set; }
 
         public IEnumerable<RegionList> AllRegionsList { get; set; } = new List<RegionList>();

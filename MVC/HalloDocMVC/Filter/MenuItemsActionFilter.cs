@@ -23,7 +23,7 @@ public class MenuItemsActionFilter : IAsyncActionFilter
         string? controllerName = context.RouteData.Values["controller"]?.ToString();
         string? actionName = context.RouteData.Values["action"]?.ToString();
         IEnumerable<HeaderMenu> AllMenuList = _accessService.GetAllMenuList();
-        if (httpContext.User.Identity.IsAuthenticated && areaName?.ToLower() == "admin")
+        if (httpContext.User.Identity.IsAuthenticated && (areaName?.ToLower() == "admin" || areaName?.ToLower() == "provider"))
         {
             if (httpContext.User.HasClaim(c => c.Type == "AspUserId"))
             {

@@ -71,7 +71,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
-                            <input asp-for="Mobile" id="Mobile" class="form-control" type="tel" name="Mobile"
+                            <input asp-for="Mobile" id="Mobile" class="form-control" type="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="Mobile"
                                 readonly />
                             <input asp-for="Mobile" type="hidden" id="phone_hidden" name="full_phone" />
                         </div>
