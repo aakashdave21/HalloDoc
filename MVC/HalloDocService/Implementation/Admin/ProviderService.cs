@@ -38,10 +38,9 @@ public class ProviderService : IProviderService
             {
                 Id = phy.Id,
                 IsNotificationStopped = phy.IsNotificationStop ?? false,
-                // IsNotificationStopped = true,
                 PhysicianName = phy.Firstname + " " + phy.Lastname,
                 Role = phy.Role.Name,
-                OnCallStatus = GetOnCallStatus(phy.OnCallStatus??0),
+                OnCallStatus = _providerRepo.GetOnCallStatus(phy.Id),
                 Status = GetStatus(phy.Status ?? 0),
                 RoleId = phy.Roleid ?? 0
             })

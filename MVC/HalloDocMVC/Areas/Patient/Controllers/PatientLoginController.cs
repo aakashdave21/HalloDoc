@@ -129,7 +129,7 @@ public class PatientLoginController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
 
-    public IActionResult ForgotPasswordPost([Bind("Username")] UserResetPasswordViewModel user)
+    public IActionResult ForgotPasswordPost([Bind("Email")] UserResetPasswordViewModel user)
     {
 
         if (!ModelState.IsValid)

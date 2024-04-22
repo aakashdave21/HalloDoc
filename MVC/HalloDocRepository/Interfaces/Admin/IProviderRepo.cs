@@ -29,4 +29,6 @@ public interface IProviderRepo
     void AddPhysicianRegion(List<Physicianregion> physicianregions);
     void AddPhysicianFile(Physicianfile physicianfile);
 
+    string GetOnCallStatus(int PhyId);
+
 }

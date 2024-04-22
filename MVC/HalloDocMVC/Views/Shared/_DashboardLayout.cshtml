@@ -107,13 +107,6 @@
         </header>
 
         @RenderBody()
-
-
-        @section Scripts {
-            @{
-                <partial name="_ValidationScriptsPartial" />
-            }
-        }
         <footer class="mt-auto d-flex justify-content-md-end justify-content-center p-4 dark-footer">
             <div>
                 <a href="#" class="text-white text-decoration-none">Terms & Condition</a>
@@ -123,8 +116,10 @@
         </footer>
     </div>
 
-
+     @await RenderSectionAsync("Scripts", required: false)
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

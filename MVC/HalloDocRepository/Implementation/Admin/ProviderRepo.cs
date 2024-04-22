@@ -35,7 +35,8 @@ public class ProviderRepo : IProviderRepo
                         .ToList();
         }
     }
-    public void UpdateNotification(List<string> stopNotificationIds,List<string> startNotificationIds){
+    public void UpdateNotification(List<string> stopNotificationIds, List<string> startNotificationIds)
+    {
         //startnotificationId -> true
         // stopNotificationId -> false
         var stopIds = stopNotificationIds.Select(int.Parse).ToList();
@@ -53,9 +54,11 @@ public class ProviderRepo : IProviderRepo
         _dbContext.SaveChanges();
 
     }
-    public void UpdateProviderPassword(int Id,string Password){
+    public void UpdateProviderPassword(int Id, string Password)
+    {
         Physician? physicianData = _dbContext.Physicians.Include(user => user.Aspnetuser).FirstOrDefault(phy => phy.Id == Id);
-        if(physicianData?.Aspnetuser != null){
+        if (physicianData?.Aspnetuser != null)
+        {
             physicianData.Aspnetuser.Passwordhash = Password;
             _dbContext.SaveChanges();
             return;
@@ -63,9 +66,11 @@ public class ProviderRepo : IProviderRepo
         throw new Exception();
     }
 
-    public void UpdatePersonalInformation(int Id,int? RoleId,int? StatusId){
+    public void UpdatePersonalInformation(int Id, int? RoleId, int? StatusId)
+    {
         Physician? phyDetails = _dbContext.Physicians.FirstOrDefault(phy => phy.Id == Id);
-        if(phyDetails != null){
+        if (phyDetails != null)
+        {
             phyDetails.Roleid = RoleId;
             phyDetails.Status = (short?)StatusId;
             _dbContext.SaveChanges();
@@ -86,7 +91,7 @@ public class ProviderRepo : IProviderRepo
             phyDetails.Medicallicense = physicianData.Medicallicense;
             phyDetails.Npinumber = physicianData.Npinumber;
             phyDetails.Syncemailaddress = physicianData.Syncemailaddress;
-            
+
             _dbContext.SaveChanges();
             return;
         }
@@ -103,7 +108,7 @@ public class ProviderRepo : IProviderRepo
             phyDetails.Regionid = physicianData.Regionid;
             phyDetails.Zip = physicianData.Zip;
             phyDetails.Altphone = physicianData.Altphone;
-            
+
             _dbContext.SaveChanges();
             return;
         }
@@ -117,10 +122,12 @@ public class ProviderRepo : IProviderRepo
             phyDetails.Businessname = physicianData.Businessname;
             phyDetails.Businesswebsite = physicianData.Businesswebsite;
             phyDetails.Adminnotes = physicianData.Adminnotes;
-            if(!string.IsNullOrEmpty(physicianData.Photo)){
+            if (!string.IsNullOrEmpty(physicianData.Photo))
+            {
                 phyDetails.Photo = physicianData.Photo;
             }
-            if(!string.IsNullOrEmpty(physicianData.Signature)){
+            if (!string.IsNullOrEmpty(physicianData.Signature))
+            {
                 phyDetails.Signature = physicianData.Signature;
             }
             _dbContext.SaveChanges();
@@ -129,21 +136,27 @@ public class ProviderRepo : IProviderRepo
         throw new Exception("Physician with the given ID not found.");
     }
 
-    public string? GetFilePath(int? Id){
-        if(Id != null){
+    public string? GetFilePath(int? Id)
+    {
+        if (Id != null)
+        {
             return _dbContext.Physicians?.FirstOrDefault(phy => phy.Id == Id)?.Signature;
         }
         throw new Exception("Physician with the given ID not found.");
     }
-    public string? GetPhotoFilePath(int? Id){
-        if(Id != null){
+    public string? GetPhotoFilePath(int? Id)
+    {
+        if (Id != null)
+        {
             return _dbContext.Physicians?.FirstOrDefault(phy => phy.Id == Id)?.Photo;
         }
         throw new Exception("Physician with the given ID not found.");
     }
-    public void UploadDocument(int Id,string FileId, string filePath){
-        Physician? physicianData = _dbContext.Physicians.FirstOrDefault(phy=>phy.Id == Id);
-        if(physicianData!=null){
+    public void UploadDocument(int Id, string FileId, string filePath)
+    {
+        Physician? physicianData = _dbContext.Physicians.FirstOrDefault(phy => phy.Id == Id);
+        if (physicianData != null)
+        {
             Physicianfile PhysiciansFile = _dbContext.Physicianfiles.FirstOrDefault(file => file.Physicianid == Id);
             if (PhysiciansFile == null)
             {
@@ -153,24 +166,29 @@ public class ProviderRepo : IProviderRepo
                 };
                 _dbContext.Physicianfiles.Add(PhysiciansFile);
             }
-            switch(FileId)
+            switch (FileId)
             {
-                case "doc-1" : PhysiciansFile.Ica = filePath;
-                                physicianData.Isagreementdoc = true;
-                                break;
-                case "doc-2" : PhysiciansFile.Backgroundcheck = filePath;
-                                physicianData.Isbackgrounddoc = true;
-                                break;
-                case "doc-3" : PhysiciansFile.Hipaa = filePath;
-                                physicianData.Istrainingdoc = true;
-                                break;
-                case "doc-4" : PhysiciansFile.Nda = filePath;
-                                physicianData.Isnondisclosuredoc = true;
-                                break;
-                case "doc-5" : PhysiciansFile.License = filePath;
-                                physicianData.Islicensedoc = true;
-                                break;
-                default : throw new Exception();
+                case "doc-1":
+                    PhysiciansFile.Ica = filePath;
+                    physicianData.Isagreementdoc = true;
+                    break;
+                case "doc-2":
+                    PhysiciansFile.Backgroundcheck = filePath;
+                    physicianData.Isbackgrounddoc = true;
+                    break;
+                case "doc-3":
+                    PhysiciansFile.Hipaa = filePath;
+                    physicianData.Istrainingdoc = true;
+                    break;
+                case "doc-4":
+                    PhysiciansFile.Nda = filePath;
+                    physicianData.Isnondisclosuredoc = true;
+                    break;
+                case "doc-5":
+                    PhysiciansFile.License = filePath;
+                    physicianData.Islicensedoc = true;
+                    break;
+                default: throw new Exception();
             }
             _dbContext.SaveChanges();
             return;
@@ -178,7 +196,8 @@ public class ProviderRepo : IProviderRepo
         throw new Exception("Physician not found.");
     }
 
-    public string? GetAgreementFile(int Id,string FileId){
+    public string? GetAgreementFile(int Id, string FileId)
+    {
         Physicianfile? PhysiciansFile = _dbContext.Physicianfiles.FirstOrDefault(file => file.Physicianid == Id);
         return FileId switch
         {
@@ -191,13 +210,16 @@ public class ProviderRepo : IProviderRepo
         };
     }
 
-    public Physicianfile? PhysicianFileData(int Id){
+    public Physicianfile? PhysicianFileData(int Id)
+    {
         return _dbContext.Physicianfiles?.FirstOrDefault(file => file.Physicianid == Id);
     }
 
-    public void DeleteProvider(int Id){
+    public void DeleteProvider(int Id)
+    {
         Physician? physicianRecords = _dbContext.Physicians.FirstOrDefault(phy => phy.Id == Id);
-        if(physicianRecords != null){
+        if (physicianRecords != null)
+        {
             physicianRecords.Isdeleted = true;
             _dbContext.SaveChanges();
             return;
@@ -205,25 +227,52 @@ public class ProviderRepo : IProviderRepo
         throw new Exception("Physician not found");
     }
 
-    public IEnumerable<Physicianlocation> GetAllProviderLocation(){
+    public IEnumerable<Physicianlocation> GetAllProviderLocation()
+    {
         return _dbContext.Physicianlocations.Include(loc => loc.Physician);
     }
 
-    public void CreatePhysician(Physician physicianData){
+    public void CreatePhysician(Physician physicianData)
+    {
         _dbContext.Physicians.Add(physicianData);
         _dbContext.SaveChanges();
     }
 
-    public void AddPhysicianRegion(List<Physicianregion> physicianregions){
+    public void AddPhysicianRegion(List<Physicianregion> physicianregions)
+    {
         _dbContext.Physicianregions.AddRange(physicianregions);
         _dbContext.SaveChanges();
     }
 
-    public void AddPhysicianFile(Physicianfile physicianfile){
+    public void AddPhysicianFile(Physicianfile physicianfile)
+    {
         _dbContext.Physicianfiles.Add(physicianfile);
         _dbContext.SaveChanges();
     }
 
+    public string GetOnCallStatus(int PhyId)
+    {
+        var currentDate = DateTime.Now.Date;
+        var currentTime = DateTime.Now.TimeOfDay;
+
+        IQueryable<Shiftdetail> shiftDetails = _dbContext.Shiftdetails
+            .Include(sd => sd.Shift)
+            .Where(sd => sd.Shiftdate.Date == currentDate);
+         
+        bool isProviderActive = shiftDetails.Any(sd =>
+            sd.Starttime.ToTimeSpan() <= currentTime &&
+            currentTime <= sd.Endtime.ToTimeSpan() &&
+            sd.Shift.Physicianid == PhyId);
+        if (!isProviderActive)
+        {
+            return "Unavailable";
+        }
+        else
+        {
+            bool isProviderBusy = _dbContext.Requests.Any(req => req.Physicianid == PhyId && req.Status == 5);
+            return isProviderBusy ? "Busy" : "Active";
+        }
+    }
 
 
 }

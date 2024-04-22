@@ -21,8 +21,8 @@ public class PatientLoginRepo : IPatientLoginRepo
         return _dbContext.Aspnetusers.Include(users => users.Aspnetuserroles).ThenInclude(roles => roles.Role).FirstOrDefault(user => user.Email == email);
     }
 
-    public Aspnetuser? userDetailsFromUserName(string username){
-        return _dbContext.Aspnetusers.FirstOrDefault(q=> q.Username == username);
+    public Aspnetuser? userDetailsFromUserName(string email){
+        return _dbContext.Aspnetusers.FirstOrDefault(q=> q.Email == email.Trim());
     }
 
     public User UserDetailsFetch(string email){

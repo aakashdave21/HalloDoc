@@ -30,8 +30,8 @@ public class PatientLogin : IPatientLogin
     }
 
     public Aspnetuser FindUserFromUsername(UserResetPasswordViewModel user){
-        Aspnetuser userDetailsFromUsername = _userRepository.userDetailsFromUserName(user.Username);
-        return userDetailsFromUsername;
+        Aspnetuser? userDetailsFromUsername = _userRepository.userDetailsFromUserName(user.Email);
+        return userDetailsFromUsername; 
     }
 
     public User UserDetailsFetch(string email){

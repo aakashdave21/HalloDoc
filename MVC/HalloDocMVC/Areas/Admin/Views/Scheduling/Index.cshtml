@@ -157,14 +157,14 @@
                                     <option value="@item.Id">@item.Name</option>
                                 }
                             </select>
-                            <span id="Schedule-Region" class="text-danger"></span>
+                            <span asp-validation-for="RegionId" id="Schedule-Region" class="text-danger"></span>
                         </div>
                         <div class="col-12">
                             <select asp-for="Physicianid" name="Physicianid" class="form-select mt-2"
                                 id="physicianSelectDropdown" aria-label="Default select example" disabled>
                                 <option value="" selected>Select Physician</option>
                             </select>
-                            <span id="Schedule-Physician" class="text-danger" id="physicianValidation"></span>
+                            <span asp-validation-for="Physicianid" id="Schedule-Physician" class="text-danger" id="physicianValidation"></span>
                         </div>
                         <div class="col-12">
                             <div class="form-floating mt-2">
@@ -172,23 +172,23 @@
                                     placeholder="shiftdate" min="">
                                 <label asp-for="ShiftDate" for="shiftdate">shift date</label>
                             </div>
-                            <span id="Schedule-ShiftDate" class="text-danger"></span>
+                            <span aria-selected="ShiftDate" asp-validation-for="ShiftDate" id="Schedule-ShiftDate" class="text-danger"></span>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mt-2">
                                 <input asp-for="StartTime" type="time" class="form-control" id="shiftStart"
-                                    placeholder="shiftStart">
+                                    placeholder="shiftStart" >
                                 <label asp-for="StartTime" for="shiftStart">start Time</label>
                             </div>
-                            <span id="Schedule-StartTime" class="text-danger"></span>
+                            <span asp-validation-for="StartTime" id="Schedule-StartTime" class="text-danger"></span>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mt-2">
                                 <input asp-for="EndTime" type="time" class="form-control" id="shiftEnd"
-                                    placeholder="shiftEnd">
+                                    placeholder="shiftEnd" >
                                 <label asp-for="EndTime" for="shiftEnd">end time</label>
                             </div>
-                            <span id="Schedule-endtime" class="text-danger"></span>
+                            <span id="Schedule-endtime" asp-validation-for="EndTime" class="text-danger"></span>
                         </div>
                         <div class="col-12 mt-3">
                             <div class="form-check form-switch">
@@ -521,7 +521,7 @@
         var shiftDate = document.getElementById("shiftdate").value;
         var startTime = document.getElementById("shiftStart").value;
         var endTime = document.getElementById("shiftEnd").value;
-        if (region == "") {
+        @* if (region == "") {
             $("#Schedule-Region").html("Please select a region.");
             return;
         }
@@ -540,7 +540,7 @@
         if (endTime == "") {
             $("#Schedule-endtime").html("Please enter an end time.");
             return;
-        }
+        } *@
         if (startTime && endTime) {
             if (startTime > endTime) {
                 ToastError("Please Choose Valid Time");

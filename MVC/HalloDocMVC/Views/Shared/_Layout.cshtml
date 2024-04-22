@@ -40,11 +40,6 @@
             @RenderBody()
         </main>
     </div>
-    @section Scripts {
-        @{
-            <partial name="_ValidationScriptsPartial" />
-        }
-    }
     <footer class="mt-auto d-flex justify-content-md-end justify-content-center p-4 dark-footer">
         <div>
             <a href="#" class="text-white text-decoration-none">Terms & Condition</a>
@@ -52,7 +47,8 @@
             <a href="#" class="text-white text-decoration-none">Privacy Policy</a>
         </div>
     </footer>
-
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/global.js" asp-append-version="true"></script>

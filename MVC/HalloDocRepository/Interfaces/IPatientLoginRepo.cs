@@ -6,7 +6,7 @@ namespace HalloDocRepository.Interfaces;
 public interface IPatientLoginRepo
 {
     Aspnetuser? ValidateUser(string email);
-    Aspnetuser? userDetailsFromUserName(string username);
+    Aspnetuser? userDetailsFromUserName(string email);
 
     User UserDetailsFetch(string email);
     AdminTable AdminDetailsFetch(string email);

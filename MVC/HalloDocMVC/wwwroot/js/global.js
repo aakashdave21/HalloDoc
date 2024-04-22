@@ -1,5 +1,6 @@
 
 // Modal Will be Open For Family,Concierge,Business
+
 $(document).ready(function(){
     $("#myModal").modal('show');
 })
