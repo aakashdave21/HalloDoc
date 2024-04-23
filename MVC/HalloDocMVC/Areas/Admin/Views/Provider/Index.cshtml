@@ -138,26 +138,6 @@
         });
     });
 
-    $(document).on('click', '#providerNameHeader', function () {
-        $(".sorting-icons").toggleClass("fa-chevron-up fa-chevron-down");
-        var sortOrder = $(".sorting-icons").hasClass("fa-chevron-up") ? "asc" : "desc";
-        $.ajax({
-            type: "POST",
-            url: "/Admin/Provider/Index",
-            data: {
-                order: sortOrder,
-                regionId: regionValue,
-            },
-            success: function (response) {
-                $("#Provider-body").empty();
-                $("#Provider-body").append(response);
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-    });
-
     function openContactModal(physicianId) {
         let modal = document.getElementById("contactProviderModal");
         modal.innerHTML = `
@@ -213,5 +193,33 @@
     function submitbCommunication() {
         $("#submitBtn").attr('disabled', true);
         $("#contactForm").submit();
+    }
+    let pageSize = 5;
+    let pageNum = 1;
+
+    const searchRecords = () => {
+        CallAjax();
+    }
+
+    function RecordsPageChange() {
+        const pageChange = document.querySelector(".RecordsPageChange");
+        pageNum = pageChange.value;
+        CallAjax();
+    }
+
+    function pageRecordChange() {
+        pageNum = 1;
+        const pageRecordChange = document.querySelector(".ReqRecordsPageRecordChange").value;
+        pageSize = pageRecordChange
+        CallAjax();
+    }
+    function CallAjax() {
+        sendAjaxRequest('/Admin/Provider/Index', 'GET', { pageSize, pageNum }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                $(".table-responsive").empty();
+                $(".table-responsive").html(response);
+            }).catch(function (error) {
+                ToastError("Internal Server Error");
+            })
     }
 </script>

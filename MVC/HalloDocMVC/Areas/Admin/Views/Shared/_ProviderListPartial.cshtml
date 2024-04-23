@@ -1,3 +1,6 @@
+@{
+    int[] pageSizeArrray = { 5, 10, 15 };
+}
 <table class="table d-md-block d-none" id="provider-table">
     <thead>
         <tr>
@@ -6,13 +9,13 @@
                 if (ViewBag.order == "desc")
                 {
                     <th style="white-space: nowrap; cursor: pointer;" id="providerNameHeader">
-                        Provider Name <i class="fa-solid fa-chevron-down sorting-icons"></i>
+                        Provider Name
                     </th>
                 }
                 else
                 {
                     <th style="white-space: nowrap; cursor: pointer;" id="providerNameHeader">
-                        Provider Name <i class="fa-solid fa-chevron-up sorting-icons"></i>
+                        Provider Name
                     </th>
                 }
             }
@@ -114,4 +117,58 @@
             </div>
         </div>
     }
+</div>
+@* Pagination *@
+<div class="d-flex justify-content-between align-items-center mt-2">
+    <div>
+        <div class="d-flex align-items-center" style="white-space: nowrap;">
+            Page : <select class="form-select select-page ms-2 RecordsPageChange"
+                onchange="RecordsPageChange()" aria-label="Default select example">
+                @{
+                    for (int i = 1; i <= Model.TotalPage; i++)
+                    {
+                        if (Model.CurrentPage == i)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                }
+            </select> &nbsp; of @Model.TotalPage
+        </div>
+    </div>
+    <div>
+        <div class="d-sm-flex d-none">
+            Show Results : @Model.PageRangeStart - @Model.PageRangeEnd Out of
+            <span>&nbsp;@Model.TotalCount </span>
+        </div>
+    </div>
+    <div>
+        <div class="d-flex align-items-center" style="white-space: nowrap;">
+            Show Rows :
+            <select class="form-select select-page ms-2 ReqRecordsPageRecordChange" onchange="pageRecordChange()"
+                aria-label="Default select example">
+                @{
+                    foreach (int i in pageSizeArrray)
+                    {
+                        if (Model.CurrentPageSize == i)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="d-flex d-sm-none">
+            Show Results : @Model.PageRangeStart - @Model.PageRangeEnd Out of
+            <span>&nbsp;@Model.TotalPage</span>
+        </div>
+    </div>
 </div>

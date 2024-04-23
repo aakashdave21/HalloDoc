@@ -12,7 +12,7 @@ public class PartnerRepo : IPartnerRepo
         }
 
     public IEnumerable<Healthprofessional> GetVendorList(string vendorName = "", int ProfessionId = 0){
-        IEnumerable<Healthprofessional> query = _dbContext.Healthprofessionals.Include(v => v.ProfessionNavigation).Where(prof => prof.Isdeleted!=true);
+        IQueryable<Healthprofessional> query = _dbContext.Healthprofessionals.Include(v => v.ProfessionNavigation).Where(prof => prof.Isdeleted!=true);
         if(ProfessionId!=0){
             query = query.Where(prof => prof.Profession == ProfessionId);
         }

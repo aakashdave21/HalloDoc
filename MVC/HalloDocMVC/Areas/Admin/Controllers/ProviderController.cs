@@ -29,12 +29,11 @@ public class ProviderController : Controller
         _hostingEnvironment = hostingEnvironment;
         _accessService = accessService;
     }
-    public IActionResult Index(string regionId, string order)
+    public IActionResult Index(string regionId, string order,int PageNum = 1, int PageSize = 5)
     {
         try
         {
-
-            AdminProviderViewModel providerViewModel = _providerService.GetAllProviderData(regionId, order);
+            AdminProviderViewModel providerViewModel = _providerService.GetAllProviderData(regionId, order, PageNum, PageSize);
             if (regionId != null && order != null)
             {
                 ViewBag.Order = order;
@@ -47,6 +46,8 @@ public class ProviderController : Controller
             else if (order == "desc" || order == "asc")
             {
                 ViewBag.Order = order;
+                return PartialView("_ProviderListPartial", providerViewModel);
+            }else if (Request.Headers["X-Requested-With"] == "XMLHttpRequest"){
                 return PartialView("_ProviderListPartial", providerViewModel);
             }
             return View(providerViewModel);

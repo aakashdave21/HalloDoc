@@ -5,7 +5,8 @@ using AdminTable = HalloDocRepository.DataModels.Admin;
 namespace HalloDocRepository.Admin.Interfaces;
 public interface IProviderRepo
 { 
-    IEnumerable<Physician> GetAllPhysician(bool order=true,string? regionId=null);
+    (IEnumerable<Physician>, int) GetAllPhysician(bool order=true,string? regionId=null,int PageNum = 1 ,int PageSize = 5);
+    IEnumerable<Physician> GetAllPhysicianList();
     void UpdateNotification(List<string> stopNotificationIds,List<string> startNotificationIds);
 
     void UpdateProviderPassword(int Id,string Password);

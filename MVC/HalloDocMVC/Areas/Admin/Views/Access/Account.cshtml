@@ -99,7 +99,7 @@
                                 {
                                     <div class="form-check">
                                         <input type="hidden" asp-for="@Model.AllCheckBoxRegionList[i].Id">
-                                        <input class="form-check-input" asp type="checkbox"
+                                        <input class="form-check-input" type="checkbox"
                                             asp-for="@Model.AllCheckBoxRegionList[i].IsSelected"
                                             id="check-@Model.AllCheckBoxRegionList[i].Id">
                                         <label class="form-check-label" for="check-@Model.AllCheckBoxRegionList[i].Id">
@@ -109,6 +109,7 @@
                                 }
                             }
                         </div>
+                        <span id="check-error" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -192,8 +193,21 @@
         $("#UsernameHidden").val(username);
     }
     function submitMyForm() {
+
+        CheckBoxValidationError($(`input[type="checkbox"][name^="AllCheckBoxRegionList"][data-val="true"]:checked`),'#check-error');
         AddCountryCode();
         $(`#CreateNewAdmin`).submit();
     }
 
 </script>
+
+@* <script>
+    function CheckBoxValidationError(,errorDiv){
+        var checkboxesChecked = $(`input[type="checkbox"][name^="AllCheckBoxRegionList"][data-val="true"]:checked`).length;
+        if (checkboxesChecked === 0) {
+            $(`${errorDiv}`).html('Please check at least one checkbox.');
+        } else {
+            $(`${errorDiv}`).html('');
+        }
+    }
+</script> *@

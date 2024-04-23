@@ -10,6 +10,12 @@ namespace HalloDocService.ViewModels
 
         public List<string> StopNotificationIds { get; set; } = new List<string>();
         public List<string> StartNotificationIds { get; set; } = new List<string>();
+        public int TotalCount {get; set;}
+        public int CurrentPage {get; set;}
+        public int CurrentPageSize {get; set;}
+        public int PageRangeStart {get; set;}
+        public int PageRangeEnd {get; set;}
+        public int TotalPage {get; set;}
     }
 
     public class PhysicianList{

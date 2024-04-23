@@ -52,7 +52,7 @@ public class ScheduleService : IScheduleService
                 Name = reg.Name
             }).ToList();
         }else{
-            scheduleView.AllProvidersList = _providerRepo.GetAllPhysician(true, null).Select(phy => new ProviderList()
+            scheduleView.AllProvidersList = _providerRepo.GetAllPhysicianList().Select(phy => new ProviderList()
             {
                 Id = phy.Id,
                 FullName = phy?.Firstname + " " + phy?.Lastname,

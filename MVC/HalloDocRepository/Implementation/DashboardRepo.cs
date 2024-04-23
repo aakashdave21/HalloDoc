@@ -20,11 +20,9 @@ public class DashboardRepo : IDashboardRepo
     }
     public IEnumerable<Request> GetUserRequest(int userId)
     {
-        var userRequests = _dbContext.Requests
-                               .Where(data => data.Userid == userId)
-                               .ToList();
-
-        var requestIds = userRequests.Select(r => r.Id).ToList();
+        IQueryable<Request> userRequests = _dbContext.Requests
+                               .Where(data => data.Userid == userId);
+        IEnumerable<int> requestIds = userRequests.Select(r => r.Id).ToList();
 
         var requestWithDocumentCount = _dbContext.Requests
                                               .Where(r => requestIds.Contains(r.Id))

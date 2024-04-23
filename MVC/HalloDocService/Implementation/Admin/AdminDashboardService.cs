@@ -626,7 +626,7 @@ public class AdminDashboardService : IAdminDashboardService
         int PhyId = 0;
         if (AccountType == 2)
         {
-            Physician physicianData = _providerRepo.GetAllPhysician().FirstOrDefault(phy => phy.Aspnetuserid == viewRequest.CreatedById);
+            Physician physicianData = _providerRepo.GetAllPhysicianList().FirstOrDefault(phy => phy.Aspnetuserid == viewRequest.CreatedById);
             PhyId = physicianData.Id;
         }
         AdminTable? CreatedUserDetails = _dashboardRepo.GetAdminFromAsp(viewRequest.CreatedById);
@@ -680,7 +680,7 @@ public class AdminDashboardService : IAdminDashboardService
         int PhyId = 0;
         if (AccountType == 2)
         {
-            Physician physicianData = _providerRepo.GetAllPhysician().FirstOrDefault(phy => phy.Aspnetuserid == viewRequest.CreatedById);
+            Physician physicianData = _providerRepo.GetAllPhysicianList().FirstOrDefault(phy => phy.Aspnetuserid == viewRequest.CreatedById);
             PhyId = physicianData.Id;
         }
         var newUser = new Aspnetuser

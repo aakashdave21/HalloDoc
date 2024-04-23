@@ -20,18 +20,15 @@ public class ScheduleRepo : IScheduleRepo
             throw new ArgumentException("Invalid date format", nameof(startDate));
         }
 
-       
-            IEnumerable<Shiftdetail> shiftdetailsInfo = _dbContext.Shiftdetails
+        IQueryable<Shiftdetail> shiftdetailsInfo = _dbContext.Shiftdetails
                 .Include(sd => sd.Shift).ThenInclude(s => s.Physician)
                 .Include(sd => sd.Region)
                 .Where(sf => (PhyId==null || sf.Shift.Physicianid == PhyId) && sf.Shiftdate.Date >= parsedStartDate.ToDateTime(new TimeOnly()).Date &&
-                                sf.Shiftdate.Date <= parsedEndDate.ToDateTime(new TimeOnly()).Date && sf.Isdeleted == false)
-                .ToList();
-
+                                sf.Shiftdate.Date <= parsedEndDate.ToDateTime(new TimeOnly()).Date && sf.Isdeleted == false);
 
         if (!string.IsNullOrEmpty(status))
         {
-            shiftdetailsInfo = shiftdetailsInfo.Where(sf => sf?.Status == short.Parse(status));
+            shiftdetailsInfo = shiftdetailsInfo.Where(sf => sf.Status == short.Parse(status));
         }
         return shiftdetailsInfo;
     }
@@ -102,7 +99,7 @@ public class ScheduleRepo : IScheduleRepo
 
     public IEnumerable<Physician> GetCallPhysician(int regionId = 0){
 
-        IEnumerable<Physician> query = _dbContext.Physicians.Where(phy => phy.OnCallStatus == 1 || phy.OnCallStatus == 2);
+        IQueryable<Physician> query = _dbContext.Physicians.Where(phy => phy.OnCallStatus == 1 || phy.OnCallStatus == 2);
         if(regionId!=0){
             List<int?> PhyId = _dbContext.Physicianregions.Where(phyReg => phyReg.Regionid == regionId).Select(phy => phy.Physicianid).ToList();
             query = query.Where(phy => PhyId.Contains(phy.Id));
@@ -110,7 +107,7 @@ public class ScheduleRepo : IScheduleRepo
         return query.ToList();
     }
     public ReviewShiftPage ReviewShift(int RegionId=0,int PageSize=5,int PageNum=1){
-        IEnumerable<Shiftdetail> query = _dbContext.Shiftdetails.Include(sd=>sd.Region).Include(sd=>sd.Shift).ThenInclude(s=>s.Physician).Where(sd => sd.Isdeleted == false && sd.Status == 1);
+        IQueryable<Shiftdetail> query = _dbContext.Shiftdetails.Include(sd=>sd.Region).Include(sd=>sd.Shift).ThenInclude(s=>s.Physician).Where(sd => sd.Isdeleted == false && sd.Status == 1);
         if(RegionId!=0){
             query = query.Where(sd => sd.Regionid == RegionId);
         }

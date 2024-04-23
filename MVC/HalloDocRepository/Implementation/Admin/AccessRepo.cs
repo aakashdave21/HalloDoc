@@ -162,11 +162,6 @@ public class AccessRepo : IAccessRepo
     }
 
     public void AddAdminRegion(List<Adminregion> adminRegionList){
-        foreach (var item in adminRegionList)
-        {
-            Console.WriteLine(item.Adminid);
-            Console.WriteLine(item.Regionid);
-        }
         _dbContext.Adminregions.AddRange(adminRegionList);
         _dbContext.SaveChanges();
     }

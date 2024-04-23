@@ -21,10 +21,11 @@ public class ProviderService : IProviderService
 
     }
 
-    public AdminProviderViewModel GetAllProviderData(string? regionId=null,string? order=null)
+    public AdminProviderViewModel GetAllProviderData(string? regionId=null,string? order=null,int PageNum = 1 ,int PageSize = 5)
     {
         bool isAscending = order == null || order != "desc";
-        
+        var (ProviderList, totalCount) = _providerRepo.GetAllPhysician(isAscending,regionId,PageNum,PageSize);
+        int startIndex = (PageNum - 1) * PageSize + 1;
         AdminProviderViewModel providerViewModel = new()
         {
             AllRegionList = _profileRepo.GetAllRegions().Select(reg => new RegionList()
@@ -32,7 +33,7 @@ public class ProviderService : IProviderService
                 Id = reg.Id,
                 Name = reg.Name
             }),
-            AllPhysicianList = _providerRepo.GetAllPhysician(isAscending,regionId).Select(phy => new PhysicianList()
+            AllPhysicianList = ProviderList.Select(phy => new PhysicianList()
             {
                 Id = phy.Id,
                 IsNotificationStopped = phy.IsNotificationStop ?? false,
@@ -41,7 +42,13 @@ public class ProviderService : IProviderService
                 OnCallStatus = _providerRepo.GetOnCallStatus(phy.Id),
                 Status = GetStatus(phy.Status ?? 0),
                 RoleId = phy.Roleid ?? 0
-            })
+            }),
+            TotalCount = totalCount,
+            CurrentPage = PageNum,
+            CurrentPageSize = PageSize,
+            PageRangeStart = totalCount == 0 ? 0 : startIndex,
+            PageRangeEnd = Math.Min(startIndex + PageSize - 1, totalCount),
+            TotalPage = (int)Math.Ceiling((double)totalCount / PageSize)
         };
         return providerViewModel;
     }
@@ -69,7 +76,7 @@ public class ProviderService : IProviderService
     }
 
     public Physician GetSingleProviderData(int Id){
-        return _providerRepo.GetAllPhysician().FirstOrDefault(phy => phy.Id == Id);
+        return _providerRepo.GetAllPhysicianList().FirstOrDefault(phy => phy.Id == Id);
     }
 
     public AdminPhysicianEditViewModel GetPhyisicianData(int Id){
@@ -86,7 +93,7 @@ public class ProviderService : IProviderService
             var selectedRegionIds = Regions.Select(reg => reg.Id);
             var unselectedRegionIds = allRegionIds.Except(selectedRegionIds);
 
-        Physician physicianData = _providerRepo.GetAllPhysician().FirstOrDefault(phy => phy.Id == Id);
+        Physician physicianData = _providerRepo.GetAllPhysicianList().FirstOrDefault(phy => phy.Id == Id);
         Physicianfile? fileData = _providerRepo.PhysicianFileData(Id);
         AdminPhysicianEditViewModel phyEditView = new(){
             Id = physicianData.Id,

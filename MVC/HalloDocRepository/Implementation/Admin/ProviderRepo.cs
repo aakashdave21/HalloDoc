@@ -12,7 +12,7 @@ public class ProviderRepo : IProviderRepo
         _dbContext = dbContext;
     }
 
-    public IEnumerable<Physician> GetAllPhysician(bool order = true, string? regionId = null)
+    public (IEnumerable<Physician>, int) GetAllPhysician(bool order = true, string? regionId = null,int PageNum = 1 ,int PageSize = 5)
     {
         IQueryable<Physician> query = _dbContext.Physicians.Include(phy => phy.Role).Include(phy => phy.Aspnetuser).Where(phy => phy.Isdeleted != true);
         if (!string.IsNullOrEmpty(regionId))
@@ -21,16 +21,23 @@ public class ProviderRepo : IProviderRepo
         }
         if (order)
         {
-            return query.OrderBy(physician => physician.Firstname)
-                        .ThenBy(physician => physician.Lastname)
-                        .ToList();
+            query = query.OrderBy(physician => physician.Firstname)
+                        .ThenBy(physician => physician.Lastname);
         }
         else
         {
-            return query.OrderByDescending(physician => physician.Firstname)
-                        .ThenByDescending(physician => physician.Lastname)
-                        .ToList();
+            query = query.OrderByDescending(physician => physician.Firstname)
+                        .ThenByDescending(physician => physician.Lastname);
         }
+        int totalCount = query.Count();
+
+        int skipCount = (PageNum - 1) * PageSize;
+        query = query.Skip(skipCount).Take(PageSize);
+
+        return (query.ToList(), totalCount);
+    }
+    public IEnumerable<Physician> GetAllPhysicianList(){
+        return _dbContext.Physicians.Include(phy => phy.Role).Include(phy => phy.Aspnetuser).Where(phy => phy.Isdeleted != true);
     }
     public void UpdateNotification(List<string> stopNotificationIds, List<string> startNotificationIds)
     {

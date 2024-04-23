@@ -62,6 +62,8 @@ namespace HalloDocService.ViewModels
     public IEnumerable<RoleList> AllRoleList { get; set; } = new List<RoleList>();
     public List<AllRegionList> AllRegionsList { get; set; } = new List<AllRegionList>();
     public List<AllRegionList> AllCheckBoxRegionList { get; set; } = new List<AllRegionList>();
+    
+
 }
 
     public class AllRegionList{

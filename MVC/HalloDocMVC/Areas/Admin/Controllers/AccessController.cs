@@ -29,7 +29,6 @@ public class AccessController : Controller
             return RedirectToAction("Index", "Dashboard");
         }
     }
-
     [HttpPost]
     public IActionResult Delete(string Id)
     {

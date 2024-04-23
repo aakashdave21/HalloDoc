@@ -5,7 +5,7 @@ using Microsoft.VisualBasic;
 namespace HalloDocService.Admin.Interfaces;
 public interface IProviderService
 {
-    AdminProviderViewModel GetAllProviderData(string? regionId=null,string? order=null);
+    AdminProviderViewModel GetAllProviderData(string? regionId=null,string? order=null,int PageNum = 1 ,int PageSize = 5);
     // AdminProviderViewModel GetProviderByRegion(int regionId);
     void UpdateNotification(List<string> stopNotificationIds,List<string> startNotificationIds);
 

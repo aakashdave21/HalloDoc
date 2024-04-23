@@ -143,6 +143,8 @@
                                 </div>
                             }
                         </div>
+                        <span id="check-error" class="text-danger"></span>
+
                     </div>
                     <div class="col-12">
                         <div class="d-flex justify-content-end">
@@ -296,8 +298,8 @@
                 value: regionId
             }).appendTo('form');
         });
-        AddCountryCode();
 
+        AddCountryCode();
         $("#AdminForm").submit();
     }
 

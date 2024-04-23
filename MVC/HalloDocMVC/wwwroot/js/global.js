@@ -196,6 +196,17 @@ const SubmitFormWithPhone = (FormId) => {
     $(`#${FormId}`).submit();
 }
 
+function CheckBoxValidationError(inputName,errorDiv){
+    var checkboxesChecked = inputName.length;
+    if (checkboxesChecked === 0) {
+        $(`${errorDiv}`).html('Please check at least one checkbox.');
+        return true;
+    } else {
+        $(`${errorDiv}`).html('');
+        return false;
+    }
+}
+
 
 // if (window.history.replaceState) {
 //     // Remove the current page from the session history
