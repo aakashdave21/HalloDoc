@@ -292,13 +292,12 @@ public class AdminDashboardService : IAdminDashboardService
     public void CancleRequestCase(int reqId, string reason, string additionalNotes)
     {
         short newStatus = 3;
-        int adminId = 1;
         Nullable<int> physicianId = null;
         short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
         int? noteId = _dashboardRepo.GetNoteIdFromRequestId(reqId);
 
         _dashboardRepo.ChangeStatusOfRequest(reqId, newStatus);
-        _dashboardRepo.AddStatusLog(reqId, newStatus, oldStatus, reason, adminId, physicianId, null);
+        _dashboardRepo.AddStatusLog(reqId, newStatus, oldStatus, reason, null, physicianId, null);
 
         if (noteId != null) _dashboardRepo.SaveAdditionalNotes(additionalNotes, (int)noteId, reqId);
         else _dashboardRepo.SaveAdditionalNotes(additionalNotes, 0, reqId);

@@ -1,7 +1,3 @@
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Data.Common;
-using Microsoft.AspNetCore.Http;
 
 namespace HalloDocService.ViewModels
 {

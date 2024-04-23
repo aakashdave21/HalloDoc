@@ -45,14 +45,8 @@ public partial class Request
     [StringLength(20)]
     public string? Confirmationnumber { get; set; }
 
-    [Column("createddate", TypeName = "timestamp without time zone")]
-    public DateTime Createddate { get; set; }
-
     [Column("isdeleted")]
     public bool? Isdeleted { get; set; }
-
-    [Column("modifieddate", TypeName = "timestamp without time zone")]
-    public DateTime? Modifieddate { get; set; }
 
     [Column("declinedby")]
     [StringLength(250)]
@@ -122,8 +116,6 @@ public partial class Request
     [StringLength(250)]
     public string? PropertyName { get; set; }
 
-    public int? NoOfRequests { get; set; }
-
     public bool? IsBlocked { get; set; }
 
     [Column("acceptToken")]
@@ -131,6 +123,8 @@ public partial class Request
 
     [Column("acceptExpiry")]
     public DateTime? AcceptExpiry { get; set; }
+
+    public int? NoOfRequest { get; set; }
 
     [InverseProperty("Request")]
     public virtual ICollection<Blockrequest> Blockrequests { get; } = new List<Blockrequest>();

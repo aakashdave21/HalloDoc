@@ -1,4 +1,3 @@
-@using HalloDocService.ViewModels;
 @model AdminAccountViewModel;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
@@ -200,14 +199,3 @@
     }
 
 </script>
-
-@* <script>
-    function CheckBoxValidationError(,errorDiv){
-        var checkboxesChecked = $(`input[type="checkbox"][name^="AllCheckBoxRegionList"][data-val="true"]:checked`).length;
-        if (checkboxesChecked === 0) {
-            $(`${errorDiv}`).html('Please check at least one checkbox.');
-        } else {
-            $(`${errorDiv}`).html('');
-        }
-    }
-</script> *@

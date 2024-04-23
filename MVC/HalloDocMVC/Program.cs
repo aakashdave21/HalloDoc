@@ -17,8 +17,11 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
 });
 builder.Services.AddControllersWithViews(options =>
 {
+
+    // Filters For Access
     options.Filters.Add<MenuItemsActionFilter>();
 });
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
@@ -27,6 +30,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 // Scoped/Custom Auth Are Added From Extensions
 builder.Services.AddMyServices();
 builder.Services.AddMyAuthentication();
+
 
 var app = builder.Build();
 
@@ -42,6 +46,8 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Custom Middleware
 app.UseMyMiddleware();
 
 app.MapControllerRoute(

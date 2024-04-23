@@ -331,6 +331,7 @@ public partial class HalloDocContext : DbContext
             entity.Property(e => e.Completedbyphysician).HasDefaultValueSql("false");
             entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.IsBlocked).HasDefaultValueSql("false");
+            entity.Property(e => e.Isdeleted).HasDefaultValueSql("false");
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             entity.HasOne(d => d.Createduser).WithMany(p => p.Requests).HasConstraintName("request_createduserid_fkey");

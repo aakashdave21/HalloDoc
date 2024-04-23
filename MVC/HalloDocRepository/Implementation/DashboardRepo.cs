@@ -39,7 +39,7 @@ public class DashboardRepo : IDashboardRepo
         foreach (var item in requestWithDocumentCount)
         {
             var request = item.Request;
-            request.NoOfRequests = item.DocumentCount;
+            request.NoOfRequest = item.DocumentCount;
         }
 
         return userRequests;

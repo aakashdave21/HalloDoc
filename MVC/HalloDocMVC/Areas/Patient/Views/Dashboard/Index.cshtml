@@ -47,10 +47,10 @@
                                 <td>@Model.GetUserRequestType(item.Status)</td>
                                 <td>
                                     @{
-                                        if(@item.NoOfRequests > 0){
+                                        if(@item.NoOfRequest > 0){
                                             using(Html.BeginForm("Documents", "Dashboard", new { area = "Patient" }, FormMethod.Post)){
                                                 <input type="hidden" name="RequestId" value="@item.Id"/>
-                                                <button type="submit" class="btn theme-btn" style="white-space: nowrap;"> (<span>@item.NoOfRequests</span>) Document </button>
+                                                <button type="submit" class="btn theme-btn" style="white-space: nowrap;"> (<span>@item.NoOfRequest</span>) Document </button>
                                             }
                                         }
                                     }
@@ -84,10 +84,10 @@
                             <div class="d-flex flex-column w-100">
                                 <p>Current Status : @Model.GetUserRequestType(item.Status)</p>
                                 @{
-                                        if(@item.NoOfRequests > 0){
+                                        if(@item.NoOfRequest > 0){
                                             using(Html.BeginForm("Documents", "Dashboard", new { area = "Patient" }, FormMethod.Post)){
                                                 <input type="hidden" name="RequestId" value="@item.Id"/>
-                                                <button type="submit" class="btn theme-btn" style="white-space: nowrap;"> (<span>@item.NoOfRequests</span>) Document </button>
+                                                <button type="submit" class="btn theme-btn" style="white-space: nowrap;"> (<span>@item.NoOfRequest</span>) Document </button>
                                             }
                                         }
                                     }
