@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HalloDocContext>(q => q.UseNpgsql(conn));
+
 builder.Services.Configure<RazorViewEngineOptions>(options =>
 {
     options.AreaPageViewLocationFormats.Add("Views/{1}/{0}.cshtml");
@@ -17,7 +18,6 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
 });
 builder.Services.AddControllersWithViews(options =>
 {
-
     // Filters For Access
     options.Filters.Add<MenuItemsActionFilter>();
 });

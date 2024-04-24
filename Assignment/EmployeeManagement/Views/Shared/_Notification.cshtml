@@ -1,0 +1,29 @@
+@if(TempData["success"] != null){
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        Toastify({
+            text: '@TempData["success"]',
+            duration : 3000,
+            className: "success", // Use "success" class for styling success message
+            close: true,
+            style: {
+                 background: "linear-gradient(to right, #28a745, #218838)"
+            }
+        }).showToast();
+    </script>
+}
+
+@if(TempData["error"] != null){
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        Toastify({
+            text: '@TempData["error"]',
+            duration : 3000,
+            close : true,
+            className: "error", // Use "error" class for styling error message
+            style: {
+                background: "linear-gradient(to right, #dc3545, #c82333)", // Red background for error message
+            }
+        }).showToast();
+    </script>
+}

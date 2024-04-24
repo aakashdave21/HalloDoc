@@ -1,0 +1,154 @@
+@model EmployeeViewModel;
+@* Create Employee *@
+<div class="modal fade shadow-lg " id="reqSupportModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: rgb(7, 130, 130);">
+                <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Employee Form</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Home" asp-action="Create" method="post">
+                <input type="hidden" asp-for="Id" id="EmpId"/>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating ">
+                                <input asp-for="FirstName" id="FirstName" type="text" class="form-control"
+                                    placeholder="first name">
+                                <label asp-for="FirstName" for="floatingInput">First Name</label>
+                            </div>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating ">
+                                <input asp-for="LastName" id="LastName" type="text" class="form-control"
+                                    placeholder="last name">
+                                <label asp-for="LastName" for="floatingInput">Last Name</label>
+                            </div>
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating ">
+                                <input asp-for="Email" id="Email" type="email" class="form-control"
+                                    placeholder="last name">
+                                <label asp-for="Email" for="floatingInput">Email</label>
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating ">
+                                <input asp-for="Age" id="Age" type="number" min="0" class="form-control"
+                                    placeholder="Age" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                <label asp-for="Age" for="floatingInput">Age</label>
+                            </div>
+                            <span asp-validation-for="Age" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Gender" for="Status">Gender</label>
+                            <div class="form-check">
+                                <input asp-for="Gender" value="1" data-id="1" class="form-check-input" type="radio" name="Gender" id="flexRadioDefault1" checked>
+                                <label asp-for="Gender" class="form-check-label" for="flexRadioDefault1">
+                                    Male
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="Gender" value="2" data-id="2" class="form-check-input" id="flexRadioDefault2" type="radio" name="Gender" >
+                                <label asp-for="Gender" class="form-check-label" for="flexRadioDefault2">
+                                    Female
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="Gender" value="3" data-id="3" class="form-check-input" id="flexRadioDefault3" type="radio" name="Gender">
+                                <label asp-for="Gender" class="form-check-label" for="flexRadioDefault3">
+                                    Other
+                                </label>
+                            </div>
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating">
+                                <select asp-for="DepartmentId" class="form-select" id="DepartmentSelect" aria-label="Large select example"
+                                    placeholder="Role">
+                                    <option selected disabled>Choose Department</option>
+                                    @* @foreach (var item in Model.AllDepartmentList)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    } *@
+                                </select>
+                                <label asp-for="DepartmentId" for="Status">Department</label>
+                            </div>
+                            <span asp-validation-for="DepartmentId" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating">
+                                <select asp-for="Education" id="EducationSelect" class="form-select" aria-label="Large select example"
+                                    placeholder="Role">
+                                    <option selected disabled>Choose Education</option>
+                                    <option value="1">Diploma</option>
+                                    <option value="2">Graduate</option>
+                                    <option value="3">Post Graduate</option>
+                                    <option value="4">Intermediate</option>
+                                    <option value="5">Matric</option>
+                                </select>
+                                <label asp-for="Education" for="Status">Education</label>
+                            </div>
+                            <span asp-validation-for="Education" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating ">
+                                <input asp-for="Company" id="Company" type="text" class="form-control"
+                                    placeholder="Company">
+                                <label asp-for="Company" for="floatingInput">Company</label>
+                            </div>
+                            <span asp-validation-for="Company" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating ">
+                                <input asp-for="Experience" id="Experience" type="text" class="form-control"
+                                    placeholder="Experience" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                <label asp-for="Experience" for="floatingInput">Experience</label>
+                            </div>
+                            <span asp-validation-for="Experience" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating ">
+                                <input asp-for="Package" id="Package" type="number" class="form-control"
+                                    placeholder="Package">
+                                <label asp-for="Package" for="floatingInput">Package</label>
+                            </div>
+                            <span asp-validation-for="Package" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn secondary-theme-btn" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn theme-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    loadDepartments();
+    function loadDepartments(){
+            $.ajax({
+                url: '/home/getAllDepartments',
+                type: 'GET',
+                success: function (response) {  
+                    console.log(response);
+                    $("#DepartmentSelect").empty();
+                    $("#DepartmentSelect").append("<option selected disabled>Choose Department</option>");
+                    $.each(response.data, function (key, value) {
+                        $("#DepartmentSelect").append("<option value='" + value.id + "'>" + value.name + "</option>");
+                    });
+                },
+                error: function (xhr, status, error) {
+                    ToastError("Internal Server Error");
+                }
+            })
+    }
+</script>

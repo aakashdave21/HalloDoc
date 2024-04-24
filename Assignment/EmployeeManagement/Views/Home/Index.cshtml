@@ -1,0 +1,93 @@
+﻿@model HomeViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="p-5 p-5">`
+    <div class="form-floating">
+        <input type="text" class="form-control" id="SearchBy" placeholder="Search" autocomplete="off">
+        <label for="SearchBy">Search</label>
+    </div>
+    <div id="render-table" class="mt-4">
+        <partial name="_EmployeeListPartial" />
+    </div>
+</div>
+<div id="render-create">
+    <partial name="_CreateEmployeePartial" model="@Model.CreateView"/>
+</div>
+<script>
+    let pageSize = 5;
+    let pageNum = 1;
+    let searchBy = "";
+    let DepartmentData;
+    function EmployeePageChange() {
+        const pageChange = document.querySelector(".EmployeePageChange");
+        pageNum = pageChange.value;
+        CallAjax();
+    }
+    function pageRecordChange() {
+        pageNum = 1;
+        const pageRecordChange = document.querySelector(".EmployeeRecordChange").value;
+        pageSize = pageRecordChange
+        CallAjax();
+    }
+    function CallAjax() {
+        $.ajax({
+            url: '/',
+            type: 'GET',
+            data : { pageNum , pageSize, searchBy},
+            success: function (response) {  
+                $("#render-table").empty();
+                $("#render-table").html(response);
+            },
+            error: function (xhr, status, error) {
+                ToastError("Internal Server Error");
+            }
+        })
+    }
+    function loadDepartments(){
+            $.ajax({
+                url: '/home/getAllDepartments',
+                type: 'GET',
+                success: function (response) {
+                    DepartmentData = response; 
+                    $("#DepartmentSelect").empty();
+                    $("#DepartmentSelect").append("<option selected disabled>Choose Department</option>");
+                    $.each(response.data, function (key, value) {
+                        $("#DepartmentSelect").append("<option value='" + value.id + "'>" + value.name + "</option>");
+                    });
+                },
+                error: function (xhr, status, error) {
+                    ToastError("Internal Server Error");
+                }
+            })
+    }
+
+        function openPopUpModal(id){
+            $.ajax({
+                url: '/home/GetSingleRecord',
+                type: 'GET',
+                data : {id},
+                success: async function (response) {  
+                    response = response.data;
+                    $("#reqSupportModal #EmpId").val(response.id);
+                    $("#reqSupportModal #FirstName").val(response.firstName);
+                    $("#reqSupportModal #LastName").val(response.lastName);
+                    $("#reqSupportModal #Email").val(response.email);
+                    $("#reqSupportModal #Age").val(response.age);
+                    $(`#reqSupportModal #flexRadioDefault${response.gender}`).attr("checked", true);
+                    $('#reqSupportModal #DepartmentSelect').val(response.departmentId);
+                    $('#reqSupportModal #EducationSelect').val(response.education);
+                    $('#reqSupportModal #Company').val(response.company);
+                    $('#reqSupportModal #Experience').val(response.experience);
+                    $('#reqSupportModal #Package').val(response.package);
+                    let modal = document.getElementById("reqSupportModal");
+                    let modalInstance = new bootstrap.Modal(modal);
+                    modalInstance.show(); 
+                },
+                error: function (xhr, status, error) {
+                    ToastError("Internal Server Error");
+                }
+            })
+        }
+</script>
