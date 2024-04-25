@@ -29,7 +29,7 @@ public class ProviderController : Controller
         _hostingEnvironment = hostingEnvironment;
         _accessService = accessService;
     }
-    public IActionResult Index(string regionId, string order,int PageNum = 1, int PageSize = 5)
+    public IActionResult Index(string regionId, string order, int PageNum = 1, int PageSize = 5)
     {
         try
         {
@@ -47,7 +47,9 @@ public class ProviderController : Controller
             {
                 ViewBag.Order = order;
                 return PartialView("_ProviderListPartial", providerViewModel);
-            }else if (Request.Headers["X-Requested-With"] == "XMLHttpRequest"){
+            }
+            else if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
                 return PartialView("_ProviderListPartial", providerViewModel);
             }
             return View(providerViewModel);
@@ -82,11 +84,16 @@ public class ProviderController : Controller
         try
         {
             var PhysicianData = _providerService.GetSingleProviderData(Id);
-            _utilityService.EmailSend("aakashdave21@gmail.com", Message, "Message From Admin", null , 2 , null , Id , null);
+            _utilityService.EmailSend("aakashdave21@gmail.com", Message, "Message From Admin", null, 2, null, Id, null);
             TempData["success"] = "Message Sent To Physician";
             return RedirectToAction("Index");
         }
-        catch (System.Exception)
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error !";
             return RedirectToAction("Index");
@@ -116,7 +123,12 @@ public class ProviderController : Controller
             return RedirectToAction("/Account/NotFound");
 
         }
-        catch (System.Exception e)
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception e)
         {
             Console.WriteLine(e);
             TempData["error"] = "Internal Server Error !";
@@ -134,7 +146,7 @@ public class ProviderController : Controller
             _providerService.UpdateProviderPassword(int.Parse(Id), hashedPassword);
             return Ok(new { message = "Successfully Reset Password" });
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             return BadRequest(new { message = e });
         }
@@ -149,7 +161,7 @@ public class ProviderController : Controller
             TempData["success"] = "Physician Updated Successfully";
             return Ok(new { message = "Successfully Updated" });
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e);
             TempData["error"] = "Internal Server Error !";
@@ -165,7 +177,7 @@ public class ProviderController : Controller
             TempData["success"] = "Physician Updated Successfully";
             return Ok(new { message = "Successfully Updated" });
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e);
             TempData["error"] = "Internal Server Error !";
@@ -181,7 +193,7 @@ public class ProviderController : Controller
             TempData["success"] = "Physician Updated Successfully";
             return Ok(new { message = "Successfully Updated" });
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e);
             TempData["error"] = "Internal Server Error !";
@@ -233,7 +245,12 @@ public class ProviderController : Controller
             TempData["success"] = "Physician Updated Successfully";
             return Ok(new { message = "Successfully Updated" });
         }
-        catch (System.Exception e)
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception e)
         {
             Console.WriteLine(e);
             TempData["error"] = "Internal Server Error !";
@@ -283,7 +300,7 @@ public class ProviderController : Controller
             TempData["success"] = "Document Uploaded Successfully";
             return Ok(new { message = "Successfully Updated" });
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e);
             TempData["error"] = "Internal Server Error !";
@@ -300,7 +317,12 @@ public class ProviderController : Controller
             TempData["success"] = "Record Deleted Successfully";
             return RedirectToAction("Index");
         }
-        catch (System.Exception e)
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception e)
         {
             Console.WriteLine(e);
             TempData["error"] = "Internal Server Error !";
@@ -326,18 +348,19 @@ public class ProviderController : Controller
     {
         try
         {
-            if(!ModelState.IsValid){
+            if (!ModelState.IsValid)
+            {
                 return View(_providerService.GetRoleAndState());
             }
             phyCreate.UploadPhoto = SaveFile(phyCreate?.UserPhoto, "uploads");
             phyCreate.IsBgCheckFileName = phyCreate?.IsBgCheckFile != null ? SaveFile(phyCreate.IsBgCheckFile, "uploads") : null;
-            phyCreate.IsHIPAAFileName = phyCreate?.IsHIPAAFile != null ? SaveFile(phyCreate.IsHIPAAFile, "uploads"): null;
-            phyCreate.IsICAFileName = phyCreate?.IsICAFile != null ? SaveFile(phyCreate?.IsICAFile, "uploads"): null;
-            phyCreate.IsNDAFileName = phyCreate?.IsNDAFile != null ? SaveFile(phyCreate?.IsNDAFile, "uploads"): null;
+            phyCreate.IsHIPAAFileName = phyCreate?.IsHIPAAFile != null ? SaveFile(phyCreate.IsHIPAAFile, "uploads") : null;
+            phyCreate.IsICAFileName = phyCreate?.IsICAFile != null ? SaveFile(phyCreate?.IsICAFile, "uploads") : null;
+            phyCreate.IsNDAFileName = phyCreate?.IsNDAFile != null ? SaveFile(phyCreate?.IsNDAFile, "uploads") : null;
             phyCreate.Password = PasswordHasher.HashPassword(phyCreate.Password);
             phyCreate.AllCheckBoxRegionList = AllCheckBoxRegionList;
             _providerService.CreatePhysician(phyCreate);
-            
+
             TempData["success"] = "Admin Created Successfully";
             return RedirectToAction("Create");
         }

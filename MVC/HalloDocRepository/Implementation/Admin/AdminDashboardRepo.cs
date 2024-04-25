@@ -256,7 +256,7 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
                 }
                 _dbContext.SaveChanges();
             }else{
-                throw new Exception();
+                throw new RecordNotFoundException();
             }
         }
     }
@@ -274,7 +274,7 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
             _dbContext.SaveChanges();
             return;
         }
-        throw new Exception();
+        throw new RecordNotFoundException();
     }
 
     public void AddStatusLog(int reqId,short newStatus,short oldStatus,string reason,int? adminId=null,int? physicianId=null,int? transToPhyId=null, bool TransToAdmin = false){
@@ -315,7 +315,7 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
             reqData.Physicianid = transPhyId;
              _dbContext.SaveChanges();
         }else{
-            throw new Exception();
+            throw new RecordNotFoundException();
         }
     }
 
@@ -331,9 +331,10 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         if(reqData != null){
             reqData.IsBlocked = true;
              _dbContext.SaveChanges();
-        }else{
-            throw new Exception();
+             return;
         }
+            throw new RecordNotFoundException();
+        
     }
 
     public void AddBlockRequest(Blockrequest newBlockReq){

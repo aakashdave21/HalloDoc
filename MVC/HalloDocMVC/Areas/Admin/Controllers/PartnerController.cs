@@ -25,7 +25,7 @@ public class PartnerController : Controller
             }
             return View(_partnerService.GetVendorList("", 0));
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["Error"] = "Internal Server Error";
             return RedirectToAction("Index", "Dashboard");
@@ -38,7 +38,7 @@ public class PartnerController : Controller
         {
             return View(_partnerService.GetAllRegionAndProfession());
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["Error"] = "Internal Server Error";
             return RedirectToAction("Index");
@@ -58,7 +58,7 @@ public class PartnerController : Controller
             TempData["Success"] = "Created Successfully!";
             return RedirectToAction("Create");
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["Error"] = "Internal Server Error";
             return RedirectToAction("Create");
@@ -73,9 +73,13 @@ public class PartnerController : Controller
             TempData["Success"] = "Deleted Successfully!";
             return RedirectToAction("Index");
         }
-        catch (System.Exception)
+        catch (RecordNotFoundException)
         {
-
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception)
+        {
             TempData["Error"] = "Internal Server Error";
             return RedirectToAction("Index");
         }
@@ -86,7 +90,12 @@ public class PartnerController : Controller
         {
             return View(_partnerService.GetSingleBusiness(Id));
         }
-        catch (System.Exception)
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception)
         {
             TempData["Error"] = "Internal Server Error";
             return RedirectToAction("Index");
@@ -106,7 +115,12 @@ public class PartnerController : Controller
             TempData["Success"] = "Updated Successfully";
             return RedirectToAction("Edit");
         }
-        catch (System.Exception)
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception)
         {
             TempData["Error"] = "Internal Server Error";
             return RedirectToAction("Index");

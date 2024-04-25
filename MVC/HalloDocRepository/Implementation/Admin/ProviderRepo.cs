@@ -67,7 +67,7 @@ public class ProviderRepo : IProviderRepo
             _dbContext.SaveChanges();
             return;
         }
-        throw new Exception();
+        throw new RecordNotFoundException();
     }
 
     public void UpdatePersonalInformation(int Id, int? RoleId, int? StatusId)
@@ -80,7 +80,7 @@ public class ProviderRepo : IProviderRepo
             _dbContext.SaveChanges();
             return;
         }
-        throw new Exception();
+        throw new RecordNotFoundException();
     }
 
     public void UpdateGeneralInformation(int Id, Physician physicianData)

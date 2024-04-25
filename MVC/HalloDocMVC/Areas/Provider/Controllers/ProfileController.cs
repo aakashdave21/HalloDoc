@@ -45,7 +45,7 @@ public class ProfileController : Controller
             }
             return RedirectToAction("/Account/NotFound");
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e);
             TempData["error"] = "Internal Server Error !";
@@ -62,7 +62,7 @@ public class ProfileController : Controller
             _providerService.UpdateProviderPassword(int.Parse(Id), hashedPassword);
             return Ok(new { message = "Successfully Reset Password" });
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             return BadRequest(new { message = e });
         }
@@ -82,7 +82,7 @@ public class ProfileController : Controller
             }
             return RedirectToAction("Index");
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error !";
             return RedirectToAction("Index");

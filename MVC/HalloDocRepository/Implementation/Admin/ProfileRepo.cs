@@ -45,10 +45,8 @@ public class ProfileRepo : IProfileRepo
                 _dbContext.SaveChanges();
                 return;
             }
-            throw new Exception();
-        }else{
-            throw new Exception();
         }
+        throw new RecordNotFoundException();
     }
 
     public void RemoveRegions(int AdminId, List<int> UncheckedRegion){
@@ -86,13 +84,13 @@ public class ProfileRepo : IProfileRepo
                 return;
             }
         }
-        throw new Exception();
+        throw new RecordNotFoundException();
     }
     public string GetPassword(int aspUserId){
         if(aspUserId!=null){
             return _dbContext.Aspnetusers.FirstOrDefault(user => user.Id == aspUserId).Passwordhash;
         }
-        throw new Exception();
+        throw new RecordNotFoundException();
     }
 
     public void UpdatePassword(int aspUserId,string password){
@@ -104,7 +102,7 @@ public class ProfileRepo : IProfileRepo
                 return;
             }
         }
-        throw new Exception();
+        throw new RecordNotFoundException();
     }
 
     public IEnumerable<Region> GetAllRegions(){

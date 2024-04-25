@@ -95,7 +95,7 @@ public class ProviderDashboardRepo : IProviderDashboardRepo
             _dbContext.SaveChanges();
             return;
         }
-        throw new Exception(); 
+        throw new RecordNotFoundException(); 
     }
 
     public Aspnetuser? SendProfileRequest(int? PhyId){

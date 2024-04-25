@@ -23,7 +23,7 @@ public class SmsSender {
             var message = MessageResource.Create(messageOptions);
             Console.WriteLine(message.Body);
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e.Message);
         }

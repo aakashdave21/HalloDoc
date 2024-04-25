@@ -8,7 +8,7 @@ namespace HalloDocMVC.Controllers.Admin;
 public class ProviderLocationController : Controller
 {
 
-   
+
     private readonly IProviderService _providerService;
 
     public ProviderLocationController(IProviderService providerService)
@@ -16,15 +16,16 @@ public class ProviderLocationController : Controller
         _providerService = providerService;
     }
 
-    public IActionResult Index(){
+    public IActionResult Index()
+    {
         try
         {
             return View(_providerService.GetAllProviderLocation());
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             TempData["Error"] = "Internal Server Error";
-            return RedirectToAction("Index","Dashboard");
+            return RedirectToAction("Index", "Dashboard");
         }
     }
 }

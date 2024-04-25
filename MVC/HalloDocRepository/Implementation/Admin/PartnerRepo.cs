@@ -41,7 +41,7 @@ public class PartnerRepo : IPartnerRepo
                 _dbContext.SaveChanges();
                 return;
             }else{
-                throw new Exception();
+                throw new RecordNotFoundException();
             }
         }else{
             _dbContext.Healthprofessionals.Add(vendorInfo);
@@ -58,7 +58,7 @@ public class PartnerRepo : IPartnerRepo
             _dbContext.SaveChanges();
             return;
         }
-        throw new Exception();
+        throw new RecordNotFoundException();
     }
 
     public Healthprofessional GetSingleBusiness(int Id){
@@ -66,7 +66,7 @@ public class PartnerRepo : IPartnerRepo
         if(details!=null){
             return details;
         }
-        throw new Exception();
+        throw new RecordNotFoundException();
     }
 
 }

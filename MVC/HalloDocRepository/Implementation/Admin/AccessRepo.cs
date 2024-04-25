@@ -35,8 +35,7 @@ public class AccessRepo : IAccessRepo
                 return;
             }
         }
-        throw new Exception();
-        
+        throw new RecordNotFoundException();  
     }
 
     public IEnumerable<Menu> GetMenuList(int AccountType){
@@ -145,7 +144,7 @@ public class AccessRepo : IAccessRepo
         if(Email != null){
             return _dbContext.Aspnetusers.Any(user => user.Email == Email);
         }
-        throw new Exception();
+        throw new RecordNotFoundException();
     }
 
     public void CreateNewAdmin(Aspnetuser? newAspUser=null,AdminTable? newAdmin=null,Aspnetuserrole? newAspRole=null){

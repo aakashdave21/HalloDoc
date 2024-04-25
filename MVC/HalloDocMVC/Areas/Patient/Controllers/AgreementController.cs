@@ -44,7 +44,7 @@ public class AgreementController : Controller
             }
             throw new Exception();
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Index",new { reqId = RequestId, token = RequestToken });
@@ -68,7 +68,7 @@ public class AgreementController : Controller
             }
             throw new Exception();
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Index",new { reqId = RequestId, token = RequestToken });

@@ -17,16 +17,17 @@ public class ProfileController : Controller
     {
         _profileService = profileService;
     }
-    
 
-    public IActionResult Index(){
+
+    public IActionResult Index()
+    {
         try
         {
             var AspUserId = User.FindFirstValue("AspUserId");
-            AdminProfileViewModel adminProfileView  = _profileService.GetAdminData(int.Parse(AspUserId));
+            AdminProfileViewModel adminProfileView = _profileService.GetAdminData(int.Parse(AspUserId));
             return View(adminProfileView);
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return View();
@@ -34,11 +35,17 @@ public class ProfileController : Controller
     }
 
     [HttpPost]
-    public IActionResult EditAdminInformation(AdminProfileViewModel adminView){
+    public IActionResult EditAdminInformation(AdminProfileViewModel adminView)
+    {
         try
         {
             _profileService.UpdateAdminInfo(adminView);
-            TempData["success"] = "Admin Information Updated Successfully!";    
+            TempData["success"] = "Admin Information Updated Successfully!";
+            return RedirectToAction("Index");
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
             return RedirectToAction("Index");
         }
         catch (Exception)
@@ -48,11 +55,17 @@ public class ProfileController : Controller
         }
     }
     [HttpPost]
-    public IActionResult EditBillingInformation(AdminProfileViewModel adminView){
+    public IActionResult EditBillingInformation(AdminProfileViewModel adminView)
+    {
         try
         {
             _profileService.UpdateBillingInfo(adminView);
-            TempData["success"] = "Admin Information Updated Successfully!";    
+            TempData["success"] = "Admin Information Updated Successfully!";
+            return RedirectToAction("Index");
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
             return RedirectToAction("Index");
         }
         catch (Exception)
@@ -62,21 +75,28 @@ public class ProfileController : Controller
         }
     }
     [HttpPost]
-    public IActionResult ResetPassword(AdminProfileViewModel adminView){
+    public IActionResult ResetPassword(AdminProfileViewModel adminView)
+    {
         try
         {
             string userPassword = _profileService.GetPassword(adminView.Id);
             // bool isVerified = PasswordHasher.VerifyPassword(adminView.Password, userPassword);
             bool isVerified = userPassword == adminView.Password;
-            if(isVerified){
-                TempData["error"] = "Password Already Exits, Enter new Password!";    
+            if (isVerified)
+            {
+                TempData["error"] = "Password Already Exits, Enter new Password!";
                 return RedirectToAction("Index");
             }
 
             string hashedPassword = PasswordHasher.HashPassword(adminView.Password);
             // _profileService.UpdatePassword(adminView.Id, adminView.Password);
             _profileService.UpdatePassword(adminView.Id, hashedPassword);
-            TempData["success"] = "Password Updated Successfully!";    
+            TempData["success"] = "Password Updated Successfully!";
+            return RedirectToAction("Index");
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
             return RedirectToAction("Index");
         }
         catch (Exception)

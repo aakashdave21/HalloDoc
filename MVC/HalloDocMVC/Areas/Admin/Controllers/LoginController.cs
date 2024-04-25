@@ -52,8 +52,8 @@ public class LoginController : Controller
             if (userEmail != null)
             {
                 string storedHashPassword = userEmail?.Passwordhash;
-                
-                var isPasswordCorrectHashed = PasswordHasher.VerifyPassword(userView.Passwordhash , storedHashPassword);
+
+                var isPasswordCorrectHashed = PasswordHasher.VerifyPassword(userView.Passwordhash, storedHashPassword);
                 Console.WriteLine(isPasswordCorrectHashed + "<<<<<<<<<<<<<<");
                 if (isPasswordCorrectHashed && IsAdmin)
                 {
@@ -81,6 +81,11 @@ public class LoginController : Controller
             }
             TempData["error"] = "Logged In Failed";
             return View(nameof(Index), userView);
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
         }
         catch (Exception e)
         {

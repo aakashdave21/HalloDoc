@@ -92,7 +92,7 @@ public class RecordsRepo : IRecordsRepo
             _dbContext.SaveChanges();
             return;
         }
-        throw new Exception();
+        throw new RecordNotFoundException();
     }
 
     public (IEnumerable<Emaillog>, int) EmailLogs(EmailRepoView Parameters, int PageNum = 1, int PageSize = 5){
@@ -183,7 +183,7 @@ public class RecordsRepo : IRecordsRepo
             _dbContext.SaveChanges();
             return;
         }
-        throw new Exception();
+        throw new RecordNotFoundException();
     }
 }
 

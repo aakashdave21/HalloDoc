@@ -129,7 +129,7 @@ public class DashboardController : Controller
             var countDictionary = _adminDashboardService.CountRequestByType();
             return Json(countDictionary);
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e);
             TempData["error"] = "Internal Server Error";
@@ -146,10 +146,14 @@ public class DashboardController : Controller
             Console.WriteLine(viewcase.Phone);
             return View("ViewCase", viewcase);
         }
-        catch (Exception e)
+        catch (RecordNotFoundException)
         {
-            Console.WriteLine(e);
-            TempData["error"] = "Internal Server Error";
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = "Internal Server Error!";
             return Redirect("/Admin/Dashboard/Index");
         }
     }
@@ -168,11 +172,15 @@ public class DashboardController : Controller
                 return View("ViViewNotesew");
             }
         }
-        catch (Exception)
+        catch (RecordNotFoundException)
         {
-            TempData["error"] = "Internal Server Error";
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = "Internal Server Error!";
             return Redirect("/Admin/Dashboard/Index");
-
         }
     }
 
@@ -185,10 +193,14 @@ public class DashboardController : Controller
             TempData["success"] = "Updated Successfully";
             return Redirect("/admin/dashboard/ViewNotes/" + viewnotes.ReqId);
         }
-        catch (Exception e)
+        catch (RecordNotFoundException)
         {
-            _logger.LogInformation(e.Message);
-            TempData["error"] = "Internal Server Error";
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = "Internal Server Error!";
             return Redirect("/Admin/Dashboard/Index");
         }
     }
@@ -198,6 +210,11 @@ public class DashboardController : Controller
         {
             var casetags = await _adminDashboardService.GetCaseTag();
             return Ok(casetags);
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
         }
         catch (Exception ex)
         {
@@ -217,6 +234,11 @@ public class DashboardController : Controller
             _adminDashboardService.CancleRequestCase(int.Parse(reqId), reason, additionalNotes);
             TempData["success"] = "Request Cancelled Successfully!";
             return Json(new { success = true, message = "Form data received successfully" });
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
         }
         catch (Exception e)
         {
@@ -251,6 +273,11 @@ public class DashboardController : Controller
             }
             return Ok(physicians);
         }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
         catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
@@ -271,6 +298,11 @@ public class DashboardController : Controller
 
             TempData["success"] = "Request Assigned Successfully!";
             return Json(new { success = true, message = "Form data received successfully" });
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
         }
         catch (Exception e)
         {
@@ -293,6 +325,11 @@ public class DashboardController : Controller
             TempData["success"] = "Request Blocked Successfully!";
             return Json(new { success = true, message = "Form data received successfully" });
         }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
         catch (Exception e)
         {
             _logger.LogInformation(e.Message);
@@ -308,6 +345,11 @@ public class DashboardController : Controller
             _adminDashboardService.SetClearCase(RequestId);
             TempData["success"] = "Request Cleared Successfully!";
             return Json(new { success = true, message = "Form data received successfully" });
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
         }
         catch (Exception e)
         {
@@ -330,6 +372,11 @@ public class DashboardController : Controller
             TempData["success"] = "Request Transfered Successfully!";
             return Json(new { success = true, message = "Form data received successfully" });
         }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
         catch (Exception e)
         {
             _logger.LogInformation(e.Message);
@@ -341,7 +388,6 @@ public class DashboardController : Controller
     {
         try
         {
-
             var DocumentRecords = _dashboardService.GetAllRequestedDocuments(RequestId);
             var patientData = _adminDashboardService.GetSingleRequest(RequestId);
             ViewBag.PatientName = patientData.User != null ? (patientData.User.Firstname + " " + patientData.User.Lastname) :
@@ -362,6 +408,11 @@ public class DashboardController : Controller
 
             return View(viewModel);
 
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
         }
         catch (Exception)
         {
@@ -438,20 +489,14 @@ public class DashboardController : Controller
     {
         try
         {
-            // string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
-            // if (!System.IO.File.Exists(filePath))
-            // {
-            //     TempData["error"] = "File not found";
-            //     return RedirectToAction("ViewUploads", new { RequestId = reqId });
-            // }
-
-            // // Delete the file
-            // System.IO.File.Delete(filePath);
-
             _adminDashboardService.DeleteDocument(int.Parse(docId));
-
             TempData["success"] = "File deleted successfully";
             return RedirectToAction("ViewUploads", new { RequestId = reqId });
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
         }
         catch (Exception)
         {
@@ -470,24 +515,10 @@ public class DashboardController : Controller
         }
         try
         {
-
-            //    foreach (var filename in fileNames)
-            //    {
-            //         string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", filename);
-            //         if (!System.IO.File.Exists(filePath))
-            //         {
-            //             TempData["error"] = "File not found";
-            //             return RedirectToAction("ViewUploads", new { RequestId = reqId });
-            //         }
-            //         // Delete the file
-            //         System.IO.File.Delete(filePath);
-            //    }
-
             foreach (var fileId in fileIds)
             {
                 _adminDashboardService.DeleteDocument(int.Parse(fileId));
             }
-
             TempData["error"] = "Files Are Deleted !";
             return Json(new { success = true, message = "Deleted Success" });
         }
@@ -499,7 +530,6 @@ public class DashboardController : Controller
     }
     public async Task<IActionResult> UploadFile(IFormFile file, int requestId)
     {
-
         if (file == null)
         {
             TempData["error"] = "Please Choose File !";
@@ -550,8 +580,7 @@ public class DashboardController : Controller
             {
                 filePaths[i] = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", fileNames[i]);
             }
-
-            _utilityService.EmailSend("aakashdave21@gmail.com", "Dear patient, please find attached the files you requested", "HalloDoc Attachments", filePaths , 3 , reqId , null , null);
+            _utilityService.EmailSend("aakashdave21@gmail.com", "Dear patient, please find attached the files you requested", "HalloDoc Attachments", filePaths, 3, reqId, null, null);
             TempData["success"] = "Files Are Send !";
             return Json(new { success = true, message = "File Send Success" });
         }
@@ -564,7 +593,6 @@ public class DashboardController : Controller
 
     public IActionResult SendOrder(int RequestId)
     {
-
         try
         {
             SendOrderViewModel sendOrders = new SendOrderViewModel
@@ -660,16 +688,13 @@ public class DashboardController : Controller
             DateTime expirationTime = DateTime.UtcNow.AddHours(1);
 
             _adminDashboardService.StoreAcceptToken(reqId, token, expirationTime);
-
-            Console.WriteLine(callbackUrl);
-
             string rcvrMail = "aakashdave21@gmail.com";
             Services.SmsSender.SendSMS();
             //  _utilityService.EmailSend(callbackUrl,rcvrMail);
             TempData["success"] = "Agreement Sent To Patient";
             return Ok();
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             TempData["error"] = "Internal Server Error";
             return BadRequest("Error occurred while fetching businesses: " + ex.Message);
@@ -685,7 +710,7 @@ public class DashboardController : Controller
             CloseCaseViewModel CloseCaseView = _adminDashboardService.CloseCase(int.Parse(RequestId));
             return View(CloseCaseView);
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Index");
@@ -702,7 +727,7 @@ public class DashboardController : Controller
             TempData["success"] = "Case Closed Successfully";
             return RedirectToAction("Index");
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Index");
@@ -723,7 +748,7 @@ public class DashboardController : Controller
             return Json(new { success = true, message = "Edited successfully" });
 
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             TempData["error"] = "Internal Server Error";
             return BadRequest("Error: " + ex.Message);
@@ -736,9 +761,8 @@ public class DashboardController : Controller
         {
             var requestData = _adminDashboardService.GetSingleRequest(int.Parse(requestId));
             return Json(new { success = true, message = "SuccessFully Consulted", requestStatus = requestData.Status });
-
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             TempData["error"] = "Internal Server Error";
             return BadRequest("Error: " + ex.Message);
@@ -755,13 +779,11 @@ public class DashboardController : Controller
     {
         try
         {
-
             _adminDashboardService.SubmitEncounter(encounterForm);
             TempData["success"] = "Report Submitted Successfully";
             return RedirectToAction("Encounter", new { RequestId = encounterForm.ReqId });
-
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Encounter", new { RequestId = encounterForm.ReqId });
@@ -775,9 +797,8 @@ public class DashboardController : Controller
         {
             _adminDashboardService.ConsultEncounter(int.Parse(requestId));
             return Json(new { success = true, message = "SuccessFully Consulted", requestId });
-
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             TempData["error"] = "Internal Server Error";
             return BadRequest("Error: " + ex.Message);
@@ -790,11 +811,9 @@ public class DashboardController : Controller
         try
         {
             _adminDashboardService.HouseCallEncounter(int.Parse(requestId), status);
-
             return Json(new { success = true, message = "Successfully Completed", requestId, status });
-
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             return BadRequest("Error: " + ex.Message);
         }
@@ -807,11 +826,11 @@ public class DashboardController : Controller
             string CreateServiceLink = Url.Action("Patient", "Request", new { area = "Patient" }, Request.Scheme);
             string rcvrMail = "aakashdave21@gmail.com";
             string message = $"Please click the following link to create new Request: <a href='{SendCreationLink}'>{SendCreationLink}</a>";
-            _utilityService.EmailSend("aakashdave21@gmail.com", message, "Create Your Request.", null , 3 , null , null , null);
+            _utilityService.EmailSend("aakashdave21@gmail.com", message, "Create Your Request.", null, 3, null, null, null);
             TempData["success"] = "Account Creation Link Send !";
             return RedirectToAction("Index");
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Index");
@@ -823,7 +842,6 @@ public class DashboardController : Controller
         try
         {
             var data = _adminDashboardService.FetchAllRequest();
-
             if (data == null)
             {
                 // Handle case where data is null
@@ -1048,7 +1066,7 @@ public class DashboardController : Controller
             newPatientRequest.AllRegionList = _patientRequestService.GetAllRegions();
             return View(newPatientRequest);
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["Error"] = "Internal Server Error";
             return RedirectToAction("Index");
@@ -1071,7 +1089,7 @@ public class DashboardController : Controller
             TempData["Success"] = "Request Created Successfully";
             return RedirectToAction("CreateRequest");
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["Error"] = "Internal Server Error";
             return RedirectToAction("Index");

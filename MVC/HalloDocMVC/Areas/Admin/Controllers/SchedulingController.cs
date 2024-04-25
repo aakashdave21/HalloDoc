@@ -17,7 +17,7 @@ public class SchedulingController : Controller
     }
 
 
-    public IActionResult Index(string startDate = "",int IsMonth=0)
+    public IActionResult Index(string startDate = "", int IsMonth = 0)
     {
         try
         {
@@ -106,6 +106,11 @@ public class SchedulingController : Controller
             _scheduleService.ChangeStatus(int.Parse(ShiftId), AspUserId);
             return Ok(new { message = "Successfully Changed !" });
         }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
         catch (Exception e)
         {
             return BadRequest(new { message = e });
@@ -123,6 +128,11 @@ public class SchedulingController : Controller
             _scheduleService.Delete(int.Parse(ShiftId), AspUserId);
             return Ok(new { message = "Successfully Deleted !" });
         }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
         catch (Exception e)
         {
             return BadRequest(new { message = e });
@@ -136,50 +146,63 @@ public class SchedulingController : Controller
         {
             int AspUserId = int.Parse(User.FindFirstValue("AspUserId"));
             _scheduleService.UpdateSchedule(formData, AspUserId);
-            return Ok(new {message = "Successfully updated"});
+            return Ok(new { message = "Successfully updated" });
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
         }
         catch (Exception ex)
         {
             if (ex.Data.Contains("IsShiftOverlap") && (bool)ex.Data["IsShiftOverlap"])
             {
-                return BadRequest(new {message = ex.Message});
+                return BadRequest(new { message = ex.Message });
             }
-            return BadRequest(new {message = "Internal Server Error"});
+            return BadRequest(new { message = "Internal Server Error" });
         }
     }
 
-    public IActionResult OnCallProvider(){
+    public IActionResult OnCallProvider()
+    {
         try
         {
             return View(_scheduleService.GetCallPhysician(0));
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["Error"] = "Internal Server Error";
             return RedirectToAction("Index");
         }
     }
-    public IActionResult GetOnCallPhysicians(int RegionId){
+    public IActionResult GetOnCallPhysicians(int RegionId)
+    {
         try
         {
             return PartialView("_OnCallProvider", _scheduleService.GetCallPhysician(RegionId));
         }
-        catch (System.Exception)
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception)
         {
             TempData["Error"] = "Internal Server Error";
             return RedirectToAction("Index");
         }
     }
-    public IActionResult ReviewShift(int RegionId=0,int PageSize=5,int PageNum=1){
+    public IActionResult ReviewShift(int RegionId = 0, int PageSize = 5, int PageNum = 1)
+    {
         try
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return PartialView("_ReviewShiftTable", _scheduleService.ReviewShift(RegionId,PageSize,PageNum));
+                return PartialView("_ReviewShiftTable", _scheduleService.ReviewShift(RegionId, PageSize, PageNum));
             }
-            return View(_scheduleService.ReviewShift(RegionId,PageSize,PageNum));
+            return View(_scheduleService.ReviewShift(RegionId, PageSize, PageNum));
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["Error"] = "Internal Server Error";
             return RedirectToAction("Index");
@@ -187,17 +210,23 @@ public class SchedulingController : Controller
     }
 
     [HttpPost]
-    public IActionResult UpdateShift(List<int> shiftDetailIds,string IsDelete="false"){
+    public IActionResult UpdateShift(List<int> shiftDetailIds, string IsDelete = "false")
+    {
         try
         {
             int AspUserId = int.Parse(User.FindFirstValue("AspUserId"));
             Console.WriteLine(IsDelete);
-            _scheduleService.UpdateShift(shiftDetailIds,AspUserId,IsDelete);
-            return Ok(new {message = "Successfully Aprroved"});
+            _scheduleService.UpdateShift(shiftDetailIds, AspUserId, IsDelete);
+            return Ok(new { message = "Successfully Aprroved" });
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
         }
         catch (Exception ex)
         {
-            return BadRequest(new {message = "Internal Server Error" + ex});
+            return BadRequest(new { message = "Internal Server Error" + ex });
         }
     }
 

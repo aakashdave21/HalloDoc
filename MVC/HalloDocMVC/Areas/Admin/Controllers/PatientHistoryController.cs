@@ -14,24 +14,32 @@ public class PatientHistoryController : Controller
         _recordsService = recordsService;
     }
 
-    public IActionResult Index(PatientHistoryView Parameters,int PageNum = 1,int PageSize = 5){
+    public IActionResult Index(PatientHistoryView Parameters, int PageNum = 1, int PageSize = 5)
+    {
         try
-        {   
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest"){
-                return PartialView("_PatientHistoryTable", _recordsService.GetPatientHistory(Parameters,PageNum,PageSize));
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_PatientHistoryTable", _recordsService.GetPatientHistory(Parameters, PageNum, PageSize));
             }
-            return View(_recordsService.GetPatientHistory(Parameters,PageNum,PageSize));
+            return View(_recordsService.GetPatientHistory(Parameters, PageNum, PageSize));
         }
         catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
-            return RedirectToAction("Index","Dashboard");
+            return RedirectToAction("Index", "Dashboard");
         }
     }
-    public IActionResult ExplorePatient(int UserId,int RequestId){
+    public IActionResult ExplorePatient(int UserId, int RequestId)
+    {
         try
-        {   
-           return View(_recordsService.GetPatientRequest(UserId,RequestId));
+        {
+            return View(_recordsService.GetPatientRequest(UserId, RequestId));
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
         }
         catch (Exception)
         {
@@ -39,6 +47,6 @@ public class PatientHistoryController : Controller
             return RedirectToAction("Index");
         }
     }
-   
+
 
 }

@@ -65,7 +65,7 @@ public class PatientRequestRepo : IPatientRequestRepo
             existedUser.ActivationExpiry = expiry;
             _dbContext.SaveChanges();
         }
-        throw new Exception();
+        throw new RecordNotFoundException();
     }
     public Region? GetSingleRegion(int regionId){
         return _dbContext.Regions.FirstOrDefault(m => m.Id == regionId);

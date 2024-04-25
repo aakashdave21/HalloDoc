@@ -38,10 +38,16 @@ public class AccessController : Controller
             TempData["success"] = "Record Deleted Successfully";
             return RedirectToAction("Index");
         }
-        catch (Exception)
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
         {
             TempData["error"] = "Internal Server Error!";
             return RedirectToAction("Index");
+
         }
     }
 
@@ -55,7 +61,7 @@ public class AccessController : Controller
             };
             return View(accessView);
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["error"] = "Internal Server Error!";
             return RedirectToAction("Index");
@@ -65,24 +71,32 @@ public class AccessController : Controller
     public IActionResult Create(IFormCollection formData)
     {
         try
-        {   
+        {
             int AspUserId = int.Parse(User.FindFirstValue("AspUserId"));
             string? roleName = formData?["rolename"];
             int AccountType = int.Parse(formData?["accountType"]);
             List<int> MenuArray = formData["menus"].Select(int.Parse).ToList();
-            _accessService.CreateNewRole(roleName,AccountType,MenuArray,AspUserId);
+            _accessService.CreateNewRole(roleName, AccountType, MenuArray, AspUserId);
             TempData["success"] = "Role Created Successfully";
-           return RedirectToAction("Create");
+            return RedirectToAction("Create");
         }
-        catch (System.Exception)
+        catch (Exception ex)
         {
-            TempData["error"] = "Internal Server Error!";
-             return RedirectToAction("Create");
+            if (ex.InnerException is RecordNotFoundException)
+            {
+                TempData["error"] = "Record not found!";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["error"] = "Internal Server Error!";
+                return RedirectToAction("Create");
+            }
         }
     }
 
     [HttpPost]
-    public IActionResult GetMenuByAccountType(string accountId,string? roleId=null)
+    public IActionResult GetMenuByAccountType(string accountId, string? roleId = null)
     {
         try
         {
@@ -112,35 +126,47 @@ public class AccessController : Controller
             AdminAccessEditViewModel accessView = _accessService.GetEditViewData(int.Parse(Id));
             return View(accessView);
         }
-        catch (System.Exception)
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
         {
             TempData["error"] = "Internal Server Error!";
-            return RedirectToAction("Index");
+            return RedirectToAction("Create");
         }
     }
     [HttpPost]
-    public IActionResult EditPost(AdminAccessEditViewModel viewData,string SelectedMenus, string UnselectedMenus)
+    public IActionResult EditPost(AdminAccessEditViewModel viewData, string SelectedMenus, string UnselectedMenus)
     {
         try
         {
-
             List<int> selectedMenusList = !string.IsNullOrEmpty(SelectedMenus) ? SelectedMenus.Split(',').Select(int.Parse).ToList() : new List<int>();
             List<int> unSelectedMenusList = !string.IsNullOrEmpty(UnselectedMenus) ? UnselectedMenus.Split(',').Select(int.Parse).ToList() : new List<int>();
-            _accessService.UpdateRoleData(viewData,selectedMenusList,unSelectedMenusList);
+            _accessService.UpdateRoleData(viewData, selectedMenusList, unSelectedMenusList);
             TempData["success"] = "Role Updated Successfully !";
             return RedirectToAction("Index");
         }
-        catch (System.Exception)
+        catch (RecordNotFoundException)
         {
-            TempData["error"] = "Internal Server Error!";
+            TempData["error"] = "Record not found!";
             return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+
+            TempData["error"] = "Internal Server Error!";
+            return RedirectToAction("Create");
+
         }
     }
 
-    public IActionResult Account(){
+    public IActionResult Account()
+    {
         try
         {
-            return View( _accessService.GetRoleAndState());
+            return View(_accessService.GetRoleAndState());
         }
         catch (Exception)
         {
@@ -149,12 +175,13 @@ public class AccessController : Controller
         }
     }
     [HttpPost]
-    public IActionResult Account(AdminAccountViewModel adminData){
+    public IActionResult Account(AdminAccountViewModel adminData)
+    {
         try
         {
             if (!ModelState.IsValid)
             {
-                AdminAccountViewModel adminRoleAndState =  _accessService.GetRoleAndState();
+                AdminAccountViewModel adminRoleAndState = _accessService.GetRoleAndState();
                 adminData.RoleId = adminData.RoleId;
                 adminData.State = adminData.State;
                 adminData.AllRoleList = adminRoleAndState.AllRoleList;
@@ -163,11 +190,17 @@ public class AccessController : Controller
                 return View(nameof(Account), adminData);
             }
             adminData.CreatedUser = int.Parse(User.FindFirstValue("AspUserId"));
-            if(adminData.Password != null){
+            if (adminData.Password != null)
+            {
                 adminData.Password = PasswordHasher.HashPassword(adminData.Password);
             }
             _accessService.CreateAdminAccount(adminData);
             TempData["success"] = "Admin Created Successfully !";
+            return RedirectToAction("Index");
+        }
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
             return RedirectToAction("Index");
         }
         catch (Exception e)
@@ -185,6 +218,6 @@ public class AccessController : Controller
         }
     }
 
-    
+
 
 }

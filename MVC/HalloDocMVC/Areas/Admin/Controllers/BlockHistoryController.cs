@@ -14,32 +14,43 @@ public class BlockHistoryController : Controller
         _recordsService = recordsService;
     }
 
-    public IActionResult Index(EmailLogsView Parameters, int PageNum = 1, int PageSize = 5){
+    public IActionResult Index(EmailLogsView Parameters, int PageNum = 1, int PageSize = 5)
+    {
         try
         {
-            if(Request.Headers["X-Requested-With"]=="XMLHttpRequest"){
-                return PartialView("_blockHistoryTable",_recordsService.BlockHistory(Parameters, PageNum, PageSize));
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_blockHistoryTable", _recordsService.BlockHistory(Parameters, PageNum, PageSize));
             }
             return View(_recordsService.BlockHistory(Parameters, PageNum, PageSize));
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["Error"] = "Internal Server Error";
-            return RedirectToAction("Index","Dashboard");
+            return RedirectToAction("Index", "Dashboard");
         }
     }
 
-    public IActionResult Unblock(int Id){
+    public IActionResult Unblock(int Id)
+    {
         try
         {
             _recordsService.UnblockRequest(Id);
             TempData["Success"] = "Request Unblocked Successfully!";
             return RedirectToAction("Index");
         }
-        catch (System.Exception)
+        catch (Exception ex)
         {
-            TempData["Error"] = "Internal Server Error";
-            return RedirectToAction("Index");
+            if (ex.InnerException is RecordNotFoundException)
+            {
+                TempData["error"] = "Record not found!";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["error"] = "Internal Server Error!";
+                return RedirectToAction("Index");
+            }
         }
     }
 }

@@ -14,19 +14,21 @@ public class SMSLogsController : Controller
         _recordsService = recordsService;
     }
 
-    public IActionResult Index(EmailLogsView Parameters, int PageNum = 1, int PageSize = 5){
+    public IActionResult Index(EmailLogsView Parameters, int PageNum = 1, int PageSize = 5)
+    {
         try
         {
-            
-            if(Request.Headers["X-Requested-With"]=="XMLHttpRequest"){
-                return PartialView("_SMSLogTable",_recordsService.SMSLogs(Parameters, PageNum, PageSize));
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_SMSLogTable", _recordsService.SMSLogs(Parameters, PageNum, PageSize));
             }
             return View(_recordsService.SMSLogs(Parameters, PageNum, PageSize));
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             TempData["Error"] = "Internal Server Error";
-            return RedirectToAction("Index","Dashboard");
+            return RedirectToAction("Index", "Dashboard");
         }
     }
 }

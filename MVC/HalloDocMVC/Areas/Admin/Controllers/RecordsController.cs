@@ -16,42 +16,53 @@ public class RecordsController : Controller
     {
         _recordsService = recordsService;
     }
-    public IActionResult Index(RecordsView Parameters, int PageNum = 1, int PageSize = 5){
+    public IActionResult Index(RecordsView Parameters, int PageNum = 1, int PageSize = 5)
+    {
         try
-        {   
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest"){
-                return PartialView("_RecordsTable", _recordsService.GetAllRecords(Parameters,PageNum,PageSize));
-            }else{
-                return View(_recordsService.GetAllRecords(Parameters,PageNum,PageSize));
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_RecordsTable", _recordsService.GetAllRecords(Parameters, PageNum, PageSize));
+            }
+            else
+            {
+                return View(_recordsService.GetAllRecords(Parameters, PageNum, PageSize));
             }
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             TempData["error"] = "Internal Server Error";
-            return RedirectToAction("Index","Dashboard");
+            return RedirectToAction("Index", "Dashboard");
         }
     }
 
-     public IActionResult Delete(int Id){
+    public IActionResult Delete(int Id)
+    {
         try
         {
             _recordsService.DeleteRecord(Id);
             TempData["Success"] = "Deleted SuccessFully";
             return RedirectToAction("Index");
         }
-        catch (System.Exception)
+        catch (RecordNotFoundException)
+        {
+            TempData["error"] = "Record not found!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception)
         {
             TempData["Error"] = "Internal Server Error";
             return RedirectToAction("Index");
         }
     }
 
-    
-    public IActionResult Download(RecordsView Parameters, int PageNum = 1, int PageSize = 5){
+
+    public IActionResult Download(RecordsView Parameters, int PageNum = 1, int PageSize = 5)
+    {
         try
         {
-            RecordsViewModel recordsView = _recordsService.GetAllRecords(Parameters,PageNum,PageSize);
+            RecordsViewModel recordsView = _recordsService.GetAllRecords(Parameters, PageNum, PageSize);
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("DataSheet1");
 
@@ -90,7 +101,7 @@ public class RecordsController : Controller
             worksheet.Column(13).Width = 15;
             worksheet.Cell(1, 14).Value = "Patient Note";
             worksheet.Column(14).Width = 15;
-        
+
 
             int row = 2;
             foreach (var item in recordsView.RecordsRequestList)
@@ -116,8 +127,8 @@ public class RecordsController : Controller
                     // Apply data body styling
                     var dataRange = worksheet.Range(worksheet.Cell(row, 1), worksheet.Cell(row, 14));
                     var dataCellStyle = dataRange.Style;
-                     dataCellStyle.Fill.BackgroundColor = XLColor.FromHtml("#DCE6F1") ;
-                        dataCellStyle.Font.FontColor = XLColor.FromHtml("#4F81BD");
+                    dataCellStyle.Fill.BackgroundColor = XLColor.FromHtml("#DCE6F1");
+                    dataCellStyle.Font.FontColor = XLColor.FromHtml("#4F81BD");
                     row++;
                 }
                 else
@@ -135,9 +146,9 @@ public class RecordsController : Controller
                 return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "data.xlsx");
             }
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
-            return BadRequest(new {message = e});
+            return BadRequest(new { message = e });
         }
     }
 }
