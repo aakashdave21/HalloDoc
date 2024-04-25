@@ -1,3 +1,4 @@
+using HalloDocRepository.CustomModels;
 using HalloDocRepository.DataModels;
 using Microsoft.VisualBasic;
 using AdminTable = HalloDocRepository.DataModels.Admin;
@@ -6,12 +7,7 @@ using AdminTable = HalloDocRepository.DataModels.Admin;
 namespace HalloDocRepository.Admin.Interfaces;
 public interface IAdminDashboardRepo
 {
-   (IEnumerable<Request> requests, int totalCount) GetNewRequest(string searchBy,int reqTypeId,int pageNumber,int pageSize,int region);
-   (IEnumerable<Request> requests, int totalCount) GetPendingStatusRequest(string searchBy,int reqTypeId,int pageNumber,int pageSize,int region);
-   (IEnumerable<Request> requests, int totalCount) GetActiveStatusRequest(string searchBy,int reqTypeId,int pageNumber,int pageSize,int region);
-   (IEnumerable<Request> requests, int totalCount) GetConcludeStatusRequest(string searchBy,int reqTypeId,int pageNumber,int pageSize,int region);
-   (IEnumerable<Request> requests, int totalCount) GetCloseStatusRequest(string searchBy,int reqTypeId,int pageNumber,int pageSize,int region);
-   (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(string searchBy,int reqTypeId,int pageNumber,int pageSize,int region);
+   (IEnumerable<Request> requests, int totalCount) GetDashboardRequests(DashboardRequestQuery Params);
    Dictionary<string,int> CountRequestByType();
    Request GetViewCaseDetails(int id);
 

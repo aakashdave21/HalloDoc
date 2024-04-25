@@ -2,6 +2,7 @@ using System.Globalization;
 using HalloDocRepository.Admin.Implementation;
 using HalloDocRepository.Admin.Interfaces;
 using HalloDocRepository.DataModels;
+using HalloDocRepository.Enums;
 using HalloDocService.Admin.Interfaces;
 using HalloDocService.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -92,7 +93,7 @@ public class ScheduleService : IScheduleService
                 Regionid = schedulingView.RegionId,
                 Starttime = TimeOnly.ParseExact(schedulingView?.StartTime, "HH:mm", null),
                 Endtime = TimeOnly.ParseExact(schedulingView?.EndTime, "HH:mm", null),
-                Status = (short)((AccountType == 1) ? 2 : 1),
+                Status = (short)((AccountType == (int)AccountTypeEnum.Admin) ? 2 : 1),
                 Createdby = AspUserId
             };
             _scheduleRepo.CreateShiftDetails(newShiftDetails);
@@ -119,7 +120,7 @@ public class ScheduleService : IScheduleService
                             Regionid = schedulingView?.RegionId,
                             Starttime = TimeOnly.ParseExact(schedulingView?.StartTime ?? "", "HH:mm", null),
                             Endtime = TimeOnly.ParseExact(schedulingView?.EndTime ?? "", "HH:mm", null),
-                            Status = (short)((AccountType == 1) ? 2 : 1),
+                            Status = (short)((AccountType == (int)AccountTypeEnum.Admin) ? 2 : 1),
                             Createdby = AspUserId
                         };
 

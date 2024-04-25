@@ -3,6 +3,8 @@ using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using AdminTable = HalloDocRepository.DataModels.Admin;
+using HalloDocRepository.Enums;
+using HalloDocRepository.CustomModels;
 
 
 namespace HalloDocRepository.Admin.Implementation;
@@ -16,189 +18,46 @@ public class AdminDashboardRepo : IAdminDashboardRepo
         _dbContext = dbContext;
     }
 
-    public (IEnumerable<Request> requests, int totalCount) GetNewRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2,int region=0)
-    {   
+    public (IEnumerable<Request> requests, int totalCount) GetDashboardRequests(DashboardRequestQuery Params)
+    {
         IQueryable<Request> query = _dbContext.Requests
             .Include(req => req.Requestclients)
-            .Include(req=>req.Encounterform)
-            .Where(req => req.Status == 1);
-
-
-        if(reqTypeId>0){
-            query = query.Where(req => req.Requesttypeid == reqTypeId);
-        }
-        if(region!=0){
-            query = query.Where(req=>req.Requestclients.FirstOrDefault().Regionid == region);
-        }
-        if (!string.IsNullOrWhiteSpace(searchBy))
+            .Include(req => req.Physician)
+            .Include(req => req.Encounterform);
+        query = Params.Status switch
         {
-            query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
-        }
+            "new" => query.Where(req => req.Status == (short)RequestStatusEnum.Unassigned),
+            "pending" => query.Where(req => req.Status == (short)RequestStatusEnum.Accepted),
+            "active" => query.Where(req => (req.Status == (short)RequestStatusEnum.MdRequest || req.Status == (short)RequestStatusEnum.MDONSite) && req.Accepteddate != null),
+            "conclude" => query.Where(req => req.Status == (short)RequestStatusEnum.Conclude),
+            "close" => query.Where(req => req.Status == (short)RequestStatusEnum.Cancelled || req.Status == (short)RequestStatusEnum.CancelledByPatient || req.Status == (short)RequestStatusEnum.Closed),
+            "unpaid" => query.Where(req => req.Status == (short)RequestStatusEnum.Unpaid),
+            _ => query.Where(req => req.Status == (short)RequestStatusEnum.Unassigned),
+        };
+        if (Params.RequestTypeId > 0) query = query.Where(req => req.Requesttypeid == Params.RequestTypeId);
+        if (Params.Region != 0) query = query.Where(req => req.Requestclients.FirstOrDefault().Regionid == Params.Region);
+        if (!string.IsNullOrWhiteSpace(Params.SearchBy)) query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(Params.SearchBy)));
         query = query.OrderByDescending(req => req.Createdat);
-        
         int totalCount = query.Count();
-        query = query.Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize);
-
-        return (query.ToList(),totalCount);
+        query = query.Skip((Params.PageNumber - 1) * Params.PageSize)
+                    .Take(Params.PageSize);
+        return (query.ToList(), totalCount);
     }
-
-public (IEnumerable<Request> requests, int totalCount) GetPendingStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2,int region=0)
-{
-    IQueryable<Request> query = _dbContext.Requests
-        .Include(req => req.Requestclients)
-        .Include(req => req.Physician)
-        .Include(req=>req.Encounterform)
-        .Where(req => req.Status == 2);
-
-    if(reqTypeId>0){
-        query = query.Where(req => req.Requesttypeid == reqTypeId);
-    }
-    if(region!=0){
-            query = query.Where(req=>req.Requestclients.FirstOrDefault().Regionid == region);
-        }
-    if (!string.IsNullOrWhiteSpace(searchBy))
+ 
+    public Dictionary<string, int> CountRequestByType()
     {
-        query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
-    }
-            query = query.OrderByDescending(req => req.Createdat);
+        Dictionary<string, int>? CountRequestRow = new();
 
-
-    int totalCount = query.Count();
-        query = query.Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize);
-
-        return (query.ToList(),totalCount);
-}
-
-public (IEnumerable<Request> requests, int totalCount) GetActiveStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2,int region=0)
-{
-    IQueryable<Request> query = _dbContext.Requests
-        .Include(req => req.Requestclients)
-        .Include(req => req.Physician)
-        .Include(req=>req.Encounterform)
-        .Where(req => (req.Status == 4 || req.Status == 5) && req.Accepteddate != null);
-
-    if(reqTypeId>0){
-        query = query.Where(req => req.Requesttypeid == reqTypeId);
-    }
-    if(region!=0){
-            query = query.Where(req=>req.Requestclients.FirstOrDefault().Regionid == region);
-        }
-    if (!string.IsNullOrWhiteSpace(searchBy))
-    {
-        query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
-    }
-            query = query.OrderByDescending(req => req.Createdat);
-
-
-    int totalCount = query.Count();
-    
-        query = query.Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize);
-
-        return (query.ToList(),totalCount);
-}
-
-public (IEnumerable<Request> requests, int totalCount) GetConcludeStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2,int region=0)
-{
-    IQueryable<Request> query = _dbContext.Requests
-        .Include(req => req.Requestclients)
-        .Include(req => req.Physician)
-        .Include(req=>req.Encounterform)
-        .Where(req => req.Status == 6);
-
-    if(reqTypeId>0){
-        query = query.Where(req => req.Requesttypeid == reqTypeId);
-    }
-    if(region!=0){
-            query = query.Where(req=>req.Requestclients.FirstOrDefault().Regionid == region);
-        }
-    if (!string.IsNullOrWhiteSpace(searchBy))
-    {
-        query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
-    }
-            query = query.OrderByDescending(req => req.Createdat);
-
-
-   int totalCount = query.Count();
-        query = query.Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize);
-
-        return (query.ToList(),totalCount);
-}
-
-public (IEnumerable<Request> requests, int totalCount) GetCloseStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2,int region=0)
-{
-    IQueryable<Request> query = _dbContext.Requests
-        .Include(req => req.Requestclients)
-        .ThenInclude(rc => rc.Region)
-        .Include(req => req.Physician)
-        .Include(req=>req.Encounterform)
-        .Where(req => (req.Status == 8 || req.Status == 7 || req.Status == 3));
-
-     if(reqTypeId>0){
-        query = query.Where(req => req.Requesttypeid == reqTypeId);
-    }
-    if(region!=0){
-            query = query.Where(req=>req.Requestclients.FirstOrDefault().Regionid == region);
-        }
-    if (!string.IsNullOrWhiteSpace(searchBy))
-    {
-        query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
-    }
-           query = query.OrderByDescending(req => req.Createdat);
-
-
-   int totalCount = query.Count();
-        query = query.Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize);
-
-        return (query.ToList(),totalCount);
-}
-
-public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(string searchBy = "",int reqTypeId=0,int pageNumber=1,int pageSize=2,int region=0)
-{
-    IQueryable<Request> query = _dbContext.Requests
-        .Include(req => req.Requestclients)
-        .Include(req => req.Physician)
-        .Include(req=>req.Encounterform)
-        .Where(req => req.Status == 9);
-
-    if(reqTypeId>0){
-        query = query.Where(req => req.Requesttypeid == reqTypeId);
-        Console.WriteLine(query);
-    }
-    if(region!=0){
-            query = query.Where(req=>req.Requestclients.FirstOrDefault().Regionid == region);
-        }
-    if (!string.IsNullOrWhiteSpace(searchBy))
-    {
-        query = query.Where(req => req.Requestclients.Any(rc => rc.Firstname.ToLower().Contains(searchBy)));
-    }
-            query = query.OrderByDescending(req => req.Createdat);
-
-
-    int totalCount = query.Count();
-        query = query.Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize);
-
-        return (query.ToList(),totalCount);
-}
-    public Dictionary<string,int> CountRequestByType()
-    {
-        Dictionary<string,int>? CountRequestRow = new();
-        
         CountRequestRow = _dbContext.Requests
-        .GroupBy(req => true) // Group all records into one group
+        .GroupBy(req => true)
         .Select(group => new
         {
-            NewCount = group.Count(req => req.Status == 1),
-            PendingCount = group.Count(req => req.Status == 2),
-            ActiveCount = group.Count(req => (req.Status == 4 || req.Status == 5) && req.Accepteddate != null),
-            ConcludeCount = group.Count(req => req.Status == 6),
-            CloseCount = group.Count(req =>  req.Status == 8 || req.Status == 7 || req.Status == 3),
-            UnpaidCount = group.Count(req => req.Status == 9)
+            NewCount = group.Count(req => req.Status == (short)RequestStatusEnum.Unassigned),
+            PendingCount = group.Count(req => req.Status == (short)RequestStatusEnum.Accepted),
+            ActiveCount = group.Count(req => (req.Status == (short)RequestStatusEnum.MdRequest || req.Status == (short)RequestStatusEnum.MDONSite) && req.Accepteddate != null),
+            ConcludeCount = group.Count(req => req.Status == (short)RequestStatusEnum.Conclude),
+            CloseCount = group.Count(req => req.Status == (short)RequestStatusEnum.Cancelled || req.Status == (short)RequestStatusEnum.CancelledByPatient || req.Status == (short)RequestStatusEnum.Closed),
+            UnpaidCount = group.Count(req => req.Status == (short)RequestStatusEnum.Unpaid)
         })
         .Select(result => new Dictionary<string, int>
         {
@@ -214,62 +73,80 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         return CountRequestRow;
     }
 
-    public Request GetViewCaseDetails(int id) {
+    public Request GetViewCaseDetails(int id)
+    {
         return _dbContext.Requests.Include(item => item.Requestclients)
                                         .ThenInclude(req => req.Region)
-                                    .Include(req=>req.Requesttype)
+                                    .Include(req => req.Requesttype)
                                     .FirstOrDefault(req => req.Id == id);
     }
 
-    public Requestnote GetViewNotesDetails(int reqId){
+    public Requestnote GetViewNotesDetails(int reqId)
+    {
         return _dbContext.Requestnotes.FirstOrDefault(req => req.Requestid == reqId);
     }
-    public Requestclient GetPatientNoteDetails(int reqId){
-        return _dbContext.Requestclients.FirstOrDefault(req=> req.Requestid == reqId);
+    public Requestclient GetPatientNoteDetails(int reqId)
+    {
+        return _dbContext.Requestclients.FirstOrDefault(req => req.Requestid == reqId);
     }
-    public IQueryable<Requeststatuslog> GetAllCancelNotes(int reqId){
+    public IQueryable<Requeststatuslog> GetAllCancelNotes(int reqId)
+    {
         var cancelNotes = _dbContext.Requeststatuslogs
-        .Where(log => log.Requestid == reqId && (log.Status == 7 || log.Status == 3 || log.Status==2));
+        .Where(log => log.Requestid == reqId && (log.Status == 7 || log.Status == 3 || log.Status == 2));
 
         return cancelNotes;
 
     }
-    public void SaveAdditionalNotes(string AdditionalNote,int noteId,int reqId, int reqType = 1){
-        if(noteId==0){
+    public void SaveAdditionalNotes(string AdditionalNote, int noteId, int reqId, int reqType = 1)
+    {
+        if (noteId == 0)
+        {
             // We have to add new Records for that
             Requestnote reqNote = new()
             {
-              Requestid = reqId,
-              Adminnotes =  reqType==1 ? AdditionalNote  : "",
-              Physiciannotes = reqType == 2 ? AdditionalNote : ""
-            //   Createdby = AdminId <---- Need To Added Admin Id 
+                Requestid = reqId,
+                Adminnotes = reqType == 1 ? AdditionalNote : "",
+                Physiciannotes = reqType == 2 ? AdditionalNote : ""
+                //   Createdby = AdminId <---- Need To Added Admin Id 
             };
             _dbContext?.Requestnotes.Add(reqNote);
             _dbContext?.SaveChanges();
-        }else{
-            var notesData = _dbContext.Requestnotes.FirstOrDefault(req=>req.Id == noteId);
-            if(notesData!=null){
-                if(reqType==1){
+        }
+        else
+        {
+            var notesData = _dbContext.Requestnotes.FirstOrDefault(req => req.Id == noteId);
+            if (notesData != null)
+            {
+                if (reqType == 1)
+                {
                     notesData.Adminnotes = AdditionalNote;
-                }else if(reqType == 2){
+                }
+                else if (reqType == 2)
+                {
                     notesData.Physiciannotes = AdditionalNote;
                 }
                 _dbContext.SaveChanges();
-            }else{
+            }
+            else
+            {
                 throw new RecordNotFoundException();
             }
         }
     }
 
-    public short GetStatusOfRequest(int reqId){
+    public short GetStatusOfRequest(int reqId)
+    {
         return _dbContext.Requests.FirstOrDefault(req => req.Id == reqId).Status;
     }
-    public int? GetNoteIdFromRequestId(int reqId){
+    public int? GetNoteIdFromRequestId(int reqId)
+    {
         return _dbContext.Requestnotes.FirstOrDefault(req => req.Requestid == reqId)?.Id;
     }
-    public void ChangeStatusOfRequest(int reqId,short newStatus){
+    public void ChangeStatusOfRequest(int reqId, short newStatus)
+    {
         Request RequestData = _dbContext.Requests.FirstOrDefault(req => req.Id == reqId);
-        if(RequestData!=null){
+        if (RequestData != null)
+        {
             RequestData.Status = newStatus;
             _dbContext.SaveChanges();
             return;
@@ -277,8 +154,10 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         throw new RecordNotFoundException();
     }
 
-    public void AddStatusLog(int reqId,short newStatus,short oldStatus,string reason,int? adminId=null,int? physicianId=null,int? transToPhyId=null, bool TransToAdmin = false){
-        Requeststatuslog NewStatusLog = new(){
+    public void AddStatusLog(int reqId, short newStatus, short oldStatus, string reason, int? adminId = null, int? physicianId = null, int? transToPhyId = null, bool TransToAdmin = false)
+    {
+        Requeststatuslog NewStatusLog = new()
+        {
             Requestid = reqId,
             Status = newStatus,
             Oldstatus = oldStatus,
@@ -292,14 +171,17 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         _dbContext.SaveChanges();
     }
 
-    public List<Region> GetRegions(){
-        return _dbContext.Regions.Include(reg=>reg.Admins).ToList();
+    public List<Region> GetRegions()
+    {
+        return _dbContext.Regions.Include(reg => reg.Admins).ToList();
     }
-    public async Task<IEnumerable<Casetag>> GetCaseTag(){
+    public async Task<IEnumerable<Casetag>> GetCaseTag()
+    {
         return await _dbContext.Casetags.ToListAsync();
     }
 
-    public async Task<IEnumerable<Physician>> GetPhysicianByRegion(int regionId){
+    public async Task<IEnumerable<Physician>> GetPhysicianByRegion(int regionId)
+    {
         var physicians = await _dbContext.Physicianregions
         .Where(phyReg => phyReg.Regionid == regionId)
         .Select(phyReg => phyReg.Physician)
@@ -309,70 +191,87 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
 
     }
 
-    public void AddPhysicianToRequest(int reqId,int? transPhyId = null){
+    public void AddPhysicianToRequest(int reqId, int? transPhyId = null)
+    {
         Request reqData = _dbContext.Requests.FirstOrDefault(req => req.Id == reqId);
-        if(reqData != null){
+        if (reqData != null)
+        {
             reqData.Physicianid = transPhyId;
-             _dbContext.SaveChanges();
-        }else{
+            _dbContext.SaveChanges();
+        }
+        else
+        {
             throw new RecordNotFoundException();
         }
     }
 
-    public Request GetSingleRequestDetails(int reqId){
+    public Request GetSingleRequestDetails(int reqId)
+    {
         return _dbContext.Requests
                       .Include(req => req.Requestclients)
                       .Include(req => req.Physician)
                       .FirstOrDefault(req => req.Id == reqId);
     }
 
-    public void SetBlockFieldRequest(int reqId){
+    public void SetBlockFieldRequest(int reqId)
+    {
         Request reqData = _dbContext.Requests.FirstOrDefault(req => req.Id == reqId);
-        if(reqData != null){
+        if (reqData != null)
+        {
             reqData.IsBlocked = true;
-             _dbContext.SaveChanges();
-             return;
+            _dbContext.SaveChanges();
+            return;
         }
-            throw new RecordNotFoundException();
-        
+        throw new RecordNotFoundException();
+
     }
 
-    public void AddBlockRequest(Blockrequest newBlockReq){
-        
+    public void AddBlockRequest(Blockrequest newBlockReq)
+    {
+
         _dbContext.Blockrequests.Add(newBlockReq);
         _dbContext.SaveChanges();
     }
 
-    public Request GetSingleRequest(int reqId){
-        return _dbContext.Requests.Include(req => req.User).Include(req=>req.Requestclients).Include(req => req.Physician).FirstOrDefault(req => req.Id == reqId);
+    public Request GetSingleRequest(int reqId)
+    {
+        return _dbContext.Requests.Include(req => req.User).Include(req => req.Requestclients).Include(req => req.Physician).FirstOrDefault(req => req.Id == reqId);
     }
 
-    public void DeleteDocument(int docId){
-        Requestwisefile fileData =  _dbContext.Requestwisefiles.FirstOrDefault(doc => doc.Id == docId);
-        if(fileData!=null){
-                fileData.Isdeleted = true;
-                _dbContext.SaveChanges();
+    public void DeleteDocument(int docId)
+    {
+        Requestwisefile fileData = _dbContext.Requestwisefiles.FirstOrDefault(doc => doc.Id == docId);
+        if (fileData != null)
+        {
+            fileData.Isdeleted = true;
+            _dbContext.SaveChanges();
         }
     }
 
-    public IEnumerable<Healthprofessionaltype> GetAllProfessions(){
+    public IEnumerable<Healthprofessionaltype> GetAllProfessions()
+    {
         return _dbContext.Healthprofessionaltypes.ToList();
     }
-    public IEnumerable<Healthprofessional> GetBusinessByProfession(int professionId){
+    public IEnumerable<Healthprofessional> GetBusinessByProfession(int professionId)
+    {
         return _dbContext.Healthprofessionals.Where(prof => prof.Profession == professionId);
     }
-    public Healthprofessional GetBusinessDetails(int businessId){
+    public Healthprofessional GetBusinessDetails(int businessId)
+    {
         return _dbContext.Healthprofessionals.FirstOrDefault(prof => prof.Id == businessId);
     }
 
-    public void AddOrderDetails(Orderdetail newOrder){
+    public void AddOrderDetails(Orderdetail newOrder)
+    {
         _dbContext.Orderdetails.Add(newOrder);
         _dbContext.SaveChanges();
     }
 
-    public void StoreAcceptToken(int reqId,string token,DateTime expirationTime){
-        Request reqData = _dbContext.Requests.FirstOrDefault(req=>req.Id == reqId);
-        if(reqData!=null){
+    public void StoreAcceptToken(int reqId, string token, DateTime expirationTime)
+    {
+        Request reqData = _dbContext.Requests.FirstOrDefault(req => req.Id == reqId);
+        if (reqData != null)
+        {
             reqData.Updatedat = DateTime.Now;
             reqData.AcceptToken = token;
             reqData.AcceptExpiry = expirationTime;
@@ -380,46 +279,57 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
         }
     }
 
-    public void AgreementAccept(int reqId){
-        Request reqData = _dbContext.Requests.FirstOrDefault(req=>req.Id == reqId);
-        if(reqData!=null){
+    public void AgreementAccept(int reqId)
+    {
+        Request reqData = _dbContext.Requests.FirstOrDefault(req => req.Id == reqId);
+        if (reqData != null)
+        {
             reqData.Updatedat = DateTime.Now;
-            reqData.Status = 4; // Accept request
+            reqData.Status = (short)RequestStatusEnum.MdRequest; // Accept request
             reqData.Accepteddate = DateTime.Now;
             _dbContext.SaveChanges();
         }
     }
-    public void AgreementReject(int reqId){
-        Request reqData = _dbContext.Requests.FirstOrDefault(req=>req.Id == reqId);
-        if(reqData!=null){
+    public void AgreementReject(int reqId)
+    {
+        Request reqData = _dbContext.Requests.FirstOrDefault(req => req.Id == reqId);
+        if (reqData != null)
+        {
             reqData.Updatedat = DateTime.Now;
-            reqData.Status = 7; // Closed By Patient
+            reqData.Status = (short)RequestStatusEnum.CancelledByPatient; // Closed By Patient
             reqData.Accepteddate = null;
             _dbContext.SaveChanges();
         }
     }
 
-    public void EditPatientInfo(string Email,string Phone,int patientId,int requestId){
+    public void EditPatientInfo(string Email, string Phone, int patientId, int requestId)
+    {
         Requestclient patientInfo = _dbContext.Requestclients.FirstOrDefault(patient => patient.Id == patientId);
-        if(patientInfo!=null){
+        if (patientInfo != null)
+        {
             patientInfo.Email = Email;
             patientInfo.Phonenumber = Phone;
             _dbContext.SaveChanges();
         }
     }
 
-    public Request GetEncounterDetails(int reqId){
-        return _dbContext.Requests.Include(req=>req.Encounterform).Include(req=>req.Requestclients).Include(req=>req.User).FirstOrDefault(req => req.Id == reqId);
+    public Request GetEncounterDetails(int reqId)
+    {
+        return _dbContext.Requests.Include(req => req.Encounterform).Include(req => req.Requestclients).Include(req => req.User).FirstOrDefault(req => req.Id == reqId);
     }
 
-    public void SubmitEncounter(Encounterform encounterform){
+    public void SubmitEncounter(Encounterform encounterform)
+    {
         if (encounterform.Id == null || encounterform.Id == 0)
         {
             _dbContext.Encounterforms.Add(encounterform);
-            
-        }else{
+
+        }
+        else
+        {
             Encounterform encounter = _dbContext.Encounterforms.FirstOrDefault(enc => enc.Id == encounterform.Id);
-            if(encounter!=null){
+            if (encounter != null)
+            {
                 encounter.Historyofpresentillness = encounterform.Historyofpresentillness;
                 encounter.Medicalhistory = encounterform.Medicalhistory;
                 encounter.Medications = encounterform.Medications;
@@ -447,34 +357,41 @@ public (IEnumerable<Request> requests, int totalCount) GetUnpaidStatusRequest(st
             }
 
         }
-         _dbContext.SaveChanges();
+        _dbContext.SaveChanges();
     }
 
-    public void AddCallType(short callType,int reqId){
+    public void AddCallType(short callType, int reqId)
+    {
         var reqData = _dbContext.Requests.FirstOrDefault(req => req.Id == reqId);
-        if(reqData!=null){
+        if (reqData != null)
+        {
             reqData.Calltype = callType;
             reqData.Updatedat = DateTime.Now;
             _dbContext.SaveChanges();
         }
     }
 
-    public IEnumerable<Request> FetchAllRequest(){
-        return _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Physician).Include(req=>req.User);
+    public IEnumerable<Request> FetchAllRequest()
+    {
+        return _dbContext.Requests.Include(req => req.Requestclients).Include(req => req.Physician).Include(req => req.User);
     }
 
-    public AdminTable? GetAdminFromAsp(int AspId){
+    public AdminTable? GetAdminFromAsp(int AspId)
+    {
         AdminTable? adminInfo = _dbContext.Admins.FirstOrDefault(req => req.Aspnetuserid == AspId);
-        if(adminInfo!=null){
+        if (adminInfo != null)
+        {
             return adminInfo;
         }
         return null;
     }
 
-    public IEnumerable<Rolemenu>? GetUserRoles(int AspUserId){
+    public IEnumerable<Rolemenu>? GetUserRoles(int AspUserId)
+    {
         int? roleId = _dbContext?.Admins?.FirstOrDefault(user => user.Aspnetuserid == AspUserId)?.Roleid ?? 0;
-        if(roleId!=0){
-            return _dbContext?.Rolemenus.Include(rm => rm.Menu).Include(rm => rm.Role).Where(rm=>rm.Roleid==roleId);
+        if (roleId != 0)
+        {
+            return _dbContext?.Rolemenus.Include(rm => rm.Menu).Include(rm => rm.Role).Where(rm => rm.Roleid == roleId);
         }
         return null;
     }

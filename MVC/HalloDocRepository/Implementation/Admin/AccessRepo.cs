@@ -2,6 +2,7 @@ using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using AdminTable = HalloDocRepository.DataModels.Admin;
+using HalloDocRepository.Enums;
 
 namespace HalloDocRepository.Admin.Implementation;
 public class AccessRepo : IAccessRepo
@@ -40,7 +41,7 @@ public class AccessRepo : IAccessRepo
 
     public IEnumerable<Menu> GetMenuList(int AccountType){
         IQueryable<Menu> query = _dbContext.Menus;
-        if(AccountType == 1 || AccountType == 2){
+        if(AccountType == (int)AccountTypeEnum.Admin || AccountType == (int)AccountTypeEnum.Provider){
             query = query.Where(menu=>menu.Accounttype == AccountType);
             return query;
         }
@@ -49,8 +50,8 @@ public class AccessRepo : IAccessRepo
 
     public void CreateNewRole(string roleName,int AccountType,List<int> MenuArray,int AspUserId){
         if(AccountType == 0){
-            CreateNewRole(roleName,1,MenuArray,AspUserId);
-            CreateNewRole(roleName,2,MenuArray,AspUserId);
+            CreateNewRole(roleName,(int)AccountTypeEnum.Admin,MenuArray,AspUserId);
+            CreateNewRole(roleName,(int)AccountTypeEnum.Provider,MenuArray,AspUserId);
             return;
         }
         Role newRole = new(){

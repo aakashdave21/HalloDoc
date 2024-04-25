@@ -1,6 +1,7 @@
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using HalloDocRepository.Enums;
 
 
 namespace HalloDocRepository.Admin.Implementation;
@@ -273,7 +274,7 @@ public class ProviderRepo : IProviderRepo
         }
         else
         {
-            bool isProviderBusy = _dbContext.Requests.Any(req => req.Physicianid == PhyId && req.Status == 5);
+            bool isProviderBusy = _dbContext.Requests.Any(req => req.Physicianid == PhyId && req.Status == (short)RequestStatusEnum.MDONSite);
             return isProviderBusy ? "Busy" : "Active";
         }
     }

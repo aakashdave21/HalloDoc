@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using HalloDocService.Interfaces;
 using System.IO.Compression;
 using ClosedXML.Excel;
+using HalloDocRepository.CustomModels;
 
 namespace HalloDocMVC.Controllers.Admin;
 [Area("Admin")]
@@ -37,89 +38,19 @@ public class DashboardController : Controller
 
     public IActionResult Index(string status)
     {
-        (List<RequestViewModel> req, int totalCount) myresult;
-        ViewBag.statusType = string.IsNullOrEmpty(status) ? "new" : status;
-
-        var viewModel = new AdminDashboardViewModel();
-        var countDictionary = _adminDashboardService.CountRequestByType();
-
-        viewModel.RegionList = _adminDashboardService.GetRegions();
-
-        viewModel.NewState = countDictionary["new"];
-        viewModel.PendingState = countDictionary["pending"];
-        viewModel.ActiveState = countDictionary["active"];
-        viewModel.ConcludeState = countDictionary["conclude"];
-        viewModel.ToCloseState = countDictionary["close"];
-        viewModel.UnPaidState = countDictionary["unpaid"];
-
-        string? searchBy = null;
-        if (Request.Query["searchBy"] != "null")
-        {
-            searchBy = Request.Query["searchBy"];
-        }
-        int Regions = 0;
-        if (Request.Query["region"] != "0")
-        {
-            Regions = !string.IsNullOrEmpty(Request.Query["region"]) ? int.TryParse(Request.Query["region"], out int regionValue) ? regionValue : 0 : 0;
-        }
-        int pageNumber = Request.Query.TryGetValue("pageNumber", out var pageNumberValue) ? int.Parse(pageNumberValue) : 1;
-        int pageSize = Request.Query.TryGetValue("pageSize", out var pageSizeValue) ? int.Parse(pageSizeValue) : 5;
-        int reqType = 0;
-        ViewBag.currentPage = pageNumber;
-        ViewBag.currentPageSize = pageSize;
-        int startIndex = (pageNumber - 1) * pageSize + 1;
-
-        if (!string.IsNullOrEmpty(Request.Query["requesttype"]))
-        {
-            int.TryParse(Request.Query["requesttype"], out reqType);
-        }
-        switch (status)
-        {
-            case "new":
-                myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-
-                break;
-            case "pending":
-                myresult = _adminDashboardService.GetPendingStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-
-                break;
-            case "active":
-                myresult = _adminDashboardService.GetActiveStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-
-                break;
-            case "conclude":
-                myresult = _adminDashboardService.GetConcludeStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-
-                break;
-            case "close":
-                myresult = _adminDashboardService.GetCloseStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-
-                break;
-            case "unpaid":
-                myresult = _adminDashboardService.GetUnpaidStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-
-                break;
-            default:
-                myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-
-                break;
-        }
-
-        viewModel.TotalPage = myresult.totalCount;
-        viewModel.Requests = myresult.req;
-        viewModel.PageRangeEnd = Math.Min(startIndex + pageSize - 1, myresult.totalCount);
-        viewModel.NoOfPage = (int)Math.Ceiling((double)myresult.totalCount / pageSize);
-        viewModel.PageRangeStart = myresult.totalCount == 0 ? 0 : startIndex;
-
-        // Check if the request is made via AJAX
-        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-        {
-            return PartialView("_AdminDashboardTable", viewModel);
-        }
-        else
-        {
-            return View(viewModel);
-        }
+        DashboardRequestQuery dashboardRequestQuery = new();
+        string? StatusVal = string.IsNullOrEmpty(status) ? "new" : status;
+        ViewBag.statusType = StatusVal;
+        dashboardRequestQuery.Status = StatusVal;
+        if (Request.Query["searchBy"] != "null") dashboardRequestQuery.SearchBy = Request.Query["searchBy"];
+        if (Request.Query["region"] != "0") dashboardRequestQuery.Region = !string.IsNullOrEmpty(Request.Query["region"]) ? int.TryParse(Request.Query["region"], out int regionValue) ? regionValue : 0 : 0;
+        dashboardRequestQuery.PageNumber = Request.Query.TryGetValue("pageNumber", out var pageNumberValue) ? int.Parse(pageNumberValue) : 1;
+        dashboardRequestQuery.PageSize = Request.Query.TryGetValue("pageSize", out var pageSizeValue) ? int.Parse(pageSizeValue) : 5;
+        ViewBag.currentPage = dashboardRequestQuery.PageNumber;
+        ViewBag.currentPageSize = dashboardRequestQuery.PageSize;
+        if (int.TryParse(Request.Query["requesttype"], out int reqType)) dashboardRequestQuery.RequestTypeId = reqType;
+        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest") return PartialView("_AdminDashboardTable", _adminDashboardService.GetDashboardRequests(dashboardRequestQuery));
+        else return View(_adminDashboardService.GetDashboardRequests(dashboardRequestQuery));
     }
 
     public IActionResult CountCards()
@@ -131,7 +62,6 @@ public class DashboardController : Controller
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
             TempData["error"] = "Internal Server Error";
             return Redirect("/Admin/Dashboard/Index");
         }
@@ -163,14 +93,7 @@ public class DashboardController : Controller
         try
         {
             ViewNotesViewModel viewnotes = _adminDashboardService.GetViewNotesDetails(id);
-            if (viewnotes != null)
-            {
-                return View("ViewNotes", viewnotes);
-            }
-            else
-            {
-                return View("ViViewNotesew");
-            }
+            return View("ViewNotes", viewnotes);
         }
         catch (RecordNotFoundException)
         {
@@ -231,7 +154,8 @@ public class DashboardController : Controller
             string? reqId = formData["reqId"];
             string? reason = formData["reason"];
             string? additionalNotes = formData["additionalNotes"];
-            _adminDashboardService.CancleRequestCase(int.Parse(reqId), reason, additionalNotes);
+            int AdminAspId = int.Parse(User.FindFirstValue("UserId"));
+            _adminDashboardService.CancleRequestCase(int.Parse(reqId), reason, additionalNotes,AdminAspId);
             TempData["success"] = "Request Cancelled Successfully!";
             return Json(new { success = true, message = "Form data received successfully" });
         }
@@ -917,67 +841,46 @@ public class DashboardController : Controller
             return RedirectToAction("Index");
         }
     }
-
     public IActionResult ExportData(string status)
     {
         try
         {
-            AdminDashboardViewModel viewModel = new();
-            (List<RequestViewModel> req, int totalCount) myresult;
-            string? searchBy = null;
-            if (Request.Query["searchBy"] != "null")
+            DashboardRequestQuery dashboardRequestQuery = new();
+            string? StatusVal = string.IsNullOrEmpty(status) ? "new" : status;
+            ViewBag.statusType = StatusVal;
+            dashboardRequestQuery.Status = StatusVal;
+            if (Request.Query["searchBy"] != "null") dashboardRequestQuery.SearchBy = Request.Query["searchBy"];
+            if (Request.Query["region"] != "0") dashboardRequestQuery.Region = !string.IsNullOrEmpty(Request.Query["region"]) ? int.TryParse(Request.Query["region"], out int regionValue) ? regionValue : 0 : 0;
+            dashboardRequestQuery.PageNumber = Request.Query.TryGetValue("pageNumber", out var pageNumberValue) ? int.Parse(pageNumberValue) : 1;
+            dashboardRequestQuery.PageSize = Request.Query.TryGetValue("pageSize", out var pageSizeValue) ? int.Parse(pageSizeValue) : 5;
+            ViewBag.currentPage = dashboardRequestQuery.PageNumber;
+            ViewBag.currentPageSize = dashboardRequestQuery.PageSize;
+            if (int.TryParse(Request.Query["requesttype"], out int reqType)) dashboardRequestQuery.RequestTypeId = reqType;
+            AdminDashboardViewModel dashboardView = _adminDashboardService.GetDashboardRequests(dashboardRequestQuery);
+            if (dashboardView.Requests == null)
             {
-                searchBy = Request.Query["searchBy"];
-            }
-            int pageNumber = Request.Query.TryGetValue("pageNumber", out var pageNumberValue) ? int.Parse(pageNumberValue) : 1;
-            int pageSize = Request.Query.TryGetValue("pageSize", out var pageSizeValue) ? int.Parse(pageSizeValue) : 5;
-            int reqType = 0;
-            if (!string.IsNullOrEmpty(Request.Query["requesttype"]))
-            {
-                int.TryParse(Request.Query["requesttype"], out reqType);
-            }
-            int Regions = 0;
-            if (Request.Query["region"] != "0")
-            {
-                Regions = !string.IsNullOrEmpty(Request.Query["region"]) ? int.TryParse(Request.Query["region"], out int regionValue) ? regionValue : 0 : 0;
-            }
-
-
-            switch (status)
-            {
-                case "new":
-                    myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-                    break;
-                case "pending":
-                    myresult = _adminDashboardService.GetPendingStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-                    break;
-                case "active":
-                    myresult = _adminDashboardService.GetActiveStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-                    break;
-                case "conclude":
-                    myresult = _adminDashboardService.GetConcludeStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-                    break;
-                case "close":
-                    myresult = _adminDashboardService.GetCloseStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-                    break;
-                case "unpaid":
-                    myresult = _adminDashboardService.GetUnpaidStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-                    break;
-                default:
-                    myresult = _adminDashboardService.GetNewStatusRequest(searchBy, reqType, pageNumber, pageSize, Regions);
-                    break;
-            }
-
-            viewModel.TotalPage = myresult.totalCount;
-            viewModel.Requests = myresult.req;
-
-            if (myresult.req == null)
-            {
-                // Handle case where data is null
                 TempData["error"] = "No data found";
                 return BadRequest(new { message = "No data found" });
             }
 
+            var memoryStream = ExportToExcel(dashboardView.Requests);
+
+            // Return the Excel file as a downloadable file
+            return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "data.xlsx");
+        }
+        catch (Exception e)
+        {
+            // Log the exception
+            Console.WriteLine(e);
+            TempData["error"] = "Internal Server Error";
+            return BadRequest(new { message = "Exported Successfully" });
+        }
+    }
+
+    private static MemoryStream ExportToExcel(List<RequestViewModel> requests)
+    {
+        try
+        {
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("DataSheet1");
 
@@ -1011,7 +914,7 @@ public class DashboardController : Controller
 
 
             int row = 2;
-            foreach (var item in myresult.req)
+            foreach (var item in requests)
             {
                 // Check for null references in the item and related entities
                 if (item != null)
@@ -1036,28 +939,21 @@ public class DashboardController : Controller
                 }
                 else
                 {
-                    // Log the null reference or handle it appropriately
                     Console.WriteLine("Null reference detected in item: " + item);
                 }
             }
 
-            using (var stream = new MemoryStream())
-            {
-                workbook.SaveAs(stream);
-                stream.Seek(0, SeekOrigin.Begin);
-                var content = stream.ToArray();
-                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "data.xlsx");
-            }
+            var memoryStream = new MemoryStream();
+            workbook.SaveAs(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            return memoryStream;
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            // Log the exception
-            Console.WriteLine(e);
-            TempData["error"] = "Internal Server Error";
-            return BadRequest(new { message = "Exported Successfully" });
+            throw;
         }
     }
-
     public IActionResult CreateRequest()
     {
         try

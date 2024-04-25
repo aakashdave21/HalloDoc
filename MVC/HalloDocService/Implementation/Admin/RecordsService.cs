@@ -3,6 +3,7 @@ using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
 using HalloDocRepository.Admin.Implementation;
+using HalloDocRepository.Enums;
 
 namespace HalloDocService.Admin.Implementation;
 public class RecordsService : IRecordsService
@@ -166,7 +167,7 @@ public class RecordsService : IRecordsService
                 Recipient = log?.Requestid != null ? log.Request?.Requestclients?.FirstOrDefault()?.Firstname ?? "-" : log?.Emailid,
                 CreatedDate = log?.Createdat,
                 SentDate = log?.Sentdate,
-                RoleName = log?.Role?.Accounttype == 1 ? "Admin" : log?.Role?.Accounttype == 2 ? "Physician" : "Patient",
+                RoleName = log?.Role?.Accounttype == (int)AccountTypeEnum.Admin ? "Admin" : log?.Role?.Accounttype == (int)AccountTypeEnum.Provider ? "Physician" : "Patient",
                 SentTries = log?.Senttries ?? 0,
                 IsSent = log?.Isemailsent,
                 ConfirmationNumber = log?.Confirmationnumber
@@ -204,7 +205,7 @@ public class RecordsService : IRecordsService
                 Recipient = log?.Requestid != null ? log.Request?.Requestclients?.FirstOrDefault()?.Firstname ?? "-" : "-",
                 CreatedDate = log?.Createdat,
                 SentDate = log?.Sentdate,
-                RoleName = log?.Role?.Accounttype == 1 ? "Admin" : log?.Role?.Accounttype == 2 ? "Physician" : "Patient",
+                RoleName = log?.Role?.Accounttype == (int)AccountTypeEnum.Admin ? "Admin" : log?.Role?.Accounttype == (int)AccountTypeEnum.Provider ? "Physician" : "Patient",
                 SentTries = log?.Senttries ?? 0,
                 IsSent = log?.Issmssent,
                 ConfirmationNumber = log?.Confirmationnumber

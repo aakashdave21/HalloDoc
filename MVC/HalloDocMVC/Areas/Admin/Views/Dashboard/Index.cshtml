@@ -344,28 +344,30 @@
 
     function ExportData() {
         var url = `/admin/dashboard/ExportData?searchBy=${searchKeyword}&requesttype=${reqTypes}&pageNumber=${pageNum}&pageSize=${pageRecord}&region=${regionId}`;
-
-        fetch(url, {
-            method: 'GET',
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+            $.ajax({
+                url: url,
+                type: 'GET',
+                traditional: true,
+                data: params, 
+                xhrFields: {
+                    responseType: 'blob' // Set response type to 'blob' for binary data
+                },
+                success: function (response) {
+                    var url = window.URL.createObjectURL(response);
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.setAttribute('download', 'data.xlsx');
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                },
+                error: function (xhr, status, error) {
+                    if (xhr.status == 401) {
+                        window.location.href = '/admin/login';
+                    }
                 }
-                return response.blob();
             })
-            .then(blob => {
-                var url = window.URL.createObjectURL(blob);
-                var link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', 'data.xlsx');
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link); // Clean up the DOM element
-                window.URL.revokeObjectURL(url);
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
     }
 </script>

@@ -3,6 +3,7 @@ using HalloDocService.Interfaces;
 using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
+using HalloDocRepository.Enums;
 
 namespace HalloDocService.Implementation;
 public class PatientRequestService : IPatientRequestService
@@ -44,7 +45,7 @@ public class PatientRequestService : IPatientRequestService
             Userid = existUserData?.Id,
             Symptoms = viewRequest.Symptoms,
             Roomnoofpatient = viewRequest.Roomnoofpatient,
-            Status = 1, // For Unassigned,
+            Status = (short)RequestStatusEnum.Unassigned, // For Unassigned,
             Firstname = viewRequest.Firstname,
             Lastname = viewRequest.Lastname,
             Phonenumber = viewRequest.Mobile,
@@ -132,7 +133,7 @@ public class PatientRequestService : IPatientRequestService
             Userid = newPatient.Id,
             Symptoms = viewRequest.Symptoms,
             Roomnoofpatient = viewRequest.Roomnoofpatient,
-            Status = 1, // For Unassigned,
+            Status = (short)RequestStatusEnum.Unassigned, // For Unassigned,
             Firstname = viewRequest.Firstname,
             Lastname = viewRequest.Lastname,
             Phonenumber = viewRequest.Mobile,
@@ -205,7 +206,7 @@ public class PatientRequestService : IPatientRequestService
             Userid = existUserData?.Id,
             Symptoms = familyRequest.Symptoms,
             Roomnoofpatient = familyRequest.Roomnoofpatient,
-            Status = 1, // For Unassigned,
+            Status = (short)RequestStatusEnum.Unassigned, // For Unassigned,
             Firstname = familyRequest.FamilyFirstname,
             Lastname = familyRequest.FamilyLastname,
             Phonenumber = familyRequest.FamilyPhonenumber,
@@ -287,7 +288,7 @@ public class PatientRequestService : IPatientRequestService
             Userid = newPatient.Id,
             Symptoms = familyRequest.Symptoms,
             Roomnoofpatient = familyRequest.Roomnoofpatient,
-            Status = 1, // For Unassigned,
+            Status = (short)RequestStatusEnum.Unassigned, // For Unassigned,
             Firstname = familyRequest.FamilyFirstname,
             Lastname = familyRequest.FamilyLastname,
             Phonenumber = familyRequest.FamilyPhonenumber,
@@ -368,7 +369,7 @@ public class PatientRequestService : IPatientRequestService
             Userid = existUserData?.Id,
             Symptoms = businessRequests.Symptoms,
             Roomnoofpatient = businessRequests.Roomnoofpatient,
-            Status = 1, // For Unassigned,
+            Status = (short)RequestStatusEnum.Unassigned, // For Unassigned,
             Firstname = businessRequests.BusinessFirstname,
             Lastname = businessRequests.BusinessLastname,
             Phonenumber = businessRequests.BusinessPhonenumber,
@@ -446,7 +447,7 @@ public class PatientRequestService : IPatientRequestService
             Userid = newPatient.Id,
             Symptoms = businessRequests.Symptoms,
             Roomnoofpatient = businessRequests.Roomnoofpatient,
-            Status = 1, // For Unassigned,
+            Status = (short)RequestStatusEnum.Unassigned, // For Unassigned,
             Firstname = businessRequests.BusinessFirstname,
             Lastname = businessRequests.BusinessLastname,
             Phonenumber = businessRequests.BusinessPhonenumber,
@@ -505,7 +506,7 @@ public class PatientRequestService : IPatientRequestService
             Userid = existUserData?.Id,
             Symptoms = conciergeRequest.Symptoms,
             Roomnoofpatient = conciergeRequest.Roomnoofpatient,
-            Status = 1, // For Unassigned,
+            Status = (short)RequestStatusEnum.Unassigned, // For Unassigned,
             Firstname = conciergeRequest.ConciergeFirstname,
             Lastname = conciergeRequest.ConciergeLastname,
             Phonenumber = conciergeRequest.ConciergePhonenumber,
@@ -592,7 +593,7 @@ public class PatientRequestService : IPatientRequestService
             Userid = newPatient.Id,
             Symptoms = conciergeRequest.Symptoms,
             Roomnoofpatient = conciergeRequest.Roomnoofpatient,
-            Status = 1, // For Unassigned,
+            Status = (short)RequestStatusEnum.Unassigned, // For Unassigned,
             Firstname = conciergeRequest.ConciergeFirstname,
             Lastname = conciergeRequest.ConciergeLastname,
             Phonenumber = conciergeRequest.ConciergePhonenumber,

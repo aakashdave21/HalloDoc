@@ -1,6 +1,7 @@
 using HalloDocRepository.DataModels;
 using HalloDocRepository.Admin.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using HalloDocRepository.Enums;
 
 namespace HalloDocRepository.Admin.Implementation;
 public class RecordsRepo : IRecordsRepo
@@ -178,7 +179,7 @@ public class RecordsRepo : IRecordsRepo
             blockrequestInfo.Isactive = true;
             Request? requestInfo = _dbContext.Requests.FirstOrDefault(req=>req.Id == blockrequestInfo.Requestid);
             if(requestInfo!=null){
-                requestInfo.Status = 1;
+                requestInfo.Status = (short)RequestStatusEnum.Unassigned;
             }
             _dbContext.SaveChanges();
             return;

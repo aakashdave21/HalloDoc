@@ -1,22 +1,18 @@
 
 using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
+using HalloDocRepository.CustomModels;
 
 namespace HalloDocService.Admin.Interfaces;
 public interface IAdminDashboardService
 {
     IEnumerable<HeaderMenu>? GetRoleOfUser(int AspUserId);
-    (List<RequestViewModel>,int totalCount) GetNewStatusRequest(string? searchBy,int reqTypeId,int pageNumber,int pageSize, int region);
-    (List<RequestViewModel>,int totalCount) GetPendingStatusRequest(string? searchBy,int reqTypeId,int pageNumber,int pageSize, int region);
-    (List<RequestViewModel>,int totalCount) GetActiveStatusRequest(string? searchBy,int reqTypeId,int pageNumber,int pageSize, int region);
-    (List<RequestViewModel>,int totalCount) GetConcludeStatusRequest(string? searchBy,int reqTypeId,int pageNumber,int pageSize, int region);
-    (List<RequestViewModel>,int totalCount) GetCloseStatusRequest(string? searchBy,int reqTypeId,int pageNumber,int pageSize, int region);
-    (List<RequestViewModel>,int totalCount) GetUnpaidStatusRequest(string? searchBy,int reqTypeId,int pageNumber,int pageSize, int region);
+    AdminDashboardViewModel GetDashboardRequests(DashboardRequestQuery Params);
     Dictionary<string,int> CountRequestByType();
     ViewCaseViewModel GetViewCaseDetails(int id);
     ViewNotesViewModel GetViewNotesDetails(int reqId, int reqType = 1);
     void SaveAdditionalNotes(string? AdditionalNote,int noteId,int reqId, int reqType);
-    void CancleRequestCase(int reqId,string reason,string additionalNotes);
+    void CancleRequestCase(int reqId,string reason,string additionalNotes,int AspAdminId, int ReqType = 1);
 
     List<Region> GetRegions();
     Task<IEnumerable<Casetag>> GetCaseTag();

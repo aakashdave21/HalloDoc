@@ -6,6 +6,8 @@ using System.Globalization;
 using HalloDocRepository.Interfaces;
 using AdminTable = HalloDocRepository.DataModels.Admin;
 using HalloDocService.Interfaces;
+using HalloDocRepository.CustomModels;
+using HalloDocRepository.Enums;
 
 
 namespace HalloDocService.Admin.Implementation;
@@ -40,124 +42,21 @@ public class AdminDashboardService : IAdminDashboardService
             AccountType = x.Menu.Accounttype
         }).OrderBy(x=>x.SortOrder).ToList();
     }
-    // Patient Request Implementation
-    public (List<RequestViewModel>, int totalCount) GetNewStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize, int region)
+    public AdminDashboardViewModel GetDashboardRequests(DashboardRequestQuery Params)
     {
+        AdminDashboardViewModel viewModel = new();
+        Dictionary<string, int> countDictionary = _dashboardRepo.CountRequestByType();
+        viewModel.NewState = countDictionary["new"];
+        viewModel.PendingState = countDictionary["pending"];
+        viewModel.ActiveState = countDictionary["active"];
+        viewModel.ConcludeState = countDictionary["conclude"];
+        viewModel.ToCloseState = countDictionary["close"];
+        viewModel.UnPaidState = countDictionary["unpaid"];
+        viewModel.RegionList = _dashboardRepo.GetRegions();
 
-        var result = _dashboardRepo.GetNewRequest(searchBy, reqTypeId, pageNumber, pageSize, region);
-        var (requests, totalCount) = result;
-
-        // Convert each Request object to RequestViewModel
-        var requestViewModels = requests.Select(r => new RequestViewModel
-        {
-            Id = r.Id,
-            Firstname = r.Requestclients.FirstOrDefault()?.Firstname,
-            Lastname = r.Requestclients.FirstOrDefault()?.Lastname,
-            Email = r.Requestclients.FirstOrDefault()?.Email,
-            Phonenumber = r.Requestclients.FirstOrDefault()?.Phonenumber,
-            BirthDate = r.Requestclients.FirstOrDefault()?.Strmonth + ", " + r.Requestclients.FirstOrDefault()?.Intdate + " " + r.Requestclients.FirstOrDefault()?.Intyear,
-            Requestor = r.Firstname + ", " + r.Lastname,
-            RequestedDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
-            Address = r.PropertyName != null ? "Room No/Property : " + r.PropertyName : r.Requestclients.FirstOrDefault()?.Street + ", " + r.Requestclients.FirstOrDefault()?.City + ", " + r.Requestclients.FirstOrDefault()?.State + ", " + r.Requestclients.FirstOrDefault()?.Zipcode,
-            Notes = r.Symptoms != null ? r.Symptoms : r.Requestclients.FirstOrDefault()?.Notes,
-            RequestType = r.Requesttypeid,
-            IsFinalized = r?.Encounterform?.Isfinalized ?? false
-        });
-
-        return (requestViewModels.ToList(), totalCount);
-    }
-
-
-    public (List<RequestViewModel>, int totalCount) GetPendingStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize, int region)
-    {
-        var result = _dashboardRepo.GetPendingStatusRequest(searchBy, reqTypeId, pageNumber, pageSize, region);
-        var (requests, totalCount) = result;
-
-        // Convert each Request object to RequestViewModel
-        var requestViewModels = requests.Select(r => new RequestViewModel
-        {
-            Id = r.Id,
-            Firstname = r.Requestclients.FirstOrDefault()?.Firstname,
-            Lastname = r.Requestclients.FirstOrDefault()?.Lastname,
-            Email = r.Requestclients.FirstOrDefault()?.Email,
-            Phonenumber = r.Requestclients.FirstOrDefault()?.Phonenumber,
-            BirthDate = r.Requestclients.FirstOrDefault()?.Strmonth + ", " + r.Requestclients.FirstOrDefault()?.Intdate + " " + r.Requestclients.FirstOrDefault()?.Intyear,
-            Requestor = r.Firstname + ", " + r.Lastname,
-            RequestedDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
-            Address = r.PropertyName != null ? "Room No/Property : " + r.PropertyName : r.Requestclients.FirstOrDefault()?.Street + ", " + r.Requestclients.FirstOrDefault()?.City + ", " + r.Requestclients.FirstOrDefault()?.State + ", " + r.Requestclients.FirstOrDefault()?.Zipcode,
-            Notes = r.Symptoms != null ? r.Symptoms : r.Requestclients.FirstOrDefault()?.Notes,
-            RequestType = r.Requesttypeid,
-            PhysicianId = r.Physicianid,
-            PhysicianName = r.Physician != null ? r.Physician?.Firstname + ", " + r.Physician?.Lastname : "-",
-            ServiceDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
-            IsFinalized = r?.Encounterform?.Isfinalized ?? false
-        });
-
-        return (requestViewModels.ToList(), totalCount);
-    }
-    public (List<RequestViewModel>, int totalCount) GetActiveStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize, int region)
-    {
-        var result = _dashboardRepo.GetActiveStatusRequest(searchBy, reqTypeId, pageNumber, pageSize, region);
-        var (requests, totalCount) = result;
-
-        // Convert each Request object to RequestViewModel
-        var requestViewModels = requests.Select(r => new RequestViewModel
-        {
-            Id = r.Id,
-            Firstname = r.Requestclients.FirstOrDefault()?.Firstname,
-            Lastname = r.Requestclients.FirstOrDefault()?.Lastname,
-            Email = r.Requestclients.FirstOrDefault()?.Email,
-            Phonenumber = r.Requestclients.FirstOrDefault()?.Phonenumber,
-            BirthDate = r.Requestclients.FirstOrDefault()?.Strmonth + ", " + r.Requestclients.FirstOrDefault()?.Intdate + " " + r.Requestclients.FirstOrDefault()?.Intyear,
-            Requestor = r.Firstname + ", " + r.Lastname,
-            RequestedDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
-            Address = r.PropertyName != null ? "Room No/Property : " + r.PropertyName : r.Requestclients.FirstOrDefault()?.Street + ", " + r.Requestclients.FirstOrDefault()?.City + ", " + r.Requestclients.FirstOrDefault()?.State + ", " + r.Requestclients.FirstOrDefault()?.Zipcode,
-            Notes = r.Symptoms != null ? r.Symptoms : r.Requestclients.FirstOrDefault()?.Notes,
-            RequestType = r.Requesttypeid,
-            PhysicianId = r.Physicianid,
-            PhysicianName = r.Physician != null ? r.Physician?.Firstname + ", " + r.Physician?.Lastname : "-",
-            ServiceDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
-            IsFinalized = r?.Encounterform?.Isfinalized ?? false
-            // Add other properties as needed
-        });
-
-        return (requestViewModels.ToList(), totalCount);
-    }
-    public (List<RequestViewModel>, int totalCount) GetConcludeStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize, int region)
-    {
-        var result = _dashboardRepo.GetConcludeStatusRequest(searchBy, reqTypeId, pageNumber, pageSize, region);
-        var (requests, totalCount) = result;
-
-        // Convert each Request object to RequestViewModel
-        var requestViewModels = requests.Select(r => new RequestViewModel
-        {
-            Id = r.Id,
-            Firstname = r.Requestclients.FirstOrDefault()?.Firstname,
-            Lastname = r.Requestclients.FirstOrDefault()?.Lastname,
-            Email = r.Requestclients.FirstOrDefault()?.Email,
-            Phonenumber = r.Requestclients.FirstOrDefault()?.Phonenumber,
-            BirthDate = r.Requestclients.FirstOrDefault()?.Strmonth + ", " + r.Requestclients.FirstOrDefault()?.Intdate + " " + r.Requestclients.FirstOrDefault()?.Intyear,
-            Requestor = r.Firstname + ", " + r.Lastname,
-            RequestedDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
-            Address = r.PropertyName != null ? "Room No/Property : " + r.PropertyName : r.Requestclients.FirstOrDefault()?.Street + ", " + r.Requestclients.FirstOrDefault()?.City + ", " + r.Requestclients.FirstOrDefault()?.State + ", " + r.Requestclients.FirstOrDefault()?.Zipcode,
-            Notes = r.Symptoms != null ? r.Symptoms : r.Requestclients.FirstOrDefault()?.Notes,
-            RequestType = r.Requesttypeid,
-            PhysicianId = r.Physicianid,
-            PhysicianName = r.Physician != null ? r.Physician?.Firstname + ", " + r.Physician?.Lastname : "-",
-            ServiceDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
-            IsFinalized = r?.Encounterform?.Isfinalized ?? false
-            // Add other properties as needed
-        });
-
-        return (requestViewModels.ToList(), totalCount);
-    }
-    public (List<RequestViewModel>, int totalCount) GetCloseStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize, int region)
-    {
-        var result = _dashboardRepo.GetCloseStatusRequest(searchBy, reqTypeId, pageNumber, pageSize, region);
-        var (requests, totalCount) = result;
-
-        // Convert each Request object to RequestViewModel
-        var requestViewModels = requests.Select(r => new RequestViewModel
+        (IEnumerable<Request> requests, int totalCount) = _dashboardRepo.GetDashboardRequests(Params);
+        int startIndex = (Params.PageNumber - 1) * Params.PageSize + 1;
+        List<RequestViewModel> requestViewModels = requests.Select(r => new RequestViewModel
         {
             Id = r.Id,
             Firstname = r.Requestclients.FirstOrDefault()?.Firstname,
@@ -175,38 +74,14 @@ public class AdminDashboardService : IAdminDashboardService
             ServiceDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
             Region = r.Requestclients.FirstOrDefault()?.Region?.Name ?? "-",
             IsFinalized = r?.Encounterform?.Isfinalized ?? false
-        });
+        }).ToList();
+        viewModel.TotalPage = totalCount;
+        viewModel.Requests = requestViewModels;
+        viewModel.PageRangeEnd = Math.Min(startIndex + Params.PageSize - 1, totalCount);
+        viewModel.NoOfPage = (int)Math.Ceiling((double)totalCount / Params.PageSize);
+        viewModel.PageRangeStart = totalCount == 0 ? 0 : startIndex;
 
-        return (requestViewModels.ToList(), totalCount);
-    }
-    public (List<RequestViewModel>, int totalCount) GetUnpaidStatusRequest(string? searchBy, int reqTypeId, int pageNumber, int pageSize, int region)
-    {
-
-        var result = _dashboardRepo.GetUnpaidStatusRequest(searchBy, reqTypeId, pageNumber, pageSize, region);
-        var (requests, totalCount) = result;
-
-        // Convert each Request object to RequestViewModel
-        var requestViewModels = requests.Select(r => new RequestViewModel
-        {
-            Id = r.Id,
-            Firstname = r.Requestclients.FirstOrDefault()?.Firstname,
-            Lastname = r.Requestclients.FirstOrDefault()?.Lastname,
-            Email = r.Requestclients.FirstOrDefault()?.Email,
-            Phonenumber = r.Requestclients.FirstOrDefault()?.Phonenumber,
-            BirthDate = r.Requestclients.FirstOrDefault()?.Strmonth + ", " + r.Requestclients.FirstOrDefault()?.Intdate + " " + r.Requestclients.FirstOrDefault()?.Intyear,
-            Requestor = r.Firstname + ", " + r.Lastname,
-            RequestedDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
-            Address = r.PropertyName != null ? "Room No/Property : " + r.PropertyName : r.Requestclients.FirstOrDefault()?.Street + ", " + r.Requestclients.FirstOrDefault()?.City + ", " + r.Requestclients.FirstOrDefault()?.State + ", " + r.Requestclients.FirstOrDefault()?.Zipcode,
-            Notes = r.Symptoms != null ? r.Symptoms : r.Requestclients.FirstOrDefault()?.Notes,
-            RequestType = r.Requesttypeid,
-            PhysicianId = r.Physicianid,
-            PhysicianName = r.Physician != null ? r.Physician?.Firstname + ", " + r.Physician?.Lastname : "-",
-            ServiceDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
-            Region = r.Requestclients.FirstOrDefault()?.Region?.Name ?? "-",
-            IsFinalized = r?.Encounterform?.Isfinalized ?? false
-        });
-
-        return (requestViewModels.ToList(), totalCount);
+        return viewModel;
     }
     public Dictionary<string, int> CountRequestByType()
     {
@@ -244,10 +119,10 @@ public class AdminDashboardService : IAdminDashboardService
         var reqData = _dashboardRepo.GetViewNotesDetails(reqId);
         var patientNote = _dashboardRepo.GetPatientNoteDetails(reqId);
         IQueryable<Requeststatuslog> cancelAndTransferNote = _dashboardRepo.GetAllCancelNotes(reqId);
-        var PatientCancelNoteFromQuery = cancelAndTransferNote.FirstOrDefault(req => req.Status == 7)?.Notes;
-        var AdminCancelNoteFromQuery = cancelAndTransferNote.FirstOrDefault(req => req.Status == 3 && req.Adminid != null && req.Physicianid == null)?.Notes;
-        var PhysicianCancelNoteFromQuery = cancelAndTransferNote.FirstOrDefault(req => req.Status == 3 && req.Adminid == null && req.Physicianid != null)?.Notes;
-        var filteredNotes = cancelAndTransferNote.Where(req => req.Status == 2);
+        var PatientCancelNoteFromQuery = cancelAndTransferNote.FirstOrDefault(req => req.Status == (short)RequestStatusEnum.CancelledByPatient)?.Notes;
+        var AdminCancelNoteFromQuery = cancelAndTransferNote.FirstOrDefault(req => req.Status == (short)RequestStatusEnum.Cancelled && req.Adminid != null && req.Physicianid == null)?.Notes;
+        var PhysicianCancelNoteFromQuery = cancelAndTransferNote.FirstOrDefault(req => req.Status == (short)RequestStatusEnum.Cancelled && req.Adminid == null && req.Physicianid != null)?.Notes;
+        var filteredNotes = cancelAndTransferNote.Where(req => req.Status == (short)RequestStatusEnum.Accepted);
         var sentences = new List<string>();
         foreach (var item in filteredNotes)
         {
@@ -289,15 +164,16 @@ public class AdminDashboardService : IAdminDashboardService
         _dashboardRepo.SaveAdditionalNotes(AdditionalNote, noteId, reqId, reqType);
     }
 
-    public void CancleRequestCase(int reqId, string reason, string additionalNotes)
+    public void CancleRequestCase(int reqId, string reason, string additionalNotes,int UserId,int ReqType = 1)
     {
-        short newStatus = 3;
-        Nullable<int> physicianId = null;
+        short newStatus = (short)RequestStatusEnum.Cancelled;
+        Nullable<int> physicianId = ReqType == 2 ? UserId : null;
+        Nullable<int> AdminId = ReqType == 1 ? UserId : null;
         short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
         int? noteId = _dashboardRepo.GetNoteIdFromRequestId(reqId);
 
         _dashboardRepo.ChangeStatusOfRequest(reqId, newStatus);
-        _dashboardRepo.AddStatusLog(reqId, newStatus, oldStatus, reason, null, physicianId, null);
+        _dashboardRepo.AddStatusLog(reqId, newStatus, oldStatus, reason, AdminId, physicianId, null);
 
         if (noteId != null) _dashboardRepo.SaveAdditionalNotes(additionalNotes, (int)noteId, reqId);
         else _dashboardRepo.SaveAdditionalNotes(additionalNotes, 0, reqId);
@@ -330,7 +206,7 @@ public class AdminDashboardService : IAdminDashboardService
     public async Task BlockRequestCase(int reqId, int? adminId, string reason)
     {
         Request requestData = _dashboardRepo.GetSingleRequestDetails(reqId);
-        short status = 11; //Blocked
+        short status = (short)RequestStatusEnum.Blocked; //Blocked
         _dashboardRepo.ChangeStatusOfRequest(reqId, status);
         _dashboardRepo.SetBlockFieldRequest(reqId);
 
@@ -339,7 +215,7 @@ public class AdminDashboardService : IAdminDashboardService
             Requestid = reqId,
             Phonenumber = requestData.Requestclients.FirstOrDefault()?.Phonenumber,
             Email = requestData.Requestclients.FirstOrDefault()?.Email,
-            Isactive = requestData.Status == 4 || requestData.Status == 5,
+            Isactive = requestData.Status == (short)RequestStatusEnum.MdRequest || requestData.Status == (short)RequestStatusEnum.MDONSite,
             Reason = reason
         };
         _dashboardRepo.AddBlockRequest(newBlockRequest);
@@ -421,14 +297,14 @@ public class AdminDashboardService : IAdminDashboardService
     public void AgreementAccept(int reqId)
     {
         _dashboardRepo.AgreementAccept(reqId);
-        short newStatus = 4;
+        short newStatus = (short)RequestStatusEnum.Accepted;
         short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
         _dashboardRepo.AddStatusLog(reqId, newStatus, oldStatus, null, null, null, null);
     }
     public void AgreementReject(int reqId, string reason)
     {
         _dashboardRepo.AgreementReject(reqId);
-        short newStatus = 7;
+        short newStatus = (short)RequestStatusEnum.CancelledByPatient;
         short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
         _dashboardRepo.AddStatusLog(reqId, newStatus, oldStatus, reason, null, null, null);
     }
@@ -476,7 +352,7 @@ public class AdminDashboardService : IAdminDashboardService
 
     public void CloseCaseSubmit(int reqId)
     {
-        _dashboardRepo.ChangeStatusOfRequest(reqId, 9);
+        _dashboardRepo.ChangeStatusOfRequest(reqId, (short)RequestStatusEnum.Unpaid);
     }
 
 
@@ -546,20 +422,19 @@ public class AdminDashboardService : IAdminDashboardService
 
     public void ConsultEncounter(int reqId)
     {
-        _dashboardRepo.ChangeStatusOfRequest(reqId, 6);
+        _dashboardRepo.ChangeStatusOfRequest(reqId, (short)RequestStatusEnum.Conclude);
         _dashboardRepo.AddCallType(1, reqId); // Consult
     }
 
     public void HouseCallEncounter(int reqId, string status)
     {
-        Console.WriteLine("In Complete" + status + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         if (status == "onroute")
         {
-            _dashboardRepo.ChangeStatusOfRequest(reqId, 5);
+            _dashboardRepo.ChangeStatusOfRequest(reqId, (short)RequestStatusEnum.MDONSite);
         }
         else if (status == "complete")
         {
-            _dashboardRepo.ChangeStatusOfRequest(reqId, 6);
+            _dashboardRepo.ChangeStatusOfRequest(reqId, (short)RequestStatusEnum.Conclude);
         }
         _dashboardRepo.AddCallType(0, reqId); // House-call
     }
@@ -623,7 +498,7 @@ public class AdminDashboardService : IAdminDashboardService
         var existUserData = _patientRequestRepo.FindUserByEmailFromUser(viewRequest.Email);
         var RegionDetails = _patientRequestRepo.GetSingleRegion((int)viewRequest.State);
         int PhyId = 0;
-        if (AccountType == 2)
+        if (AccountType == (short)AccountTypeEnum.Provider)
         {
             Physician physicianData = _providerRepo.GetAllPhysicianList().FirstOrDefault(phy => phy.Aspnetuserid == viewRequest.CreatedById);
             PhyId = physicianData.Id;
@@ -633,7 +508,7 @@ public class AdminDashboardService : IAdminDashboardService
         {
             Userid = existUserData.Id,
             Roomnoofpatient = viewRequest.Roomnoofpatient,
-            Status = (short)(AccountType == 2 ? 2 : 1),
+            Status = (short)(AccountType == (short)AccountTypeEnum.Provider ? (short)RequestStatusEnum.Accepted : (short)RequestStatusEnum.Unassigned ),
             Firstname = CreatedUserDetails?.Firstname ?? "",
             Lastname = CreatedUserDetails?.Lastname ?? "",
             Phonenumber = CreatedUserDetails?.Mobile ?? "",
@@ -664,8 +539,8 @@ public class AdminDashboardService : IAdminDashboardService
 
         if (viewRequest.Symptoms != null && !string.IsNullOrEmpty(viewRequest.Symptoms))
         {
-            if(AccountType==1) _dashboardRepo.SaveAdditionalNotes(viewRequest.Symptoms ?? "", 0, newRequestForExistedUser.Id);
-            else if(AccountType == 2) _dashboardRepo.SaveAdditionalNotes(viewRequest.Symptoms ?? "", 0, newRequestForExistedUser.Id , 2);
+            if(AccountType==(int)AccountTypeEnum.Admin) _dashboardRepo.SaveAdditionalNotes(viewRequest.Symptoms ?? "", 0, newRequestForExistedUser.Id);
+            else if(AccountType == (int)AccountTypeEnum.Provider) _dashboardRepo.SaveAdditionalNotes(viewRequest.Symptoms ?? "", 0, newRequestForExistedUser.Id , 2);
         }
     }
 
@@ -677,7 +552,7 @@ public class AdminDashboardService : IAdminDashboardService
         var RegionDetails = _patientRequestRepo.GetSingleRegion((int)viewRequest.State);
         AdminTable? CreatedUserDetails = _dashboardRepo.GetAdminFromAsp(viewRequest.CreatedById);
         int PhyId = 0;
-        if (AccountType == 2)
+        if (AccountType == (int)AccountTypeEnum.Provider)
         {
             Physician physicianData = _providerRepo.GetAllPhysicianList().FirstOrDefault(phy => phy.Aspnetuserid == viewRequest.CreatedById);
             PhyId = physicianData.Id;
@@ -720,7 +595,7 @@ public class AdminDashboardService : IAdminDashboardService
         {
             Userid = newPatient.Id,
             Roomnoofpatient = viewRequest.Roomnoofpatient,
-            Status = (short)(AccountType == 2 ? 2 : 1),
+            Status = (short)(AccountType == (int)AccountTypeEnum.Provider ? (short)RequestStatusEnum.Accepted : (short)RequestStatusEnum.Unassigned ),
             Firstname = CreatedUserDetails?.Firstname ?? "",
             Lastname = CreatedUserDetails?.Lastname ?? "",
             Phonenumber = CreatedUserDetails?.Mobile ?? "",
@@ -728,7 +603,7 @@ public class AdminDashboardService : IAdminDashboardService
             Requesttypeid = 4,
             Createduserid = viewRequest.CreatedById,
             Confirmationnumber = _patientRequestService.CreateConfirmation(viewRequest.State, viewRequest.Firstname, viewRequest?.Lastname),
-            Physicianid = AccountType == 2 ? PhyId : null
+            Physicianid = AccountType == (int)AccountTypeEnum.Provider ? PhyId : null
         };
         _patientRequestRepo.NewRequestAdd(newRequest);
 
@@ -752,8 +627,8 @@ public class AdminDashboardService : IAdminDashboardService
 
         if (viewRequest.Symptoms != null && !string.IsNullOrEmpty(viewRequest.Symptoms))
         {
-            if(AccountType==1) _dashboardRepo.SaveAdditionalNotes(viewRequest.Symptoms ?? "", 0, newRequest.Id);
-            else if(AccountType == 2) _dashboardRepo.SaveAdditionalNotes(viewRequest.Symptoms ?? "", 0, newRequest.Id , 2);
+            if(AccountType==(int)AccountTypeEnum.Admin) _dashboardRepo.SaveAdditionalNotes(viewRequest.Symptoms ?? "", 0, newRequest.Id);
+            else if(AccountType == (int)AccountTypeEnum.Provider) _dashboardRepo.SaveAdditionalNotes(viewRequest.Symptoms ?? "", 0, newRequest.Id , 2);
         }
 
     }

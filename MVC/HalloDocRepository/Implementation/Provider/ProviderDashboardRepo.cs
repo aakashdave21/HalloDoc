@@ -1,6 +1,7 @@
 using HalloDocRepository.DataModels;
 using Microsoft.EntityFrameworkCore;
 using HalloDocRepository.Provider.Interfaces;
+using HalloDocRepository.Enums;
 
 
 namespace HalloDocRepository.Provider.Implementation;
@@ -19,10 +20,10 @@ public class ProviderDashboardRepo : IProviderDashboardRepo
         int? PhysicianId = _dbContext?.Physicians?.FirstOrDefault(req => req.Aspnetuserid == AspId)?.Id;
         IQueryable<Request> query = status switch
         {
-            "new" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == 1 && req.Isdeleted != true && req.IsBlocked != true),
-            "pending" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == 2 && req.Isdeleted != true && req.IsBlocked != true),
-            "active" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && (req.Status == 4 || req.Status == 5) && req.Isdeleted != true && req.IsBlocked != true),
-            "conclude" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == 6 && req.Isdeleted != true && req.IsBlocked != true),
+            "new" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == (short)RequestStatusEnum.Unassigned && req.Isdeleted != true && req.IsBlocked != true),
+            "pending" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == (short)RequestStatusEnum.Accepted && req.Isdeleted != true && req.IsBlocked != true),
+            "active" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && (req.Status == (short)RequestStatusEnum.MdRequest || req.Status == (short)RequestStatusEnum.MDONSite) && req.Isdeleted != true && req.IsBlocked != true),
+            "conclude" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == (short)RequestStatusEnum.Conclude && req.Isdeleted != true && req.IsBlocked != true),
             _ => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == 1 && req.Isdeleted != true && req.IsBlocked != true),
         };
         if (reqTypeId > 0)
@@ -49,10 +50,10 @@ public class ProviderDashboardRepo : IProviderDashboardRepo
         .GroupBy(req => true) // Group all records into one group
         .Select(group => new
         {
-            NewCount = group.Count(req => req.Physicianid == PhysicianId && req.Status == 1 && req.Isdeleted != true && req.IsBlocked != true),
-            PendingCount = group.Count(req => req.Physicianid == PhysicianId && req.Status == 2 && req.Isdeleted != true && req.IsBlocked != true),
-            ActiveCount = group.Count(req => req.Physicianid == PhysicianId && (req.Status == 4 || req.Status == 5) && req.Isdeleted != true && req.IsBlocked != true),
-            ConcludeCount = group.Count(req => req.Physicianid == PhysicianId && req.Status == 6 && req.Isdeleted != true && req.IsBlocked != true),
+            NewCount = group.Count(req => req.Physicianid == PhysicianId && req.Status == (short)RequestStatusEnum.Unassigned && req.Isdeleted != true && req.IsBlocked != true),
+            PendingCount = group.Count(req => req.Physicianid == PhysicianId && req.Status == (short)RequestStatusEnum.Accepted && req.Isdeleted != true && req.IsBlocked != true),
+            ActiveCount = group.Count(req => req.Physicianid == PhysicianId && (req.Status == (short)RequestStatusEnum.MdRequest || req.Status == (short)RequestStatusEnum.MDONSite) && req.Isdeleted != true && req.IsBlocked != true),
+            ConcludeCount = group.Count(req => req.Physicianid == PhysicianId && req.Status == (short)RequestStatusEnum.Conclude && req.Isdeleted != true && req.IsBlocked != true),
         })
         .Select(result => new Dictionary<string, int>
         {
@@ -69,7 +70,7 @@ public class ProviderDashboardRepo : IProviderDashboardRepo
     public void AcceptRequest(int ReqId){
         Request query = _dbContext.Requests.FirstOrDefault(req => req.Id == ReqId);
         if(query!=null){
-            query.Status = 2;
+            query.Status = (short)RequestStatusEnum.Accepted;
             _dbContext.SaveChanges();
             return;
         }

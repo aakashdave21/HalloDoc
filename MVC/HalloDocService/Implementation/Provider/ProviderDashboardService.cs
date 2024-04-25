@@ -3,6 +3,7 @@ using HalloDocRepository.DataModels;
 using HalloDocService.Provider.Interfaces;
 using HalloDocRepository.Provider.Interfaces;
 using HalloDocRepository.Admin.Interfaces;
+using HalloDocRepository.Enums;
 
 namespace HalloDocService.Provider.Implementation;
 public class ProviderDashboardService : IProviderDashboardService
@@ -50,9 +51,9 @@ public class ProviderDashboardService : IProviderDashboardService
         _providerDashboardRepo.AcceptRequest(ReqId);
     }
     public void SetTransferCase(int ReqId,int PhysicianId, string Description){
-        _dashboardRepo.ChangeStatusOfRequest(ReqId, 1);
+        _dashboardRepo.ChangeStatusOfRequest(ReqId, (short)RequestStatusEnum.Unassigned);
         _dashboardRepo.AddPhysicianToRequest(ReqId, null);
-        _dashboardRepo.AddStatusLog(ReqId,1,2,Description,null,PhysicianId,null,true);
+        _dashboardRepo.AddStatusLog(ReqId,(short)RequestStatusEnum.Unassigned,(short)RequestStatusEnum.Accepted,Description,null,PhysicianId,null,true);
     }
     public bool CheckEncounterFinalized(int ReqId){
         return _providerDashboardRepo.CheckEncounterFinalized(ReqId);
@@ -60,8 +61,8 @@ public class ProviderDashboardService : IProviderDashboardService
 
     public void ConcludeCare(int reqId, string providerNote,int? PhysicianId){
         short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
-        _dashboardRepo.ChangeStatusOfRequest(reqId, 8);
-        _dashboardRepo.AddStatusLog(reqId,8,oldStatus,providerNote,null,PhysicianId,null,false);
+        _dashboardRepo.ChangeStatusOfRequest(reqId, (short)RequestStatusEnum.Closed);
+        _dashboardRepo.AddStatusLog(reqId,(short)RequestStatusEnum.Closed,oldStatus,providerNote,null,PhysicianId,null,false);
     }
 
     public void FinalizeForm(int EncId, int ReqId){
