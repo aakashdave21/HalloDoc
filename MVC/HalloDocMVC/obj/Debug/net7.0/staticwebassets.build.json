@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "AregUjkuH1/oFcnWAuFB39FjDsoZBRxjz18BGdaENaQ=",
+  "Hash": "G+xONWxhSKrETrR5U7h0gX+4QoYaNe7A+SzOmH1it1c=",
   "Source": "HalloDocMVC",
   "BasePath": "_content/HalloDocMVC",
   "Mode": "Default",
@@ -3298,6 +3298,23 @@
       "OriginalItemSpec": "wwwroot\\uploads\\26629c3f-92b3-4d95-8b58-db19e18ac95c_pexels-apunto-group-agencia-de-publicidad-7752846.jpg"
     },
     {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\3482551d-d58b-46a7-9734-855a21f9c2d6_data (1).xlsx",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/3482551d-d58b-46a7-9734-855a21f9c2d6_data (1).xlsx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\3482551d-d58b-46a7-9734-855a21f9c2d6_data (1).xlsx"
+    },
+    {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\391055e1-ec5d-4fe9-bb48-6a01a5f810c7_Untitled.png",
       "SourceId": "HalloDocMVC",
       "SourceType": "Discovered",
@@ -3772,6 +3789,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\ed76153d-68b7-4658-9238-ef0f69346c8c_sem8_report.pdf"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\f52dbc58-2568-423e-89d8-7dd8161863b3_Encounter_3.pdf",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/f52dbc58-2568-423e-89d8-7dd8161863b3_Encounter_3.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\f52dbc58-2568-423e-89d8-7dd8161863b3_Encounter_3.pdf"
     },
     {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\f80cb19d-4281-43fb-bc19-49c159d0e044_data.xlsx",

@@ -73,12 +73,12 @@ public class AdminDashboardRepo : IAdminDashboardRepo
         return CountRequestRow;
     }
 
-    public Request GetViewCaseDetails(int id)
+    public Request? GetViewCaseDetails(int id)
     {
-        return _dbContext.Requests.Include(item => item.Requestclients)
+        return _dbContext != null ? _dbContext.Requests.Include(item => item.Requestclients)
                                         .ThenInclude(req => req.Region)
                                     .Include(req => req.Requesttype)
-                                    .FirstOrDefault(req => req.Id == id);
+                                    .FirstOrDefault(req => req.Id == id) : null;
     }
 
     public Requestnote GetViewNotesDetails(int reqId)
@@ -97,7 +97,7 @@ public class AdminDashboardRepo : IAdminDashboardRepo
         return cancelNotes;
 
     }
-    public void SaveAdditionalNotes(string AdditionalNote, int noteId, int reqId, int reqType = 1)
+    public void SaveAdditionalNotes(string AdditionalNote, int noteId, int reqId, int reqType = (int)AccountTypeEnum.Admin)
     {
         if (noteId == 0)
         {
@@ -105,8 +105,8 @@ public class AdminDashboardRepo : IAdminDashboardRepo
             Requestnote reqNote = new()
             {
                 Requestid = reqId,
-                Adminnotes = reqType == 1 ? AdditionalNote : "",
-                Physiciannotes = reqType == 2 ? AdditionalNote : ""
+                Adminnotes = reqType == (int)AccountTypeEnum.Admin ? AdditionalNote : "",
+                Physiciannotes = reqType == (int)AccountTypeEnum.Provider ? AdditionalNote : ""
                 //   Createdby = AdminId <---- Need To Added Admin Id 
             };
             _dbContext?.Requestnotes.Add(reqNote);
@@ -117,11 +117,11 @@ public class AdminDashboardRepo : IAdminDashboardRepo
             var notesData = _dbContext.Requestnotes.FirstOrDefault(req => req.Id == noteId);
             if (notesData != null)
             {
-                if (reqType == 1)
+                if (reqType == (int)AccountTypeEnum.Admin)
                 {
                     notesData.Adminnotes = AdditionalNote;
                 }
-                else if (reqType == 2)
+                else if (reqType == (int)AccountTypeEnum.Provider)
                 {
                     notesData.Physiciannotes = AdditionalNote;
                 }

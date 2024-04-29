@@ -35,10 +35,14 @@ public class DashboardController : Controller
         _patientRequestService = patientRequestService;
     }
 
-
-    public IActionResult Index(string status)
+    [HttpGet]
+    [Route("/admin")]
+    [Route("/admin/dashboard/")]
+    [Route("/admin/dashboard/Index")]
+    public IActionResult Index()
     {
         DashboardRequestQuery dashboardRequestQuery = new();
+        string? status = Request.Query["status"];
         string? StatusVal = string.IsNullOrEmpty(status) ? "new" : status;
         ViewBag.statusType = StatusVal;
         dashboardRequestQuery.Status = StatusVal;
@@ -748,8 +752,8 @@ public class DashboardController : Controller
         try
         {
             string CreateServiceLink = Url.Action("Patient", "Request", new { area = "Patient" }, Request.Scheme);
-            string rcvrMail = "aakashdave21@gmail.com";
-            string message = $"Please click the following link to create new Request: <a href='{SendCreationLink}'>{SendCreationLink}</a>";
+            string? rcvrMail = "aakashdave21@gmail.com";
+            string message = $"Please click the following link to create a new Request: <a href=\"{CreateServiceLink}\">{CreateServiceLink}</a>";
             _utilityService.EmailSend("aakashdave21@gmail.com", message, "Create Your Request.", null, 3, null, null, null);
             TempData["success"] = "Account Creation Link Send !";
             return RedirectToAction("Index");

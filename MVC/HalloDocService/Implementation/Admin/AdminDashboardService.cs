@@ -90,31 +90,31 @@ public class AdminDashboardService : IAdminDashboardService
     }
     public ViewCaseViewModel GetViewCaseDetails(int id)
     {
-        Request resData = _dashboardRepo.GetViewCaseDetails(id);
+        Request? resData = _dashboardRepo.GetViewCaseDetails(id);
         DateTime date = DateTime.ParseExact(resData.Requestclients.FirstOrDefault()?.Strmonth, "MMMM", CultureInfo.InvariantCulture);
-        int year = resData.Requestclients.FirstOrDefault().Intyear ?? 0000;
-        int day = resData.Requestclients.FirstOrDefault().Intdate ?? 1;
+        int year = resData?.Requestclients?.FirstOrDefault()?.Intyear ?? 0000;
+        int day = resData?.Requestclients?.FirstOrDefault()?.Intdate ?? 1;
         date = new DateTime(year, date.Month, day);
         ViewCaseViewModel viewCase = new()
         {
             Id = resData.Id,
-            Firstname = resData.Requestclients?.FirstOrDefault()?.Firstname,
-            Lastname = resData.Requestclients?.FirstOrDefault()?.Lastname,
-            Email = resData.Requestclients?.FirstOrDefault()?.Email,
-            ConfirmationNumber = resData.Confirmationnumber ?? "No Confirmation Number",
-            Phone = resData.Requestclients?.FirstOrDefault()?.Phonenumber,
-            PropertyName = resData.PropertyName,
-            Room = resData.Roomnoofpatient,
+            Firstname = resData?.Requestclients?.FirstOrDefault()?.Firstname,
+            Lastname = resData?.Requestclients?.FirstOrDefault()?.Lastname,
+            Email = resData?.Requestclients?.FirstOrDefault()?.Email,
+            ConfirmationNumber = resData?.Confirmationnumber ?? "No Confirmation Number",
+            Phone = resData?.Requestclients?.FirstOrDefault()?.Phonenumber,
+            PropertyName = resData?.PropertyName,
+            Room = resData?.Roomnoofpatient,
             DateOfBirth = date.ToString("yyyy-MM-dd"),
-            Region = resData.Requestclients.FirstOrDefault()?.Region?.Name ?? " ",
-            Symptoms = resData.Symptoms ?? resData.Requestclients?.FirstOrDefault()?.Notes,
+            Region = resData?.Requestclients?.FirstOrDefault()?.Region?.Name ?? " ",
+            Symptoms = resData?.Symptoms ?? resData?.Requestclients?.FirstOrDefault()?.Notes,
             RequestType = resData?.Requesttype?.Name
         };
 
         return viewCase;
     }
 
-    public ViewNotesViewModel GetViewNotesDetails(int reqId, int reqType = 1)
+    public ViewNotesViewModel GetViewNotesDetails(int reqId, int reqType = (int)AccountTypeEnum.Admin)
     {
         var reqData = _dashboardRepo.GetViewNotesDetails(reqId);
         var patientNote = _dashboardRepo.GetPatientNoteDetails(reqId);
@@ -148,7 +148,7 @@ public class AdminDashboardService : IAdminDashboardService
                 ReqId = reqId,
                 AdminNote = reqData?.Adminnotes ?? "",
                 PhysicianNote = reqData?.Physiciannotes ?? "",
-                AdditionalNote = reqType == 1 ? reqData?.Adminnotes ?? "" : reqData?.Physiciannotes ?? "",
+                AdditionalNote = reqType == (int)AccountTypeEnum.Admin ? reqData?.Adminnotes ?? "" : reqData?.Physiciannotes ?? "",
                 PatientNote = patientNote?.Notes ?? "",
                 PatientCancelNote = PatientCancelNoteFromQuery ?? "",
                 AdminCancelNote = AdminCancelNoteFromQuery ?? "",
@@ -164,11 +164,11 @@ public class AdminDashboardService : IAdminDashboardService
         _dashboardRepo.SaveAdditionalNotes(AdditionalNote, noteId, reqId, reqType);
     }
 
-    public void CancleRequestCase(int reqId, string reason, string additionalNotes,int UserId,int ReqType = 1)
+    public void CancleRequestCase(int reqId, string reason, string additionalNotes,int UserId,int ReqType = (int)AccountTypeEnum.Admin)
     {
         short newStatus = (short)RequestStatusEnum.Cancelled;
-        Nullable<int> physicianId = ReqType == 2 ? UserId : null;
-        Nullable<int> AdminId = ReqType == 1 ? UserId : null;
+        Nullable<int> physicianId = ReqType == (int)AccountTypeEnum.Provider ? UserId : null;
+        Nullable<int> AdminId = ReqType == (int)AccountTypeEnum.Provider ? UserId : null;
         short oldStatus = _dashboardRepo.GetStatusOfRequest(reqId);
         int? noteId = _dashboardRepo.GetNoteIdFromRequestId(reqId);
 
@@ -332,10 +332,10 @@ public class AdminDashboardService : IAdminDashboardService
         {
             ReqId = PatientData.Id,
             PatientId = PatientData.Requestclients.FirstOrDefault().Id,
-            Firstname = PatientData.Requestclients.FirstOrDefault().Firstname,
-            Lastname = PatientData.Requestclients.FirstOrDefault().Lastname,
-            Email = PatientData.Requestclients.FirstOrDefault().Email,
-            Phone = PatientData.Requestclients.FirstOrDefault().Phonenumber,
+            Firstname = PatientData?.Requestclients?.FirstOrDefault()?.Firstname,
+            Lastname = PatientData?.Requestclients?.FirstOrDefault()?.Lastname,
+            Email = PatientData?.Requestclients?.FirstOrDefault()?.Email,
+            Phone = PatientData?.Requestclients?.FirstOrDefault()?.Phonenumber,
             DateOfBirth = dt.ToString("yyyy-MM-dd"),
             documentList = viewModel
         };
@@ -500,7 +500,7 @@ public class AdminDashboardService : IAdminDashboardService
         int PhyId = 0;
         if (AccountType == (short)AccountTypeEnum.Provider)
         {
-            Physician physicianData = _providerRepo.GetAllPhysicianList().FirstOrDefault(phy => phy.Aspnetuserid == viewRequest.CreatedById);
+            Physician? physicianData = _providerRepo.GetAllPhysicianList().FirstOrDefault(phy => phy.Aspnetuserid == viewRequest.CreatedById);
             PhyId = physicianData.Id;
         }
         AdminTable? CreatedUserDetails = _dashboardRepo.GetAdminFromAsp(viewRequest.CreatedById);
@@ -528,7 +528,7 @@ public class AdminDashboardService : IAdminDashboardService
             Email = viewRequest.Email,
             Street = viewRequest.Street,
             City = viewRequest.City,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = viewRequest.State,
             Zipcode = viewRequest.Zipcode,
             Strmonth = DateOnly.Parse(viewRequest.Birthdate).ToString("MMMM"),
@@ -549,12 +549,12 @@ public class AdminDashboardService : IAdminDashboardService
         string email = viewRequest.Email;
         string[] parts = email.Split('@');
         string userName = parts[0];
-        var RegionDetails = _patientRequestRepo.GetSingleRegion((int)viewRequest.State);
+        Region? RegionDetails = _patientRequestRepo.GetSingleRegion((int)viewRequest.State);
         AdminTable? CreatedUserDetails = _dashboardRepo.GetAdminFromAsp(viewRequest.CreatedById);
         int PhyId = 0;
         if (AccountType == (int)AccountTypeEnum.Provider)
         {
-            Physician physicianData = _providerRepo.GetAllPhysicianList().FirstOrDefault(phy => phy.Aspnetuserid == viewRequest.CreatedById);
+            Physician? physicianData = _providerRepo.GetAllPhysicianList().FirstOrDefault(phy => phy.Aspnetuserid == viewRequest.CreatedById);
             PhyId = physicianData.Id;
         }
         var newUser = new Aspnetuser
@@ -616,7 +616,7 @@ public class AdminDashboardService : IAdminDashboardService
             Email = viewRequest.Email,
             Street = viewRequest.Street,
             City = viewRequest.City,
-            State = RegionDetails.Name,
+            State = RegionDetails?.Name,
             Regionid = viewRequest.State,
             Zipcode = viewRequest.Zipcode,
             Strmonth = DateOnly.Parse(viewRequest.Birthdate).ToString("MMMM"),

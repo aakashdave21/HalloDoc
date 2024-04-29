@@ -9,14 +9,14 @@ public interface IAdminDashboardRepo
 {
    (IEnumerable<Request> requests, int totalCount) GetDashboardRequests(DashboardRequestQuery Params);
    Dictionary<string,int> CountRequestByType();
-   Request GetViewCaseDetails(int id);
+   Request? GetViewCaseDetails(int id);
 
    Requestnote GetViewNotesDetails(int reqId);
    Requestclient GetPatientNoteDetails(int reqId);
    IQueryable<Requeststatuslog> GetAllCancelNotes(int reqId);
    void SaveAdditionalNotes(string AdditionalNote,int noteId,int reqId, int reqType=1);
    void ChangeStatusOfRequest(int reqId,short newStatus);
-   void AddStatusLog(int reqId,short newStatus,short oldStatus,string reason,int? adminId=null,int? physicianId=null,int? transToPhyId=null, bool TransToAdmin = false);
+   void AddStatusLog(int reqId,short newStatus,short oldStatus,string? reason,int? adminId=null,int? physicianId=null,int? transToPhyId=null, bool TransToAdmin = false);
    short GetStatusOfRequest(int reqId);
    int? GetNoteIdFromRequestId(int reqId);
 

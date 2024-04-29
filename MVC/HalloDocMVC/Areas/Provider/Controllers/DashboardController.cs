@@ -699,7 +699,7 @@ public class DashboardController : Controller
             int? PhyId = int.Parse(User.FindFirstValue("UserId"));
             _providerService.ConcludeCare(RequestId, ProviderNote, PhyId);
             TempData["success"] = "Request Concluded";
-            return RedirectToAction("ConcludeCare", new { RequestId });
+            return RedirectToAction("Index");
         }
         catch (Exception)
         {

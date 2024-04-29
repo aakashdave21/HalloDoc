@@ -24,7 +24,7 @@ public class ProviderDashboardRepo : IProviderDashboardRepo
             "pending" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == (short)RequestStatusEnum.Accepted && req.Isdeleted != true && req.IsBlocked != true),
             "active" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && (req.Status == (short)RequestStatusEnum.MdRequest || req.Status == (short)RequestStatusEnum.MDONSite) && req.Isdeleted != true && req.IsBlocked != true),
             "conclude" => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == (short)RequestStatusEnum.Conclude && req.Isdeleted != true && req.IsBlocked != true),
-            _ => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == 1 && req.Isdeleted != true && req.IsBlocked != true),
+            _ => _dbContext.Requests.Include(req => req.Requestclients).Include(req=>req.Encounterform).Where(req => req.Physicianid == PhysicianId && req.Status == (short)RequestStatusEnum.Unassigned && req.Isdeleted != true && req.IsBlocked != true),
         };
         if (reqTypeId > 0)
         {

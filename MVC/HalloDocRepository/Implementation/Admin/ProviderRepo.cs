@@ -13,7 +13,7 @@ public class ProviderRepo : IProviderRepo
         _dbContext = dbContext;
     }
 
-    public (IEnumerable<Physician>, int) GetAllPhysician(bool order = true, string? regionId = null,int PageNum = 1 ,int PageSize = 5)
+    public (IEnumerable<Physician>, int) GetAllPhysician(bool order = true, string? regionId = null,int PageNum = (int)AccountTypeEnum.Admin ,int PageSize = 5)
     {
         IQueryable<Physician> query = _dbContext.Physicians.Include(phy => phy.Role).Include(phy => phy.Aspnetuser).Where(phy => phy.Isdeleted != true);
         if (!string.IsNullOrEmpty(regionId))
@@ -42,8 +42,6 @@ public class ProviderRepo : IProviderRepo
     }
     public void UpdateNotification(List<string> stopNotificationIds, List<string> startNotificationIds)
     {
-        //startnotificationId -> true
-        // stopNotificationId -> false
         var stopIds = stopNotificationIds.Select(int.Parse).ToList();
         _dbContext.Physicians
             .Where(physician => stopIds.Contains(physician.Id))
@@ -162,14 +160,14 @@ public class ProviderRepo : IProviderRepo
         Physician? physicianData = _dbContext.Physicians.FirstOrDefault(phy => phy.Id == Id);
         if (physicianData != null)
         {
-            Physicianfile PhysiciansFile = _dbContext.Physicianfiles.FirstOrDefault(file => file.Physicianid == Id);
+            Physicianfile? PhysiciansFile = _dbContext?.Physicianfiles?.FirstOrDefault(file => file.Physicianid == Id);
             if (PhysiciansFile == null)
             {
                 PhysiciansFile = new Physicianfile
                 {
                     Physicianid = Id
                 };
-                _dbContext.Physicianfiles.Add(PhysiciansFile);
+                _dbContext?.Physicianfiles.Add(PhysiciansFile);
             }
             switch (FileId)
             {
@@ -195,7 +193,7 @@ public class ProviderRepo : IProviderRepo
                     break;
                 default: throw new Exception();
             }
-            _dbContext.SaveChanges();
+            _dbContext?.SaveChanges();
             return;
         }
         throw new Exception("Physician not found.");

@@ -17,10 +17,11 @@ public class ProfileRepo : IProfileRepo
     }
 
     public IEnumerable<Role> GetAllRoles(int AccountType=-1){
+        Console.WriteLine(AccountType + "<<<<<<<<<<<<<<<");
         if(AccountType == -1){
-            return _dbContext.Roles;
+            return _dbContext.Roles.Where(role => role.Isdeleted!=true);
         }else{
-            return _dbContext.Roles.Where(role => role.Accounttype == AccountType);
+            return _dbContext.Roles.Where(role => role.Accounttype == AccountType && role.Isdeleted != true);
         }
     }
 

@@ -2,6 +2,7 @@
 using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
 using HalloDocRepository.CustomModels;
+using HalloDocRepository.Enums;
 
 namespace HalloDocService.Admin.Interfaces;
 public interface IAdminDashboardService
@@ -10,9 +11,9 @@ public interface IAdminDashboardService
     AdminDashboardViewModel GetDashboardRequests(DashboardRequestQuery Params);
     Dictionary<string,int> CountRequestByType();
     ViewCaseViewModel GetViewCaseDetails(int id);
-    ViewNotesViewModel GetViewNotesDetails(int reqId, int reqType = 1);
+    ViewNotesViewModel GetViewNotesDetails(int reqId, int reqType =(int)AccountTypeEnum.Admin);
     void SaveAdditionalNotes(string? AdditionalNote,int noteId,int reqId, int reqType);
-    void CancleRequestCase(int reqId,string reason,string additionalNotes,int AspAdminId, int ReqType = 1);
+    void CancleRequestCase(int reqId,string reason,string additionalNotes,int AspAdminId, int ReqType = (int)AccountTypeEnum.Admin);
 
     List<Region> GetRegions();
     Task<IEnumerable<Casetag>> GetCaseTag();

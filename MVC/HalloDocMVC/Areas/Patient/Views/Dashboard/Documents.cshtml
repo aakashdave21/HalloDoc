@@ -19,7 +19,6 @@
                     <small class="text-secondary">Patient Name</small>
                     <div class="d-flex flex-sm-row flex-column align-items-sm-center justify-content-start gap-2">
                         <h4 class="patient-name fw-bold">@Model.FirstOrDefault()?.PatientName</h4>
-                        <p>(MD56465498456549874654)</p>
                     </div>
                     <small class="text-secondary">Check here for any files that you and doctors of your subsequents requestors has attached for review.</small>
 
@@ -56,7 +55,7 @@
                                             <tr class="d-md-table-row d-flex flex-column">
                                                 <td><input type="checkbox" id="@item.DocumentId" value="@item.FileName" class="form-check-input selectRow"></td>
                                                 <td>
-                                                    @{var filename = string.Join("_",  @item.FileName.Split("_").Skip(1));}
+                                                    @{var filename = item.FileName != null ? string.Join("_", item.FileName.Split("_").Skip(1)): null; }
                                                     @filename
                                                 </td>
                                                 <td>@item.UploaderName</td>

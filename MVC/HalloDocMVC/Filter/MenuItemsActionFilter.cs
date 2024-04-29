@@ -23,32 +23,35 @@ public class MenuItemsActionFilter : IAsyncActionFilter
         string? controllerName = context.RouteData.Values["controller"]?.ToString();
         string? actionName = context.RouteData.Values["action"]?.ToString();
         IEnumerable<HeaderMenu> AllMenuList = _accessService.GetAllMenuList();
-        if (httpContext.User.Identity.IsAuthenticated && (areaName?.ToLower() == "admin"))
+        if (httpContext.User.Identity != null && httpContext.User.Identity.IsAuthenticated && (areaName?.ToLower() == "admin"))
         {
             if (httpContext.User.HasClaim(c => c.Type == "AspUserId"))
             {
-                int aspUserId = int.Parse(httpContext.User.FindFirstValue("AspUserId"));
-                IEnumerable<HeaderMenu>? menuItems = _adminDashboardService.GetRoleOfUser(aspUserId);
-                httpContext.Items["MenuItems"] = menuItems;
-                if(areaName==null){
-                    await next();
-                    return;
-                }
-                if (!MenuItemsContainItem(AllMenuList, menuItems, areaName, controllerName, actionName))
-                {
-                    context.Result = new RedirectResult("/Account/AccessDenied");
-                    return;
+                var aspUserIdString = httpContext.User.FindFirstValue("AspUserId");
+                if (aspUserIdString != null && int.TryParse(aspUserIdString, out var aspUserId))
+                {     
+                    IEnumerable<HeaderMenu>? menuItems = _adminDashboardService.GetRoleOfUser(aspUserId);
+                    httpContext.Items["MenuItems"] = menuItems;
+                    if(areaName==null){
+                        await next();
+                        return;
+                    }
+                    if (!MenuItemsContainItem(AllMenuList, menuItems, areaName, controllerName, actionName))
+                    {
+                        context.Result = new RedirectResult("/Account/AccessDenied");
+                        return;
+                    }
                 }
             }
         }
         await next();
     }
 
-    private static bool MenuItemsContainItem(IEnumerable<HeaderMenu> AllMenuList,IEnumerable<HeaderMenu> menuItems, string areaName, string controllerName, string actionName)
+    private static bool MenuItemsContainItem(IEnumerable<HeaderMenu> AllMenuList,IEnumerable<HeaderMenu>? menuItems, string areaName, string? controllerName, string? actionName)
     {
         int? AccountType = areaName.ToLower() == "admin" ? 1 : areaName.ToLower() == "provider" ? 2 : 3;
         bool isInAllMenuList = AllMenuList.Any(menu => menu.AccountType == AccountType && menu.Name == controllerName);
-        bool isInAssignedMenuList = menuItems.Any(item =>
+        bool isInAssignedMenuList = menuItems!=null && menuItems.Any(item =>
             item.AccountType == AccountType &&
             item.Name == controllerName);
         if(isInAllMenuList==true && isInAssignedMenuList==false){
