@@ -57,12 +57,14 @@ public class InvoicingController : Controller
                 };
                 _providerInvoicingService.AddUpdateTimeSheet(timeSheet);
             }
-            return RedirectToAction("Index");
+            TempData["success"] = "TimeSheet Updated Successfully";
+
+            return RedirectToAction("Timesheet", new { startdate = timesheetDetailsList?.First()?.Shiftdate?.ToString("dd/MM/yyyy"), endDate = timesheetDetailsList?.Last()?.Shiftdate?.ToString("dd/MM/yyyy") });
         }
         catch (Exception)
         {
             TempData["error"] = "Internal Server Error";
-            return RedirectToAction("Index");
+            return RedirectToAction("Timesheet", new { startdate = timesheetDetailsList?.First()?.Shiftdate?.ToString("dd/MM/yyyy"), endDate = timesheetDetailsList?.Last()?.Shiftdate?.ToString("dd/MM/yyyy") });
         }
     }
 
@@ -74,6 +76,21 @@ public class InvoicingController : Controller
             return Ok(_providerInvoicingService.CheckFinalizeAndGetData(StartDate, EndDate));
         }
         catch (Exception)
+        {
+            TempData["error"] = "Internal Server Error";
+            return RedirectToAction("Index");
+        }
+    }
+
+    [HttpPost]
+    public IActionResult Finalize(int Id){
+        try
+        {
+            _providerInvoicingService.Finalize(Id);
+            TempData["success"] = "Timesheet Finialized Successfully";
+            return RedirectToAction("Index");
+        }
+        catch (System.Exception)
         {
             TempData["error"] = "Internal Server Error";
             return RedirectToAction("Index");

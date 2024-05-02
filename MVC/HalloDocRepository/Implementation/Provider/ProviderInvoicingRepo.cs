@@ -49,4 +49,14 @@ public class ProviderInvoicingRepo : IProviderInvoicingRepo
         }
         throw new RecordNotFoundException();
     }
+
+    public void Finalize(int Id){
+        Timesheet? isTimeSheetExits = _dbContext.Timesheets.FirstOrDefault(ts => ts.Id == Id);
+        if(isTimeSheetExits!=null){
+            isTimeSheetExits.Isfinalized = true;
+            _dbContext.SaveChanges();
+            return;
+        }
+        throw new RecordNotFoundException();
+    }
 }

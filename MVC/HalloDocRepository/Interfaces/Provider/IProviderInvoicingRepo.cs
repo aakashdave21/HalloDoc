@@ -8,4 +8,5 @@ public interface IProviderInvoicingRepo
     void AddTimeSheetDetails(List<Timesheetdetail> newTimesheetsDetails);
     Timesheetdetail? GetTimesheetDetailById(int Id);
     void UpdateTimesheetDetail(Timesheetdetail updatedTimeSheet);
+    void Finalize(int Id);
 }

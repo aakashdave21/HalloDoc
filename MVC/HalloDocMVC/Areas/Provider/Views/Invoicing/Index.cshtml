@@ -11,7 +11,7 @@
                 <div class="form-floating">
                     <select class="form-select" aria-label="Large select example" id="bi-weekly-date-range"
                         placeholder="Date-Range">
-                        <option selected disabled>Choose Date Range</option>
+                        <option value="" selected disabled>Choose Date Range</option>
                     </select>
                     <label for="Status">Select Date Range</label>
                 </div>
@@ -88,7 +88,7 @@
         document.getElementById("bi-weekly-date-range").appendChild(option);
     }
 
-    $("#bi-weekly-date-range").change(function () {
+    function loadOptions (){
         const biWeeklyDateRange = $("#bi-weekly-date-range").val();
         if (biWeeklyDateRange == "Choose Date Range") {
             $(".text-danger").html("Please select a date range.");
@@ -100,35 +100,37 @@
 
         sendAjaxRequest('/Provider/Invoicing/CheckForFinalize', 'GET', { startDate, endDate }, "application/x-www-form-urlencoded; charset=UTF-8", true)
             .then(function (response) {
-                console.log(response);
-                if ((response.id == 0 && response.startdate == null && response.enddate == null) || response.isfinalized == false) {
-                    $("#timesheetDetailsRow").empty();
-                    $("#no-record-text").css('display','block');
-                    $("#render-timesheet-table").css('display','none');
-                    $("#inputStartDate").val(startDate);
-                    $("#inputEndDate").val(endDate);
+                $("#timesheetDetailsRow").empty();
+                $("#inputStartDate").val(startDate);
+                $("#inputEndDate").val(endDate);
+                if (response.id == 0 && response.startdate == null && response.enddate == null) {
+                    $("#no-record-text").css('display', 'block');
+                    $("#render-timesheet-table").css('display', 'none');
                     $("#finalize-btn").css('display', 'block');
-                    if (!(response.id == 0 && response.startdate == null && response.enddate == null)) {
-                        $("#no-record-text").css('display','none');
-                        $("#render-timesheet-table").css('display','flex');
-                        response.timesheetdetailsList.forEach(function (item) {
-                            var newRow = $("<tr>");
-                            newRow.append("<td>" + new Date(item.shiftdate).toLocaleDateString() + "</td>");
-                            newRow.append("<td>" + '-' + "</td>");
-                            newRow.append("<td>" + '-' + "</td>");
-                            newRow.append("<td>" + item.housecall + "</td>");
-                            newRow.append("<td>" + '-' + "</td>");
-                            newRow.append("<td>" + item.phoneconsult + "</td>");
-                            newRow.append("<td>" + '-' + "</td>");
-                            newRow.append("<td>" + '-' + "</td>");
-                            $("#timesheetDetailsRow").append(newRow);
-                        });
-
-                    }
+                } else {
+                    $("#no-record-text").css('display', 'none');
+                    $("#render-timesheet-table").css('display', 'flex');
+                    $("#finalize-btn").css('display', response.isfinalized ? 'none' : 'block');
+                    response.timesheetdetailsList.forEach(function (item) {
+                        var newRow = $("<tr>");
+                        newRow.append("<td>" + new Date(item.shiftdate).toLocaleDateString() + "</td>");
+                        newRow.append("<td>" + '-' + "</td>");
+                        newRow.append("<td>" + '-' + "</td>");
+                        newRow.append("<td>" + item.housecall + "</td>");
+                        newRow.append("<td>" + '-' + "</td>");
+                        newRow.append("<td>" + item.phoneconsult + "</td>");
+                        newRow.append("<td>" + '-' + "</td>");
+                        newRow.append("<td>" + '-' + "</td>");
+                        $("#timesheetDetailsRow").append(newRow);
+                    });
                 }
             }).catch(function (error) {
                 ToastError("Internal Server Error");
             })
 
-    })
+    }
+
+    
+    $("#bi-weekly-date-range").change(loadOptions);
+    
 </script>

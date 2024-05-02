@@ -13,7 +13,8 @@
 </style>
 <main class="container-sm mt-sm-5 mb-5">
     <div class="d-flex justify-content-end">
-        <a asp-area="Provider" asp-controller="Invoicing" asp-action="Index" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+        <a asp-area="Provider" asp-controller="Invoicing" asp-action="Index" class="btn btn-sm back-link"><i
+                class="fa-solid fa-chevron-left"></i> Back</a>
     </div>
     <div class="border p-4 mt-3 mb-3 rounded shadow">
         <form id="timesheetForm" method="post" asp-area="Provider" asp-controller="Invoicing"
@@ -38,7 +39,8 @@
                             <tr>
                                 <td>
                                     @{
-                                        string? ShiftDateValue = item.Shiftdate.HasValue ? item.Shiftdate.Value.ToString("dd/MM/yyyy") : "";
+                                        string? ShiftDateValue = item.Shiftdate.HasValue ?
+                                        item.Shiftdate.Value.ToString("dd/MM/yyyy") : "";
                                     }
                                     @ShiftDateValue
                                     <input type="hidden" name="TimesheetdetailsList[@i].Shiftdate" value=@item.Shiftdate>
@@ -49,7 +51,8 @@
                                         value="@item.Shifthours" oninput="restrictInput(this)"></td>
 
                                 <td class="ps-5">
-                                    <input class="form-check-input" type="checkbox" asp-for="@Model.TimesheetdetailsList[i].Isweekend">
+                                    <input class="form-check-input" type="checkbox"
+                                        asp-for="@Model.TimesheetdetailsList[i].Isweekend">
                                 </td>
 
                                 <td><input class="form-control" type="text" name="TimesheetdetailsList[@i].Housecall"
@@ -69,14 +72,11 @@
         </form>
     </div>
     <div class="d-flex justify-content-between flex-wrap">
-        <button class="btn secondary-theme-btn">
+        <button class="btn secondary-theme-btn" onclick="toggleTable()" id="toggle-btn">
             Add Receipts
         </button>
-        <button class="btn secondary-theme-btn">
-            Finalize
-        </button>
     </div>
-    <div class="border p-4 mt-5 mb-3 rounded shadow">
+    <div class="border p-4 mt-5 mb-3 rounded shadow" id="reimbursementSection" style="display: none;">
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -89,11 +89,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.TimesheetreimbursementsList)
+                    <input type="hidden" name="TimeSheetId" value="@Model.Id">
+                    @for (int i = 0; i < Model.TimesheetreimbursementsList.Count(); i++)
                     {
+                        var item = Model.TimesheetreimbursementsList[i];
                         <tr>
-                            <td>@(item.Shiftdate.HasValue ? item.Shiftdate.Value.ToString("dd/MM/yyyy") : "")</td>
-                            <td><input class="form-control" type="text" value="@item.Item"></td>
+                            <td>
+                                @{
+                                    string? ShiftDateValue = item.Shiftdate.HasValue ?
+                                    item.Shiftdate.Value.ToString("dd/MM/yyyy") : "";
+                                }
+                                @ShiftDateValue
+                                <input type="hidden" name="TimesheetreimbursementsList[@i].Shiftdate" value=@item.Shiftdate>
+                                <input type="hidden" name="TimesheetreimbursementsList[@i].Id" value="@item.Id">
+                            </td>
+                            <td><input class="form-control" type="text" name="TimesheetreimbursementsList[@i].Items"
+                                    value="@item.Item"></td>
                             <td><input class="form-control" type="text" value="@item.Amount" oninput="restrictInput(this)">
                             </td>
                             <td><input type="file" class="form-control" name="file"></td>
@@ -115,6 +126,18 @@
             </button>
         </div>
     </div>
+    @if (@Model.Id != 0)
+    {
+        <div class="d-flex justify-content-end flex-wrap mt-5">
+            @using (Html.BeginForm("Finalize", "Invoicing", new { area = "Provider" }, FormMethod.Post))
+            {
+                <input type="hidden" asp-for="@Model.Id" />
+                <button class="btn btn-purple">
+                    Finalize
+                </button>
+            }
+        </div>
+    }
 </main>
 
 <script>
@@ -123,6 +146,17 @@
         var value = inputField.value.trim() === "" ? 0 : parseInt(inputField.value);
         if (value < 0) {
             inputField.value = "0";
+        }
+    }
+
+    function toggleTable() {
+        var table = document.getElementById("reimbursementSection");
+        if (table.style.display === "none") {
+            $("#toggle-btn").text("Hide Receipts");
+            table.style.display = "block";
+        } else {
+            $("#toggle-btn").text("Add Receipts");
+            table.style.display = "none";
         }
     }
 </script>

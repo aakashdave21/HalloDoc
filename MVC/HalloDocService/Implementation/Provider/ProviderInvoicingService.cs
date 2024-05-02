@@ -57,33 +57,26 @@ public class ProviderInvoicingService : IProviderInvoicingService
     {
         DateTime startDate = DateTime.ParseExact(StartDate, "dd/MM/yyyy", null);
         DateTime endDate = DateTime.ParseExact(EndDate, "dd/MM/yyyy", null);
-        Timesheet? TimeSheetData = _providerInvoicingRepo.CheckFinalizeAndGetData(startDate, endDate);
-        if (TimeSheetData == null)
+        Timesheet? timeSheetData = _providerInvoicingRepo.CheckFinalizeAndGetData(startDate, endDate);
+        List<DateTime> datesInRange = GetDatesInRange(startDate, endDate);
+
+        TimeSheetViewModel timeSheetViewModel = new()
         {
-            List<DateTime> datesInRange = GetDatesInRange(startDate, endDate);
-            TimeSheetViewModel timeSheetViewModel = new()
-            {
-                TimesheetdetailsList = datesInRange.Select(date => new TimeSheetDetailsView()
-                {
-                    Shiftdate = date,
-                }).ToList(),
-                TimesheetreimbursementsList = datesInRange.Select(date => new TimesheetreimbursementView()
-                {
-                    Shiftdate = date,
-                }).ToList()
-            };
-            return timeSheetViewModel;
-        }
-        else
+            TimesheetdetailsList = datesInRange.Select(date => new TimeSheetDetailsView { Shiftdate = date }).ToList(),
+            TimesheetreimbursementsList = datesInRange.Select(date => new TimesheetreimbursementView { Shiftdate = date }).ToList()
+        };
+
+        if (timeSheetData != null)
         {
-            TimeSheetViewModel timeSheetViewModel = new()
+            timeSheetViewModel.Id = timeSheetData.Id;
+            timeSheetViewModel.Physicianid = timeSheetData.Physicianid;
+            timeSheetViewModel.Startdate = timeSheetData.Startdate;
+            timeSheetViewModel.Enddate = timeSheetData.Enddate;
+            timeSheetViewModel.Isfinalized = timeSheetData.Isfinalized;
+
+            if (timeSheetData.Timesheetdetails.Any(tsd => tsd.Timesheetid == timeSheetData.Id))
             {
-                Id = TimeSheetData.Id,
-                Physicianid = TimeSheetData.Physicianid,
-                Startdate = TimeSheetData.Startdate,
-                Enddate = TimeSheetData.Enddate,
-                Isfinalized = TimeSheetData.Isfinalized,
-                TimesheetdetailsList = TimeSheetData.Timesheetdetails.Select(tsd => new TimeSheetDetailsView()
+                timeSheetViewModel.TimesheetdetailsList = timeSheetData.Timesheetdetails.Select(tsd => new TimeSheetDetailsView
                 {
                     Id = tsd.Id,
                     Timesheetid = tsd.Timesheetid,
@@ -92,20 +85,26 @@ public class ProviderInvoicingService : IProviderInvoicingService
                     Housecall = tsd.Housecall,
                     Phoneconsult = tsd.Phoneconsult,
                     Isweekend = tsd.Isweekend ?? false
-                }).ToList(),
-                TimesheetreimbursementsList = TimeSheetData.Timesheetreimbursements.Select(tsr => new TimesheetreimbursementView()
+                }).ToList();
+            }
+
+            if (timeSheetData.Timesheetreimbursements.Any(tsr => tsr.Timesheetid == timeSheetData.Id))
+            {
+                timeSheetViewModel.TimesheetreimbursementsList = timeSheetData.Timesheetreimbursements.Select(tsr => new TimesheetreimbursementView
                 {
                     Id = tsr.Id,
                     Timesheetid = tsr.Timesheetid,
+                    Shiftdate = tsr.ShiftDate,
                     Item = tsr.Item,
                     Amount = tsr.Amount,
                     Bill = tsr.Bill
-                }).ToList()
-            };
-            return timeSheetViewModel;
+                }).ToList();
+            }
         }
 
+        return timeSheetViewModel;
     }
+
 
     public static List<DateTime> GetDatesInRange(DateTime startDate, DateTime endDate)
     {
@@ -129,6 +128,7 @@ public class ProviderInvoicingService : IProviderInvoicingService
                 Startdate = timesheetDetailsList.Startdate,
                 Enddate = timesheetDetailsList.Enddate,
                 Isfinalized = timesheetDetailsList.Isfinalized,
+                Status = "Pending"
             };
             _providerInvoicingRepo.AddTimeSheet(newTimeSheet);
 
@@ -162,7 +162,12 @@ public class ProviderInvoicingService : IProviderInvoicingService
 
                     _providerInvoicingRepo.UpdateTimesheetDetail(existingDetail);
                 }
-                throw new RecordNotFoundException();
             }
         }
     }
+
+    public void Finalize(int Id)
+    {
+        _providerInvoicingRepo.Finalize(Id);
+    }
+}

@@ -8,4 +8,5 @@ public interface IProviderInvoicingService
     TimeSheetViewModel CheckFinalizeAndGetData(string StartDate, string EndDate);
     TimeSheetViewModel GetTimeSheetList(string StartDate, string EndDate);
     void AddUpdateTimeSheet(TimeSheetViewModel timesheetDetailsList);
+    void Finalize(int Id);
 }
