@@ -72,6 +72,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcRW1haWxMb2dzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Admin/Views/Invoicing/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcSW52b2ljaW5nXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Admin/Views/Login/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcTG9naW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -306,6 +310,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Dashboard/ViewUploads.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcRGFzaGJvYXJkXFZpZXdVcGxvYWRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Invoicing/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcSW52b2ljaW5nXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Invoicing/Timesheet.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUHJvdmlkZXJcVmlld3NcSW52b2ljaW5nXFRpbWVzaGVldC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Provider/Views/Login/Index.cshtml]

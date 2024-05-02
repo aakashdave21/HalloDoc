@@ -1,0 +1,134 @@
+@{
+    ViewData["Title"] = "Invoicing Page";
+}
+<main class="container-sm mt-sm-5 mb-5">
+    <div class="d-flex mt-4">
+        <h3 class="fw-bold">Timesheets</h3>
+    </div>
+    <div class="border p-4 mt-3 mb-3 rounded shadow">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <div class="form-floating">
+                    <select class="form-select" aria-label="Large select example" id="bi-weekly-date-range"
+                        placeholder="Date-Range">
+                        <option selected disabled>Choose Date Range</option>
+                    </select>
+                    <label for="Status">Select Date Range</label>
+                </div>
+                <span class="text-danger"></span>
+            </div>
+            <div id="finalize-btn" style="display: none;">
+                @using (Html.BeginForm("Timesheet", "Invoicing", new { area = "Provider" }, FormMethod.Post))
+                {
+                    <input type="hidden" name="startDate" id="inputStartDate" value="" />
+                    <input type="hidden" name="endDate" id="inputEndDate" value="" />
+                    <button type="submit" class="btn secondary-theme-btn">
+                        Finalize Timesheets
+                    </button>
+                }
+            </div>
+        </div>
+        <div class="mt-4">
+            <h4 class="text-muted" id="no-record-text">No Record(s) Found</h4>
+            <div id="render-timesheet-table" style="display: none;">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="white-space:nowrap;">Shiftdate</th>
+                                <th style="white-space:nowrap;">Shift</th>
+                                <th>Night Shift Weekend</th>
+                                <th>Housecall</th>
+                                <th>Housecall Night Weekend</th>
+                                <th style="white-space:nowrap; ">No of Phone Consult</th>
+                                <th>Phone Consult Nights Weekend</th>
+                                <th style="white-space:nowrap; ">Batch Testing</th>
+                            </tr>
+                        </thead>
+                        <tbody id="timesheetDetailsRow">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="border p-4 mt-3 mb-3 rounded shadow">
+        <h5 class="fw-bold">Timesheet Reimbursement</h5>
+        <div id="render-reimbursement-table" class="mt-4">
+            <h4 class="text-muted">No Record(s) Found</h4>
+        </div>
+    </div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script>
+    function getBiWeeklyDateRangesArray() {
+        const currentDate = moment(); // Get current date
+        const result = [];
+        for (let monthDiff = 0; monthDiff < 12; monthDiff++) {
+            const currentMonth = currentDate.clone().subtract(monthDiff, 'months');
+            const currentYear = currentMonth.year();
+            const currentMonthNumber = currentMonth.month();
+            const daysInMonth = currentMonth.daysInMonth();
+            const firstDateOfMonth = moment().year(currentYear).month(currentMonthNumber).date(1).format('DD/MM/YYYY');
+            const dateAfterTwoWeeks = moment(firstDateOfMonth, 'DD/MM/YYYY').add(13, 'days').format('DD/MM/YYYY');
+            const FirstDayAfterTwoWeeks = moment(firstDateOfMonth, 'DD/MM/YYYY').add(14, 'days').format('DD/MM/YYYY');
+            const LastDateOfMonth = moment(firstDateOfMonth, 'DD/MM/YYYY').endOf('month').format('DD/MM/YYYY');
+            result.push(`${firstDateOfMonth} - ${dateAfterTwoWeeks}`);
+            result.push(`${FirstDayAfterTwoWeeks} - ${LastDateOfMonth}`);
+        }
+        return result;
+    }
+
+    const biWeeklyDateRangesArray = getBiWeeklyDateRangesArray();
+    for (let i = 0; i < biWeeklyDateRangesArray.length; i++) {
+        const option = document.createElement('option');
+        option.textContent = biWeeklyDateRangesArray[i];
+        option.value = biWeeklyDateRangesArray[i];
+        document.getElementById("bi-weekly-date-range").appendChild(option);
+    }
+
+    $("#bi-weekly-date-range").change(function () {
+        const biWeeklyDateRange = $("#bi-weekly-date-range").val();
+        if (biWeeklyDateRange == "Choose Date Range") {
+            $(".text-danger").html("Please select a date range.");
+            return;
+        }
+        $(".text-danger").html("");
+        const startDate = biWeeklyDateRange.split("-")[0].trim();
+        const endDate = biWeeklyDateRange.split("-")[1].trim();
+
+        sendAjaxRequest('/Provider/Invoicing/CheckForFinalize', 'GET', { startDate, endDate }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+            .then(function (response) {
+                console.log(response);
+                if ((response.id == 0 && response.startdate == null && response.enddate == null) || response.isfinalized == false) {
+                    $("#timesheetDetailsRow").empty();
+                    $("#no-record-text").css('display','block');
+                    $("#render-timesheet-table").css('display','none');
+                    $("#inputStartDate").val(startDate);
+                    $("#inputEndDate").val(endDate);
+                    $("#finalize-btn").css('display', 'block');
+                    if (!(response.id == 0 && response.startdate == null && response.enddate == null)) {
+                        $("#no-record-text").css('display','none');
+                        $("#render-timesheet-table").css('display','flex');
+                        response.timesheetdetailsList.forEach(function (item) {
+                            var newRow = $("<tr>");
+                            newRow.append("<td>" + new Date(item.shiftdate).toLocaleDateString() + "</td>");
+                            newRow.append("<td>" + '-' + "</td>");
+                            newRow.append("<td>" + '-' + "</td>");
+                            newRow.append("<td>" + item.housecall + "</td>");
+                            newRow.append("<td>" + '-' + "</td>");
+                            newRow.append("<td>" + item.phoneconsult + "</td>");
+                            newRow.append("<td>" + '-' + "</td>");
+                            newRow.append("<td>" + '-' + "</td>");
+                            $("#timesheetDetailsRow").append(newRow);
+                        });
+
+                    }
+                }
+            }).catch(function (error) {
+                ToastError("Internal Server Error");
+            })
+
+    })
+</script>

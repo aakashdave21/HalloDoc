@@ -94,4 +94,13 @@ public class LoginController : Controller
             return View();
         }
     }
+
+    public async Task<IActionResult> LogOut()
+    {
+        Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+        Response.Headers["Pragma"] = "no-cache";
+        Response.Headers["Expires"] = "0";
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index", "Login");
+    }
 }

@@ -206,9 +206,3 @@ function CheckBoxValidationError(inputName,errorDiv){
         return false;
     }
 }
-
-
-// if (window.history.replaceState) {
-//     // Remove the current page from the session history
-//     window.history.replaceState(null, null, window.location.href);
-// }

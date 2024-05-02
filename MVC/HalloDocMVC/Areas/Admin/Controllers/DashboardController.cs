@@ -999,11 +999,28 @@ public class DashboardController : Controller
 
     public async Task<IActionResult> LogOut()
     {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
-        Response.Headers["Pragma"] = "no-cache";
-        Response.Headers["Expires"] = "0";
-        return RedirectToAction("Index", "Login");
+        try
+        {    
+            Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            Response.Headers["Pragma"] = "no-cache";
+            Response.Headers["Expires"] = "0";
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Login");
+        }
+        catch (System.Exception e)
+        {
+            Console.WriteLine(e + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+            string previousUrl = HttpContext.Session.GetString("PreviousUrl");
+            if (!string.IsNullOrEmpty(previousUrl))
+            {
+                return Redirect(previousUrl);
+            }
+            else
+            {
+                TempData["error"] = "Internal Server Error";
+                return RedirectToAction("Index", "Login");
+            }
+        }
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

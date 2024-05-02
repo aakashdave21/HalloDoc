@@ -43,6 +43,8 @@ namespace HalloDocMVC.Extensions
             services.AddScoped<IRecordsRepo, RecordsRepo>();
             services.AddScoped<IProviderDashboardService, ProviderDashboardService>();
             services.AddScoped<IProviderDashboardRepo, ProviderDashboardRepo>();
+            services.AddScoped<IProviderInvoicingService, ProviderInvoicingService>();
+            services.AddScoped<IProviderInvoicingRepo, ProviderInvoicingRepo>();
             return services;
         }
 

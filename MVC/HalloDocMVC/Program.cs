@@ -18,10 +18,11 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
 });
 builder.Services.AddControllersWithViews(options =>
 {
-    // Filters For Access
+    // Added Filters For Access
     options.Filters.Add<MenuItemsActionFilter>();
 });
 
+// Json Serialization Cycle detect Prevention
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
@@ -47,7 +48,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Custom Middleware
+// Custom Middleware Related To Authenticatin
 app.UseMyMiddleware();
 
 app.MapControllerRoute(

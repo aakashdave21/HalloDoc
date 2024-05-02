@@ -1,0 +1,128 @@
+@model TimeSheetViewModel;
+@{
+    ViewData["Title"] = "Invoicing Timesheet Page";
+}
+<style>
+    td input[type="checkbox"] {
+        cursor: pointer;
+    }
+
+    td input.form-control {
+        min-width: 150px;
+    }
+</style>
+<main class="container-sm mt-sm-5 mb-5">
+    <div class="d-flex justify-content-end">
+        <a asp-area="Provider" asp-controller="Invoicing" asp-action="Index" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+    </div>
+    <div class="border p-4 mt-3 mb-3 rounded shadow">
+        <form id="timesheetForm" method="post" asp-area="Provider" asp-controller="Invoicing"
+            asp-action="TimeSheetDetailsUpdate">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="white-space:nowrap;">Date</th>
+                            <th style="white-space:nowrap; width:20%;">On Call Hours</th>
+                            <th style="white-space:nowrap;">Total Hours</th>
+                            <th>Weekend/ <br>Holidays</th>
+                            <th style="white-space:nowrap; width:20%; ">No of Housecalls</th>
+                            <th style="white-space:nowrap; width:20%; ">No of Phone Consult</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <input type="hidden" name="TimeSheetId" value="@Model.Id">
+                        @for (int i = 0; i < Model.TimesheetdetailsList.Count(); i++)
+                        {
+                            var item = Model.TimesheetdetailsList[i];
+                            <tr>
+                                <td>
+                                    @{
+                                        string? ShiftDateValue = item.Shiftdate.HasValue ? item.Shiftdate.Value.ToString("dd/MM/yyyy") : "";
+                                    }
+                                    @ShiftDateValue
+                                    <input type="hidden" name="TimesheetdetailsList[@i].Shiftdate" value=@item.Shiftdate>
+                                    <input type="hidden" name="TimesheetdetailsList[@i].Id" value="@item.Id">
+                                </td>
+                                <td>@item.OnCallhours</td>
+                                <td><input class="form-control" type="text" name="TimesheetdetailsList[@i].Shifthours"
+                                        value="@item.Shifthours" oninput="restrictInput(this)"></td>
+
+                                <td class="ps-5">
+                                    <input class="form-check-input" type="checkbox" asp-for="@Model.TimesheetdetailsList[i].Isweekend">
+                                </td>
+
+                                <td><input class="form-control" type="text" name="TimesheetdetailsList[@i].Housecall"
+                                        value="@item.Housecall" oninput="restrictInput(this)"></td>
+                                <td><input class="form-control" type="text" name="TimesheetdetailsList[@i].Phoneconsult"
+                                        value="@item.Phoneconsult" oninput="restrictInput(this)"></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button class="btn secondary-theme-btn mt-3">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="d-flex justify-content-between flex-wrap">
+        <button class="btn secondary-theme-btn">
+            Add Receipts
+        </button>
+        <button class="btn secondary-theme-btn">
+            Finalize
+        </button>
+    </div>
+    <div class="border p-4 mt-5 mb-3 rounded shadow">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="white-space:nowrap;">Date</th>
+                        <th style="white-space:nowrap; min-width:250px;">Item</th>
+                        <th style="white-space:nowrap; min-width:250px;">Amount</th>
+                        <th style="white-space:nowrap; min-width:250px;">Bill</th>
+                        <th style="white-space:nowrap; width:20%; ">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.TimesheetreimbursementsList)
+                    {
+                        <tr>
+                            <td>@(item.Shiftdate.HasValue ? item.Shiftdate.Value.ToString("dd/MM/yyyy") : "")</td>
+                            <td><input class="form-control" type="text" value="@item.Item"></td>
+                            <td><input class="form-control" type="text" value="@item.Amount" oninput="restrictInput(this)">
+                            </td>
+                            <td><input type="file" class="form-control" name="file"></td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <button class="btn theme-btn"><i class="fa-solid fa-pen"></i></button>
+                                    <button class="btn theme-btn"><i class="fa-regular fa-trash-can"></i></button>
+                                    <button class="btn theme-btn"><i class="fa-regular fa-eye"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button class="btn secondary-theme-btn mt-3">
+                Submit
+            </button>
+        </div>
+    </div>
+</main>
+
+<script>
+    function restrictInput(inputField) {
+        inputField.value = inputField.value.replace(/[^0-9.]/g, '');
+        var value = inputField.value.trim() === "" ? 0 : parseInt(inputField.value);
+        if (value < 0) {
+            inputField.value = "0";
+        }
+    }
+</script>

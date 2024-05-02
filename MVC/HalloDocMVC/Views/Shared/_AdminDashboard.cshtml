@@ -75,7 +75,7 @@
                                 id="UserName">@username.ToUpper()</strong> </p>
                         @if (Role == "Admin")
                         {
-                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="LogOut" class="btn theme-btn me-2">
+                            <a asp-area="Admin" asp-controller="Login" asp-action="LogOut" class="btn theme-btn me-2">
                                 <span class="d-none d-md-inline d-lg-inline">Log Out</span>
                                 <i class="fas fa-sign-out-alt d-sm-inline d-md-none"></i>
                             </a>
@@ -169,6 +169,9 @@
                             </li>
                             <li data-id="3">
                                 <a asp-area="Provider" asp-controller="Profile" asp-action="Index">My Profile</a>
+                            </li>
+                            <li data-id="3">
+                                <a asp-area="Provider" asp-controller="Invoicing" asp-action="Index">Invoicing</a>
                             </li>
                             <li data-id="3">
                                 <a asp-area="Provider" asp-controller="Scheduling" asp-action="Index">My Scheduling</a>

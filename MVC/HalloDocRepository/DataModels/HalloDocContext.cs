@@ -43,6 +43,8 @@ public partial class HalloDocContext : DbContext
 
     public virtual DbSet<Orderdetail> Orderdetails { get; set; }
 
+    public virtual DbSet<Payrate> Payrates { get; set; }
+
     public virtual DbSet<Physician> Physicians { get; set; }
 
     public virtual DbSet<Physicianfile> Physicianfiles { get; set; }
@@ -78,6 +80,12 @@ public partial class HalloDocContext : DbContext
     public virtual DbSet<Shiftdetailregion> Shiftdetailregions { get; set; }
 
     public virtual DbSet<Smslog> Smslogs { get; set; }
+
+    public virtual DbSet<Timesheet> Timesheets { get; set; }
+
+    public virtual DbSet<Timesheetdetail> Timesheetdetails { get; set; }
+
+    public virtual DbSet<Timesheetreimbursement> Timesheetreimbursements { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -260,6 +268,23 @@ public partial class HalloDocContext : DbContext
                 .HasConstraintName("orderdetails_requestid_fkey");
 
             entity.HasOne(d => d.Vendor).WithMany(p => p.Orderdetails).HasConstraintName("orderdetails_vendorid_fkey");
+        });
+
+        modelBuilder.Entity<Payrate>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("payrate_pkey");
+
+            entity.Property(e => e.Batchtesting).HasDefaultValueSql("0");
+            entity.Property(e => e.Housecall).HasDefaultValueSql("0");
+            entity.Property(e => e.Housecallnightweekend).HasDefaultValueSql("0");
+            entity.Property(e => e.Nightshiftweekend).HasDefaultValueSql("0");
+            entity.Property(e => e.Phoneconsult).HasDefaultValueSql("0");
+            entity.Property(e => e.Phoneconsultnightweekend).HasDefaultValueSql("0");
+            entity.Property(e => e.Shift).HasDefaultValueSql("0");
+
+            entity.HasOne(d => d.Physician).WithMany(p => p.Payrates)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("payrate_physicianid_fkey");
         });
 
         modelBuilder.Entity<Physician>(entity =>
@@ -508,6 +533,40 @@ public partial class HalloDocContext : DbContext
                 .HasConstraintName("smslog_requestid_fkey");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Smslogs).HasConstraintName("smslog_roleid_fkey");
+        });
+
+        modelBuilder.Entity<Timesheet>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("timesheet_pkey");
+
+            entity.Property(e => e.Isfinalized).HasDefaultValueSql("false");
+
+            entity.HasOne(d => d.Physician).WithMany(p => p.Timesheets)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("timesheet_physicianid_fkey");
+        });
+
+        modelBuilder.Entity<Timesheetdetail>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("timesheetdetails_pkey");
+
+            entity.Property(e => e.Housecall).HasDefaultValueSql("0");
+            entity.Property(e => e.Isweekend).HasDefaultValueSql("false");
+            entity.Property(e => e.Phoneconsult).HasDefaultValueSql("0");
+            entity.Property(e => e.Shifthours).HasDefaultValueSql("0");
+
+            entity.HasOne(d => d.Timesheet).WithMany(p => p.Timesheetdetails)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("timesheetdetails_timesheetid_fkey");
+        });
+
+        modelBuilder.Entity<Timesheetreimbursement>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("timesheetreimbursement_pkey");
+
+            entity.HasOne(d => d.Timesheet).WithMany(p => p.Timesheetreimbursements)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("timesheetreimbursement_timesheetid_fkey");
         });
 
         modelBuilder.Entity<User>(entity =>

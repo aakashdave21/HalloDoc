@@ -1,8 +1,4 @@
 const changePasswordView = (passwordField,eyeIcon)=>{
-    // let floatingPassword = document.getElementById("Passwordhash");
-    // let eyeIcon = document.querySelector(".eye-icon");
-     console.log(passwordField);
-     console.log(eyeIcon);
     if (passwordField.type === "password") {
         passwordField.type = "text";
         eyeIcon.classList.remove('fa-eye')

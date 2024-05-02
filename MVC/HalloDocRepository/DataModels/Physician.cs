@@ -153,6 +153,9 @@ public partial class Physician
     public virtual Aspnetuser? ModifiedbyNavigation { get; set; }
 
     [InverseProperty("Physician")]
+    public virtual ICollection<Payrate> Payrates { get; } = new List<Payrate>();
+
+    [InverseProperty("Physician")]
     public virtual Physicianfile? Physicianfile { get; set; }
 
     [InverseProperty("Physician")]
@@ -186,4 +189,7 @@ public partial class Physician
 
     [InverseProperty("Physician")]
     public virtual ICollection<Smslog> Smslogs { get; } = new List<Smslog>();
+
+    [InverseProperty("Physician")]
+    public virtual ICollection<Timesheet> Timesheets { get; } = new List<Timesheet>();
 }
