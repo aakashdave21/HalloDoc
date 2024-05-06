@@ -6,7 +6,7 @@
         <h3 class="fw-bold">Timesheets</h3>
     </div>
     <div class="border p-4 mt-3 mb-3 rounded shadow">
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div>
                 <div class="form-floating">
                     <select class="form-select" aria-label="Large select example" id="bi-weekly-date-range"
@@ -55,8 +55,23 @@
     </div>
     <div class="border p-4 mt-3 mb-3 rounded shadow">
         <h5 class="fw-bold">Timesheet Reimbursement</h5>
-        <div id="render-reimbursement-table" class="mt-4">
-            <h4 class="text-muted">No Record(s) Found</h4>
+        <h4 class="text-muted" id="no-reimbursements">No Record(s) Found</h4>
+        <div id="render-reimbursement-table" style="display: none;" class="mt-4">
+             <div class="table-responsive" style="width:100%;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="white-space:nowrap;">Date</th>
+                                <th style="white-space:nowrap;">Item</th>
+                                <th style="white-space:nowrap;">Amount</th>
+                                <th>Bill</th>
+                            </tr>
+                        </thead>
+                        <tbody id="timesheetReimbursementRow">
+
+                        </tbody>
+                    </table>
+                </div>
         </div>
     </div>
 </main>
@@ -97,23 +112,28 @@
         $(".text-danger").html("");
         const startDate = biWeeklyDateRange.split("-")[0].trim();
         const endDate = biWeeklyDateRange.split("-")[1].trim();
+        var options = { year: 'numeric', month: 'long', day: 'numeric' };
 
         sendAjaxRequest('/Provider/Invoicing/CheckForFinalize', 'GET', { startDate, endDate }, "application/x-www-form-urlencoded; charset=UTF-8", true)
             .then(function (response) {
+                response.timesheetreimbursementsList = response.timesheetreimbursementsList.sort((a, b) => new Date(a.shiftdate) - new Date(b.shiftdate));
                 $("#timesheetDetailsRow").empty();
+                $("#timesheetReimbursementRow").empty();
                 $("#inputStartDate").val(startDate);
                 $("#inputEndDate").val(endDate);
+                $("#no-record-text").css('display', 'block');
+                $("#no-reimbursements").css('display', 'block');
+                $("#render-timesheet-table").css('display', 'none');
+                $("#render-reimbursement-table").css('display', 'none');
                 if (response.id == 0 && response.startdate == null && response.enddate == null) {
-                    $("#no-record-text").css('display', 'block');
-                    $("#render-timesheet-table").css('display', 'none');
                     $("#finalize-btn").css('display', 'block');
                 } else {
-                    $("#no-record-text").css('display', 'none');
-                    $("#render-timesheet-table").css('display', 'flex');
                     $("#finalize-btn").css('display', response.isfinalized ? 'none' : 'block');
-                    response.timesheetdetailsList.forEach(function (item) {
+                    response.timesheetdetailsList.length > 0 && response.timesheetdetailsList.forEach(function (item) {
+                        $("#no-record-text").css('display', 'none');
+                        $("#render-timesheet-table").css('display', 'flex');
                         var newRow = $("<tr>");
-                        newRow.append("<td>" + new Date(item.shiftdate).toLocaleDateString() + "</td>");
+                        newRow.append("<td>" + new Date(item.shiftdate).toLocaleDateString("en-US", options) + "</td>");
                         newRow.append("<td>" + '-' + "</td>");
                         newRow.append("<td>" + '-' + "</td>");
                         newRow.append("<td>" + item.housecall + "</td>");
@@ -122,6 +142,19 @@
                         newRow.append("<td>" + '-' + "</td>");
                         newRow.append("<td>" + '-' + "</td>");
                         $("#timesheetDetailsRow").append(newRow);
+                    });
+                    
+                    response.timesheetreimbursementsList.length > 0 && response.timesheetreimbursementsList.forEach(function (reimb) {
+                        $("#no-reimbursements").css('display', 'none');
+                        $("#render-reimbursement-table").css('display', 'flex');
+                        let filePath = reimb.bill;
+                        let fileName = filePath.split('_').slice(1).join("_");
+                        var newRow = $("<tr>");
+                        newRow.append("<td style='white-space:nowrap;'>" + new Date(reimb.shiftdate).toLocaleDateString("en-US", options) + "</td>");
+                        newRow.append("<td style='white-space:nowrap;'>" + reimb.item + "</td>");
+                        newRow.append("<td style='white-space:nowrap;'>" + reimb.amount + "</td>");
+                        newRow.append("<td style='white-space:nowrap;'>" + fileName + "</td>");
+                        $("#timesheetReimbursementRow").append(newRow);
                     });
                 }
             }).catch(function (error) {

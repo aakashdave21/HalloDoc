@@ -2,8 +2,6 @@ using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
 using HalloDocService.Provider.Interfaces;
 using HalloDocRepository.Provider.Interfaces;
-using HalloDocRepository.Admin.Interfaces;
-using HalloDocRepository.Enums;
 
 namespace HalloDocService.Provider.Implementation;
 public class ProviderInvoicingService : IProviderInvoicingService
@@ -85,22 +83,37 @@ public class ProviderInvoicingService : IProviderInvoicingService
                     Housecall = tsd.Housecall,
                     Phoneconsult = tsd.Phoneconsult,
                     Isweekend = tsd.Isweekend ?? false
-                }).ToList();
+                }).OrderBy(s=>s.Shiftdate).ToList();
             }
 
             if (timeSheetData.Timesheetreimbursements.Any(tsr => tsr.Timesheetid == timeSheetData.Id))
             {
-                timeSheetViewModel.TimesheetreimbursementsList = timeSheetData.Timesheetreimbursements.Select(tsr => new TimesheetreimbursementView
+
+                var mergedReimbursements = datesInRange.Select(date =>
                 {
-                    Id = tsr.Id,
-                    Timesheetid = tsr.Timesheetid,
-                    Shiftdate = tsr.ShiftDate,
-                    Item = tsr.Item,
-                    Amount = tsr.Amount,
-                    Bill = tsr.Bill
+                    var reimbursement = timeSheetData.Timesheetreimbursements.FirstOrDefault(tsr => tsr.ShiftDate!=null && tsr.ShiftDate.Value.Date == date.Date);
+                    if (reimbursement != null)
+                    {
+                        return new TimesheetreimbursementView
+                        {
+                            Id = reimbursement.Id,
+                            Timesheetid = reimbursement.Timesheetid,
+                            Shiftdate = reimbursement.ShiftDate,
+                            Item = reimbursement.Item,
+                            Amount = reimbursement.Amount,
+                            Bill = reimbursement.Bill
+                        };
+                    }
+                    else
+                    {
+                        return new TimesheetreimbursementView { Shiftdate = date };
+                    }
                 }).ToList();
+                timeSheetViewModel.TimesheetreimbursementsList = mergedReimbursements;
             }
         }
+        timeSheetViewModel.TimesheetdetailsList = timeSheetViewModel.TimesheetdetailsList.OrderBy(ts => ts.Shiftdate).ToList();
+        timeSheetViewModel.TimesheetreimbursementsList = timeSheetViewModel.TimesheetreimbursementsList.OrderBy(ts => ts.Shiftdate).ToList();
 
         return timeSheetViewModel;
     }
@@ -120,6 +133,7 @@ public class ProviderInvoicingService : IProviderInvoicingService
 
     public void AddUpdateTimeSheet(TimeSheetViewModel timesheetDetailsList)
     {
+        List<Timesheetdetail> newTimesheetsDetails = new();
         if (timesheetDetailsList.Id == 0) // Add New Record if TimesheetId is 0
         {
             Timesheet newTimeSheet = new()
@@ -132,16 +146,15 @@ public class ProviderInvoicingService : IProviderInvoicingService
             };
             _providerInvoicingRepo.AddTimeSheet(newTimeSheet);
 
-            List<Timesheetdetail> newTimesheetsDetails = new();
             foreach (var item in timesheetDetailsList.TimesheetdetailsList)
             {
                 newTimesheetsDetails.Add(new Timesheetdetail()
                 {
                     Timesheetid = newTimeSheet.Id,
                     Shiftdate = item.Shiftdate,
-                    Shifthours = item.Shifthours,
-                    Housecall = item.Housecall,
-                    Phoneconsult = item.Phoneconsult,
+                    Shifthours = item.Shifthours ?? 0,
+                    Housecall = item.Housecall ?? 0,
+                    Phoneconsult = item.Phoneconsult ?? 0,
                     Isweekend = item.Isweekend
                 });
             }
@@ -155,13 +168,26 @@ public class ProviderInvoicingService : IProviderInvoicingService
                 if (existingDetail != null)
                 {
                     existingDetail.Shiftdate = item.Shiftdate;
-                    existingDetail.Shifthours = item.Shifthours;
-                    existingDetail.Housecall = item.Housecall;
-                    existingDetail.Phoneconsult = item.Phoneconsult;
+                    existingDetail.Shifthours = item.Shifthours ?? 0;
+                    existingDetail.Housecall = item.Housecall ?? 0;
+                    existingDetail.Phoneconsult = item.Phoneconsult ?? 0;
                     existingDetail.Isweekend = item.Isweekend;
-
                     _providerInvoicingRepo.UpdateTimesheetDetail(existingDetail);
+                }else{
+                    newTimesheetsDetails.Add(new Timesheetdetail()
+                    {
+                        Timesheetid = timesheetDetailsList.Id,
+                        Shiftdate = item.Shiftdate,
+                        Shifthours = item.Shifthours ?? 0,
+                        Housecall = item.Housecall ?? 0,
+                        Phoneconsult = item.Phoneconsult ?? 0,
+                        Isweekend = item.Isweekend
+                    });
                 }
+            }
+            if (newTimesheetsDetails.Any())
+            {
+                _providerInvoicingRepo.AddTimeSheetDetails(newTimesheetsDetails);
             }
         }
     }
@@ -170,4 +196,48 @@ public class ProviderInvoicingService : IProviderInvoicingService
     {
         _providerInvoicingRepo.Finalize(Id);
     }
+
+    public void AddUpdateTimeReimbursement(TimeSheetViewModel timesheetDetail, TimesheetreimbursementView timesheetreimbursement)
+    {
+        if (timesheetDetail.Id == 0) // Add New Record if TimesheetId is 0
+        {
+            Timesheet newTimeSheet = new()
+            {
+                Physicianid = timesheetDetail.Physicianid,
+                Startdate = timesheetDetail.Startdate,
+                Enddate = timesheetDetail.Enddate,
+                Isfinalized = timesheetDetail.Isfinalized,
+                Status = "Pending"
+            };
+            _providerInvoicingRepo.AddTimeSheet(newTimeSheet);
+
+            Timesheetreimbursement newTimeSheetDetails = new()
+            {
+                Timesheetid = newTimeSheet.Id,
+                ShiftDate = timesheetreimbursement.Shiftdate,
+                Item = timesheetreimbursement?.Item ?? "",
+                Amount = timesheetreimbursement != null ? timesheetreimbursement.Amount : 0,
+                Bill = timesheetreimbursement?.Bill ?? ""
+            };
+            _providerInvoicingRepo.AddTimeSheetReimbursement(newTimeSheetDetails);
+        }
+        else
+        {
+                Timesheetreimbursement updatedTimeSheetDetails = new()
+                {
+                    Id = timesheetreimbursement.Id,
+                    Timesheetid = timesheetDetail.Id,
+                    ShiftDate = timesheetreimbursement.Shiftdate,
+                    Item = timesheetreimbursement?.Item ?? "",
+                    Amount = timesheetreimbursement != null ? timesheetreimbursement.Amount : 0,
+                    Bill = timesheetreimbursement?.Bill ?? ""
+                };
+                _providerInvoicingRepo.AddTimeSheetReimbursement(updatedTimeSheetDetails);
+            }
+    }
+
+    public void DeleteTimeReimbursement(int Id){
+        _providerInvoicingRepo.DeleteTimeReimbursement(Id);
+    }
+
 }

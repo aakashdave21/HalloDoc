@@ -9,4 +9,7 @@ public interface IProviderInvoicingService
     TimeSheetViewModel GetTimeSheetList(string StartDate, string EndDate);
     void AddUpdateTimeSheet(TimeSheetViewModel timesheetDetailsList);
     void Finalize(int Id);
+    void AddUpdateTimeReimbursement(TimeSheetViewModel timesheetDetail,TimesheetreimbursementView timesheetreimbursement);
+
+    void DeleteTimeReimbursement(int Id);
 }

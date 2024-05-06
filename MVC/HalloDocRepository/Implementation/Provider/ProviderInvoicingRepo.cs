@@ -59,4 +59,30 @@ public class ProviderInvoicingRepo : IProviderInvoicingRepo
         }
         throw new RecordNotFoundException();
     }
+
+    public void AddTimeSheetReimbursement(Timesheetreimbursement timesheetreimbursement){
+        if(timesheetreimbursement.Id != 0){ // Perform Update
+            Timesheetreimbursement? reimburshementDetails = _dbContext.Timesheetreimbursements.FirstOrDefault(t => t.Id == timesheetreimbursement.Id);
+            if(reimburshementDetails != null){
+                reimburshementDetails.Item = timesheetreimbursement.Item;
+                reimburshementDetails.Amount = timesheetreimbursement.Amount;
+                _dbContext.SaveChanges();
+            }
+        }else{ //Perform Addition
+            _dbContext.Timesheetreimbursements.Add(timesheetreimbursement);
+            _dbContext.SaveChanges();
+        }
+    }
+
+    public void DeleteTimeReimbursement(int Id){
+        if(Id != 0){
+            Timesheetreimbursement? reimburshementDetails = _dbContext.Timesheetreimbursements.FirstOrDefault(t => t.Id == Id);
+            if(reimburshementDetails != null){
+                _dbContext.Timesheetreimbursements.Remove(reimburshementDetails);
+                _dbContext.SaveChanges();
+                return;
+            }
+        }
+        throw new RecordNotFoundException();
+    }
 }

@@ -9,4 +9,6 @@ public interface IProviderInvoicingRepo
     Timesheetdetail? GetTimesheetDetailById(int Id);
     void UpdateTimesheetDetail(Timesheetdetail updatedTimeSheet);
     void Finalize(int Id);
+    void AddTimeSheetReimbursement(Timesheetreimbursement timesheetreimbursement);
+    void DeleteTimeReimbursement(int Id);
 }

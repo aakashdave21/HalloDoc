@@ -1,3 +1,4 @@
+@using System.IO;
 @model TimeSheetViewModel;
 @{
     ViewData["Title"] = "Invoicing Timesheet Page";
@@ -48,7 +49,7 @@
                                 </td>
                                 <td>@item.OnCallhours</td>
                                 <td><input class="form-control" type="text" name="TimesheetdetailsList[@i].Shifthours"
-                                        value="@item.Shifthours" oninput="restrictInput(this)"></td>
+                                        value="@item.Shifthours" oninput="restrictShift(this)"></td>
 
                                 <td class="ps-5">
                                     <input class="form-check-input" type="checkbox"
@@ -89,41 +90,115 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <input type="hidden" name="TimeSheetId" value="@Model.Id">
                     @for (int i = 0; i < Model.TimesheetreimbursementsList.Count(); i++)
                     {
-                        var item = Model.TimesheetreimbursementsList[i];
-                        <tr>
-                            <td>
-                                @{
-                                    string? ShiftDateValue = item.Shiftdate.HasValue ?
-                                    item.Shiftdate.Value.ToString("dd/MM/yyyy") : "";
-                                }
-                                @ShiftDateValue
-                                <input type="hidden" name="TimesheetreimbursementsList[@i].Shiftdate" value=@item.Shiftdate>
-                                <input type="hidden" name="TimesheetreimbursementsList[@i].Id" value="@item.Id">
-                            </td>
-                            <td><input class="form-control" type="text" name="TimesheetreimbursementsList[@i].Items"
-                                    value="@item.Item"></td>
-                            <td><input class="form-control" type="text" value="@item.Amount" oninput="restrictInput(this)">
-                            </td>
-                            <td><input type="file" class="form-control" name="file"></td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <button class="btn theme-btn"><i class="fa-solid fa-pen"></i></button>
-                                    <button class="btn theme-btn"><i class="fa-regular fa-trash-can"></i></button>
-                                    <button class="btn theme-btn"><i class="fa-regular fa-eye"></i></button>
+
+                        string? ShiftDateValue = Model.TimesheetreimbursementsList[i].Shiftdate.HasValue ?
+                        Model.TimesheetreimbursementsList[i].Shiftdate.Value.ToString("dd/MM/yyyy") : "";
+                        string? filePath = Model.TimesheetreimbursementsList[i].Bill;
+                        string fileName = string.IsNullOrEmpty(filePath)
+                        ? ""
+                        : string.Join("_", (System.IO.Path.GetFileName(filePath)?.Split('_')?.Skip(1) ?? new string[0]));
+                        @if (Model.TimesheetreimbursementsList[i].Id != 0)
+                        {
+                            <tr class="Timesheetreimbursement-@i form-view" style="display : none;">
+                                <form asp-area="Provider" asp-controller="Invoicing" asp-action="SubmitReimbursement" method="post">
+                                    <td>@ShiftDateValue</td>
+                                    <input type="hidden" name="Id" value="@Model.TimesheetreimbursementsList[i].Id">
+                                    <input type="hidden" name="TimeSheetId" value="@Model.Id">
+                                    <input type="hidden" name="startDate"
+                                        value="@Model.TimesheetreimbursementsList.First().Shiftdate">
+                                    <input type="hidden" name="endDate" value="@Model.TimesheetreimbursementsList.Last().Shiftdate">
+                                    <input type="hidden" name="Shiftdate"
+                                            value="@Model.TimesheetreimbursementsList[i].Shiftdate">
+                                    <td>
+                                        <input class="form-control edit-input" type="text" name="Item"
+                                            value="@Model.TimesheetreimbursementsList[i].Item">
+                                    </td>
+                                    <td>
+                                        <input class="form-control edit-input" type="text" name="Amount"
+                                            value="@Model.TimesheetreimbursementsList[i].Amount" oninput="restrictInput(this)">
+                                    </td>
+                                    <td>@fileName</td>
+                                    <td>
+                                        <div id="edit-save-btns" class="d-flex gap-2">
+                                            <button type="submit" class="btn secondary-theme-btn">Save</button>
+                                            <button type="reset" class="btn secondary-theme-btn" onclick="closeEditMode(@i)">Cancel</button>
+                                        </div>
+                                    </td>
+                                </form>
+                            </tr>
+                            <tr class="Timesheetreimbursement-@i text-view">
+                                <div id="text-view">
+                                    <td>@ShiftDateValue</td>
+                                    <td>
+                                        <p class="edit-text">@Model.TimesheetreimbursementsList[i].Item</p>
+                                    </td>
+                                    <td>
+                                        <p class="edit-text">@Model.TimesheetreimbursementsList[i].Amount</p>
+                                    </td>
+                                    <td>@fileName</td>
+                                    <td>
+                                        <div id="custom-btns" style="display: flex;" class="gap-2">
+                                            <button class="btn secondary-theme-btn" onclick="openEditMode(@i)"><i class="fa-solid fa-pen"></i></button>
+                                            @using (Html.BeginForm("DeleteTimeReimbursement", "Invoicing", new
+                                            {
+                                                area =
+                                           "Provider"
+                                            },
+                                           FormMethod.Post))
+                                            {
+                                                <input type="hidden" name="Id" value="@Model.TimesheetreimbursementsList[i].Id">
+                                                <input type="hidden" name="startDate"
+                                                    value="@Model.TimesheetreimbursementsList.First().Shiftdate">
+                                                <input type="hidden" name="endDate"
+                                                    value="@Model.TimesheetreimbursementsList.Last().Shiftdate">
+                                                <button class="btn secondary-theme-btn"><i class="fa-solid fa-trash"></i></button>
+                                            }
+                                            <a class="btn secondary-theme-btn" target="_blank"
+                                                href="~/uploads/@System.IO.Path.GetFileName(filePath)"><i class="fa-regular fa-eye"></i></a>
+                                        </div>
+                                    </td>
                                 </div>
-                            </td>
-                        </tr>
+                            </tr>
+                        }
+                        else
+                        {
+                            var item = Model.TimesheetreimbursementsList[i];
+                            <form asp-area="Provider" asp-controller="Invoicing" asp-action="SubmitReimbursement" method="post"
+                                enctype="multipart/form-data">
+                                <input type="hidden" name="TimeSheetId" value="@Model.Id">
+                                <input type="hidden" name="startDate"
+                                    value="@Model.TimesheetreimbursementsList.First().Shiftdate">
+                                <input type="hidden" name="endDate" value="@Model.TimesheetreimbursementsList.Last().Shiftdate">
+                                <tr>
+                                    <td>
+                                        @ShiftDateValue
+                                        <input type="hidden" name="Shiftdate"
+                                            value="@Model.TimesheetreimbursementsList[i].Shiftdate">
+                                        <input type="hidden" name="Id" value="@Model.TimesheetreimbursementsList[i].Id">
+                                    </td>
+                                    <td><input class="form-control" type="text" name="Item"
+                                            value="@Model.TimesheetreimbursementsList[i].Item"></td>
+                                    <td><input class="form-control" type="text" name="Amount"
+                                            value="@Model.TimesheetreimbursementsList[i].Amount" oninput="restrictInput(this)">
+                                    </td>
+                                    <td><input type="file" class="form-control" name="phyBill"
+                                            accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps"></td>
+                                    <td class="action-column">
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn theme-btn save-button"
+                                                style="display: none;">Save</button>
+                                            <button type="reset" class="btn secondary-theme-btn cancel-button"
+                                                style="display: none;">Cancel</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </form>
+                        }
                     }
                 </tbody>
             </table>
-        </div>
-        <div class="d-flex justify-content-end">
-            <button class="btn secondary-theme-btn mt-3">
-                Submit
-            </button>
         </div>
     </div>
     @if (@Model.Id != 0)
@@ -148,7 +223,15 @@
             inputField.value = "0";
         }
     }
+    function restrictShift(inputField) {
+        inputField.value = inputField.value.replace(/[^0-9.]/g, '');
+        let value = parseFloat(inputField.value);
+        if (value < 0 || value > 24) {
+            inputField.value = '';
+            ToastError("Please Enter Value Between 0 to 24");
+        }
 
+    }
     function toggleTable() {
         var table = document.getElementById("reimbursementSection");
         if (table.style.display === "none") {
@@ -159,4 +242,43 @@
             table.style.display = "none";
         }
     }
+    document.querySelectorAll('#reimbursementSection tr').forEach(row => {
+        row.querySelectorAll('#reimbursementSection input').forEach(input => {
+            input.addEventListener('input', function () {
+                // Find the closest save button
+                const saveButton = this.closest('#reimbursementSection tr').querySelector('.save-button');
+                const cancelButton = this.closest('#reimbursementSection tr').querySelector('.cancel-button');
+
+                // Show the save button when any input field changes
+                saveButton.style.display = 'block';
+                cancelButton.style.display = 'block';
+
+                cancelButton.addEventListener('click', () => {
+                    saveButton.style.display = 'none';
+                    cancelButton.style.display = 'none';
+                })
+            });
+        });
+    });
+
+    function openEditMode(iterator) {
+        console.log($(`Timesheetreimbursement-${iterator}`));
+        $(`.Timesheetreimbursement-${iterator}.text-view`).css('display', 'none');
+        $(`.Timesheetreimbursement-${iterator}.form-view`).css('display', 'table-row');
+    }
+
+    function closeEditMode(iterator) {
+        console.log($(`Timesheetreimbursement-${iterator}`));
+        $(`.Timesheetreimbursement-${iterator}.text-view`).css('display', 'table-row');
+        $(`.Timesheetreimbursement-${iterator}.form-view`).css('display', 'none');
+    }
 </script>
+
+
+@* <td>
+<div class="d-flex gap-2">
+<button class="btn theme-btn"><i class="fa-solid fa-pen"></i></button>
+<button class="btn theme-btn"><i class="fa-regular fa-trash-can"></i></button>
+<button class="btn theme-btn"><i class="fa-regular fa-eye"></i></button>
+</div>
+</td> *@
