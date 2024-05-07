@@ -73,10 +73,18 @@ public class ProviderService : IProviderService
 
     public void UpdateNotification(List<string> stopNotificationIds,List<string> startNotificationIds){
         _providerRepo.UpdateNotification(stopNotificationIds,startNotificationIds);
-    }
+    } 
 
     public Physician GetSingleProviderData(int Id){
         return _providerRepo.GetAllPhysicianList().FirstOrDefault(phy => phy.Id == Id);
+    }
+
+    public IEnumerable<ProviderList> GetAllPhysicianList(){
+        var providerList = _providerRepo.GetAllPhysicianList().Select(phy => new ProviderList(){
+            Id = phy.Id,
+            FullName = phy.Firstname + " " + phy.Lastname
+        }).OrderBy(phy => phy.FullName);
+        return providerList;
     }
 
     public AdminPhysicianEditViewModel GetPhyisicianData(int Id){

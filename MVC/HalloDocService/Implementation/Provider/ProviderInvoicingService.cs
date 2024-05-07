@@ -13,11 +13,11 @@ public class ProviderInvoicingService : IProviderInvoicingService
         _providerInvoicingRepo = providerInvoicingRepo;
     }
 
-    public TimeSheetViewModel CheckFinalizeAndGetData(string StartDate, string EndDate)
+    public TimeSheetViewModel CheckFinalizeAndGetData(string StartDate, string EndDate, int PhysicianId = 0)
     {
         DateTime startDate = DateTime.ParseExact(StartDate, "dd/MM/yyyy", null);
         DateTime endDate = DateTime.ParseExact(EndDate, "dd/MM/yyyy", null);
-        Timesheet? TimeSheetData = _providerInvoicingRepo.CheckFinalizeAndGetData(startDate, endDate);
+        Timesheet? TimeSheetData = _providerInvoicingRepo.CheckFinalizeAndGetData(startDate, endDate, PhysicianId);
         if (TimeSheetData == null)
         {
             return new TimeSheetViewModel();
@@ -51,11 +51,11 @@ public class ProviderInvoicingService : IProviderInvoicingService
         };
         return timeSheetViewModel;
     }
-    public TimeSheetViewModel GetTimeSheetList(string StartDate, string EndDate)
+    public TimeSheetViewModel GetTimeSheetList(string StartDate, string EndDate,int physicianid = 0)
     {
         DateTime startDate = DateTime.ParseExact(StartDate, "dd/MM/yyyy", null);
         DateTime endDate = DateTime.ParseExact(EndDate, "dd/MM/yyyy", null);
-        Timesheet? timeSheetData = _providerInvoicingRepo.CheckFinalizeAndGetData(startDate, endDate);
+        Timesheet? timeSheetData = _providerInvoicingRepo.CheckFinalizeAndGetData(startDate, endDate, physicianid);
         List<DateTime> datesInRange = GetDatesInRange(startDate, endDate);
 
         TimeSheetViewModel timeSheetViewModel = new()

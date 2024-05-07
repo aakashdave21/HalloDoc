@@ -10,6 +10,8 @@ namespace HalloDocService.ViewModels
         public DateTime? Enddate { get; set; }
         public string? Status { get; set; }
         public bool? Isfinalized { get; set; }
+
+        public IEnumerable<ProviderList> ProviderLists { get; set; } = new List<ProviderList>();
         public List<TimeSheetDetailsView> TimesheetdetailsList { get; set; } = new List<TimeSheetDetailsView>();
         public List<TimesheetreimbursementView> TimesheetreimbursementsList { get; set; } = new List<TimesheetreimbursementView>();
     }

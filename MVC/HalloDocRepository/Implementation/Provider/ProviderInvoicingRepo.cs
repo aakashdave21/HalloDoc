@@ -15,8 +15,9 @@ public class ProviderInvoicingRepo : IProviderInvoicingRepo
         _dbContext = dbContext;
     }
 
-    public Timesheet? CheckFinalizeAndGetData(DateTime StartDate, DateTime EndDate){
-        Timesheet? isTimeSheetExits = _dbContext.Timesheets.Include(ts => ts.Timesheetdetails).Include(ts => ts.Timesheetreimbursements).FirstOrDefault(ts => ts.Startdate == StartDate && ts.Enddate == EndDate);
+    public Timesheet? CheckFinalizeAndGetData(DateTime StartDate, DateTime EndDate,int PhysicianId = 0){
+        Timesheet? isTimeSheetExits = _dbContext.Timesheets.Include(ts => ts.Timesheetdetails).Include(ts => ts.Timesheetreimbursements).FirstOrDefault(ts => ts.Startdate == StartDate && ts.Enddate == EndDate && ts.Physicianid == PhysicianId);
+        
         return isTimeSheetExits;
     }
 

@@ -3,7 +3,7 @@ using HalloDocRepository.DataModels;
 namespace HalloDocRepository.Provider.Interfaces;
 public interface IProviderInvoicingRepo
 {
-    Timesheet? CheckFinalizeAndGetData(DateTime StartDate, DateTime EndDate);
+    Timesheet? CheckFinalizeAndGetData(DateTime StartDate, DateTime EndDate, int PhysicianId = 0);
     void AddTimeSheet(Timesheet newTimeSheet);
     void AddTimeSheetDetails(List<Timesheetdetail> newTimesheetsDetails);
     Timesheetdetail? GetTimesheetDetailById(int Id);

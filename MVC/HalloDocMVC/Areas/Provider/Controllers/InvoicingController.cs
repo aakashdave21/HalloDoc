@@ -33,7 +33,8 @@ public class InvoicingController : Controller
     {
         try
         {
-            return View(_providerInvoicingService.GetTimeSheetList(StartDate, EndDate));
+            var physicianid = User.FindFirstValue("UserId");
+            return View(_providerInvoicingService.GetTimeSheetList(StartDate, EndDate, int.Parse(physicianid)));
         }
         catch (Exception)
         {
@@ -77,7 +78,8 @@ public class InvoicingController : Controller
     {
         try
         {
-            return Ok(_providerInvoicingService.CheckFinalizeAndGetData(StartDate, EndDate));
+            var physicianid = User.FindFirstValue("UserId");
+            return Ok(_providerInvoicingService.CheckFinalizeAndGetData(StartDate, EndDate,int.Parse(physicianid)));
         }
         catch (Exception)
         {

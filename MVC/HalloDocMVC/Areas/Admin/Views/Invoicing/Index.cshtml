@@ -1,3 +1,4 @@
+@model TimeSheetViewModel;
 @{
     ViewData["Title"] = "Invoicing Page";
 }
@@ -6,19 +7,118 @@
         <h3 class="fw-bold">Timesheets</h3>
     </div>
     <div class="border p-4 mt-3 mb-3 rounded shadow">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="form-floating ">
-                <input type="text" class="form-control" id="Name" placeholder="Name">
-                <label for="Name">Name</label>
-            </div>
-            <div>
-                <button class="btn secondary-theme-btn">
-                    Finalize Timesheets
-                </button>
+        <div class="d-flex justify-content-start gap-2 fle-wrap align-items-center">
+                <div>
+                    <div class="form-floating">
+                        <select class="form-select" aria-label="Large select example"
+                            placeholder="Physician" id="Physician-dropdown" onchange="getTimesheetRecords()">
+                            <option value="" selected disabled>Choose Physician</option>
+                            @foreach (var item in Model.ProviderLists)
+                            {
+                                <option value="@item.Id">@item.FullName</option>
+                            }
+                        </select>
+                        <label for="Status">Select Physician</label>
+                    </div>
+                    <span class="text-danger"></span>
+                </div>
+                <div>
+                    <div class="form-floating">
+                        <select class="form-select" aria-label="Large select example" id="bi-weekly-date-range"
+                            placeholder="Date-Range" onchange="getTimesheetRecords()">
+                            <option value="" selected disabled>Choose Date Range</option>
+                        </select>
+                        <label for="Status">Select Date Range</label>
+                    </div>
+                    <span class="text-danger"></span>
+                </div>
+        </div>
+        <div class="mt-4">
+            <h5 class="text-muted" id="info-text">
+                Please Choose Physician & Time Range to show Records
+            </h5>
+             <div id="render-timesheet-table" style="display: none;">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="white-space:nowrap;">Start Date</th>
+                                <th style="white-space:nowrap;">End Date</th>
+                                <th style="white-space:nowrap;">Status</th>
+                                <th style="white-space:nowrap; ">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="timesheetDetailsRow">
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-    <div class="border p-4 mt-3 mb-3 rounded shadow">
-        <h5 class="fw-bold">Timesheet Reimbursement</h5>
-    </div>
 </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+<script>
+    function getBiWeeklyDateRangesArray() {
+        const currentDate = moment(); // Get current date
+        const result = [];
+        for (let monthDiff = 0; monthDiff < 12; monthDiff++) {
+            const currentMonth = currentDate.clone().subtract(monthDiff, 'months');
+            const currentYear = currentMonth.year();
+            const currentMonthNumber = currentMonth.month();
+            const daysInMonth = currentMonth.daysInMonth();
+            const firstDateOfMonth = moment().year(currentYear).month(currentMonthNumber).date(1).format('DD/MM/YYYY');
+            const dateAfterTwoWeeks = moment(firstDateOfMonth, 'DD/MM/YYYY').add(13, 'days').format('DD/MM/YYYY');
+            const FirstDayAfterTwoWeeks = moment(firstDateOfMonth, 'DD/MM/YYYY').add(14, 'days').format('DD/MM/YYYY');
+            const LastDateOfMonth = moment(firstDateOfMonth, 'DD/MM/YYYY').endOf('month').format('DD/MM/YYYY');
+            result.push(`${firstDateOfMonth} - ${dateAfterTwoWeeks}`);
+            result.push(`${FirstDayAfterTwoWeeks} - ${LastDateOfMonth}`);
+        }
+        return result;
+    }
+
+    const biWeeklyDateRangesArray = getBiWeeklyDateRangesArray();
+    for (let i = 0; i < biWeeklyDateRangesArray.length; i++) {
+        const option = document.createElement('option');
+        option.textContent = biWeeklyDateRangesArray[i];
+        option.value = biWeeklyDateRangesArray[i];
+        document.getElementById("bi-weekly-date-range").appendChild(option);
+    }
+
+    const getTimesheetRecords = ()=>{
+        const dateRangeValue =  $("#bi-weekly-date-range").val();
+        const physicianValue =  $("#Physician-dropdown").val();
+        const physicianName = $("#Physician-dropdown option:selected").text();
+        var options = { year: 'numeric', month: 'long', day: 'numeric' };
+        $("#render-timesheet-table").css('display', 'none');
+        $("#info-text").css('display', 'block');
+        if(dateRangeValue == null || physicianValue == null){
+            return;
+        }else{
+            const startDate = dateRangeValue.split("-")[0].trim();
+            const endDate = dateRangeValue.split("-")[1].trim();
+            sendAjaxRequest('/Admin/Invoicing/GetRecords', 'GET', { physician : physicianValue,startDate, endDate }, "application/x-www-form-urlencoded; charset=UTF-8", true)
+                .then(function(response){
+                    if(response.isfinalized == false){
+                        $("#info-text").text(`${physicianName} has not finalized the timesheet in specified time period.`);
+                    }else if(response.isfinalized == true){
+                        $("#timesheetDetailsRow").empty();
+                        $("#info-text").css('display', 'none');
+                        $("#render-timesheet-table").css('display', 'block');
+                        var newRow = $("<tr>");
+                        newRow.append("<td>" + new Date(response.startdate).toLocaleDateString("en-US", options) + "</td>");
+                        newRow.append("<td>" + new Date(response.enddate).toLocaleDateString("en-US", options) + "</td>");
+                        newRow.append("<td>" + (response.status === null ? "Pending" : response.status) + "</td>");
+                        newRow.append("<td>" + (response.status === null || response.status === "pending" ? "<button class='btn theme-btn'> Approve </button>" : "-") + "</td>"); 
+                        $("#timesheetDetailsRow").append(newRow);
+                    }else{
+                        $("#info-text").text(`${physicianName} has not finalized the timesheet in specified time period.`);
+                    }
+                }).catch(function(error){
+                    ToastError("Internal Server Error");
+                })
+        }
+    }
+</script>
+</script>

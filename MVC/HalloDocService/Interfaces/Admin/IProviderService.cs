@@ -23,4 +23,6 @@ public interface IProviderService
     ProviderLocationViewModel GetAllProviderLocation();
     void CreatePhysician(AdminPhysicianCreateViewModel viewData);
 
+    IEnumerable<ProviderList> GetAllPhysicianList();
+
 }
