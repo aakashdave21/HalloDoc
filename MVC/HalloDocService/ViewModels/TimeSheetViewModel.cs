@@ -14,6 +14,8 @@ namespace HalloDocService.ViewModels
         public IEnumerable<ProviderList> ProviderLists { get; set; } = new List<ProviderList>();
         public List<TimeSheetDetailsView> TimesheetdetailsList { get; set; } = new List<TimeSheetDetailsView>();
         public List<TimesheetreimbursementView> TimesheetreimbursementsList { get; set; } = new List<TimesheetreimbursementView>();
+
+        public PayrateViewModel PayrateDetails {get; set;} = new PayrateViewModel();
     }
 
     public class TimeSheetDetailsView

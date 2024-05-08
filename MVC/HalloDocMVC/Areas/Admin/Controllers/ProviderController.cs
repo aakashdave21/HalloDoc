@@ -371,4 +371,31 @@ public class ProviderController : Controller
         }
     }
 
+    [HttpPost]
+    [HttpGet]
+    public IActionResult Payrate(int Id){
+        try{
+            return View(_providerService.GetPayrateDetails(Id));
+        }
+        catch (Exception)
+        {
+            TempData["error"] = "Internal Server Error !";
+            return RedirectToAction("Index");
+        }
+    }
+
+    [HttpPost]
+    public IActionResult PayratePost(PayrateViewModel payrateData){
+        try{
+            _providerService.AddUpdatePayrate(payrateData);
+            TempData["success"] = "Payrate Data Applied Successfully";
+            return RedirectToAction( "Payrate", new { id = payrateData.Physicianid });
+        }
+        catch (Exception)
+        {
+            TempData["error"] = "Internal Server Error !";
+            return RedirectToAction("Index");
+        }
+    }
+
 }

@@ -2,15 +2,18 @@ using HalloDocService.ViewModels;
 using HalloDocRepository.DataModels;
 using HalloDocService.Provider.Interfaces;
 using HalloDocRepository.Provider.Interfaces;
+using HalloDocRepository.Admin.Interfaces;
 
 namespace HalloDocService.Provider.Implementation;
 public class ProviderInvoicingService : IProviderInvoicingService
 {
     private readonly IProviderInvoicingRepo _providerInvoicingRepo;
+    private readonly IProviderRepo _providerRepo;
 
-    public ProviderInvoicingService(IProviderInvoicingRepo providerInvoicingRepo)
+    public ProviderInvoicingService(IProviderInvoicingRepo providerInvoicingRepo,IProviderRepo providerRepo)
     {
         _providerInvoicingRepo = providerInvoicingRepo;
+        _providerRepo = providerRepo;
     }
 
     public TimeSheetViewModel CheckFinalizeAndGetData(string StartDate, string EndDate, int PhysicianId = 0)
@@ -51,10 +54,10 @@ public class ProviderInvoicingService : IProviderInvoicingService
         };
         return timeSheetViewModel;
     }
-    public TimeSheetViewModel GetTimeSheetList(string StartDate, string EndDate,int physicianid = 0)
+    public TimeSheetViewModel GetTimeSheetList(string? StartDate, string? EndDate,int physicianid = 0)
     {
-        DateTime startDate = DateTime.ParseExact(StartDate, "dd/MM/yyyy", null);
-        DateTime endDate = DateTime.ParseExact(EndDate, "dd/MM/yyyy", null);
+        DateTime startDate = DateTime.ParseExact(StartDate ?? DateTime.MinValue.ToString(), "dd/MM/yyyy", null);
+        DateTime endDate = DateTime.ParseExact(EndDate ?? DateTime.MinValue.ToString(), "dd/MM/yyyy", null);
         Timesheet? timeSheetData = _providerInvoicingRepo.CheckFinalizeAndGetData(startDate, endDate, physicianid);
         List<DateTime> datesInRange = GetDatesInRange(startDate, endDate);
 
@@ -63,6 +66,19 @@ public class ProviderInvoicingService : IProviderInvoicingService
             TimesheetdetailsList = datesInRange.Select(date => new TimeSheetDetailsView { Shiftdate = date }).ToList(),
             TimesheetreimbursementsList = datesInRange.Select(date => new TimesheetreimbursementView { Shiftdate = date }).ToList()
         };
+
+        Payrate? payrateData = _providerRepo.GetPayrateDetails(physicianid);
+        if(payrateData != null){
+            timeSheetViewModel.PayrateDetails.Id = payrateData.Id;
+            timeSheetViewModel.PayrateDetails.Nightshiftweekend = payrateData.Nightshiftweekend;
+            timeSheetViewModel.PayrateDetails.Shift = payrateData.Shift;
+            timeSheetViewModel.PayrateDetails.Housecallnightweekend = payrateData.Housecallnightweekend;
+            timeSheetViewModel.PayrateDetails.Housecall = payrateData.Housecall;
+            timeSheetViewModel.PayrateDetails.Phoneconsult = payrateData.Phoneconsult;
+            timeSheetViewModel.PayrateDetails.Phoneconsultnightweekend = payrateData.Phoneconsultnightweekend;
+            timeSheetViewModel.PayrateDetails.Batchtesting = payrateData.Batchtesting;
+            timeSheetViewModel.PayrateDetails.Physicianid = payrateData.Physicianid;
+        }
 
         if (timeSheetData != null)
         {
@@ -238,6 +254,13 @@ public class ProviderInvoicingService : IProviderInvoicingService
 
     public void DeleteTimeReimbursement(int Id){
         _providerInvoicingRepo.DeleteTimeReimbursement(Id);
+    }
+
+    public TimeSheetViewModel GetTimeSheetById(int Id){
+        Timesheet TimeSheetDetails = _providerInvoicingRepo.GetTimeSheetById(Id);
+        string? StartDate = TimeSheetDetails.Startdate?.ToString("dd/MM/yyyy");
+        string? EndDate = TimeSheetDetails.Enddate?.ToString("dd/MM/yyyy");
+        return GetTimeSheetList(StartDate, EndDate, TimeSheetDetails.Physicianid);
     }
 
 }

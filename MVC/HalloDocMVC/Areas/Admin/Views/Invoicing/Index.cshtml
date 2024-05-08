@@ -103,6 +103,7 @@
                     if(response.isfinalized == false){
                         $("#info-text").text(`${physicianName} has not finalized the timesheet in specified time period.`);
                     }else if(response.isfinalized == true){
+                        console.log(response);
                         $("#timesheetDetailsRow").empty();
                         $("#info-text").css('display', 'none');
                         $("#render-timesheet-table").css('display', 'block');
@@ -110,7 +111,16 @@
                         newRow.append("<td>" + new Date(response.startdate).toLocaleDateString("en-US", options) + "</td>");
                         newRow.append("<td>" + new Date(response.enddate).toLocaleDateString("en-US", options) + "</td>");
                         newRow.append("<td>" + (response.status === null ? "Pending" : response.status) + "</td>");
-                        newRow.append("<td>" + (response.status === null || response.status === "pending" ? "<button class='btn theme-btn'> Approve </button>" : "-") + "</td>"); 
+
+                        var approveForm = $("<form action='/admin/invoicing/TimeSheet' method='post'>");
+                        approveForm.append("<input type='hidden' name='id' value='" + response.id + "'>");
+                        approveForm.append("<button type='submit' class='btn theme-btn'>Approve</button>");
+
+                        if (response.status === null || response.status === "pending") {
+                            $("<td>").append(approveForm).appendTo(newRow);
+                        } else {
+                            newRow.append("<td>-</td>");
+                        } 
                         $("#timesheetDetailsRow").append(newRow);
                     }else{
                         $("#info-text").text(`${physicianName} has not finalized the timesheet in specified time period.`);

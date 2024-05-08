@@ -277,5 +277,34 @@ public class ProviderRepo : IProviderRepo
         }
     }
 
+    public Payrate? GetPayrateDetails(int PhyId){
+        return _dbContext.Payrates.FirstOrDefault(pr => pr.Physicianid == PhyId);
+    }
+
+    public void AddUpdatePayrate(Payrate payrateData)
+    {
+        if (payrateData.Id == 0)
+        {
+            _dbContext.Payrates.Add(payrateData);
+            _dbContext.SaveChanges();
+        }
+        else
+        {
+            Payrate? payrateDetails = _dbContext.Payrates.FirstOrDefault(p => p.Id == payrateData.Id);
+            if (payrateDetails != null)
+            {
+                payrateDetails.Nightshiftweekend = payrateData.Nightshiftweekend;
+                payrateDetails.Shift = payrateData.Shift;
+                payrateDetails.Housecallnightweekend = payrateData.Housecallnightweekend;
+                payrateDetails.Housecall = payrateData.Housecall;
+                payrateDetails.Phoneconsult = payrateData.Phoneconsult;
+                payrateDetails.Phoneconsultnightweekend = payrateData.Phoneconsultnightweekend;
+                payrateDetails.Batchtesting = payrateData.Batchtesting;
+                _dbContext.SaveChanges();
+            }
+        }
+
+    }
+
 
 }

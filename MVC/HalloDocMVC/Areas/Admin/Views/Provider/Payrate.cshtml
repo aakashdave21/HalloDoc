@@ -1,0 +1,89 @@
+@model PayrateViewModel;
+@{
+    ViewData["Title"] = "Payrate Page";
+    Layout = "~/Views/Shared/_AdminDashboard.cshtml";
+}
+
+<main class="container-sm mt-sm-5">
+    <div class="d-flex justify-content-end mt-4">
+        <a asp-area="Admin" asp-controller="Provider" asp-action="Index" class="btn btn-sm back-link"><i class="fa-solid fa-chevron-left"></i> Back</a>
+    </div> 
+    <div class="d-flex mt-4">
+        <h4 class="fw-bold">Payrate</h4>
+    </div>
+    <div class="p-4 mt-3 mb-3 rounded shadow border">
+        <div class="table-responsive">
+            <form asp-area="Admin" asp-controller="Provider" asp-action="PayratePost">
+                <input type="hidden" name="Id" value="@Model.Id"/>
+                <input type="hidden" asp-for="Physicianid"/>
+                <table class="table" id="payrate-table">
+                        <thead>
+                            <tr>
+                                <th style="white-space:nowrap;">Category</th>
+                                <th style="white-space:nowrap;">Payrate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>NightShift Weekend</td>
+                                <td><input class="form-control" type="text" asp-for="Nightshiftweekend" oninput="restrictInput(this)"> </td>
+                            </tr>
+                            <tr>
+                                <td>Shift</td>
+                                <td><input class="form-control" type="text" asp-for="Shift" oninput="restrictInput(this)"> </td>
+                            </tr>
+                            <tr>
+                                <td>Housecall night weekend</td>
+                                <td><input class="form-control" type="text" asp-for="Housecallnightweekend" oninput="restrictInput(this)"> </td>
+                            </tr>
+                            <tr>
+                                <td>Phone consult</td>
+                                <td><input class="form-control" type="text" asp-for="Phoneconsult" oninput="restrictInput(this)"> </td>
+                            </tr>
+                            <tr>
+                                <td>Phoneconsult night weekend</td>
+                                <td><input class="form-control" type="text" asp-for="Phoneconsultnightweekend" oninput="restrictInput(this)"> </td>
+                            </tr>
+                            <tr>
+                                <td>Batch testing</td>
+                                <td><input class="form-control" type="text" asp-for="Batchtesting" oninput="restrictInput(this)"> </td>
+                            </tr>
+                            <tr>
+                                <td>Housecall</td>
+                                <td><input class="form-control" type="text" asp-for="Housecall" oninput="restrictInput(this)"> </td>
+                            </tr>
+                        </tbody>
+                </table>
+                <div class="d-flex justify-content-end gap-2 flex-wrap">
+                    <button type="button" class="btn secondary-theme-btn" id="edit-btn" onclick="openEditMode()">Edit</button>
+                    <div id="save-btns" style="display: none;">
+                        <button class="btn secondary-theme-btn">Save</button>
+                        <button type="reset" class="btn theme-btn" onclick="resetForm()">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script>
+    function restrictInput(inputField) {
+        inputField.value = inputField.value.replace(/[^0-9.]/g, '');
+        var value = inputField.value.trim() === "" ? 0 : parseInt(inputField.value);
+        if (value < 0) {
+            inputField.value = "0";
+        }
+    }
+    $("#payrate-table tbody tr input").attr('disabled', true);
+    function openEditMode(){
+        $('#edit-btn').css('display', 'none');
+        $('#save-btns').css('display', 'block');
+        $("#payrate-table tbody tr input").attr('disabled', false);
+    }
+
+    function resetForm(){
+        $('#edit-btn').css('display', 'block');
+        $('#save-btns').css('display', 'none');
+        $("#payrate-table tbody tr input").attr('disabled', true);
+    }
+</script>

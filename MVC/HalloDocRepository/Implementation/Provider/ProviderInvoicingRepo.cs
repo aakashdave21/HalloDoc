@@ -15,26 +15,31 @@ public class ProviderInvoicingRepo : IProviderInvoicingRepo
         _dbContext = dbContext;
     }
 
-    public Timesheet? CheckFinalizeAndGetData(DateTime StartDate, DateTime EndDate,int PhysicianId = 0){
+    public Timesheet? CheckFinalizeAndGetData(DateTime StartDate, DateTime EndDate, int PhysicianId = 0)
+    {
         Timesheet? isTimeSheetExits = _dbContext.Timesheets.Include(ts => ts.Timesheetdetails).Include(ts => ts.Timesheetreimbursements).FirstOrDefault(ts => ts.Startdate == StartDate && ts.Enddate == EndDate && ts.Physicianid == PhysicianId);
-        
+
         return isTimeSheetExits;
     }
 
-    public void AddTimeSheet(Timesheet newTimeSheet){
+    public void AddTimeSheet(Timesheet newTimeSheet)
+    {
         _dbContext.Timesheets.Add(newTimeSheet);
         _dbContext.SaveChanges();
     }
 
-    public void AddTimeSheetDetails(List<Timesheetdetail> newTimesheetsDetails){
+    public void AddTimeSheetDetails(List<Timesheetdetail> newTimesheetsDetails)
+    {
         _dbContext.Timesheetdetails.AddRange(newTimesheetsDetails);
         _dbContext.SaveChanges();
     }
-    public Timesheetdetail? GetTimesheetDetailById(int Id){
+    public Timesheetdetail? GetTimesheetDetailById(int Id)
+    {
         return _dbContext.Timesheetdetails.FirstOrDefault(ts => ts.Id == Id);
     }
 
-    public void UpdateTimesheetDetail(Timesheetdetail updatedTimeSheet){
+    public void UpdateTimesheetDetail(Timesheetdetail updatedTimeSheet)
+    {
         var existingDetail = _dbContext.Timesheetdetails.FirstOrDefault(d => d.Id == updatedTimeSheet.Id);
 
         if (existingDetail != null)
@@ -51,9 +56,11 @@ public class ProviderInvoicingRepo : IProviderInvoicingRepo
         throw new RecordNotFoundException();
     }
 
-    public void Finalize(int Id){
+    public void Finalize(int Id)
+    {
         Timesheet? isTimeSheetExits = _dbContext.Timesheets.FirstOrDefault(ts => ts.Id == Id);
-        if(isTimeSheetExits!=null){
+        if (isTimeSheetExits != null)
+        {
             isTimeSheetExits.Isfinalized = true;
             _dbContext.SaveChanges();
             return;
@@ -61,24 +68,32 @@ public class ProviderInvoicingRepo : IProviderInvoicingRepo
         throw new RecordNotFoundException();
     }
 
-    public void AddTimeSheetReimbursement(Timesheetreimbursement timesheetreimbursement){
-        if(timesheetreimbursement.Id != 0){ // Perform Update
+    public void AddTimeSheetReimbursement(Timesheetreimbursement timesheetreimbursement)
+    {
+        if (timesheetreimbursement.Id != 0)
+        { // Perform Update
             Timesheetreimbursement? reimburshementDetails = _dbContext.Timesheetreimbursements.FirstOrDefault(t => t.Id == timesheetreimbursement.Id);
-            if(reimburshementDetails != null){
+            if (reimburshementDetails != null)
+            {
                 reimburshementDetails.Item = timesheetreimbursement.Item;
                 reimburshementDetails.Amount = timesheetreimbursement.Amount;
                 _dbContext.SaveChanges();
             }
-        }else{ //Perform Addition
+        }
+        else
+        { //Perform Addition
             _dbContext.Timesheetreimbursements.Add(timesheetreimbursement);
             _dbContext.SaveChanges();
         }
     }
 
-    public void DeleteTimeReimbursement(int Id){
-        if(Id != 0){
+    public void DeleteTimeReimbursement(int Id)
+    {
+        if (Id != 0)
+        {
             Timesheetreimbursement? reimburshementDetails = _dbContext.Timesheetreimbursements.FirstOrDefault(t => t.Id == Id);
-            if(reimburshementDetails != null){
+            if (reimburshementDetails != null)
+            {
                 _dbContext.Timesheetreimbursements.Remove(reimburshementDetails);
                 _dbContext.SaveChanges();
                 return;
@@ -86,4 +101,13 @@ public class ProviderInvoicingRepo : IProviderInvoicingRepo
         }
         throw new RecordNotFoundException();
     }
+
+    public Timesheet GetTimeSheetById(int Id)
+    {
+        Timesheet? timesheet = _dbContext.Timesheets.FirstOrDefault(t => t.Id == Id);
+        if (timesheet != null) return timesheet;
+        throw new RecordNotFoundException();
+    }
+
+    
 }

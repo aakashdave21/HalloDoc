@@ -22,7 +22,9 @@ public interface IProviderService
     AdminPhysicianCreateViewModel GetRoleAndState();
     ProviderLocationViewModel GetAllProviderLocation();
     void CreatePhysician(AdminPhysicianCreateViewModel viewData);
-
     IEnumerable<ProviderList> GetAllPhysicianList();
+    PayrateViewModel GetPayrateDetails(int PhysicianId);
+    void AddUpdatePayrate(PayrateViewModel payrateData);
+
 
 }

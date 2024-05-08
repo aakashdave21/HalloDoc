@@ -99,9 +99,9 @@
             </div>
          </form>
 
-         <form asp-area="Admin" asp-controller="Profile" asp-action="EditAdminInformation" method="post" id="AdminForm">
+        <form asp-area="Admin" asp-controller="Profile" asp-action="EditAdminInformation" method="post" id="AdminForm">
                  <div class="mt-4" id="adminInfoSection">
-                <h5>Administrator Information</h5>
+                <h5>Provider Information</h5>
                 <div class="row">
                     <input type="hidden" name="Id" asp-for="Id"/>
                     <div class="col-md-6 mb-3">
@@ -179,7 +179,11 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-end gap-2 flex-wrap">
+                            <button type="button" class="btn secondary-theme-btn" id="payrateButton"
+                                onclick="openPayratePage()">
+                                Enter Payrate
+                            </button>
                             <button type="button" class="btn secondary-theme-btn" id="editInfoBtn"
                                 onclick="openSaveButtons('editInfoBtn','saveAdminBtns','AdminForm')">
                                 Edit
@@ -196,7 +200,7 @@
                     </div>
                 </div>
             </div>
-            </form>
+        </form>
 
         <form asp-area="Admin" asp-controller="Profile" asp-action="EditBillingInformation" method="post" id="AdminBillingForm">
                 <div class="mt-4" id="billingInfoSection">
@@ -725,5 +729,19 @@ $("#fileDoc").change(function(){
             ToastError("Internal Server Error");
         });
 })
+
+function openPayratePage(){
+    var form = $("<form>").attr({
+        method: "POST",
+        action: "/Admin/Provider/Payrate" // Specify the URL to which the form will be submitted
+    });
+    form.append($("<input>").attr({
+        type: "hidden",
+        name: "Id",
+        value: "@Model.Id"
+    }));
+    form.appendTo("body");
+    form.submit();
+}
 </script>
 

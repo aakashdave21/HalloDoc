@@ -323,4 +323,39 @@ public class ProviderService : IProviderService
         };
         _providerRepo.AddPhysicianFile(physicianfile);
     }
+
+    public PayrateViewModel GetPayrateDetails(int PhysicianId){
+        Payrate? payrateData = _providerRepo.GetPayrateDetails(PhysicianId);
+        PayrateViewModel payrateDetails = new()
+        {
+            Id = 0,
+            Physicianid = PhysicianId
+        };
+        if (payrateData != null){
+            payrateDetails.Id = payrateData.Id;
+            payrateDetails.Nightshiftweekend = payrateData.Nightshiftweekend;
+            payrateDetails.Shift = payrateData.Shift;
+            payrateDetails.Housecallnightweekend = payrateData.Housecallnightweekend;
+            payrateDetails.Housecall = payrateData.Housecall;
+            payrateDetails.Phoneconsult = payrateData.Phoneconsult;
+            payrateDetails.Phoneconsultnightweekend = payrateData.Phoneconsultnightweekend;
+            payrateDetails.Batchtesting = payrateData.Batchtesting;
+        }
+        return payrateDetails;
+    }
+
+    public void AddUpdatePayrate(PayrateViewModel payrateData){
+        Payrate payrateDetails = new(){
+            Id = payrateData.Id,
+            Physicianid = payrateData.Physicianid,
+            Nightshiftweekend = payrateData.Nightshiftweekend,
+            Shift = payrateData.Shift,
+            Housecallnightweekend = payrateData.Housecallnightweekend,
+            Housecall = payrateData.Housecall,
+            Phoneconsult = payrateData.Phoneconsult,
+            Phoneconsultnightweekend = payrateData.Phoneconsultnightweekend,
+            Batchtesting = payrateData.Batchtesting
+        };
+        _providerRepo.AddUpdatePayrate(payrateDetails);
+    }
 }

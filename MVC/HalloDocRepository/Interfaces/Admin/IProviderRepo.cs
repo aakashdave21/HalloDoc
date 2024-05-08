@@ -32,4 +32,8 @@ public interface IProviderRepo
 
     string GetOnCallStatus(int PhyId);
 
+    Payrate? GetPayrateDetails(int PhyId);
+
+    void AddUpdatePayrate(Payrate payrateData);
+
 }

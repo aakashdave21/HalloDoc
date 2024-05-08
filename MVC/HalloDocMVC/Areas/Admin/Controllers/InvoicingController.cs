@@ -46,10 +46,11 @@ public class InvoicingController : Controller
         }
     }
 
-    public IActionResult Timesheet(){
+    [HttpPost]
+    public IActionResult TimeSheet(int Id){
         try
         {
-            return View();
+            return View(_providerInvoicingService.GetTimeSheetById(Id));
         }
         catch (Exception)
         {

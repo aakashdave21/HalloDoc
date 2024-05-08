@@ -11,4 +11,5 @@ public interface IProviderInvoicingRepo
     void Finalize(int Id);
     void AddTimeSheetReimbursement(Timesheetreimbursement timesheetreimbursement);
     void DeleteTimeReimbursement(int Id);
+    Timesheet GetTimeSheetById(int Id);
 }
