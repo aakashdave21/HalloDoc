@@ -222,6 +222,9 @@
         if (value < 0) {
             inputField.value = "0";
         }
+        if (inputField.value.length > 10) {
+            inputField.value = inputField.value.slice(0, 10);
+        }
     }
     function restrictShift(inputField) {
         inputField.value = inputField.value.replace(/[^0-9.]/g, '');

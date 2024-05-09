@@ -14,4 +14,5 @@ public interface IProviderInvoicingService
     void DeleteTimeReimbursement(int Id);
 
     TimeSheetViewModel GetTimeSheetById(int Id);
+    void ApproveTimeSheet(int Id, int Bonus, string Description);
 }

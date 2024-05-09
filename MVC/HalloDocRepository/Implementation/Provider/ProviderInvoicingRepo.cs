@@ -109,5 +109,17 @@ public class ProviderInvoicingRepo : IProviderInvoicingRepo
         throw new RecordNotFoundException();
     }
 
+    public void ApproveTimesheet(Timesheet timesheet){
+        Timesheet? timesheetDetails = _dbContext.Timesheets.FirstOrDefault(ts => ts.Id == timesheet.Id);
+        if(timesheetDetails!=null){
+            timesheetDetails.Status = timesheet.Status;
+            timesheetDetails.Bonus = timesheet.Bonus ?? 0;
+            timesheetDetails.Description = timesheet.Description ?? "";
+            _dbContext.SaveChanges();
+            return;
+        }
+        throw new RecordNotFoundException();
+    }
+
     
 }

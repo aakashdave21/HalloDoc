@@ -32,6 +32,7 @@ public class ProviderInvoicingService : IProviderInvoicingService
             Startdate = TimeSheetData.Startdate,
             Enddate = TimeSheetData.Enddate,
             Isfinalized = TimeSheetData.Isfinalized,
+            Status = TimeSheetData.Status,
             TimesheetdetailsList = TimeSheetData.Timesheetdetails.Select(tsd => new TimeSheetDetailsView()
             {
                 Id = tsd.Id,
@@ -158,7 +159,7 @@ public class ProviderInvoicingService : IProviderInvoicingService
                 Startdate = timesheetDetailsList.Startdate,
                 Enddate = timesheetDetailsList.Enddate,
                 Isfinalized = timesheetDetailsList.Isfinalized,
-                Status = "Pending"
+                Status = "pending"
             };
             _providerInvoicingRepo.AddTimeSheet(newTimeSheet);
 
@@ -223,7 +224,7 @@ public class ProviderInvoicingService : IProviderInvoicingService
                 Startdate = timesheetDetail.Startdate,
                 Enddate = timesheetDetail.Enddate,
                 Isfinalized = timesheetDetail.Isfinalized,
-                Status = "Pending"
+                Status = "pending"
             };
             _providerInvoicingRepo.AddTimeSheet(newTimeSheet);
 
@@ -263,4 +264,13 @@ public class ProviderInvoicingService : IProviderInvoicingService
         return GetTimeSheetList(StartDate, EndDate, TimeSheetDetails.Physicianid);
     }
 
+    public void ApproveTimeSheet(int Id, int Bonus, string Description){
+        Timesheet timesheetUpdate = new(){
+            Id = Id,
+            Bonus = Bonus,
+            Description = Description,
+            Status = "approved"
+        };
+        _providerInvoicingRepo.ApproveTimesheet(timesheetUpdate);
+    }
 }

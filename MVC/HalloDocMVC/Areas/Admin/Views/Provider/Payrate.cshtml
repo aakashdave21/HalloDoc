@@ -73,6 +73,9 @@
         if (value < 0) {
             inputField.value = "0";
         }
+        if (inputField.value.length > 10) {
+            inputField.value = inputField.value.slice(0, 10);
+        }
     }
     $("#payrate-table tbody tr input").attr('disabled', true);
     function openEditMode(){

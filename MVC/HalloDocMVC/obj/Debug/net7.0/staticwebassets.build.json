@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "L9GO0gzSr1oNvvffvpROM1/CSmsFdUA/Kj9MywjcLS4=",
+  "Hash": "gLmVhvC+cG6bFLRmJTwaoJV/vHEp3Yf0R/URk0hiAA8=",
   "Source": "HalloDocMVC",
   "BasePath": "_content/HalloDocMVC",
   "Mode": "Default",
@@ -3706,6 +3706,23 @@
       "OriginalItemSpec": "wwwroot\\uploads\\a07c4d6f-413d-44c5-b11f-765cce335434_.net-Whole-Plane-2024.pdf"
     },
     {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\a101bf74-7ed2-4d8e-ba75-2f6e76aa5b9f_data (1).xlsx",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/a101bf74-7ed2-4d8e-ba75-2f6e76aa5b9f_data (1).xlsx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\a101bf74-7ed2-4d8e-ba75-2f6e76aa5b9f_data (1).xlsx"
+    },
+    {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\a7e32692-aac6-43c2-a0c2-aa38931beff1_A.pdf",
       "SourceId": "HalloDocMVC",
       "SourceType": "Discovered",
@@ -3806,6 +3823,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\d7622bfe-e7eb-4dc6-b07a-b94360106f80_Encounter_3.pdf"
+    },
+    {
+      "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\d79fa733-2a8f-4b71-9b22-da9f9c21e1eb_Encounter_3.pdf",
+      "SourceId": "HalloDocMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\",
+      "BasePath": "_content/HalloDocMVC",
+      "RelativePath": "uploads/d79fa733-2a8f-4b71-9b22-da9f9c21e1eb_Encounter_3.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\d79fa733-2a8f-4b71-9b22-da9f9c21e1eb_Encounter_3.pdf"
     },
     {
       "Identity": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\d9ecf61b-1089-44bb-8345-86a7a1d4a4bb_Encounter_3.pdf",

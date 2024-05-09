@@ -37,7 +37,7 @@
             <h5 class="text-muted" id="info-text">
                 Please Choose Physician & Time Range to show Records
             </h5>
-             <div id="render-timesheet-table" style="display: none;">
+             <div id="render-table" style="display: none;">
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -48,12 +48,55 @@
                                 <th style="white-space:nowrap; ">Action</th>
                             </tr>
                         </thead>
+                        <tbody id="timesheetRow">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="render-timesheet-table" style="display: none;">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="white-space:nowrap;">Shiftdate</th>
+                                <th style="white-space:nowrap;">Shift</th>
+                                <th>Night Shift Weekend</th>
+                                <th>Housecall</th>
+                                <th>Housecall Night Weekend</th>
+                                <th style="white-space:nowrap; ">No of Phone Consult</th>
+                                <th>Phone Consult Nights Weekend</th>
+                                <th style="white-space:nowrap; ">Batch Testing</th>
+                            </tr>
+                        </thead>
                         <tbody id="timesheetDetailsRow">
 
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="border p-4 mt-3 mb-3 rounded shadow" id="render-reimbursement-table" style="display: none;">
+        <h5 class="fw-bold">Timesheet Reimbursement</h5>
+        <h4 class="text-muted" id="no-reimbursements">No Record(s) Found</h4>
+        <div class="mt-4">
+             <div class="table-responsive" style="width:100%;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="white-space:nowrap;">Date</th>
+                                <th style="white-space:nowrap;">Item</th>
+                                <th style="white-space:nowrap;">Amount</th>
+                                <th>Bill</th>
+                            </tr>
+                        </thead>
+                        <tbody id="timesheetReimbursementRow">
+
+                        </tbody>
+                    </table>
+                </div>
         </div>
     </div>
 </main>
@@ -91,7 +134,7 @@
         const physicianValue =  $("#Physician-dropdown").val();
         const physicianName = $("#Physician-dropdown option:selected").text();
         var options = { year: 'numeric', month: 'long', day: 'numeric' };
-        $("#render-timesheet-table").css('display', 'none');
+        $("#render-table").css('display', 'none');
         $("#info-text").css('display', 'block');
         if(dateRangeValue == null || physicianValue == null){
             return;
@@ -100,13 +143,13 @@
             const endDate = dateRangeValue.split("-")[1].trim();
             sendAjaxRequest('/Admin/Invoicing/GetRecords', 'GET', { physician : physicianValue,startDate, endDate }, "application/x-www-form-urlencoded; charset=UTF-8", true)
                 .then(function(response){
-                    if(response.isfinalized == false){
-                        $("#info-text").text(`${physicianName} has not finalized the timesheet in specified time period.`);
-                    }else if(response.isfinalized == true){
-                        console.log(response);
-                        $("#timesheetDetailsRow").empty();
+                    $("#render-reimbursement-table").css('display', 'none');
+                    $("#render-timesheet-table").css('display', 'none');
+                    $("#render-table").css('display', 'none');
+                    if(response.isfinalized == true && (response.status === null || response.status === "pending")){
+                        $("#timesheetRow").empty();
                         $("#info-text").css('display', 'none');
-                        $("#render-timesheet-table").css('display', 'block');
+                        $("#render-table").css('display', 'block');
                         var newRow = $("<tr>");
                         newRow.append("<td>" + new Date(response.startdate).toLocaleDateString("en-US", options) + "</td>");
                         newRow.append("<td>" + new Date(response.enddate).toLocaleDateString("en-US", options) + "</td>");
@@ -118,11 +161,40 @@
 
                         if (response.status === null || response.status === "pending") {
                             $("<td>").append(approveForm).appendTo(newRow);
-                        } else {
-                            newRow.append("<td>-</td>");
-                        } 
-                        $("#timesheetDetailsRow").append(newRow);
-                    }else{
+                        }
+                        $("#timesheetRow").append(newRow);
+                    }else if(response.isfinalized == true && response.status === "approved"){
+                        $("#timesheetReimbursementRow").empty();
+                        $("#timesheetDetailsRow").empty();
+                        response.timesheetdetailsList.length > 0 && response.timesheetdetailsList.forEach(function (item) {
+                            $("#info-text").css('display', 'none');
+                            $("#render-timesheet-table").css('display', 'flex');
+                            var newRow = $("<tr>");
+                            newRow.append("<td>" + new Date(item.shiftdate).toLocaleDateString("en-US", options) + "</td>");
+                            newRow.append("<td>" + '-' + "</td>");
+                            newRow.append("<td>" + '-' + "</td>");
+                            newRow.append("<td>" + item.housecall + "</td>");
+                            newRow.append("<td>" + '-' + "</td>");
+                            newRow.append("<td>" + item.phoneconsult + "</td>");
+                            newRow.append("<td>" + '-' + "</td>");
+                            newRow.append("<td>" + '-' + "</td>");
+                            $("#timesheetDetailsRow").append(newRow);
+                        });
+                        response.timesheetreimbursementsList.length > 0 && response.timesheetreimbursementsList.forEach(function (reimb) {
+                           
+                            $("#no-reimbursements").css('display', 'none');
+                            $("#render-reimbursement-table").css('display', 'block');
+                            let filePath = reimb.bill;
+                            let fileName = filePath.split('_').slice(1).join("_");
+                            var newRow = $("<tr>");
+                            newRow.append("<td style='white-space:nowrap;'>" + new Date(reimb.shiftdate).toLocaleDateString("en-US", options) + "</td>");
+                            newRow.append("<td style='white-space:nowrap;'>" + reimb.item + "</td>");
+                            newRow.append("<td style='white-space:nowrap;'>" + reimb.amount + "</td>");
+                            newRow.append("<td style='white-space:nowrap;'>" + fileName + "</td>");
+                            $("#timesheetReimbursementRow").append(newRow);
+                        });
+                    }
+                    else{
                         $("#info-text").text(`${physicianName} has not finalized the timesheet in specified time period.`);
                     }
                 }).catch(function(error){

@@ -138,11 +138,11 @@
                                             value="@Model?.TimesheetreimbursementsList[i].Shiftdate">
                                     <td>
                                         <input class="form-control edit-input" type="text" name="Item"
-                                            value="@Model?.TimesheetreimbursementsList[i].Item">
+                                            value="@Model?.TimesheetreimbursementsList[i].Item" disabled>
                                     </td>
                                     <td>
                                         <input class="form-control edit-input" type="text" name="Amount"
-                                            value="@Model?.TimesheetreimbursementsList[i].Amount" oninput="restrictInput(this)">
+                                            value="@Model?.TimesheetreimbursementsList[i].Amount" oninput="restrictInput(this)" disabled>
                                     </td>
                                     <td>@fileName</td>
                                     <td>
@@ -189,12 +189,11 @@
                                         <input type="hidden" name="Id" value="@Model?.TimesheetreimbursementsList[i].Id">
                                     </td>
                                     <td><input class="form-control" type="text" name="Item"
-                                            value="@Model?.TimesheetreimbursementsList[i].Item"></td>
+                                            value="@Model?.TimesheetreimbursementsList[i].Item" disabled></td>
                                     <td><input class="form-control" type="text" name="Amount"
-                                            value="@Model?.TimesheetreimbursementsList[i].Amount" oninput="restrictInput(this)">
+                                            value="@Model?.TimesheetreimbursementsList[i].Amount" oninput="restrictInput(this)" disabled>
                                     </td>
-                                    <td><input type="file" class="form-control" name="phyBill"
-                                            accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps"></td>
+                                    <td><input type="text" class="form-control" disabled></td>
                                     <td class="action-column">
                                         <div class="d-flex gap-2">
                                             <button type="submit" class="btn theme-btn save-button"
@@ -213,15 +212,21 @@
     </div>
     @if (@Model?.Id != 0)
     {
-        <div class="d-flex justify-content-end flex-wrap mt-5">
-            @using (Html.BeginForm("Finalize", "Invoicing", new { area = "Provider" }, FormMethod.Post))
+            @using (Html.BeginForm("Approve", "Invoicing", new { area = "Admin" }, FormMethod.Post))
             {
-                <input type="hidden" asp-for="@Model.Id" />
-                <button class="btn secondary-theme-btn">
-                    Approve
-                </button>
+                <div class="d-flex justify-content-end flex-wrap mt-5 gap-2">
+                        <input type="hidden" asp-for="@Model.Id" />
+                        <div>
+                            <input class="form-control" type="text" name="Bonus" oninput="restrictInput(this)" placeholder="Bonus">
+                        </div>
+                        <div>
+                            <input class="form-control" type="text" name="Description" placeholder="Admin Description">
+                        </div>
+                        <button class="btn secondary-theme-btn">
+                            Approve
+                        </button>
+                </div>
             }
-        </div>
     }
 </main>
 
@@ -231,6 +236,9 @@
         var value = inputField.value.trim() === "" ? 0 : parseInt(inputField.value);
         if (value < 0) {
             inputField.value = "0";
+        }
+        if (inputField.value.length > 10) {
+            inputField.value = inputField.value.slice(0, 10);
         }
     }
     function restrictShift(inputField) {

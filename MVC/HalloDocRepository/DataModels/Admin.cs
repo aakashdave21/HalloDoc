@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace HalloDocRepository.DataModels;
 
 [Table("admin")]
- public partial class Admin 
+public partial class Admin
 {
     [Key]
     [Column("id")]

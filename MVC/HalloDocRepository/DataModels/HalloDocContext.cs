@@ -539,6 +539,7 @@ public partial class HalloDocContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("timesheet_pkey");
 
+            entity.Property(e => e.Bonus).HasDefaultValueSql("0");
             entity.Property(e => e.Isfinalized).HasDefaultValueSql("false");
 
             entity.HasOne(d => d.Physician).WithMany(p => p.Timesheets)
