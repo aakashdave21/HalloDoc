@@ -1,0 +1,57 @@
+@model ChatViewModel;
+<style>
+    .message-section{
+        height: 70vh;
+    }
+    .message-section #render-message{
+        height: 92%;
+        background-color: #f0f8ff78;
+        border-radius: 10px;
+    }
+    .send-section{
+        margin-top: 10px;
+    }
+</style>
+<main class="container-sm mt-sm-5 mb-5">
+    <div class="mt-4">
+        <h4 class="fw-bold" style="color: #01bce9;">@Model.ReceiverName</h4>
+        <small class="fw-bold text-muted">@Model.ReceiverPhone</small><br>
+        <small class="fw-bold text-muted">@Model.ReceiverEmail</small>
+    </div>
+    <div class="p-4 mt-3 mb-3 rounded shadow border message-section">
+        <div id="render-message">
+            
+        </div>
+        <div class="mb-3 d-flex gap-2 send-section">
+            <input type="text" class="form-control" id="messageInput" />
+            <button type="submit" id="sendMessageBtn" class="btn secondary-theme-btn"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js" integrity="sha512-7rhBJh1om/W5Ztx7WiYOR9h2wlSaTmPyQMoHFtbT/FVNIA12y6S6I8HY9mrBS1uJ3dSU/R3qaSAXsGYuRjMDxg==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+    // Start the connection
+    connection.start().then(function () {
+        console.log("SignalR Connected");
+    }).catch(function (err) {
+        console.error(err.toString());
+    });
+
+    document.getElementById("sendMessageBtn").addEventListener("click", function () {
+        var messageInput = document.getElementById("messageInput").value;
+        var receiverId = "@Model.Receiver";
+        connection.invoke("SendMessage", receiverId, messageInput).catch(function (err) {
+            console.error(err.toString());
+        });
+        document.getElementById("messageInput").value = "";
+    });
+
+    connection.on("ReceiveMessage", function (senderId, message) {
+        var messageHtml = "<div><strong>Sender: </strong>" + senderId + "<br><strong>Message: </strong>" + message + "</div>";
+        document.getElementById("render-message").innerHTML += messageHtml;
+    });
+</script>

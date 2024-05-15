@@ -73,7 +73,9 @@ public class AdminDashboardService : IAdminDashboardService
             PhysicianName = r.Physician != null ? r.Physician?.Firstname + ", " + r.Physician?.Lastname : "-",
             ServiceDate = r.Createdat?.ToString("MMM,d yyyy HH\\h m\\m ss"),
             Region = r.Requestclients.FirstOrDefault()?.Region?.Name ?? "-",
-            IsFinalized = r?.Encounterform?.Isfinalized ?? false
+            IsFinalized = r?.Encounterform?.Isfinalized ?? false,
+            PhysicianAspId = r?.Physician?.Aspnetuserid ?? 0,
+            PatientAspId = r?.User?.Aspnetuserid ?? 0
         }).ToList();
         viewModel.TotalPage = totalCount;
         viewModel.Requests = requestViewModels;

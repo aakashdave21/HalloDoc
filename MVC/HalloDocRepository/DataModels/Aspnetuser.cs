@@ -97,6 +97,18 @@ public partial class Aspnetuser
     [InverseProperty("User")]
     public virtual ICollection<Aspnetuserrole> Aspnetuserroles { get; } = new List<Aspnetuserrole>();
 
+    [InverseProperty("Receiveraspnetuser")]
+    public virtual ICollection<Chat> ChatReceiveraspnetusers { get; } = new List<Chat>();
+
+    [InverseProperty("Senderaspnetuser")]
+    public virtual ICollection<Chat> ChatSenderaspnetusers { get; } = new List<Chat>();
+
+    [InverseProperty("ReceiverNavigation")]
+    public virtual ICollection<Chathistory> ChathistoryReceiverNavigations { get; } = new List<Chathistory>();
+
+    [InverseProperty("SenderNavigation")]
+    public virtual ICollection<Chathistory> ChathistorySenderNavigations { get; } = new List<Chathistory>();
+
     [InverseProperty("CreatedbyNavigation")]
     public virtual ICollection<Orderdetail> Orderdetails { get; } = new List<Orderdetail>();
 

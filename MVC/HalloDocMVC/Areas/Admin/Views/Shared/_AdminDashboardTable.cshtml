@@ -157,13 +157,19 @@
                                    ==
                                    "conclude" || ViewBag.statusType == "close" || ViewBag.statusType == "unpaid")
                                         {
-                                            <button class="btn">
-                                                Patient
-                                            </button>
+                                            <form action="/admin/chat/CreateChat" method="post">
+                                                <input type="hidden" name="Id" value="@item.PatientAspId">
+                                                <button type="submit" class="btn">
+                                                    Patient
+                                                </button>
+                                            </form>
                                         }
-                                        <button class="btn">
-                                            Provider
-                                        </button>
+                                        <form action="/admin/chat/CreateChat" method="post">
+                                                <input type="hidden" name="Id" value="@item.PhysicianAspId">
+                                                <button type="submit" class="btn">
+                                                    Provider
+                                                </button>
+                                        </form>
                                     </div>
                                 </td>
                                 <td class="action-btn">

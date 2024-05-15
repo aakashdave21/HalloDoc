@@ -1,0 +1,99 @@
+@model ChatHistoryViewModel;
+
+<style>
+    .user-list img{
+        width: 50px;
+    }
+    .user-list .main-list{
+        list-style: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 10px 10px 25px;
+        border-bottom: 1px solid #f0f8ff78;
+        border-top: 1px solid #f0f8ff78;
+        border-collapse: collapse;
+    }
+    .user-list .main-list:hover{
+        transition: 0.5s all ease;
+        background-color: #f0f8ff78;
+        cursor: pointer;
+    }
+    .role-list li{
+        list-style: none;
+        color: #01bce9;
+    }
+</style>
+
+<main class="container-sm mt-sm-5 mb-5">
+    <div class="d-flex mt-4">
+        <h4 class="fw-bold">Chat With</h4>
+    </div>
+    <div class="p-4 mt-3 mb-3 rounded shadow border">
+        <ul class="user-list">      
+            @foreach(var item in Model.ChatUserLists){
+                <li class="main-list" onclick="submitChatForm('@item.Sender', '@item.Receiver')">
+                    <div class="d-flex">
+                        <div>
+                            <img src="~/images/DefaultUser.png" alt="defaultUser">
+                        </div>
+                        <div class="ms-3">
+                            <div>
+                                <span class="fw-bold">
+                                    @item.ReceiverName
+                                </span>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-bold">
+                                    @item.ReceiverPhone
+                                </small>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-bold">
+                                    @item.ReceiverEmail
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <ul class="role-list">
+                            @foreach(var i in item.UserRoles){
+                                <li>@(char.ToUpper(i[0]) + i.Substring(1))</li>
+                            }
+                        </ul>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</main>
+
+<script>
+    function submitChatForm(sender, receiver) {
+        // Find the form element
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/Admin/Chat/Connect");
+
+        // Create hidden input fields for sender and receiver
+        var senderInput = document.createElement("input");
+        senderInput.setAttribute("type", "hidden");
+        senderInput.setAttribute("name", "Sender");
+        senderInput.setAttribute("value", sender);
+        form.appendChild(senderInput);
+
+        var receiverInput = document.createElement("input");
+        receiverInput.setAttribute("type", "hidden");
+        receiverInput.setAttribute("name", "Receiver");
+        receiverInput.setAttribute("value", receiver);
+        form.appendChild(receiverInput);
+
+        // Append the form to the document body and submit it
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+
+
+
+

@@ -36,6 +36,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQmxvY2tIaXN0b3J5XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Admin/Views/Chat/Connect.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ2hhdFxDb25uZWN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Admin/Views/Chat/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ2hhdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/pce115/Documents/Project/HalloDoc/MVC/HalloDocMVC/Areas/Admin/Views/Dashboard/CloseCase.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcRGFzaGJvYXJkXENsb3NlQ2FzZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

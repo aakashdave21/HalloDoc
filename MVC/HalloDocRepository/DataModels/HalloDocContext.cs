@@ -29,6 +29,10 @@ public partial class HalloDocContext : DbContext
 
     public virtual DbSet<Casetag> Casetags { get; set; }
 
+    public virtual DbSet<Chat> Chats { get; set; }
+
+    public virtual DbSet<Chathistory> Chathistories { get; set; }
+
     public virtual DbSet<Concierge> Concierges { get; set; }
 
     public virtual DbSet<Emaillog> Emaillogs { get; set; }
@@ -183,6 +187,33 @@ public partial class HalloDocContext : DbContext
 
             entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.Updatedat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
+        modelBuilder.Entity<Chat>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("chat_pkey");
+
+            entity.Property(e => e.Createddate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.Receiveraspnetuser).WithMany(p => p.ChatReceiveraspnetusers).HasConstraintName("fk_receiver");
+
+            entity.HasOne(d => d.Senderaspnetuser).WithMany(p => p.ChatSenderaspnetusers).HasConstraintName("fk_sender");
+        });
+
+        modelBuilder.Entity<Chathistory>(entity =>
+        {
+            entity.HasKey(e => new { e.Sender, e.Receiver }).HasName("pk_chathistory");
+
+            entity.Property(e => e.Createdat).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.HasOne(d => d.ReceiverNavigation).WithMany(p => p.ChathistoryReceiverNavigations)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("chathistory_receiver_fkey");
+
+            entity.HasOne(d => d.SenderNavigation).WithMany(p => p.ChathistorySenderNavigations)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("chathistory_sender_fkey");
         });
 
         modelBuilder.Entity<Concierge>(entity =>

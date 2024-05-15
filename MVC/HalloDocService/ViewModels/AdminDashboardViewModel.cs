@@ -28,7 +28,6 @@ namespace HalloDocService.ViewModels
         public string? Email { get; set; }
         public string? Phonenumber { get; set; }
         public string? BirthDate { get; set; }
-
         public string? Requestor { get; set; }
         public string? RequestedDate { get; set; }
         public string? Address { get; set; }
@@ -38,8 +37,9 @@ namespace HalloDocService.ViewModels
         public int? PhysicianId { get; set; }
         public string? ServiceDate { get; set; }
         public string? Region { get; set; }
-
         public bool? IsFinalized { get; set; } = false;
+        public int? PhysicianAspId {get; set;}
+        public int? PatientAspId {get; set;}
 
     }
 

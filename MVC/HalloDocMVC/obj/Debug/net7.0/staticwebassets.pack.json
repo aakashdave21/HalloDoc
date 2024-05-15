@@ -93,12 +93,20 @@
       "PackagePath": "staticwebassets\\js\\cancleCase.js"
     },
     {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\chat.js",
+      "PackagePath": "staticwebassets\\js\\chat.js"
+    },
+    {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\global.js",
       "PackagePath": "staticwebassets\\js\\global.js"
     },
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\passwordToggle.js",
       "PackagePath": "staticwebassets\\js\\passwordToggle.js"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\signalr\\dist\\browser\\signalr.js",
+      "PackagePath": "staticwebassets\\js\\signalr\\dist\\browser\\signalr.js"
     },
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\js\\site.js",
@@ -663,6 +671,10 @@
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\db16f2cc-e599-4859-8e4c-a4f8000f55b5_Fig3. Admin Dashboard.jpg",
       "PackagePath": "staticwebassets\\uploads\\db16f2cc-e599-4859-8e4c-a4f8000f55b5_Fig3. Admin Dashboard.jpg"
+    },
+    {
+      "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\df6787c8-0c51-40ca-ba51-3d3b399cd52a_Encounter_3.pdf",
+      "PackagePath": "staticwebassets\\uploads\\df6787c8-0c51-40ca-ba51-3d3b399cd52a_Encounter_3.pdf"
     },
     {
       "Id": "C:\\Users\\pce115\\Documents\\Project\\HalloDoc\\MVC\\HalloDocMVC\\wwwroot\\uploads\\e1abdeaf-d363-4044-a247-aa5a14bd13fc_Test Instructions.pdf",

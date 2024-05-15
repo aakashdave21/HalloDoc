@@ -23,6 +23,7 @@ public class AdminDashboardRepo : IAdminDashboardRepo
         IQueryable<Request> query = _dbContext.Requests
             .Include(req => req.Requestclients)
             .Include(req => req.Physician)
+            .Include(req=> req.User)
             .Include(req => req.Encounterform);
         query = Params.Status switch
         {

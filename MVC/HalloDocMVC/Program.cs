@@ -3,11 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using HalloDocRepository.DataModels;
 using Microsoft.AspNetCore.Mvc.Razor;
 using HalloDocMVC.Extensions;
+using HalloDocMVC.Hubs;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HalloDocContext>(q => q.UseNpgsql(conn));
+builder.Services.AddSignalR();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.Configure<RazorViewEngineOptions>(options =>
 {
@@ -48,8 +52,13 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+
 // Custom Middleware Related To Authenticatin
 app.UseMyMiddleware();
+
+app.MapHub<ChatHub>("/chatHub");
+
 
 app.MapControllerRoute(
        name: "Admin",
